@@ -2,6 +2,7 @@
 #define NET_MINECRAFT_CLIENT__Minecraft_H__
 
 #include "Options.h"
+#include "User.h"
 #ifndef STANDALONE_SERVER
 #include "MouseHandler.h"
 #endif

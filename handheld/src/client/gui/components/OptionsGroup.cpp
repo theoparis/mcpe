@@ -47,6 +47,7 @@ void OptionsGroup::createToggle(const Options::Option *option,
   def.height = 20 * 0.7f;
   OptionButton *element = new OptionButton(option);
   element->setImageDef(def, true);
+  element->updateImage(&minecraft->options);
   std::string itemLabel = I18n::get(option->getCaptionId());
   OptionsItem *item = new OptionsItem(itemLabel, element);
   addChild(item);
@@ -70,12 +71,15 @@ void OptionsGroup::createStepSlider(const Options::Option *option,
                                     Minecraft *minecraft) {
   std::vector<int> steps;
   if (option == &Options::Option::DIFFICULTY ||
-      option == &Options::Option::RENDER_DISTANCE ||
       option == &Options::Option::GUI_SCALE) {
     steps.push_back(0);
     steps.push_back(1);
     steps.push_back(2);
     steps.push_back(3);
+  } else if (option == &Options::Option::RENDER_DISTANCE) {
+    for (int i = MAX_VIEW_DISTANCE; i >= 0; --i) {
+      steps.push_back(i);
+    }
   } else {
     return;
   }

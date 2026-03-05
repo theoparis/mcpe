@@ -150,9 +150,6 @@ void GameRenderer::render(float a) {
     if (pid >= 0) {
       xMouse = (int)(Multitouch::getX(pid) * Gui::InvGuiScale);
       yMouse = (int)(Multitouch::getY(pid) * Gui::InvGuiScale);
-    } else {
-      xMouse = -9999;
-      yMouse = -9999;
     }
   }
   TIMER_POP();
@@ -672,7 +669,8 @@ void GameRenderer::pick(float a) {
   float range = mc->gameMode->getPickRange();
   bool isPicking = true;
 
-  bool freeform = mc->useTouchscreen() && !mc->options.isJoyTouchArea;
+  bool freeform =
+      mc->useTouchscreen() && !mc->options.isJoyTouchArea && !mc->mouseGrabbed;
   if (freeform) {
     isPicking = updateFreeformPickDirection(a, pickDirection);
   } else {

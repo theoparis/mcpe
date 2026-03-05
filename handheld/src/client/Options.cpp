@@ -215,11 +215,23 @@ void Options::update() {
     if (key == OptionStrings::Graphics_Fancy) {
       readBool(value, fancyGraphics);
     }
+    if (key == OptionStrings::Graphics_AmbientOcclusion) {
+      readBool(value, ambientOcclusion);
+    }
+    if (key == OptionStrings::Graphics_ViewDistance) {
+      int distance;
+      if (readInt(value, distance)) {
+        if (distance < 0)
+          distance = 0;
+        if (distance > MAX_VIEW_DISTANCE)
+          distance = MAX_VIEW_DISTANCE;
+        viewDistance = distance;
+      }
+    }
     if (key == OptionStrings::Graphics_LowQuality) {
       bool isLow;
       readBool(value, isLow);
       if (isLow) {
-        viewDistance = 3;
         fancyGraphics = false;
       }
     }
@@ -304,6 +316,14 @@ void Options::save() {
                         isJoyTouchArea);
   addOptionToSaveOutput(stringVec, OptionStrings::Controls_FeedbackVibration,
                         destroyVibration);
+  addOptionToSaveOutput(stringVec, OptionStrings::Graphics_Fancy,
+                        fancyGraphics);
+  addOptionToSaveOutput(stringVec, OptionStrings::Graphics_AmbientOcclusion,
+                        ambientOcclusion);
+  addOptionToSaveOutput(stringVec, OptionStrings::Graphics_ViewDistance,
+                        viewDistance);
+
+  optionsFile.save(stringVec);
   //
   // 	static const Option MUSIC;
   // 	static const Option SOUND;

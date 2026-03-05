@@ -8,6 +8,7 @@
 #include "../../../../platform/time.h"
 #include "../../../../util/SmoothFloat.h"
 #include "../ITurnInput.h"
+#include "../MouseBuildInput.h"
 #include "TouchAreaModel.h"
 
 #include "../../../../world/entity/player/Inventory.h"
@@ -245,6 +246,10 @@ public:
     updateFeedbackProgressAlpha(now);
 
     wasActive = isActive;
+    if (Mouse::getDX() != 0 || Mouse::getDY() != 0) {
+      dx += (float)Mouse::getDX();
+      dy += (float)Mouse::getDY();
+    }
     return TurnDelta(dx, -dy);
   }
 
@@ -297,6 +302,11 @@ public:
   //
   virtual bool tickBuild(Player *player, BuildActionIntention *bai) {
     _lastPlayer = player;
+
+    if (state != State_Destroy) {
+      if (_mouseBuild.tickBuild(player, bai))
+        return true;
+    }
 
     if (state == State_Destroy) {
       if (!_sentFirstRemove) {
@@ -383,6 +393,7 @@ private:
   float _sensitivity;
 
   Player *_lastPlayer;
+  MouseBuildInput _mouseBuild;
 
   // Build
   float _lastBuildDownTime;
@@ -436,6 +447,15 @@ public:
   }
 
   virtual bool allowPicking() {
+    int leftState = Mouse::getButtonState(MouseAction::ACTION_LEFT);
+    int rightState = Mouse::getButtonState(MouseAction::ACTION_RIGHT);
+    if (leftState == MouseAction::DATA_DOWN ||
+        rightState == MouseAction::DATA_DOWN) {
+      mousex = Mouse::getX();
+      mousey = Mouse::getY();
+      return true;
+    }
+
     const int *pointerIds;
     int pointerCount = Multitouch::getActivePointerIds(&pointerIds);
     for (int i = 0; i < pointerCount; ++i) {

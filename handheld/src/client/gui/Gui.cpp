@@ -632,7 +632,7 @@ void Gui::renderDebugInfo() {
   float yy = minecraft->player->y - minecraft->player->heightOffset;
   float zz = minecraft->player->z;
   posTranslator.to(xx, yy, zz);
-  sprintf(buf, "pos: %3.1f, %3.1f, %3.1f\n", xx, yy, zz);
+  snprintf(buf, 256, "pos: %3.1f, %3.1f, %3.1f\n", xx, yy, zz);
   Tesselator &t = Tesselator::instance;
   t.beginOverride();
   t.scale2d(InvGuiScale, InvGuiScale);

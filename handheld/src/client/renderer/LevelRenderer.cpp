@@ -13,6 +13,7 @@
 #include "DirtyChunkSorter.h"
 #include "DistanceChunkSorter.h"
 #include "TileRenderer.h"
+#include "client/Options.h"
 #include "culling/Culler.h"
 #include "entity/EntityRenderDispatcher.h"
 
@@ -140,14 +141,10 @@ void LevelRenderer::allChanged() {
   Tile::leaves_carried->setFancy(mc->options.fancyGraphics);
   lastViewDistance = mc->options.viewDistance;
 
-  int dist = (512 >> 3) << (3 - lastViewDistance);
+  int dist = (512 >> 3) << (MAX_VIEW_DISTANCE - lastViewDistance);
   if (lastViewDistance <= 2 && mc->isPowerVR())
     dist = (int)((float)dist * 0.8f);
   LOGI("last: %d, power: %d\n", lastViewDistance, mc->isPowerVR());
-
-#if defined(SDL3)
-  dist *= 0.6f;
-#endif
 
   if (dist > 400)
     dist = 400;

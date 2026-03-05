@@ -8,6 +8,7 @@
 #include "../components/ImageButton.h"
 #include "../components/OptionsGroup.h"
 #include "../components/OptionsPane.h"
+
 OptionsScreen::OptionsScreen()
     : btnClose(NULL), bHeader(NULL), selectedCategory(0) {}
 
@@ -97,10 +98,14 @@ void OptionsScreen::render(int xm, int ym, float a) {
     currentOptionPane->render(minecraft, xmm, ymm);
 }
 
-void OptionsScreen::removed() {}
+void OptionsScreen::removed() {
+  if (minecraft) {
+    minecraft->options.save();
+    minecraft->reloadOptions();
+  }
+}
 void OptionsScreen::buttonClicked(Button *button) {
   if (button == btnClose) {
-    minecraft->reloadOptions();
     minecraft->screenChooser.setScreen(SCREEN_STARTMENU);
   } else if (button->id > 1 && button->id < 7) {
     // This is a category button

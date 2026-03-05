@@ -71,10 +71,19 @@ protected:
 
 private:
   void connectDirect();
+  void applyUsername();
 
   Button bJoin;
   Button bBack;
   AvailableGamesList *gamesList;
+
+  std::string usernameText;
+  bool usernameFocused;
+  int usernameX;
+  int usernameY;
+  int usernameW;
+  int usernameH;
+
   std::string directConnectText;
   bool directConnectFocused;
   int directConnectX;

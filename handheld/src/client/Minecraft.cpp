@@ -960,7 +960,9 @@ void Minecraft::handleBuildAction(BuildActionIntention *action) {
 
   if (!hitResult.isHit()) {
     if (action->isRemove() && !gameMode->isCreativeType()) {
-      missTime = 10;
+      if (Mouse::getButtonState(MouseAction::ACTION_LEFT) == 0) {
+        missTime = 10;
+      }
     }
   } else if (hitResult.type == ENTITY) {
     if (action->isAttack()) {
@@ -1121,9 +1123,6 @@ void Minecraft::releaseMouse() {
 }
 
 bool Minecraft::useTouchscreen() {
-#ifdef SDL3
-  return false;
-#endif
   return options.useTouchScreen || !_supportsNonTouchscreen;
 }
 bool Minecraft::supportNonTouchScreen() { return _supportsNonTouchscreen; }
@@ -1364,11 +1363,16 @@ void Minecraft::_levelGenerated() {
   }
 
 #if defined(WIN32) || defined(SDL3)
-  if (_commandServer) {
+  if (raknetInstance && raknetInstance->isServer()) {
+    if (_commandServer) {
+      delete _commandServer;
+    }
+    _commandServer = new CommandServer(this);
+    _commandServer->init(commandPort);
+  } else if (_commandServer) {
     delete _commandServer;
+    _commandServer = NULL;
   }
-  _commandServer = new CommandServer(this);
-  _commandServer->init(commandPort);
 #endif
 
   // Hack to (hopefully) get the players to show (note: in LevelListener

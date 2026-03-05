@@ -12,6 +12,8 @@
 #include <cstdio>
 #include <string>
 
+const int MAX_VIEW_DISTANCE = 3;
+
 class Minecraft;
 typedef std::vector<std::string> StringVector;
 
@@ -190,18 +192,29 @@ public:
     }
     notifyOptionUpdate(item, value);
   }
+
   void set(const Option *item, int value) {
     if (item == &Option::DIFFICULTY) {
       difficulty = value;
+    } else if (item == &Option::RENDER_DISTANCE) {
+      int v = value;
+      if (v < 0)
+        v = 0;
+      if (v > MAX_VIEW_DISTANCE)
+        v = MAX_VIEW_DISTANCE;
+      viewDistance = v;
+    } else if (item == &Option::GUI_SCALE) {
+      guiScale = value;
     }
     notifyOptionUpdate(item, value);
+    save();
   }
 
   void toggle(const Option *option, int dir) {
     if (option == &Option::INVERT_MOUSE)
       invertYMouse = !invertYMouse;
     if (option == &Option::RENDER_DISTANCE)
-      viewDistance = (viewDistance + dir) & 3;
+      viewDistance = (viewDistance + dir) & MAX_VIEW_DISTANCE;
     if (option == &Option::GUI_SCALE)
       guiScale = (guiScale + dir) & 3;
     if (option == &Option::VIEW_BOBBING)
@@ -243,6 +256,10 @@ public:
   int getIntValue(const Option *item) {
     if (item == &Option::DIFFICULTY)
       return difficulty;
+    if (item == &Option::RENDER_DISTANCE)
+      return viewDistance;
+    if (item == &Option::GUI_SCALE)
+      return guiScale;
     return 0;
   }
 

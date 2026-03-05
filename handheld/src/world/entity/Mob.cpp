@@ -602,6 +602,10 @@ void Mob::updateWalkAnim() {
   walkAnimSpeedO = walkAnimSpeed;
   float xxd = x - xo;
   float zzd = z - zo;
+  if (Mth::abs(xxd) < 0.0001f && Mth::abs(zzd) < 0.0001f) {
+    xxd = x - xOld;
+    zzd = z - zOld;
+  }
   float wst = Mth::sqrt(xxd * xxd + zzd * zzd) * 4;
   if (wst > 1)
     wst = 1;

@@ -6,6 +6,8 @@ const char *OptionStrings::Multiplayer_ServerVisible =
 
 const char *OptionStrings::Graphics_Fancy = "gfx_fancygraphics";
 const char *OptionStrings::Graphics_LowQuality = "gfx_lowquality";
+const char *OptionStrings::Graphics_ViewDistance = "gfx_viewdistance";
+const char *OptionStrings::Graphics_AmbientOcclusion = "gfx_ao";
 
 const char *OptionStrings::Controls_Sensitivity = "ctrl_sensitivity";
 const char *OptionStrings::Controls_InvertMouse = "ctrl_invertmouse";

@@ -23,14 +23,16 @@ Slider::Slider(Minecraft *minecraft, const Options::Option *option,
   assert(stepVec.size() > 1);
   numSteps = sliderSteps.size();
   if (option != NULL) {
-    curStepValue;
-    int curStep;
     curStepValue = minecraft->options.getIntValue(option);
     std::vector<int>::iterator currentItem =
         std::find(sliderSteps.begin(), sliderSteps.end(), curStepValue);
     if (currentItem != sliderSteps.end()) {
-      curStep = currentItem - sliderSteps.begin();
+      curStep = (int)(currentItem - sliderSteps.begin());
+    } else {
+      curStep = 0;
+      curStepValue = sliderSteps[0];
     }
+    percentage = float(curStep) / float(numSteps - 1);
   }
 }
 
@@ -64,6 +66,8 @@ void Slider::mouseClicked(Minecraft *minecraft, int x, int y, int buttonNum) {
 }
 
 void Slider::mouseReleased(Minecraft *minecraft, int x, int y, int buttonNum) {
+  if (!mouseDownOnElement)
+    return;
   mouseDownOnElement = false;
   if (sliderType == SliderStep) {
     curStep = Mth::floor((percentage * (numSteps - 1) + 0.5f));

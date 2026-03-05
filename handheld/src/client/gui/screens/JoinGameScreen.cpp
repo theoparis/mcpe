@@ -5,11 +5,51 @@
 #include "../Font.h"
 #include "ProgressScreen.h"
 #include "StartMenuScreen.h"
+#include "raknet/RakPeerInterface.h"
 #include <cctype>
 #include <cstdlib>
+#include <ctime>
+#include <functional>
+#include <iomanip>
+#include <sstream>
 
 namespace {
 static const int kDefaultPort = 19132;
+static std::string s_cachedUsername = "";
+
+static std::string makeUniqueUsername(const std::string &base,
+                                      Minecraft *minecraft) {
+  std::string suffix;
+
+  if (minecraft && minecraft->raknetInstance) {
+    RakNet::RakPeerInterface *peer = minecraft->raknetInstance->getPeer();
+    if (peer) {
+      RakNet::RakNetGUID guid = peer->GetMyGUID();
+      std::string guidStr = guid.ToString();
+      std::size_t hash = std::hash<std::string>{}(guidStr);
+      unsigned int v = (unsigned int)(hash & 0xFFFF);
+      std::ostringstream out;
+      out << std::hex << std::setw(4) << std::setfill('0') << v;
+      suffix = out.str();
+    }
+  }
+
+  if (suffix.empty()) {
+    unsigned int t = (unsigned int)std::time(NULL);
+    static unsigned int counter = 0;
+    ++counter;
+    unsigned int v = (t + counter) & 0xFFFF;
+    std::ostringstream out;
+    out << std::hex << std::setw(4) << std::setfill('0') << v;
+    suffix = out.str();
+  }
+
+  std::string trimmed = base;
+  if (trimmed.size() > 12)
+    trimmed = trimmed.substr(0, 12);
+
+  return trimmed + suffix;
+}
 
 static std::string trim(const std::string &value) {
   size_t start = 0;
@@ -56,6 +96,7 @@ static bool parseHostPort(const std::string &input, std::string &host,
   host = trim(host);
   return !host.empty();
 }
+
 } // namespace
 
 JoinGameScreen::JoinGameScreen()
@@ -66,7 +107,29 @@ JoinGameScreen::JoinGameScreen()
 
 JoinGameScreen::~JoinGameScreen() { delete gamesList; }
 
+void JoinGameScreen::applyUsername() {
+  if (!minecraft || !minecraft->user)
+    return;
+
+  std::string name = trim(usernameText);
+  if (name.empty())
+    name = minecraft->options.username;
+
+  if (name.empty())
+    return;
+
+  if (name == minecraft->options.username) {
+    name = makeUniqueUsername(name, minecraft);
+  }
+
+  minecraft->user->name = name;
+  usernameText = name;
+  s_cachedUsername = name;
+}
+
 void JoinGameScreen::connectDirect() {
+  applyUsername();
+
   std::string host;
   int port = kDefaultPort;
   if (!parseHostPort(directConnectText, host, port))
@@ -84,6 +147,7 @@ void JoinGameScreen::connectDirect() {
 
 void JoinGameScreen::buttonClicked(Button *button) {
   if (button->id == bJoin.id) {
+    applyUsername();
     if (isIndexValid(gamesList->selectedItem)) {
       PingedCompatibleServer selectedServer =
           gamesList->copiedServerList[gamesList->selectedItem];
@@ -119,6 +183,9 @@ bool JoinGameScreen::handleBackEvent(bool isDown) {
 
 void JoinGameScreen::removed() {
   directConnectFocused = false;
+  usernameFocused = false;
+  if (!usernameText.empty())
+    s_cachedUsername = trim(usernameText);
   minecraft->platform()->hideKeyboard();
 }
 
@@ -127,20 +194,44 @@ void JoinGameScreen::mouseClicked(int x, int y, int buttonNum) {
   if (buttonNum != MouseAction::ACTION_LEFT)
     return;
 
-  bool inside = (x >= directConnectX && x <= directConnectX + directConnectW &&
-                 y >= directConnectY && y <= directConnectY + directConnectH);
-  if (inside) {
-    if (!directConnectFocused) {
-      directConnectFocused = true;
-      minecraft->platform()->showKeyboard();
-    }
-  } else if (directConnectFocused) {
+  bool insideUsername = (x >= usernameX && x <= usernameX + usernameW &&
+                         y >= usernameY && y <= usernameY + usernameH);
+  bool insideDirect =
+      (x >= directConnectX && x <= directConnectX + directConnectW &&
+       y >= directConnectY && y <= directConnectY + directConnectH);
+
+  if (insideUsername) {
+    usernameFocused = true;
     directConnectFocused = false;
-    minecraft->platform()->hideKeyboard();
+    minecraft->platform()->showKeyboard();
+  } else if (insideDirect) {
+    directConnectFocused = true;
+    usernameFocused = false;
+    minecraft->platform()->showKeyboard();
+  } else {
+    if (directConnectFocused || usernameFocused)
+      minecraft->platform()->hideKeyboard();
+    directConnectFocused = false;
+    usernameFocused = false;
   }
 }
 
 void JoinGameScreen::keyPressed(int eventKey) {
+  if (usernameFocused) {
+    if (eventKey == Keyboard::KEY_BACKSPACE) {
+      if (!usernameText.empty()) {
+        usernameText.erase(usernameText.size() - 1, 1);
+      }
+      return;
+    }
+    if (eventKey == Keyboard::KEY_RETURN) {
+      usernameFocused = false;
+      directConnectFocused = true;
+      minecraft->platform()->showKeyboard();
+      return;
+    }
+  }
+
   if (directConnectFocused) {
     if (eventKey == Keyboard::KEY_BACKSPACE) {
       if (!directConnectText.empty()) {
@@ -161,10 +252,17 @@ void JoinGameScreen::keyPressed(int eventKey) {
 }
 
 void JoinGameScreen::keyboardNewChar(char inputChar) {
-  if (!directConnectFocused)
+  if (inputChar < 32 || inputChar >= 127)
     return;
 
-  if (inputChar >= 32 && inputChar < 127) {
+  if (usernameFocused) {
+    if (usernameText.size() < 16) {
+      usernameText.push_back(inputChar);
+    }
+    return;
+  }
+
+  if (directConnectFocused) {
     if (directConnectText.size() < 128) {
       directConnectText.push_back(inputChar);
     }
@@ -221,6 +319,11 @@ void JoinGameScreen::init() {
 
   directConnectFocused = false;
   directConnectText = "";
+  usernameFocused = false;
+  if (!s_cachedUsername.empty())
+    usernameText = s_cachedUsername;
+  else
+    usernameText = minecraft ? minecraft->options.username : "";
 
   minecraft->raknetInstance->clearServerList();
   gamesList = new AvailableGamesList(minecraft, width, height);
@@ -250,8 +353,13 @@ void JoinGameScreen::setupPositions() {
   directConnectW = width - 40;
   directConnectY = yBase - directConnectH - 8;
 
+  usernameH = 18;
+  usernameX = 20;
+  usernameW = width - 40;
+  usernameY = directConnectY - usernameH - 6;
+
   if (gamesList) {
-    gamesList->setBounds(24, directConnectY - 6);
+    gamesList->setBounds(24, usernameY - 6);
   }
 }
 
@@ -265,6 +373,28 @@ void JoinGameScreen::render(int xm, int ym, float a) {
   if (hasNetwork)
     gamesList->render(xm, ym, a);
   Screen::render(xm, ym, a);
+
+  const int userLeft = usernameX;
+  const int userRight = usernameX + usernameW;
+  const int userTop = usernameY;
+  const int userBottom = usernameY + usernameH;
+
+  fill(userLeft, userTop, userRight, userBottom, 0x80000000);
+  fill(userLeft - 1, userTop - 1, userLeft, userBottom + 1, 0xffa0a0a0);
+  fill(userRight, userTop - 1, userRight + 1, userBottom + 1, 0xffa0a0a0);
+  fill(userLeft, userTop - 1, userRight, userTop, 0xffa0a0a0);
+  fill(userLeft, userBottom, userRight, userBottom + 1, 0xffa0a0a0);
+
+  std::string userText = usernameText;
+  int userColor = 0xffffffff;
+  if (userText.empty()) {
+    userText = "Username";
+    userColor = 0xff909090;
+  } else if (usernameFocused && ((int)(getTimeS() * 2) % 2 == 0)) {
+    userText += "_";
+  }
+
+  drawString(minecraft->font, userText, userLeft + 4, userTop + 4, userColor);
 
   const int fieldLeft = directConnectX;
   const int fieldRight = directConnectX + directConnectW;

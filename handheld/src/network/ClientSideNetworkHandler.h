@@ -126,10 +126,12 @@ private:
   int requestNextChunkPosition;
 
   static const int NumRequestChunks = CHUNK_CACHE_WIDTH * CHUNK_CACHE_WIDTH;
+  static const int ReadyRequestThreshold = 36;
 
   int requestNextChunkIndex;
   IntPair requestNextChunkIndexList[NumRequestChunks];
   bool chunksLoaded[NumRequestChunks];
+  bool sentReadyRequestedChunks;
 };
 
 #endif

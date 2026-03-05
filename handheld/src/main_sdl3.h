@@ -56,7 +56,8 @@ public:
     return BinaryBlob();
   }
 
-  TextureData loadTexture(const std::string &filename_, bool textureFolder) {
+  TextureData loadTexture(const std::string &filename_,
+                          bool textureFolder) override {
     TextureData out;
 
     std::string filename =
@@ -240,16 +241,22 @@ int handleEvents(App *app, AppContext *state) {
     if (SDL_EVENT_MOUSE_BUTTON_DOWN == event.type) {
       bool left = SDL_BUTTON_LEFT == event.button.button;
       char button = left ? 1 : 2;
-      Mouse::feed(button, 1, event.button.x, event.button.y);
-      Multitouch::feed(button, 1, event.button.x, event.button.y, 0);
+      bool relative = SDL_GetWindowRelativeMouseMode(state->window);
+      int mx = relative ? (width / 2) : event.button.x;
+      int my = relative ? (height / 2) : event.button.y;
+      Mouse::feed(button, 1, mx, my);
+      Multitouch::feed(button, 1, mx, my, 0);
       continue;
     }
 
     if (SDL_EVENT_MOUSE_BUTTON_UP == event.type) {
       bool left = SDL_BUTTON_LEFT == event.button.button;
       char button = left ? 1 : 2;
-      Mouse::feed(button, 0, event.button.x, event.button.y);
-      Multitouch::feed(button, 0, event.button.x, event.button.y, 0);
+      bool relative = SDL_GetWindowRelativeMouseMode(state->window);
+      int mx = relative ? (width / 2) : event.button.x;
+      int my = relative ? (height / 2) : event.button.y;
+      Mouse::feed(button, 0, mx, my);
+      Multitouch::feed(button, 0, mx, my, 0);
       continue;
     }
 
@@ -262,13 +269,15 @@ int handleEvents(App *app, AppContext *state) {
       bool relative = SDL_GetWindowRelativeMouseMode(state->window);
       if (relative) {
         relAccumX += event.motion.xrel;
-        relAccumY += event.motion.yrel;
+        relAccumY += -event.motion.yrel;
 
         int dx = (int)std::lround(relAccumX);
         int dy = (int)std::lround(relAccumY);
 
         if (dx != 0 || dy != 0) {
-          Mouse::feed(0, 0, 0, 0, (short)dx, (short)dy);
+          int mx = width / 2;
+          int my = height / 2;
+          Mouse::feed(0, 0, mx, my, (short)dx, (short)dy);
           relAccumX -= dx;
           relAccumY -= dy;
         }
@@ -276,7 +285,7 @@ int handleEvents(App *app, AppContext *state) {
         float x = event.motion.x;
         float y = event.motion.y;
         Multitouch::feed(0, 0, x, y, 0);
-        Mouse::feed(0, 0, x, y, event.motion.xrel, event.motion.yrel);
+        Mouse::feed(0, 0, x, y, event.motion.xrel, -event.motion.yrel);
       }
       continue;
     }

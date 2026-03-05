@@ -96,7 +96,7 @@ bool ProgressScreen::isInGameScreen() { return false; }
 void ProgressScreen::tick() {
   // After 10 seconds of not connecting -> write an error message and go back
   if (++ticks == 10 * SharedConstants::TicksPerSecond &&
-      minecraft->getProgressStatusId() == 0) {
+      minecraft->getProgressStatusId() == 0 && !minecraft->isOnline()) {
     minecraft->setScreen(
         new DisconnectionScreen("Could not connect to server. Try again."));
   }

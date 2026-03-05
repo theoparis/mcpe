@@ -77,7 +77,7 @@ int main(int numArguments, char *pszArgs[]) {
   while (!app->wantToQuit()) {
     app->update();
     // pthread_yield();
-    sleep(20);
+    sleepMs(20);
   }
   ((MAIN_CLASS *)g_app)->level->saveLevelData();
   delete app;

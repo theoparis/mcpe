@@ -8,6 +8,8 @@ public:
 
   static const char *Graphics_Fancy;
   static const char *Graphics_LowQuality;
+  static const char *Graphics_ViewDistance;
+  static const char *Graphics_AmbientOcclusion;
 
   static const char *Controls_Sensitivity;
   static const char *Controls_InvertMouse;

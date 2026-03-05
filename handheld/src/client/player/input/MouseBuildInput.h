@@ -7,14 +7,22 @@
 /** A Mouse Build input */
 class MouseBuildInput : public IBuildInput {
 public:
-  MouseBuildInput() : buildDelayTicks(10), buildHoldTicks(0) {}
+  MouseBuildInput()
+      : buildDelayTicks(10), buildHoldTicks(0), removeHoldTicks(0) {}
 
   virtual bool tickBuild(Player *p, BuildActionIntention *bai) {
     if (Mouse::getButtonState(MouseAction::ACTION_LEFT) != 0) {
-      *bai = BuildActionIntention(BuildActionIntention::BAI_REMOVE |
-                                  BuildActionIntention::BAI_ATTACK);
+      if (removeHoldTicks == 0) {
+        *bai = BuildActionIntention(BuildActionIntention::BAI_FIRSTREMOVE |
+                                    BuildActionIntention::BAI_ATTACK);
+      } else {
+        *bai = BuildActionIntention(BuildActionIntention::BAI_REMOVE |
+                                    BuildActionIntention::BAI_ATTACK);
+      }
+      ++removeHoldTicks;
       return true;
     }
+    removeHoldTicks = 0;
     if (Mouse::getButtonState(MouseAction::ACTION_RIGHT) != 0) {
       if (buildHoldTicks >= buildDelayTicks)
         buildHoldTicks = 0;
@@ -31,6 +39,7 @@ public:
 
 private:
   int buildHoldTicks;
+  int removeHoldTicks;
   int buildDelayTicks;
 };
 

@@ -120,8 +120,6 @@ void Screen::keyPressed(int eventKey) {
     minecraft->setScreen(NULL);
     // minecraft->grabMouse();
   }
-  if (minecraft->useTouchscreen())
-    return;
 
   // "Tabbing" the buttons (walking with keys)
   const int tabButtonCount = tabButtons.size();
@@ -147,9 +145,6 @@ void Screen::keyPressed(int eventKey) {
 }
 
 void Screen::updateTabButtonSelection() {
-  if (minecraft->useTouchscreen())
-    return;
-
   for (unsigned int i = 0; i < tabButtons.size(); ++i)
     tabButtons[i]->selected = (i == tabButtonIndex);
 }

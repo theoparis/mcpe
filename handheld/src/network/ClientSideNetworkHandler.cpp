@@ -37,7 +37,8 @@ static MultiPlayerLevel *mpcast(Level *l) { return (MultiPlayerLevel *)l; }
 ClientSideNetworkHandler::ClientSideNetworkHandler(
     Minecraft *minecraft, IRakNetInstance *raknetInstance)
     : minecraft(minecraft), raknetInstance(raknetInstance), level(NULL),
-      requestNextChunkPosition(0), requestNextChunkIndex(0) {
+      requestNextChunkPosition(0), requestNextChunkIndex(0),
+      sentReadyRequestedChunks(false) {
   rakPeer = raknetInstance->getPeer();
 }
 
@@ -55,6 +56,13 @@ void ClientSideNetworkHandler::requestNextChunk() {
     // CHUNK_CACHE_WIDTH, requestNextChunkPosition / CHUNK_CACHE_WIDTH));
     requestNextChunkIndex++;
     requestNextChunkPosition++;
+
+    if (!sentReadyRequestedChunks &&
+        requestNextChunkPosition >= ReadyRequestThreshold) {
+      ReadyPacket readyPacket(ReadyPacket::READY_REQUESTEDCHUNKS);
+      raknetInstance->send(readyPacket);
+      sentReadyRequestedChunks = true;
+    }
   }
 }
 
@@ -264,12 +272,34 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     // we skip this since we will get this player anyway when we request level
     return;
   }
-  LOGI("AddPlayerPacket\n");
+  if (minecraft->player) {
+    if (packet->entityId == minecraft->player->entityId)
+      return;
+    if (packet->owner == minecraft->player->owner)
+      return;
+  }
+  if (raknetInstance && raknetInstance->isMyLocalGuid(packet->owner))
+    return;
 
-  Player *player = new RemotePlayer(level, minecraft->isCreativeMode());
-  minecraft->gameMode->initAbilities(player->abilities);
-  player->entityId = packet->entityId;
-  level->addEntity(player);
+  LOGI("AddPlayerPacket id=%d owner=%s name=%s\n", packet->entityId,
+       packet->owner.ToString(), packet->name.C_String());
+
+  bool created = false;
+  Player *player = findPlayer(level, packet->entityId, &packet->owner);
+  if (player == minecraft->player)
+    return;
+
+  if (!player) {
+    player = new RemotePlayer(level, minecraft->isCreativeMode());
+    minecraft->gameMode->initAbilities(player->abilities);
+    player->entityId = packet->entityId;
+    mpcast(level)->putEntity(packet->entityId, player);
+    created = true;
+  } else {
+    player->entityId = packet->entityId;
+    if (mpcast(level)->getEntity(packet->entityId) != player)
+      mpcast(level)->putEntity(packet->entityId, player);
+  }
 
   player->moveTo(packet->x, packet->y, packet->z, packet->yRot, packet->xRot);
   player->name = packet->name.C_String();
@@ -285,11 +315,13 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   player->inventory->moveToSelectedSlot(slot, true);
   // player->resetPos();
 
-  std::string message = packet->name.C_String();
-  message += " joined the game";
+  if (created) {
+    std::string message = packet->name.C_String();
+    message += " joined the game";
 #ifndef STANDALONE_SERVER
-  minecraft->gui.addMessage(message);
+    minecraft->gui.addMessage(message);
 #endif
+  }
 }
 
 void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
@@ -387,10 +419,14 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
 
   // printf("MovePlayerPacket\n");
   Entity *entity = level->getEntity(packet->entityId);
-  if (entity) {
-    entity->lerpTo(packet->x, packet->y, packet->z, packet->yRot, packet->xRot,
-                   3);
+  if (!entity) {
+    LOGW("MovePlayerPacket missing entity id=%d\n", packet->entityId);
+    return;
   }
+  LOGI("MovePlayerPacket id=%d pos=%f,%f,%f rot=%f,%f\n", packet->entityId,
+       packet->x, packet->y, packet->z, packet->yRot, packet->xRot);
+  entity->lerpTo(packet->x, packet->y, packet->z, packet->yRot, packet->xRot,
+                 3);
 }
 
 void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
@@ -595,8 +631,11 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   chunksLoaded[packet->x * CHUNK_CACHE_WIDTH + packet->z] = true;
 
   if (areAllChunksLoaded()) {
-    ReadyPacket packet(ReadyPacket::READY_REQUESTEDCHUNKS);
-    raknetInstance->send(packet);
+    if (!sentReadyRequestedChunks) {
+      ReadyPacket packet(ReadyPacket::READY_REQUESTEDCHUNKS);
+      raknetInstance->send(packet);
+      sentReadyRequestedChunks = true;
+    }
 
     for (unsigned int i = 0; i < bufferedBlockUpdates.size(); i++) {
       const SBufferedBlockUpdate &update = bufferedBlockUpdates[i];
@@ -937,4 +976,5 @@ void ClientSideNetworkHandler::clearChunksLoaded() {
     requestNextChunkIndexList[i].y = i % CHUNK_WIDTH;
     chunksLoaded[i] = false;
   }
+  sentReadyRequestedChunks = false;
 }

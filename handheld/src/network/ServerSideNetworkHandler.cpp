@@ -51,7 +51,7 @@ void ServerSideNetworkHandler::tileChanged(int x, int y, int z) {
 
 Packet *ServerSideNetworkHandler::getAddPacketFromEntity(Entity *entity) {
   if (entity->isMob() && !entity->isPlayer()) { //@fix: This code is duplicated.
-                                                //See if it can be unified.
+                                                // See if it can be unified.
     if (minecraft->player) {
       // I guess this should always be true, but it crashed somewhere in this
       // function once and I only see this one as a potential problem
@@ -103,7 +103,7 @@ void ServerSideNetworkHandler::entityAdded(Entity *e) {
 
 void ServerSideNetworkHandler::entityRemoved(Entity *e) {
   if (!e->isPlayer()) { //@fix: This code MIGHT be duplicated. See if it can be
-                        //unified.
+                        // unified.
     RemoveEntityPacket packet(e->entityId);
     redistributePacket(&packet, rakPeer->GetMyGUID());
   } else { // Is a player
@@ -261,6 +261,8 @@ void ServerSideNetworkHandler::onReady_ClientGeneration(
   const PlayerList &players = level->players;
   for (unsigned int i = 0; i < players.size(); i++) {
     Player *player = players[i];
+    if (player->owner == source)
+      continue;
 
     bitStream.Reset();
     AddPlayerPacket(player).write(&bitStream);
@@ -275,6 +277,10 @@ void ServerSideNetworkHandler::onReady_ClientGeneration(
     }
   }
 
+  if (Player *existingPlayer = findPlayer(level, &source)) {
+    existingPlayer->reallyRemoveIfPlayer = true;
+    level->removeEntity(existingPlayer);
+  }
   level->addEntity(newPlayer);
 #ifndef STANDALONE_SERVER
   minecraft->gui.addMessage(newPlayer->name + " joined the game");
@@ -328,6 +334,26 @@ void ServerSideNetworkHandler::onReady_RequestedChunks(
       delete packet;
     }
   }
+
+  // Resync existing players now that the client has chunks
+  const PlayerList &players = level->players;
+  for (unsigned int i = 0; i < players.size(); i++) {
+    Player *player = players[i];
+    if (player->owner == source)
+      continue;
+
+    bitStream.Reset();
+    AddPlayerPacket(player).write(&bitStream);
+    rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
+                  false);
+
+    if (player->getArmorTypeHash()) {
+      bitStream.Reset();
+      PlayerArmorEquipmentPacket(player).write(&bitStream);
+      rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
+                    false);
+    }
+  }
 }
 
 void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
@@ -335,7 +361,9 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   if (!level)
     return;
 
-  // LOGI("MovePlayerPacket\n");
+  LOGI("MovePlayerPacket id=%d src=%s pos=%f,%f,%f rot=%f,%f\n",
+       packet->entityId, source.ToString(), packet->x, packet->y, packet->z,
+       packet->yRot, packet->xRot);
   if (Entity *entity = level->getEntity(packet->entityId)) {
     entity->xd = entity->yd = entity->zd = 0;
     entity->lerpTo(packet->x, packet->y, packet->z, packet->yRot, packet->xRot,

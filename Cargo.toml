@@ -1,0 +1,35 @@
+[package]
+name = "mcpe"
+version = "0.1.0"
+edition = "2024"
+license = "MPL-2.0"
+
+[dependencies]
+bytemuck = { version = "1.25.0", features = ["derive"] }
+log = "0.4"
+env_logger = "0.11"
+pollster = "0.4.0"
+png = "0.18"
+wgpu = { version = "28.0.0", default-features = false, features = [
+    "vulkan",
+    "wgsl",
+    "vulkan-portability",
+    "metal",
+] }
+winit = { version = "0.30.13", default-features = false, features = [
+    "wayland",
+    "rwh_06",
+] }
+glam = { version = "0.32.0", features = ["bytemuck"] }
+glyphon = "0.10.0"
+lz4_flex = { git = "https://github.com/yujincheng08/lz4_flex", branch = "hc", features = [
+    "hc",
+] }
+rayon = "1.10"
+noise-functions = "0.8.2"
+
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.dev.package.mcpe]
+opt-level = 1

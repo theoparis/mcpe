@@ -7,3 +7,5 @@
 /result
 /result-*
 .DS_Store
+target/
+/worlds

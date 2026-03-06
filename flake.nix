@@ -32,24 +32,27 @@
               rec {
                 nativeBuildInputs = [
                   pkg-config
-                  cmakeMinimal
-                  ninja
+                  rustfmt
+                  clippy
+                  cargo
+                  rustc
+                  rust-analyzer
                   nixfmt
-                  nixd
-                  llvmPackages.clang-tools
+                  nil
+                ]
+                ++ lib.optionals stdenv.hostPlatform.isLinux [
+                  wild
                 ];
 
                 buildInputs = [
-                  libGL
-                  angle
-                  libpng
-                  openal
-                  sdl3
+                  vulkan-loader
                 ]
                 ++ lib.optionals stdenv.hostPlatform.isLinux [
                   wayland
+                  libxkbcommon
                 ];
 
+                RUST_SRC_PATH = rustPlatform.rustLibSrc;
                 LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
                 DYLD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;
               };

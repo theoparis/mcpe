@@ -27,7 +27,8 @@
           default =
             mkShell.override
               {
-                stdenv = llvmPackages.stdenv;
+                stdenv =
+                  if stdenv.hostPlatform.isLinux then useWildLinker llvmPackages.stdenv else llvmPackages.stdenv;
               }
               rec {
                 nativeBuildInputs = [
@@ -39,13 +40,11 @@
                   rust-analyzer
                   nixfmt
                   nil
-                ]
-                ++ lib.optionals stdenv.hostPlatform.isLinux [
-                  wild
                 ];
 
                 buildInputs = [
                   vulkan-loader
+                  stdenv.cc.cc.lib
                 ]
                 ++ lib.optionals stdenv.hostPlatform.isLinux [
                   wayland

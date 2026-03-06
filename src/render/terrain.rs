@@ -2,6 +2,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::mpsc;
 
 use bytemuck::{Pod, Zeroable};
+use glam::{Mat4, Vec3, Vec4};
 use rayon::prelude::*;
 use wgpu::util::DeviceExt;
 
@@ -28,7 +29,8 @@ impl BlockPtrSlice {
 
 struct ChunkMesh {
     vertex_buffer: wgpu::Buffer,
-    num_vertices: u32,
+    index_buffer: wgpu::Buffer,
+    num_indices: u32,
     lod: bool,
 }
 
@@ -54,6 +56,7 @@ struct MeshResult {
     lod: bool,
     generation: u64,
     vertices: Vec<TerrainVertex>,
+    indices: Vec<u32>,
 }
 
 /// Vertex format for terrain rendering: position + texcoord + tile_origin + tile_size + color.
@@ -94,6 +97,68 @@ pub struct TerrainUniforms {
     pub fog_start: f32,
     pub fog_end: f32,
     pub _padding: [f32; 2],
+}
+
+#[derive(Copy, Clone)]
+struct Plane {
+    normal: Vec3,
+    d: f32,
+}
+
+impl Plane {
+    fn from_vec4(v: Vec4) -> Self {
+        Self {
+            normal: Vec3::new(v.x, v.y, v.z),
+            d: v.w,
+        }
+    }
+
+    fn normalize(self) -> Self {
+        let inv_len = 1.0 / self.normal.length();
+        Self {
+            normal: self.normal * inv_len,
+            d: self.d * inv_len,
+        }
+    }
+
+    fn distance(&self, p: Vec3) -> f32 {
+        self.normal.dot(p) + self.d
+    }
+}
+
+struct Frustum {
+    planes: [Plane; 6],
+}
+
+impl Frustum {
+    fn from_view_proj(view_proj: [[f32; 4]; 4]) -> Self {
+        let m = Mat4::from_cols_array_2d(&view_proj);
+        let mt = m.transpose();
+        let planes = [
+            Plane::from_vec4(mt.w_axis + mt.x_axis),
+            Plane::from_vec4(mt.w_axis - mt.x_axis),
+            Plane::from_vec4(mt.w_axis + mt.y_axis),
+            Plane::from_vec4(mt.w_axis - mt.y_axis),
+            Plane::from_vec4(mt.w_axis + mt.z_axis),
+            Plane::from_vec4(mt.w_axis - mt.z_axis),
+        ];
+        let planes = planes.map(|p| p.normalize());
+        Self { planes }
+    }
+
+    fn intersects_aabb(&self, min: Vec3, max: Vec3) -> bool {
+        for plane in &self.planes {
+            let p = Vec3::new(
+                if plane.normal.x >= 0.0 { max.x } else { min.x },
+                if plane.normal.y >= 0.0 { max.y } else { min.y },
+                if plane.normal.z >= 0.0 { max.z } else { min.z },
+            );
+            if plane.distance(p) < 0.0 {
+                return false;
+            }
+        }
+        true
+    }
 }
 
 /// The terrain atlas size (terrain.png is a 16×16 grid of tiles).
@@ -394,12 +459,13 @@ impl TerrainRenderer {
 
         let ptrs = BlockPtrSlice(block_ptrs);
 
-        let mesh_builds: Vec<((i32, i32), bool, Vec<TerrainVertex>)> = locked
+        let mesh_builds: Vec<((i32, i32), bool, Vec<TerrainVertex>, Vec<u32>)> = locked
             .par_iter()
             .enumerate()
             .map(|(ci, lc)| {
                 let chunk = lc.chunk;
                 let mut chunk_vertices = Vec::new();
+                let mut chunk_indices = Vec::new();
 
                 let dx = (chunk.cx as f32 + 0.5) * CHUNK_WIDTH as f32 - cam_pos[0];
                 let dz = (chunk.cz as f32 + 0.5) * CHUNK_WIDTH as f32 - cam_pos[2];
@@ -408,13 +474,19 @@ impl TerrainRenderer {
                 let use_lod = dist_sq > lod_dist_sq && chunk.lod_blocks.is_some();
                 if use_lod {
                     if let Some(ref lod) = chunk.lod_blocks {
-                        Self::push_lod_vertices_into(&mut chunk_vertices, chunk.cx, chunk.cz, lod);
+                        Self::push_lod_vertices_into(
+                            &mut chunk_vertices,
+                            &mut chunk_indices,
+                            chunk.cx,
+                            chunk.cz,
+                            lod,
+                        );
                     }
-                    return ((chunk.cx, chunk.cz), true, chunk_vertices);
+                    return ((chunk.cx, chunk.cz), true, chunk_vertices, chunk_indices);
                 }
 
                 let Some(blocks) = ptrs.get(ci) else {
-                    return ((chunk.cx, chunk.cz), false, chunk_vertices);
+                    return ((chunk.cx, chunk.cz), false, chunk_vertices, chunk_indices);
                 };
 
                 // Resolve neighbor block slices (zero-cost after this).
@@ -427,16 +499,16 @@ impl TerrainRenderer {
                 let w_blocks = get_neighbor(-1, 0);
                 let e_blocks = get_neighbor(1, 0);
 
-                let mesh = Self::build_full_mesh_from_blocks(
+                let (vertices, indices) = Self::build_full_mesh_from_blocks(
                     chunk.cx, chunk.cz, blocks, n_blocks, s_blocks, w_blocks, e_blocks,
                 );
-                ((chunk.cx, chunk.cz), false, mesh)
+                ((chunk.cx, chunk.cz), false, vertices, indices)
             })
             .collect();
 
         self.chunk_meshes.clear();
-        for (key, lod, vertices) in mesh_builds {
-            if vertices.is_empty() {
+        for (key, lod, vertices, indices) in mesh_builds {
+            if vertices.is_empty() || indices.is_empty() {
                 continue;
             }
             let vertex_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
@@ -444,11 +516,17 @@ impl TerrainRenderer {
                 contents: bytemuck::cast_slice(&vertices),
                 usage: wgpu::BufferUsages::VERTEX,
             });
+            let index_buffer = device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("terrain ib"),
+                contents: bytemuck::cast_slice(&indices),
+                usage: wgpu::BufferUsages::INDEX,
+            });
             self.chunk_meshes.insert(
                 key,
                 ChunkMesh {
                     vertex_buffer,
-                    num_vertices: vertices.len() as u32,
+                    index_buffer,
+                    num_indices: indices.len() as u32,
                     lod,
                 },
             );
@@ -609,7 +687,7 @@ impl TerrainRenderer {
 
     fn spawn_mesh_job(job: MeshJob, tx: mpsc::Sender<MeshResult>) {
         rayon::spawn(move || {
-            let (key, lod, generation, vertices) = match job {
+            let (key, lod, generation, vertices, indices) = match job {
                 MeshJob::Full {
                     key,
                     generation,
@@ -619,7 +697,7 @@ impl TerrainRenderer {
                     w_blocks,
                     e_blocks,
                 } => {
-                    let vertices = TerrainRenderer::build_full_mesh_from_blocks(
+                    let (vertices, indices) = TerrainRenderer::build_full_mesh_from_blocks(
                         key.0,
                         key.1,
                         &blocks,
@@ -628,15 +706,15 @@ impl TerrainRenderer {
                         w_blocks.as_deref(),
                         e_blocks.as_deref(),
                     );
-                    (key, false, generation, vertices)
+                    (key, false, generation, vertices, indices)
                 }
                 MeshJob::Lod {
                     key,
                     generation,
                     lod,
                 } => {
-                    let vertices = TerrainRenderer::build_lod_mesh(key.0, key.1, &lod);
-                    (key, true, generation, vertices)
+                    let (vertices, indices) = TerrainRenderer::build_lod_mesh(key.0, key.1, &lod);
+                    (key, true, generation, vertices, indices)
                 }
             };
             let _ = tx.send(MeshResult {
@@ -644,6 +722,7 @@ impl TerrainRenderer {
                 lod,
                 generation,
                 vertices,
+                indices,
             });
         });
     }
@@ -658,7 +737,7 @@ impl TerrainRenderer {
                         continue;
                     }
 
-                    if result.vertices.is_empty() {
+                    if result.vertices.is_empty() || result.indices.is_empty() {
                         self.chunk_meshes.remove(&result.key);
                         continue;
                     }
@@ -669,12 +748,19 @@ impl TerrainRenderer {
                             contents: bytemuck::cast_slice(&result.vertices),
                             usage: wgpu::BufferUsages::VERTEX,
                         });
+                    let index_buffer =
+                        device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                            label: Some("terrain ib"),
+                            contents: bytemuck::cast_slice(&result.indices),
+                            usage: wgpu::BufferUsages::INDEX,
+                        });
 
                     self.chunk_meshes.insert(
                         result.key,
                         ChunkMesh {
                             vertex_buffer,
-                            num_vertices: result.vertices.len() as u32,
+                            index_buffer,
+                            num_indices: result.indices.len() as u32,
                             lod: result.lod,
                         },
                     );
@@ -733,13 +819,64 @@ impl TerrainRenderer {
         s_blocks: Option<&BlockArray>,
         w_blocks: Option<&BlockArray>,
         e_blocks: Option<&BlockArray>,
-    ) -> Vec<TerrainVertex> {
+    ) -> (Vec<TerrainVertex>, Vec<u32>) {
         let mut chunk_vertices = Vec::new();
+        let mut chunk_indices = Vec::new();
         let ox = (cx * CHUNK_WIDTH as i32) as f32;
         let oz = (cz * CHUNK_WIDTH as i32) as f32;
 
+        #[derive(Copy, Clone, PartialEq)]
+        struct FaceKey {
+            tex: u32,
+            color: [f32; 3],
+        }
+
+        #[derive(Copy, Clone)]
+        enum FaceDir {
+            PosX,
+            NegX,
+            PosY,
+            NegY,
+            PosZ,
+            NegZ,
+        }
+
         #[inline(always)]
-        fn neighbor_block(
+        fn should_render_face(block: Block, neighbor: Block) -> bool {
+            neighbor.is_transparent() && (neighbor != block || block == Block::Glass)
+        }
+
+        #[inline(always)]
+        fn face_key_for(block: Block, dir: FaceDir) -> FaceKey {
+            let (top_tex, side_tex, bottom_tex) = block.texture_indices();
+            let grass_tint = [0.44, 0.74, 0.31];
+            let white = [1.0_f32, 1.0, 1.0];
+            let top_tint = match block {
+                Block::Grass | Block::OakLeaves => grass_tint,
+                _ => white,
+            };
+            let side_tint = match block {
+                Block::OakLeaves => grass_tint,
+                _ => white,
+            };
+
+            let (tex, tint, light) = match dir {
+                FaceDir::PosY => (top_tex, top_tint, 1.0),
+                FaceDir::NegY => (bottom_tex, white, 0.5),
+                FaceDir::PosZ => (side_tex, side_tint, 0.7),
+                FaceDir::NegZ => (side_tex, side_tint, 0.7),
+                FaceDir::NegX => (side_tex, side_tint, 0.6),
+                FaceDir::PosX => (side_tex, side_tint, 0.8),
+            };
+
+            FaceKey {
+                tex,
+                color: apply_light(tint, light),
+            }
+        }
+
+        #[inline(always)]
+        fn block_at(
             blocks: &BlockArray,
             x: i32,
             y: i32,
@@ -784,224 +921,461 @@ impl TerrainRenderer {
             Block::Air
         }
 
-        for y in 0..CHUNK_HEIGHT {
-            for z in 0..CHUNK_WIDTH {
-                for x in 0..CHUNK_WIDTH {
-                    let block_id = blocks[Chunk::index(x, y, z)];
-                    if block_id == 0 {
+        fn emit_mask_quads<F: FnMut(usize, usize, usize, usize, FaceKey)>(
+            mask: &mut [Option<FaceKey>],
+            u_len: usize,
+            v_len: usize,
+            mut emit: F,
+        ) {
+            let mut v = 0;
+            while v < v_len {
+                let mut u = 0;
+                while u < u_len {
+                    let idx = u + v * u_len;
+                    let Some(key) = mask[idx] else {
+                        u += 1;
                         continue;
-                    }
-                    let block = Block::from_id(block_id);
-
-                    let wx = ox + x as f32;
-                    let wy = y as f32;
-                    let wz = oz + z as f32;
-
-                    let (top_tex, side_tex, bottom_tex) = block.texture_indices();
-                    let grass_tint = [0.44, 0.74, 0.31];
-                    let white = [1.0_f32, 1.0, 1.0];
-                    let top_tint = match block {
-                        Block::Grass | Block::OakLeaves => grass_tint,
-                        _ => white,
-                    };
-                    let side_tint = match block {
-                        Block::OakLeaves => grass_tint,
-                        _ => white,
                     };
 
-                    let ix = x as i32;
-                    let iy = y as i32;
-                    let iz = z as i32;
-
-                    let top_neighbor = neighbor_block(
-                        blocks,
-                        ix,
-                        iy + 1,
-                        iz,
-                        n_blocks,
-                        s_blocks,
-                        w_blocks,
-                        e_blocks,
-                    );
-                    if (top_neighbor.is_transparent()
-                        && (top_neighbor != block || block == Block::Glass))
-                        || iy + 1 >= CHUNK_HEIGHT as i32
-                    {
-                        let (u0, v0, u1, v1) = tile_uv(top_tex);
-                        let c = apply_light(top_tint, 1.0);
-                        push_quad(
-                            &mut chunk_vertices,
-                            [wx, wy + 1.0, wz],
-                            [wx + 1.0, wy + 1.0, wz],
-                            [wx + 1.0, wy + 1.0, wz + 1.0],
-                            [wx, wy + 1.0, wz + 1.0],
-                            u0,
-                            v0,
-                            u1,
-                            v1,
-                            c,
-                        );
+                    let mut w = 1;
+                    while u + w < u_len && mask[idx + w] == Some(key) {
+                        w += 1;
                     }
 
-                    let bottom_neighbor = neighbor_block(
-                        blocks,
-                        ix,
-                        iy - 1,
-                        iz,
-                        n_blocks,
-                        s_blocks,
-                        w_blocks,
-                        e_blocks,
-                    );
-                    if iy > 0
-                        && bottom_neighbor.is_transparent()
-                        && (bottom_neighbor != block || block == Block::Glass)
-                    {
-                        let (u0, v0, u1, v1) = tile_uv(bottom_tex);
-                        let c = apply_light(white, 0.5);
-                        push_quad(
-                            &mut chunk_vertices,
-                            [wx, wy, wz + 1.0],
-                            [wx + 1.0, wy, wz + 1.0],
-                            [wx + 1.0, wy, wz],
-                            [wx, wy, wz],
-                            u0,
-                            v0,
-                            u1,
-                            v1,
-                            c,
-                        );
+                    let mut h = 1;
+                    'height: while v + h < v_len {
+                        for du in 0..w {
+                            if mask[u + du + (v + h) * u_len] != Some(key) {
+                                break 'height;
+                            }
+                        }
+                        h += 1;
                     }
 
-                    let north_neighbor = neighbor_block(
-                        blocks,
-                        ix,
-                        iy,
-                        iz - 1,
-                        n_blocks,
-                        s_blocks,
-                        w_blocks,
-                        e_blocks,
-                    );
-                    if north_neighbor.is_transparent()
-                        && (north_neighbor != block || block == Block::Glass)
-                    {
-                        let (u0, v0, u1, v1) = tile_uv(side_tex);
-                        let c = apply_light(side_tint, 0.7);
-                        push_quad(
-                            &mut chunk_vertices,
-                            [wx + 1.0, wy + 1.0, wz],
-                            [wx, wy + 1.0, wz],
-                            [wx, wy, wz],
-                            [wx + 1.0, wy, wz],
-                            u0,
-                            v0,
-                            u1,
-                            v1,
-                            c,
-                        );
+                    emit(u, v, w, h, key);
+
+                    for dv in 0..h {
+                        for du in 0..w {
+                            mask[u + du + (v + dv) * u_len] = None;
+                        }
                     }
 
-                    let south_neighbor = neighbor_block(
-                        blocks,
-                        ix,
-                        iy,
-                        iz + 1,
-                        n_blocks,
-                        s_blocks,
-                        w_blocks,
-                        e_blocks,
-                    );
-                    if south_neighbor.is_transparent()
-                        && (south_neighbor != block || block == Block::Glass)
-                    {
-                        let (u0, v0, u1, v1) = tile_uv(side_tex);
-                        let c = apply_light(side_tint, 0.7);
-                        push_quad(
-                            &mut chunk_vertices,
-                            [wx, wy + 1.0, wz + 1.0],
-                            [wx + 1.0, wy + 1.0, wz + 1.0],
-                            [wx + 1.0, wy, wz + 1.0],
-                            [wx, wy, wz + 1.0],
-                            u0,
-                            v0,
-                            u1,
-                            v1,
-                            c,
-                        );
-                    }
+                    u += w;
+                }
+                v += 1;
+            }
+        }
 
-                    let west_neighbor = neighbor_block(
-                        blocks,
-                        ix - 1,
-                        iy,
-                        iz,
-                        n_blocks,
-                        s_blocks,
-                        w_blocks,
-                        e_blocks,
-                    );
-                    if west_neighbor.is_transparent()
-                        && (west_neighbor != block || block == Block::Glass)
-                    {
-                        let (u0, v0, u1, v1) = tile_uv(side_tex);
-                        let c = apply_light(side_tint, 0.6);
-                        push_quad(
-                            &mut chunk_vertices,
-                            [wx, wy + 1.0, wz],
-                            [wx, wy + 1.0, wz + 1.0],
-                            [wx, wy, wz + 1.0],
-                            [wx, wy, wz],
-                            u0,
-                            v0,
-                            u1,
-                            v1,
-                            c,
-                        );
-                    }
+        fn emit_face_quad(
+            vertices: &mut Vec<TerrainVertex>,
+            indices: &mut Vec<u32>,
+            dir: FaceDir,
+            ox: f32,
+            oz: f32,
+            x: i32,
+            y: i32,
+            z: i32,
+            w: i32,
+            h: i32,
+            key: FaceKey,
+        ) {
+            let (u0, v0, u1, v1) = tile_uv(key.tex);
+            let tile_w = u1 - u0;
+            let tile_h = v1 - v0;
 
-                    let east_neighbor = neighbor_block(
-                        blocks,
-                        ix + 1,
-                        iy,
-                        iz,
-                        n_blocks,
-                        s_blocks,
-                        w_blocks,
-                        e_blocks,
+            match dir {
+                FaceDir::PosY => {
+                    let x0 = ox + x as f32;
+                    let z0 = oz + z as f32;
+                    let x1 = x0 + w as f32;
+                    let z1 = z0 + h as f32;
+                    let y1 = y as f32 + 1.0;
+                    push_quad(
+                        vertices,
+                        indices,
+                        [x0, y1, z0],
+                        [x1, y1, z0],
+                        [x1, y1, z1],
+                        [x0, y1, z1],
+                        u0,
+                        v0,
+                        u0 + tile_w * w as f32,
+                        v0 + tile_h * h as f32,
+                        key.color,
                     );
-                    if east_neighbor.is_transparent()
-                        && (east_neighbor != block || block == Block::Glass)
-                    {
-                        let (u0, v0, u1, v1) = tile_uv(side_tex);
-                        let c = apply_light(side_tint, 0.8);
-                        push_quad(
-                            &mut chunk_vertices,
-                            [wx + 1.0, wy + 1.0, wz + 1.0],
-                            [wx + 1.0, wy + 1.0, wz],
-                            [wx + 1.0, wy, wz],
-                            [wx + 1.0, wy, wz + 1.0],
-                            u0,
-                            v0,
-                            u1,
-                            v1,
-                            c,
-                        );
-                    }
+                }
+                FaceDir::NegY => {
+                    let x0 = ox + x as f32;
+                    let z0 = oz + z as f32;
+                    let x1 = x0 + w as f32;
+                    let z1 = z0 + h as f32;
+                    let y0 = y as f32;
+                    push_quad(
+                        vertices,
+                        indices,
+                        [x0, y0, z1],
+                        [x1, y0, z1],
+                        [x1, y0, z0],
+                        [x0, y0, z0],
+                        u0,
+                        v0,
+                        u0 + tile_w * w as f32,
+                        v0 + tile_h * h as f32,
+                        key.color,
+                    );
+                }
+                FaceDir::NegZ => {
+                    let x0 = ox + x as f32;
+                    let x1 = x0 + w as f32;
+                    let y0 = y as f32;
+                    let y1 = y0 + h as f32;
+                    let z0 = oz + z as f32;
+                    push_quad(
+                        vertices,
+                        indices,
+                        [x1, y1, z0],
+                        [x0, y1, z0],
+                        [x0, y0, z0],
+                        [x1, y0, z0],
+                        u0,
+                        v0,
+                        u0 + tile_w * w as f32,
+                        v0 + tile_h * h as f32,
+                        key.color,
+                    );
+                }
+                FaceDir::PosZ => {
+                    let x0 = ox + x as f32;
+                    let x1 = x0 + w as f32;
+                    let y0 = y as f32;
+                    let y1 = y0 + h as f32;
+                    let z1 = oz + z as f32 + 1.0;
+                    push_quad(
+                        vertices,
+                        indices,
+                        [x0, y1, z1],
+                        [x1, y1, z1],
+                        [x1, y0, z1],
+                        [x0, y0, z1],
+                        u0,
+                        v0,
+                        u0 + tile_w * w as f32,
+                        v0 + tile_h * h as f32,
+                        key.color,
+                    );
+                }
+                FaceDir::NegX => {
+                    let x0 = ox + x as f32;
+                    let z0 = oz + z as f32;
+                    let z1 = z0 + w as f32;
+                    let y0 = y as f32;
+                    let y1 = y0 + h as f32;
+                    push_quad(
+                        vertices,
+                        indices,
+                        [x0, y1, z0],
+                        [x0, y1, z1],
+                        [x0, y0, z1],
+                        [x0, y0, z0],
+                        u0,
+                        v0,
+                        u0 + tile_w * w as f32,
+                        v0 + tile_h * h as f32,
+                        key.color,
+                    );
+                }
+                FaceDir::PosX => {
+                    let x1 = ox + x as f32 + 1.0;
+                    let z0 = oz + z as f32;
+                    let z1 = z0 + w as f32;
+                    let y0 = y as f32;
+                    let y1 = y0 + h as f32;
+                    push_quad(
+                        vertices,
+                        indices,
+                        [x1, y1, z1],
+                        [x1, y1, z0],
+                        [x1, y0, z0],
+                        [x1, y0, z1],
+                        u0,
+                        v0,
+                        u0 + tile_w * w as f32,
+                        v0 + tile_h * h as f32,
+                        key.color,
+                    );
                 }
             }
         }
 
-        chunk_vertices
+        let cw = CHUNK_WIDTH as i32;
+        let ch = CHUNK_HEIGHT as i32;
+
+        // +X faces
+        {
+            let u_len = CHUNK_WIDTH as usize;
+            let v_len = CHUNK_HEIGHT as usize;
+            let mut mask = vec![None; u_len * v_len];
+
+            for x in 0..cw {
+                mask.fill(None);
+                for y in 0..ch {
+                    for z in 0..cw {
+                        let block =
+                            block_at(blocks, x, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if block.is_air() {
+                            continue;
+                        }
+                        let neighbor =
+                            block_at(blocks, x + 1, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if should_render_face(block, neighbor) {
+                            mask[z as usize + y as usize * u_len] =
+                                Some(face_key_for(block, FaceDir::PosX));
+                        }
+                    }
+                }
+                emit_mask_quads(&mut mask, u_len, v_len, |u, v, w, h, key| {
+                    emit_face_quad(
+                        &mut chunk_vertices,
+                        &mut chunk_indices,
+                        FaceDir::PosX,
+                        ox,
+                        oz,
+                        x,
+                        v as i32,
+                        u as i32,
+                        w as i32,
+                        h as i32,
+                        key,
+                    );
+                });
+            }
+        }
+
+        // -X faces
+        {
+            let u_len = CHUNK_WIDTH as usize;
+            let v_len = CHUNK_HEIGHT as usize;
+            let mut mask = vec![None; u_len * v_len];
+
+            for x in 0..cw {
+                mask.fill(None);
+                for y in 0..ch {
+                    for z in 0..cw {
+                        let block =
+                            block_at(blocks, x, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if block.is_air() {
+                            continue;
+                        }
+                        let neighbor =
+                            block_at(blocks, x - 1, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if should_render_face(block, neighbor) {
+                            mask[z as usize + y as usize * u_len] =
+                                Some(face_key_for(block, FaceDir::NegX));
+                        }
+                    }
+                }
+                emit_mask_quads(&mut mask, u_len, v_len, |u, v, w, h, key| {
+                    emit_face_quad(
+                        &mut chunk_vertices,
+                        &mut chunk_indices,
+                        FaceDir::NegX,
+                        ox,
+                        oz,
+                        x,
+                        v as i32,
+                        u as i32,
+                        w as i32,
+                        h as i32,
+                        key,
+                    );
+                });
+            }
+        }
+
+        // +Z faces
+        {
+            let u_len = CHUNK_WIDTH as usize;
+            let v_len = CHUNK_HEIGHT as usize;
+            let mut mask = vec![None; u_len * v_len];
+
+            for z in 0..cw {
+                mask.fill(None);
+                for y in 0..ch {
+                    for x in 0..cw {
+                        let block =
+                            block_at(blocks, x, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if block.is_air() {
+                            continue;
+                        }
+                        let neighbor =
+                            block_at(blocks, x, y, z + 1, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if should_render_face(block, neighbor) {
+                            mask[x as usize + y as usize * u_len] =
+                                Some(face_key_for(block, FaceDir::PosZ));
+                        }
+                    }
+                }
+                emit_mask_quads(&mut mask, u_len, v_len, |u, v, w, h, key| {
+                    emit_face_quad(
+                        &mut chunk_vertices,
+                        &mut chunk_indices,
+                        FaceDir::PosZ,
+                        ox,
+                        oz,
+                        u as i32,
+                        v as i32,
+                        z,
+                        w as i32,
+                        h as i32,
+                        key,
+                    );
+                });
+            }
+        }
+
+        // -Z faces
+        {
+            let u_len = CHUNK_WIDTH as usize;
+            let v_len = CHUNK_HEIGHT as usize;
+            let mut mask = vec![None; u_len * v_len];
+
+            for z in 0..cw {
+                mask.fill(None);
+                for y in 0..ch {
+                    for x in 0..cw {
+                        let block =
+                            block_at(blocks, x, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if block.is_air() {
+                            continue;
+                        }
+                        let neighbor =
+                            block_at(blocks, x, y, z - 1, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if should_render_face(block, neighbor) {
+                            mask[x as usize + y as usize * u_len] =
+                                Some(face_key_for(block, FaceDir::NegZ));
+                        }
+                    }
+                }
+                emit_mask_quads(&mut mask, u_len, v_len, |u, v, w, h, key| {
+                    emit_face_quad(
+                        &mut chunk_vertices,
+                        &mut chunk_indices,
+                        FaceDir::NegZ,
+                        ox,
+                        oz,
+                        u as i32,
+                        v as i32,
+                        z,
+                        w as i32,
+                        h as i32,
+                        key,
+                    );
+                });
+            }
+        }
+
+        // +Y faces (top)
+        {
+            let u_len = CHUNK_WIDTH as usize;
+            let v_len = CHUNK_WIDTH as usize;
+            let mut mask = vec![None; u_len * v_len];
+
+            for y in 0..ch {
+                mask.fill(None);
+                for z in 0..cw {
+                    for x in 0..cw {
+                        let block =
+                            block_at(blocks, x, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if block.is_air() {
+                            continue;
+                        }
+                        let neighbor =
+                            block_at(blocks, x, y + 1, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if should_render_face(block, neighbor) {
+                            mask[x as usize + z as usize * u_len] =
+                                Some(face_key_for(block, FaceDir::PosY));
+                        }
+                    }
+                }
+                emit_mask_quads(&mut mask, u_len, v_len, |u, v, w, h, key| {
+                    emit_face_quad(
+                        &mut chunk_vertices,
+                        &mut chunk_indices,
+                        FaceDir::PosY,
+                        ox,
+                        oz,
+                        u as i32,
+                        y,
+                        v as i32,
+                        w as i32,
+                        h as i32,
+                        key,
+                    );
+                });
+            }
+        }
+
+        // -Y faces (bottom)
+        {
+            let u_len = CHUNK_WIDTH as usize;
+            let v_len = CHUNK_WIDTH as usize;
+            let mut mask = vec![None; u_len * v_len];
+
+            for y in 0..ch {
+                mask.fill(None);
+                if y == 0 {
+                    continue;
+                }
+                for z in 0..cw {
+                    for x in 0..cw {
+                        let block =
+                            block_at(blocks, x, y, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if block.is_air() {
+                            continue;
+                        }
+                        let neighbor =
+                            block_at(blocks, x, y - 1, z, n_blocks, s_blocks, w_blocks, e_blocks);
+                        if should_render_face(block, neighbor) {
+                            mask[x as usize + z as usize * u_len] =
+                                Some(face_key_for(block, FaceDir::NegY));
+                        }
+                    }
+                }
+                emit_mask_quads(&mut mask, u_len, v_len, |u, v, w, h, key| {
+                    emit_face_quad(
+                        &mut chunk_vertices,
+                        &mut chunk_indices,
+                        FaceDir::NegY,
+                        ox,
+                        oz,
+                        u as i32,
+                        y,
+                        v as i32,
+                        w as i32,
+                        h as i32,
+                        key,
+                    );
+                });
+            }
+        }
+
+        (chunk_vertices, chunk_indices)
     }
 
-    fn build_lod_mesh(cx: i32, cz: i32, lod: &LodArray) -> Vec<TerrainVertex> {
+    fn build_lod_mesh(cx: i32, cz: i32, lod: &LodArray) -> (Vec<TerrainVertex>, Vec<u32>) {
         let mut vertices = Vec::new();
-        Self::push_lod_vertices_into(&mut vertices, cx, cz, lod);
-        vertices
+        let mut indices = Vec::new();
+        Self::push_lod_vertices_into(&mut vertices, &mut indices, cx, cz, lod);
+        (vertices, indices)
     }
 
-    fn push_lod_vertices_into(vertices: &mut Vec<TerrainVertex>, cx: i32, cz: i32, lod: &LodArray) {
+    fn push_lod_vertices_into(
+        vertices: &mut Vec<TerrainVertex>,
+        indices: &mut Vec<u32>,
+        cx: i32,
+        cz: i32,
+        lod: &LodArray,
+    ) {
         let ox = (cx * CHUNK_WIDTH as i32) as f32;
         let oz = (cz * CHUNK_WIDTH as i32) as f32;
 
@@ -1045,6 +1419,7 @@ impl TerrainRenderer {
                         let tile_h = v1 - v0;
                         push_quad(
                             vertices,
+                            indices,
                             [wx, wy + 1.0, wz],
                             [wx + 4.0, wy + 1.0, wz],
                             [wx + 4.0, wy + 1.0, wz + 4.0],
@@ -1071,6 +1446,7 @@ impl TerrainRenderer {
                         let tile_h = v1 - v0;
                         push_quad(
                             vertices,
+                            indices,
                             [wx, wy, wz + 4.0],
                             [wx + 4.0, wy, wz + 4.0],
                             [wx + 4.0, wy, wz],
@@ -1096,6 +1472,7 @@ impl TerrainRenderer {
                         let tile_w = u1 - u0;
                         push_quad(
                             vertices,
+                            indices,
                             [wx + 4.0, wy + 1.0, wz],
                             [wx, wy + 1.0, wz],
                             [wx, wy, wz],
@@ -1121,6 +1498,7 @@ impl TerrainRenderer {
                         let tile_w = u1 - u0;
                         push_quad(
                             vertices,
+                            indices,
                             [wx, wy + 1.0, wz + 4.0],
                             [wx + 4.0, wy + 1.0, wz + 4.0],
                             [wx + 4.0, wy, wz + 4.0],
@@ -1146,6 +1524,7 @@ impl TerrainRenderer {
                         let tile_w = u1 - u0;
                         push_quad(
                             vertices,
+                            indices,
                             [wx, wy + 1.0, wz],
                             [wx, wy + 1.0, wz + 4.0],
                             [wx, wy, wz + 4.0],
@@ -1171,6 +1550,7 @@ impl TerrainRenderer {
                         let tile_w = u1 - u0;
                         push_quad(
                             vertices,
+                            indices,
                             [wx + 4.0, wy + 1.0, wz + 4.0],
                             [wx + 4.0, wy + 1.0, wz],
                             [wx + 4.0, wy, wz],
@@ -1228,9 +1608,24 @@ impl TerrainRenderer {
         pass.set_bind_group(0, &self.uniform_bind_group, &[]);
         pass.set_bind_group(1, &self.texture_bind_group, &[]);
 
-        for mesh in self.chunk_meshes.values() {
+        let frustum = Frustum::from_view_proj(uniforms.view_proj);
+
+        for (&(cx, cz), mesh) in self.chunk_meshes.iter() {
+            let ox = (cx * CHUNK_WIDTH as i32) as f32;
+            let oz = (cz * CHUNK_WIDTH as i32) as f32;
+            let min = Vec3::new(ox, 0.0, oz);
+            let max = Vec3::new(
+                ox + CHUNK_WIDTH as f32,
+                CHUNK_HEIGHT as f32,
+                oz + CHUNK_WIDTH as f32,
+            );
+            if !frustum.intersects_aabb(min, max) {
+                continue;
+            }
+
             pass.set_vertex_buffer(0, mesh.vertex_buffer.slice(..));
-            pass.draw(0..mesh.num_vertices, 0..1);
+            pass.set_index_buffer(mesh.index_buffer.slice(..), wgpu::IndexFormat::Uint32);
+            pass.draw_indexed(0..mesh.num_indices, 0, 0..1);
         }
     }
 }
@@ -1244,6 +1639,7 @@ fn apply_light(tint: [f32; 3], light: f32) -> [f32; 3] {
 #[allow(clippy::too_many_arguments)]
 fn push_quad(
     vertices: &mut Vec<TerrainVertex>,
+    indices: &mut Vec<u32>,
     p0: [f32; 3],
     p1: [f32; 3],
     p2: [f32; 3],
@@ -1260,6 +1656,8 @@ fn push_quad(
         (v0 * ATLAS_TILES as f32).floor() * inv,
     ];
     let tile_size = [inv, inv];
+
+    let base = vertices.len() as u32;
 
     vertices.push(TerrainVertex {
         position: p0,
@@ -1283,24 +1681,12 @@ fn push_quad(
         color,
     });
     vertices.push(TerrainVertex {
-        position: p0,
-        texcoord: [u0, v0],
-        tile_origin,
-        tile_size,
-        color,
-    });
-    vertices.push(TerrainVertex {
-        position: p2,
-        texcoord: [u1, v1],
-        tile_origin,
-        tile_size,
-        color,
-    });
-    vertices.push(TerrainVertex {
         position: p3,
         texcoord: [u0, v1],
         tile_origin,
         tile_size,
         color,
     });
+
+    indices.extend_from_slice(&[base, base + 1, base + 2, base, base + 2, base + 3]);
 }

@@ -40,6 +40,13 @@
 #include "../LicenseCodes.h"
 #include "../Performance.h"
 #include "../platform/input/Mouse.h"
+#if defined(MCPE_ENABLE_WAYLAND_SIGN) && defined(LINUX)
+#include "../platform/wayland/WaylandSignCompositor.h"
+#include "../world/level/tile/entity/SignTileEntity.h"
+#include "../world/level/tile/entity/TileEntity.h"
+#include <cstdlib>
+#include <linux/input-event-codes.h>
+#endif
 #include "../util/PerfRenderer.h"
 #include "../util/PerfTimer.h"
 #include "player/input/MouseBuildInput.h"
@@ -180,6 +187,14 @@ Minecraft::Minecraft()
   soundEngine = new SoundEngine(20.0f);
   soundEngine->init(this, &options);
 #endif
+#if defined(MCPE_ENABLE_WAYLAND_SIGN) && defined(LINUX)
+  if (WaylandSignCompositor::get().start(512, 256)) {
+    const std::string &displayName =
+        WaylandSignCompositor::get().getDisplayName();
+    if (!displayName.empty())
+      setenv("WAYLAND_DISPLAY", displayName.c_str(), 1);
+  }
+#endif
   // setupPieces();
 }
 
@@ -188,6 +203,9 @@ Minecraft::~Minecraft() {
     generateLevelThread->join();
     generateLevelThread.reset();
   }
+#if defined(MCPE_ENABLE_WAYLAND_SIGN) && defined(LINUX)
+  WaylandSignCompositor::get().stop();
+#endif
   delete netCallback;
   delete raknetInstance;
 #ifndef STANDALONE_SERVER
@@ -633,6 +651,69 @@ void Minecraft::tickInput() {
   bool allowGuiClicks = true;
 #endif
 
+#if defined(MCPE_ENABLE_WAYLAND_SIGN) && defined(LINUX)
+  static bool waylandFocused = false;
+  static float waylandU = 0.5f;
+  static float waylandV = 0.5f;
+  bool isWaylandSignTarget = false;
+  WaylandSignCompositor &wayland = WaylandSignCompositor::get();
+
+  if (wayland.isRunning() && hitResult.isHit() && hitResult.type == TILE &&
+      level) {
+    int x = hitResult.x;
+    int y = hitResult.y;
+    int z = hitResult.z;
+    int tileId = level->getTile(x, y, z);
+    if (tileId == Tile::sign->id || tileId == Tile::wallSign->id) {
+      TileEntity *te = level->getTileEntity(x, y, z);
+      if (TileEntity::isType(te, TileEntityType::Sign)) {
+        SignTileEntity *sign = (SignTileEntity *)te;
+        if (sign->messages[0] == "[wayland]") {
+          isWaylandSignTarget = true;
+          float localX = hitResult.pos.x - x;
+          float localY = hitResult.pos.y - y;
+          float localZ = hitResult.pos.z - z;
+          float u = localX;
+          float v = 1.0f - localY;
+          switch (hitResult.f) {
+          case 2:
+            u = 1.0f - localX;
+            break;
+          case 3:
+            u = localX;
+            break;
+          case 4:
+            u = localZ;
+            break;
+          case 5:
+            u = 1.0f - localZ;
+            break;
+          default:
+            break;
+          }
+          if (u < 0.0f)
+            u = 0.0f;
+          if (u > 1.0f)
+            u = 1.0f;
+          if (v < 0.0f)
+            v = 0.0f;
+          if (v > 1.0f)
+            v = 1.0f;
+          waylandU = u;
+          waylandV = v;
+        }
+      }
+    }
+  }
+
+  if (!isWaylandSignTarget)
+    waylandFocused = false;
+
+  if (wayland.isRunning()) {
+    wayland.setPointerFocus(waylandFocused && isWaylandSignTarget);
+  }
+#endif
+
   TIMER_PUSH("mouse");
   while (Mouse::next()) {
     // if (Mouse::getButtonState(MouseAction::ACTION_LEFT))
@@ -645,6 +726,28 @@ void Minecraft::tickInput() {
     // of messages, we just continue.
 
     const MouseAction &e = Mouse::getEvent();
+
+#if defined(MCPE_ENABLE_WAYLAND_SIGN) && defined(LINUX)
+    if (wayland.isRunning() && (waylandFocused || isWaylandSignTarget)) {
+      if (e.action == MouseAction::ACTION_MOVE) {
+        wayland.sendPointerMotion(waylandU, waylandV);
+      } else if (e.action == MouseAction::ACTION_LEFT ||
+                 e.action == MouseAction::ACTION_RIGHT) {
+        bool pressed = (e.data == MouseAction::DATA_DOWN);
+        if (pressed) {
+          if (isWaylandSignTarget)
+            waylandFocused = true;
+          else
+            waylandFocused = false;
+        }
+        wayland.sendPointerMotion(waylandU, waylandV);
+        uint32_t button =
+            (e.action == MouseAction::ACTION_LEFT) ? BTN_LEFT : BTN_RIGHT;
+        wayland.sendPointerButton(button, pressed);
+      }
+      continue;
+    }
+#endif
 
 #ifdef SDL3 // If clicked when not having focus, get focus @keyboard
     if (!mouseGrabbed) {
@@ -683,6 +786,12 @@ void Minecraft::tickInput() {
   while (Keyboard::next()) {
     int key = Keyboard::getEventKey();
     bool isPressed = (Keyboard::getEventKeyState() == KeyboardAction::KEYDOWN);
+#if defined(MCPE_ENABLE_WAYLAND_SIGN) && defined(LINUX)
+    if (wayland.isRunning() && waylandFocused) {
+      wayland.sendKey(key, isPressed);
+      continue;
+    }
+#endif
     player->setKey(key, isPressed);
 
     if (isPressed) {

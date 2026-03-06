@@ -48,6 +48,7 @@
                 ]
                 ++ lib.optionals stdenv.hostPlatform.isLinux [
                   wayland
+                  libdrm
                 ];
 
                 LD_LIBRARY_PATH = lib.makeLibraryPath buildInputs;

@@ -12,6 +12,7 @@ endif()
 
 option(BUILD_CLIENT "Build the client" ON)
 option(BUILD_WITH_NIX "Build with Nix" OFF)
+option(MCPE_ENABLE_WAYLAND_SIGN "Enable Wayland sign compositor" OFF)
 
 find_package(PkgConfig REQUIRED)
 if(BUILD_CLIENT)
@@ -473,6 +474,85 @@ target_compile_features(
     PRIVATE
     cxx_std_23
 )
+
+if(MCPE_ENABLE_WAYLAND_SIGN AND UNIX AND NOT APPLE)
+    pkg_check_modules(WAYLAND_SERVER REQUIRED IMPORTED_TARGET wayland-server)
+    pkg_check_modules(WAYLAND_PROTOCOLS REQUIRED wayland-protocols)
+    pkg_check_modules(XKBCOMMON REQUIRED IMPORTED_TARGET xkbcommon)
+    pkg_check_modules(LIBDRM REQUIRED IMPORTED_TARGET libdrm)
+    pkg_check_modules(EGL REQUIRED IMPORTED_TARGET egl)
+
+    if (NOT WAYLAND_PROTOCOLS_PKGDATADIR)
+        message(FATAL_ERROR "wayland-protocols pkgdatadir not found")
+    endif()
+
+    find_program(WAYLAND_SCANNER wayland-scanner REQUIRED)
+
+    set(PROTOCOL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/handheld/src/platform/wayland/protocols)
+    set(XDG_SHELL_XML ${WAYLAND_PROTOCOLS_PKGDATADIR}/stable/xdg-shell/xdg-shell.xml)
+    set(LINUX_DMABUF_XML ${WAYLAND_PROTOCOLS_PKGDATADIR}/unstable/linux-dmabuf/linux-dmabuf-unstable-v1.xml)
+
+    add_custom_command(
+        OUTPUT ${PROTOCOL_DIR}/xdg-shell-protocol.h
+        COMMAND ${WAYLAND_SCANNER} server-header ${XDG_SHELL_XML} ${PROTOCOL_DIR}/xdg-shell-protocol.h
+        DEPENDS ${XDG_SHELL_XML}
+        VERBATIM
+    )
+    add_custom_command(
+        OUTPUT ${PROTOCOL_DIR}/xdg-shell-protocol.c
+        COMMAND ${WAYLAND_SCANNER} private-code ${XDG_SHELL_XML} ${PROTOCOL_DIR}/xdg-shell-protocol.c
+        DEPENDS ${XDG_SHELL_XML}
+        VERBATIM
+    )
+    add_custom_command(
+        OUTPUT ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.h
+        COMMAND ${WAYLAND_SCANNER} server-header ${LINUX_DMABUF_XML} ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.h
+        DEPENDS ${LINUX_DMABUF_XML}
+        VERBATIM
+    )
+    add_custom_command(
+        OUTPUT ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.c
+        COMMAND ${WAYLAND_SCANNER} private-code ${LINUX_DMABUF_XML} ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.c
+        DEPENDS ${LINUX_DMABUF_XML}
+        VERBATIM
+    )
+
+    add_custom_target(mcpe_wayland_protocols
+        DEPENDS
+            ${PROTOCOL_DIR}/xdg-shell-protocol.h
+            ${PROTOCOL_DIR}/xdg-shell-protocol.c
+            ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.h
+            ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.c
+    )
+
+    target_sources(mcpe_sdl3
+        PRIVATE
+        "handheld/src/platform/wayland/WaylandSignCompositor.cpp"
+        "handheld/src/platform/wayland/WaylandSignTexture.cpp"
+        ${PROTOCOL_DIR}/xdg-shell-protocol.c
+        ${PROTOCOL_DIR}/linux-dmabuf-unstable-v1-protocol.c
+    )
+
+    add_dependencies(mcpe_sdl3 mcpe_wayland_protocols)
+
+    target_include_directories(mcpe_sdl3
+        PRIVATE
+        ${PROTOCOL_DIR}
+    )
+
+    target_compile_definitions(mcpe_sdl3
+        PRIVATE
+        MCPE_ENABLE_WAYLAND_SIGN
+    )
+
+    target_link_libraries(mcpe_sdl3
+        PRIVATE
+        PkgConfig::WAYLAND_SERVER
+        PkgConfig::XKBCOMMON
+        PkgConfig::LIBDRM
+        PkgConfig::EGL
+    )
+endif()
 
 if (WIN32)
     # list(APPEND SOURCES "handheld/src/AppPlatform_win32.cpp")

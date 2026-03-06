@@ -3,8 +3,8 @@
 
 #include "SoundSystem.h"
 
-#import <OpenAL/al.h>
-#import <OpenAL/alc.h>
+#import <AL/al.h>
+#import <AL/alc.h>
 
 #include <list>
 #include <vector>

@@ -1,9 +1,4 @@
 #include "MinecraftApp.h"
-// #include <EGL/egl.h>
-
-#ifdef SDL3
-// #define NO_STORAGE
-#endif
 
 #include "platform/input/Mouse.h"
 #include "platform/input/Multitouch.h"
@@ -48,18 +43,22 @@
 #include "client/renderer/EntityTileRenderer.h"
 #endif
 
+#if defined(ANDROID) || defined(__APPLE__) || defined(LINUX)
+#include <signal.h>
+#endif
+
 bool MinecraftApp::_hasInitedStatics = false;
 
 #ifndef STANDALONE_SERVER
 MinecraftApp::MinecraftApp(SDL_Window *window)
     : _verbose(true), _window(window), _lastTickMs(0), _frames(0) {
-#if defined(ANDROID) || defined(__APPLE__) || defined(SDL3)
+#if defined(ANDROID) || defined(__APPLE__) || defined(LINUX)
   signal(SIGPIPE, SIG_IGN);
 #endif
 }
 #else
 MinecraftApp::MinecraftApp() : _verbose(true), _lastTickMs(0), _frames(0) {
-#if defined(ANDROID) || defined(__APPLE__) || defined(SDL3)
+#if defined(ANDROID) || defined(__APPLE__) || defined(LINUX)
   signal(SIGPIPE, SIG_IGN);
 #endif
 }

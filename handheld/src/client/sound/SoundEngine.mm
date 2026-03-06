@@ -52,8 +52,8 @@
  
  */
 
-#import <OpenAL/al.h>
-#import <OpenAL/alc.h>
+#import <ALal.h>
+#import <AL/alc.h>
 #import <AudioToolbox/AudioToolbox.h>
 #import <AudioToolbox/ExtendedAudioFile.h>
 

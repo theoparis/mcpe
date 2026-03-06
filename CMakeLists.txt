@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 4.0)
 
 project(mcpe C CXX ASM OBJCXX)
 
+include(GNUInstallDirs)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -9,11 +11,16 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 option(BUILD_CLIENT "Build the client" ON)
+option(BUILD_WITH_NIX "Build with Nix" OFF)
 
 find_package(PkgConfig REQUIRED)
-if (BUILD_CLIENT)
+if(BUILD_CLIENT)
     pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
-    pkg_check_modules(GLES1 REQUIRED IMPORTED_TARGET glesv1_cm)
+    if (BUILD_WITH_NIX)
+        pkg_check_modules(ANGLE REQUIRED IMPORTED_TARGET angle)
+    else()
+        pkg_check_modules(GLES1 REQUIRED IMPORTED_TARGET glesv1_cm)
+    endif()
     pkg_check_modules(OpenAL REQUIRED IMPORTED_TARGET openal)
     pkg_check_modules(libpng REQUIRED IMPORTED_TARGET libpng)
 
@@ -403,31 +410,47 @@ add_executable(mcpe_sdl3
 target_link_libraries(
     mcpe_sdl3
     PRIVATE
-    PkgConfig::GLES1
     PkgConfig::SDL3
     PkgConfig::OpenAL
     PkgConfig::libpng
 )
+if(BUILD_WITH_NIX)
+    target_link_libraries(
+        mcpe_sdl3
+        PUBLIC
+        PkgConfig::ANGLE
+    )
+else()
+    target_link_libraries(
+        mcpe_sdl3
+        PUBLIC
+        PkgConfig::GLES1
+    )
+endif()
 target_compile_definitions(
     mcpe_sdl3
     PUBLIC
     SDL3
 )
-target_link_libraries(
-    mcpe_sdl3
-    PUBLIC
-    PkgConfig::GLES1
-    PkgConfig::SDL3
-    PkgConfig::libpng
-    PkgConfig::OpenAL
-)
 target_link_directories(
     mcpe_sdl3
     PUBLIC
-    ${GLES1_LIBRARY_DIRS}
     ${OpenAL_LIBRARY_DIRS}
     ${libpng_LIBRARY_DIRS}
 )
+if(BUILD_WITH_NIX)
+    target_link_directories(
+        mcpe_sdl3
+        PUBLIC
+        ${ANGLE_LIBRARY_DIRS}
+    )
+else()
+    target_link_directories(
+        mcpe_sdl3
+        PUBLIC
+        ${GLES1_LIBRARY_DIRS}
+    )
+endif()
 target_compile_definitions(
     mcpe_sdl3
     PUBLIC
@@ -435,6 +458,7 @@ target_compile_definitions(
     OPENGL_ES
     GL_GLES_PROTOTYPES=1
     GL_GLEXT_PROTOTYPES=1
+    MCPE_INSTALL_DATA_DIR="${CMAKE_INSTALL_FULL_DATADIR}/mcpe"
 )
 target_include_directories(
     mcpe_sdl3
@@ -468,6 +492,7 @@ elseif (APPLE)
     )
 endif()
 
+install(DIRECTORY data/ DESTINATION ${CMAKE_INSTALL_DATADIR}/mcpe)
 
 install(TARGETS mcpe_sdl3 mcpe_dedicated
     EXPORT mcpeTargets

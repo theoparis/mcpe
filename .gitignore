@@ -4,3 +4,6 @@
 *.pyc
 /games/
 /level
+/result
+/result-*
+.DS_Store

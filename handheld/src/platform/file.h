@@ -3,6 +3,7 @@
 
 #include <cstdio>
 #include <string>
+#include <cstring>
 
 bool DeleteDirectory(const std::string &, bool noRecycleBin = true);
 
@@ -52,7 +53,7 @@ bool DeleteDirectory(const std::string &d, bool noRecycleBin /*true*/) {
 
   struct dirent *entry;
   while ((entry = readdir(dir))) {
-    if (strcmp(".", entry->d_name) && strcmp("..", entry->d_name)) {
+    if (std::strcmp(".", entry->d_name) && std::strcmp("..", entry->d_name)) {
       snprintf(fullPath, CMAX, "%s/%s", folder, entry->d_name);
       remove(fullPath);
     }

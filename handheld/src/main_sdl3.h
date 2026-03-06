@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <png.h>
+#include <vector>
 
 #include <SDL3/SDL.h>
 #include <unistd.h>
@@ -30,10 +31,45 @@ class AppPlatform_SDL3 : public AppPlatform {
 public:
   bool isTouchscreen() { return false; }
 
+  std::vector<std::string> getDataSearchPaths() const {
+    std::vector<std::string> paths;
+    auto addPath = [&](const std::string &p) {
+      if (p.empty())
+        return;
+      std::string out = p;
+      while (!out.empty() && out.back() == '/')
+        out.pop_back();
+      if (!out.empty())
+        paths.push_back(out);
+    };
+
+    if (const char *env = std::getenv("MCPE_DATA_DIR"))
+      addPath(env);
+
+#ifdef MCPE_INSTALL_DATA_DIR
+    addPath(MCPE_INSTALL_DATA_DIR);
+#endif
+
+    addPath("/usr/share/mcpe");
+    addPath("/usr/local/share/mcpe");
+
+    const char *base = SDL_GetBasePath();
+    if (base) {
+      std::string basePath(base);
+      addPath(basePath + "/data");
+      addPath(basePath + "/../share/mcpe");
+    }
+
+    addPath("data");
+    addPath("../data");
+    addPath("../../data");
+    return paths;
+  }
+
   BinaryBlob readAssetFile(const std::string &filename) override {
-    const char *prefixes[] = {"data/", "../data/", "../../data/"};
-    for (size_t i = 0; i < sizeof(prefixes) / sizeof(prefixes[0]); ++i) {
-      std::string path = std::string(prefixes[i]) + filename;
+    const auto roots = getDataSearchPaths();
+    for (const auto &root : roots) {
+      std::string path = root + "/" + filename;
       std::ifstream file(path.c_str(), std::ios::binary);
       if (!file)
         continue;
@@ -60,11 +96,14 @@ public:
                           bool textureFolder) override {
     TextureData out;
 
-    std::string filename =
-        textureFolder ? "data/images/" + filename_ : filename_;
-    std::ifstream source(filename.c_str(), std::ios::binary);
+    std::string rel = textureFolder ? "images/" + filename_ : filename_;
+    const auto roots = getDataSearchPaths();
+    for (const auto &root : roots) {
+      std::string filename = root + "/" + rel;
+      std::ifstream source(filename.c_str(), std::ios::binary);
+      if (!source)
+        continue;
 
-    if (source) {
       png_structp pngPtr =
           png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
 
@@ -103,10 +142,10 @@ public:
       source.close();
 
       return out;
-    } else {
-      LOGE("Couldn't find file: %s\n", filename.c_str());
-      return out;
     }
+
+    LOGE("Couldn't find file: %s\n", rel.c_str());
+    return out;
   }
 };
 

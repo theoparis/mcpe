@@ -16,11 +16,7 @@ option(BUILD_WITH_NIX "Build with Nix" OFF)
 find_package(PkgConfig REQUIRED)
 if(BUILD_CLIENT)
     pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
-    if (BUILD_WITH_NIX)
-        pkg_check_modules(ANGLE REQUIRED IMPORTED_TARGET angle)
-    else()
-        pkg_check_modules(GLES1 REQUIRED IMPORTED_TARGET glesv1_cm)
-    endif()
+    pkg_check_modules(GLES1 REQUIRED IMPORTED_TARGET glesv2)
     pkg_check_modules(OpenAL REQUIRED IMPORTED_TARGET openal)
     pkg_check_modules(libpng REQUIRED IMPORTED_TARGET libpng)
 
@@ -423,7 +419,7 @@ else()
     target_link_libraries(
         mcpe_sdl3
         PUBLIC
-        PkgConfig::GLES1
+        GLESv1_CM
     )
 endif()
 target_compile_definitions(

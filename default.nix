@@ -41,7 +41,6 @@ stdenv.mkDerivation {
 
   cmakeFlags = [
     "-GNinja"
-    "-DBUILD_WITH_NIX=ON"
   ];
 
   postInstall = ''

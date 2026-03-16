@@ -41,7 +41,6 @@
 
                 buildInputs = [
                   libGL
-                  angle
                   libpng
                   openal
                   sdl3

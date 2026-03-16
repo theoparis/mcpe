@@ -4,6 +4,7 @@
 *.pyc
 /games/
 /level
+options.txt
 /result
 /result-*
 .DS_Store

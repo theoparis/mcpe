@@ -38,19 +38,18 @@ public:
   /// \param[in] socketFamily IP version: For IPV4, use AF_INET (default). For
   /// IPV6, use AF_INET6. To autoselect, use AF_UNSPEC.
   bool Start(unsigned short port, unsigned short maxIncomingConnections,
-             int threadPriority = -99999,
-             unsigned short socketFamily = AF_INET);
+      int threadPriority = -99999, unsigned short socketFamily = AF_INET);
 
   /// Stops the TCP server
   void Stop(void);
 
   /// Sends a byte stream
   void Send(const char *data, unsigned length,
-            const SystemAddress &systemAddress, bool broadcast);
+      const SystemAddress &systemAddress, bool broadcast);
 
   // Sends a concatenated list of byte streams
   bool SendList(const char **data, const int *lengths, const int numParameters,
-                const SystemAddress &systemAddress, bool broadcast);
+      const SystemAddress &systemAddress, bool broadcast);
 
   /// Returns data received
   Packet *Receive(void);

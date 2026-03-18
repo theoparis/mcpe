@@ -22,7 +22,7 @@ LightUpdate::LightUpdate(const LightUpdate &t)
       z1(t.z1) {}
 
 LightUpdate::LightUpdate(const LightLayer &_layer, int _x0, int _y0, int _z0,
-                         int _x1, int _y1, int _z1)
+    int _x1, int _y1, int _z1)
     : layer(&_layer), x0(_x0), y0(_y0), z0(_z0), x1(_x1), y1(_y1), z1(_z1) {}
 
 void LightUpdate::operator=(const LightUpdate *t) {
@@ -144,8 +144,8 @@ void LightUpdate::update(Level *level) {
     }
 }
 
-bool LightUpdate::expandToContain(int _x0, int _y0, int _z0, int _x1, int _y1,
-                                  int _z1) {
+bool LightUpdate::expandToContain(
+    int _x0, int _y0, int _z0, int _x1, int _y1, int _z1) {
   if (_x0 >= x0 && _y0 >= y0 && _z0 >= z0 && _x1 <= x1 && _y1 <= y1 &&
       _z1 <= z1)
     return true;

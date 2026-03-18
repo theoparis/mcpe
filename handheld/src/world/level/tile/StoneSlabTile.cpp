@@ -69,9 +69,7 @@ int StoneSlabTile::getTexture(int face) { return getTexture(face, 0); }
 bool StoneSlabTile::isSolidRender() { return fullSize; }
 
 int StoneSlabTile::getPlacedOnFaceDataValue(Level *level, int x, int y, int z,
-                                            int face, float clickX,
-                                            float clickY, float clickZ,
-                                            int itemValue) {
+    int face, float clickX, float clickY, float clickZ, int itemValue) {
   if (fullSize)
     return itemValue;
 
@@ -114,18 +112,18 @@ int StoneSlabTile::getResourceCount(Random *random) {
 bool StoneSlabTile::isCubeShaped() { return fullSize; }
 
 void StoneSlabTile::addAABBs(Level *level, int x, int y, int z, const AABB *box,
-                             std::vector<AABB> &boxes) {
+    std::vector<AABB> &boxes) {
   updateShape(level, x, y, z);
   super::addAABBs(level, x, y, z, box, boxes);
 }
 
 static bool isHalfSlab(int tileId) {
   return tileId ==
-         Tile::stoneSlabHalf->id; // || tileId == Tile::woodSlabHalf->id;
+      Tile::stoneSlabHalf->id; // || tileId == Tile::woodSlabHalf->id;
 }
 
-bool StoneSlabTile::shouldRenderFace(LevelSource *level, int x, int y, int z,
-                                     int face) {
+bool StoneSlabTile::shouldRenderFace(
+    LevelSource *level, int x, int y, int z, int face) {
 
   if (fullSize)
     return super::shouldRenderFace(level, x, y, z, face);
@@ -147,14 +145,14 @@ bool StoneSlabTile::shouldRenderFace(LevelSource *level, int x, int y, int z,
     if (face == Facing::UP && super::shouldRenderFace(level, x, y, z, face))
       return true;
     return !(isHalfSlab(level->getTile(x, y, z)) &&
-             (level->getData(x, y, z) & TOP_SLOT_BIT) != 0);
+        (level->getData(x, y, z) & TOP_SLOT_BIT) != 0);
   } else {
     if (face == Facing::UP)
       return true;
     if (face == Facing::DOWN && super::shouldRenderFace(level, x, y, z, face))
       return true;
     return !(isHalfSlab(level->getTile(x, y, z)) &&
-             (level->getData(x, y, z) & TOP_SLOT_BIT) == 0);
+        (level->getData(x, y, z) & TOP_SLOT_BIT) == 0);
   }
 }
 

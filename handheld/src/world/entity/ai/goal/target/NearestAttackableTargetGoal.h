@@ -12,7 +12,7 @@ class NearestAttackableTargetGoal : public TargetGoal {
 
 public:
   NearestAttackableTargetGoal(Monster *mob, int targetType, float within,
-                              int randomInterval, bool mustSee)
+      int randomInterval, bool mustSee)
       : super(mob, within, mustSee), targetType(targetType),
         randomInterval(randomInterval) {
     setRequiredControlFlags(TargetGoal::TargetFlag);

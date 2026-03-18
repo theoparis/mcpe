@@ -12,8 +12,8 @@
 
 #include "Export.h"
 
-bool RAK_DLL_EXPORT WriteFileWithDirectories(const char *path, char *data,
-                                             unsigned dataLength);
+bool RAK_DLL_EXPORT WriteFileWithDirectories(
+    const char *path, char *data, unsigned dataLength);
 bool RAK_DLL_EXPORT IsSlash(unsigned char c);
 void RAK_DLL_EXPORT AddSlash(char *input);
 void RAK_DLL_EXPORT QuoteIfSpaces(char *str);

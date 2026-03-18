@@ -30,8 +30,8 @@ void IngameBlockSelectionScreen::init() {
   InventoryRows = 1 + (InventorySize - 1) / InventoryCols;
 
   _area = RectangleArea((float)getSlotPosX(0) - 4, (float)getSlotPosY(0) - 4,
-                        (float)getSlotPosX(InventoryCols) + 4,
-                        (float)getSlotPosY(InventoryRows) + 4);
+      (float)getSlotPosX(InventoryCols) + 4,
+      (float)getSlotPosY(InventoryRows) + 4);
 
   ItemInstance *selected = inventory->getSelected();
   if (!selected || selected->isNull()) {
@@ -92,9 +92,9 @@ void IngameBlockSelectionScreen::renderSlots() {
   }
   if (selectedItem >= 0) {
     int x = getSlotPosX(selectedItem % InventoryCols) -
-            4; // width / 2 - 182 / 2 - 1 + () * 20;
+        4; // width / 2 - 182 / 2 - 1 + () * 20;
     int y = getSlotPosY(selectedItem / InventoryCols) -
-            4; // height - 22 * 3 - 1 - (selectedItem / InventoryCols) * 22;
+        4; // height - 22 * 3 - 1 - (selectedItem / InventoryCols) * 22;
     blit(x, y, 0, 22, 24, 22);
   }
 
@@ -102,8 +102,8 @@ void IngameBlockSelectionScreen::renderSlots() {
     int y = getSlotPosY(r);
     for (int i = 0; i < InventoryCols; i++) {
       int x = getSlotPosX(i);
-      renderSlot(r * InventoryCols + i + Inventory::MAX_SELECTION_SIZE, x, y,
-                 0);
+      renderSlot(
+          r * InventoryCols + i + Inventory::MAX_SELECTION_SIZE, x, y, 0);
     }
   }
 
@@ -136,8 +136,8 @@ void IngameBlockSelectionScreen::renderSlot(int slot, int x, int y, float a) {
   if (!item)
     return;
 
-  ItemRenderer::renderGuiItem(minecraft->font, minecraft->textures, item,
-                              (float)x, (float)y, true);
+  ItemRenderer::renderGuiItem(
+      minecraft->font, minecraft->textures, item, (float)x, (float)y, true);
 
   if (minecraft->gameMode->isCreativeType())
     return;
@@ -146,7 +146,7 @@ void IngameBlockSelectionScreen::renderSlot(int slot, int x, int y, float a) {
 
   glPushMatrix2();
   glScalef2(Gui::InvGuiScale + Gui::InvGuiScale,
-            Gui::InvGuiScale + Gui::InvGuiScale, 1);
+      Gui::InvGuiScale + Gui::InvGuiScale, 1);
   const float k = 0.5f * Gui::GuiScale;
   minecraft->gui.renderSlotText(item, k * x, k * y, true, true);
   glPopMatrix2();
@@ -266,12 +266,12 @@ void IngameBlockSelectionScreen::render(int xm, int ym, float a) {
 void IngameBlockSelectionScreen::renderDemoOverlay() {
 #ifdef DEMO_MODE
   fill(getSlotPosX(0) - 3, getSlotPosY(3) - 3, getSlotPosX(InventoryCols) - 3,
-       getSlotPosY(InventoryRows) - 3, 0xa0 << 24);
+      getSlotPosY(InventoryRows) - 3, 0xa0 << 24);
 
   const int centerX = (getSlotPosX(4) + getSlotPosX(5)) / 2;
   const int centerY = (getSlotPosY(3) + getSlotPosY(InventoryRows - 1)) / 2 + 5;
-  drawCenteredString(minecraft->font, demoVersionString, centerX, centerY,
-                     0xffffffff);
+  drawCenteredString(
+      minecraft->font, demoVersionString, centerX, centerY, 0xffffffff);
 #endif /*DEMO_MODE*/
 }
 

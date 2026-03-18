@@ -10,8 +10,8 @@ class SplashParticle : public WaterDropParticle {
   typedef WaterDropParticle super;
 
 public:
-  SplashParticle(Level *level, float x, float y, float z, float xa, float ya,
-                 float za)
+  SplashParticle(
+      Level *level, float x, float y, float z, float xa, float ya, float za)
       : super(level, x, y, z) {
     gravity = 0.04f;
     tex += 1;

@@ -13,9 +13,8 @@
 #include "MoveFolder.h"
 #endif
 
-static const char ILLEGAL_FILE_CHARACTERS[] = {'/',  '\n', '\r', '\t', '\0',
-                                               '\f', '`',  '?',  '*',  '\\',
-                                               '<',  '>',  '|',  '\"', ':'};
+static const char ILLEGAL_FILE_CHARACTERS[] = {'/', '\n', '\r', '\t', '\0',
+    '\f', '`', '?', '*', '\\', '<', '>', '|', '\"', ':'};
 
 ExternalFileLevelStorageSource::ExternalFileLevelStorageSource(
     const std::string &externalPath, const std::string &temporaryFilesPath)
@@ -97,9 +96,8 @@ void ExternalFileLevelStorageSource::getLevelList(LevelSummaryList &dest) {
 #endif
 }
 
-LevelStorage *
-ExternalFileLevelStorageSource::selectLevel(const std::string &levelId,
-                                            bool createPlayerDir) {
+LevelStorage *ExternalFileLevelStorageSource::selectLevel(
+    const std::string &levelId, bool createPlayerDir) {
   return new ExternalFileLevelStorage(levelId, getFullPath(levelId));
 }
 
@@ -113,8 +111,8 @@ void ExternalFileLevelStorageSource::deleteLevel(const std::string &levelId) {
   }
 }
 
-static std::string getUniqueLevelName(const LevelSummaryList &levels,
-                                      const std::string &level) {
+static std::string getUniqueLevelName(
+    const LevelSummaryList &levels, const std::string &level) {
   std::set<std::string> Set;
   for (unsigned int i = 0; i < levels.size(); ++i)
     Set.insert(levels[i].id);
@@ -156,24 +154,24 @@ void ExternalFileLevelStorageSource::renameLevel(
   }
 
   couldRename = couldRename ||
-                rename(_renFULLPATH(oldLevelId_), _renFULLPATH(levelId)) == 0;
-  if (!couldRename)        // != 0: fail
+      rename(_renFULLPATH(oldLevelId_), _renFULLPATH(levelId)) == 0;
+  if (!couldRename) // != 0: fail
     levelId = oldLevelId_; // Try to rewrite the level name anyway
 
   // Rename the level name and write back to file
   LevelData levelData;
   ExternalFileLevelStorage::readLevelData(_renFULLPATH(levelId), levelData);
   levelData.setLevelName(newLevelName_);
-  ExternalFileLevelStorage::saveLevelData(_renFULLPATH(levelId), levelData,
-                                          NULL);
+  ExternalFileLevelStorage::saveLevelData(
+      _renFULLPATH(levelId), levelData, NULL);
 }
 
 std::string ExternalFileLevelStorageSource::getName() {
   return "External File Level Storage";
 }
 
-LevelData *
-ExternalFileLevelStorageSource::getDataTagFor(const std::string &levelId) {
+LevelData *ExternalFileLevelStorageSource::getDataTagFor(
+    const std::string &levelId) {
   return NULL;
 }
 
@@ -182,8 +180,8 @@ bool ExternalFileLevelStorageSource::isNewLevelIdAcceptable(
   return true;
 }
 
-std::string
-ExternalFileLevelStorageSource::getFullPath(const std::string &levelId) {
+std::string ExternalFileLevelStorageSource::getFullPath(
+    const std::string &levelId) {
   return ((TempLevelId == levelId) ? tmpBasePath : basePath) + "/" + levelId;
 }
 

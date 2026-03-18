@@ -3,22 +3,22 @@
 #include "../../level/tile/LevelEvent.h"
 
 const float Sheep::COLOR[][3] = {
-    {1.0f, 1.0f, 1.0f},  // white
+    {1.0f, 1.0f, 1.0f}, // white
     {0.95f, 0.7f, 0.2f}, // orange
     {0.9f, 0.5f, 0.85f}, // magenta
     {0.6f, 0.7f, 0.95f}, // light blue
-    {0.9f, 0.9f, 0.2f},  // yellow
-    {0.5f, 0.8f, 0.1f},  // light green
+    {0.9f, 0.9f, 0.2f}, // yellow
+    {0.5f, 0.8f, 0.1f}, // light green
     {0.95f, 0.7f, 0.8f}, // pink
-    {0.3f, 0.3f, 0.3f},  // gray
-    {0.6f, 0.6f, 0.6f},  // silver
-    {0.3f, 0.6f, 0.7f},  // cyan
-    {0.7f, 0.4f, 0.9f},  // purple
-    {0.2f, 0.4f, 0.8f},  // blue
-    {0.5f, 0.4f, 0.3f},  // brown
-    {0.4f, 0.5f, 0.2f},  // green
-    {0.8f, 0.3f, 0.3f},  // red
-    {0.1f, 0.1f, 0.1f},  // black
+    {0.3f, 0.3f, 0.3f}, // gray
+    {0.6f, 0.6f, 0.6f}, // silver
+    {0.3f, 0.6f, 0.7f}, // cyan
+    {0.7f, 0.4f, 0.9f}, // purple
+    {0.2f, 0.4f, 0.8f}, // blue
+    {0.5f, 0.4f, 0.3f}, // brown
+    {0.4f, 0.5f, 0.2f}, // green
+    {0.8f, 0.3f, 0.3f}, // red
+    {0.1f, 0.1f, 0.1f}, // black
 };
 const int Sheep::NumColors = sizeof(Sheep::COLOR) / sizeof(Sheep *);
 
@@ -114,8 +114,8 @@ int Sheep::getColor() const {
 
 void Sheep::setColor(int color) {
   char current = entityData.getByte(DATA_WOOL_ID);
-  entityData.set(DATA_WOOL_ID, (SynchedEntityData::TypeChar)((current & 0xf0) |
-                                                             (color & 0x0f)));
+  entityData.set(DATA_WOOL_ID,
+      (SynchedEntityData::TypeChar)((current & 0xf0) | (color & 0x0f)));
 }
 
 bool Sheep::isSheared() const {
@@ -127,8 +127,8 @@ void Sheep::setSheared(bool value) {
   if (value) {
     entityData.set(DATA_WOOL_ID, (SynchedEntityData::TypeChar)(current | 0x10));
   } else {
-    entityData.set(DATA_WOOL_ID,
-                   (SynchedEntityData::TypeChar)(current & ~0x10));
+    entityData.set(
+        DATA_WOOL_ID, (SynchedEntityData::TypeChar)(current & ~0x10));
   }
 }
 
@@ -194,7 +194,7 @@ void Sheep::updateAi() {
     zz, 0); ate = true; } else */
     if (level->getTile(xx, yy - 1, zz) == ((Tile *)Tile::grass)->id) {
       level->levelEvent(NULL, LevelEvent::PARTICLES_DESTROY_BLOCK, xx, yy - 1,
-                        zz, ((Tile *)Tile::grass)->id);
+          zz, ((Tile *)Tile::grass)->id);
       level->setTile(xx, yy - 1, zz, Tile::dirt->id);
       ate = true;
     }

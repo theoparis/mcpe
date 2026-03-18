@@ -31,7 +31,3 @@
 #include "main_android.h"
 #endif
 #endif
-
-#ifdef SDL3
-#include "main_sdl3.h"
-#endif

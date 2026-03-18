@@ -17,8 +17,8 @@ class TakeAnimationParticle : public Particle {
 
 public:
   //@todo:itementity
-  TakeAnimationParticle(Level *level, ItemEntity *item, Entity *target,
-                        float yOffs)
+  TakeAnimationParticle(
+      Level *level, ItemEntity *item, Entity *target, float yOffs)
       : super(level, item->x, item->y, item->z, item->xd, item->yd, item->zd),
         e(level, item->x, item->y, item->z, item->item),
         // bx(item->x), by(item->y), bz(item->z),
@@ -27,7 +27,7 @@ public:
   }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     float time = (life + a) / lifeTime;
     time = time * time;
 

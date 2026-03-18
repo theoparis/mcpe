@@ -39,8 +39,8 @@ public:
   void compile(float scale);
 
   void addChild(ModelPart *child);
-  ModelPart &addBox(const std::string &id, float x0, float y0, float z0, int w,
-                    int h, int d);
+  ModelPart &addBox(
+      const std::string &id, float x0, float y0, float z0, int w, int h, int d);
   ModelPart &addBox(float x0, float y0, float z0, int w, int h, int d);
   void addBox(float x0, float y0, float z0, int w, int h, int d, float g);
   void addTexBox(float x0, float y0, float z0, int w, int h, int d, int tex);

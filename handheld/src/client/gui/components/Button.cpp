@@ -54,15 +54,15 @@ int Button::getYImage(bool hovered) {
 void Button::renderFace(Minecraft *mc, int xm, int ym) {
   Font *font = mc->font;
   if (!active) {
-    drawCenteredString(font, msg, x + width / 2, y + (height - 8) / 2,
-                       0xffa0a0a0);
+    drawCenteredString(
+        font, msg, x + width / 2, y + (height - 8) / 2, 0xffa0a0a0);
   } else {
     if (hovered(mc, xm, ym) || selected) {
-      drawCenteredString(font, msg, x + width / 2, y + (height - 8) / 2,
-                         0xffffa0);
+      drawCenteredString(
+          font, msg, x + width / 2, y + (height - 8) / 2, 0xffffa0);
     } else {
-      drawCenteredString(font, msg, x + width / 2, y + (height - 8) / 2,
-                         0xe0e0e0);
+      drawCenteredString(
+          font, msg, x + width / 2, y + (height - 8) / 2, 0xe0e0e0);
     }
   }
 }
@@ -78,7 +78,7 @@ void Button::renderBg(Minecraft *minecraft, int xm, int ym) {
 
   blit(x, y, 0, 46 + yImage * 20, width / 2, height, 0, 20);
   blit(x + width / 2, y, 200 - width / 2, 46 + yImage * 20, width / 2, height,
-       0, 20);
+      0, 20);
 }
 
 bool Button::hovered(Minecraft *minecraft, int xm, int ym) {
@@ -120,10 +120,10 @@ TButton::TButton(int id, int x, int y, int w, int h, const std::string &msg)
     : super(id, x, y, w, h, msg) {}
 
 void TButton::renderBg(Minecraft *minecraft, int xm, int ym) {
-  bool hovered = active && (minecraft->useTouchscreen()
-                                ? (_currentlyDown && xm >= x && ym >= y &&
-                                   xm < x + width && ym < y + height)
-                                : false);
+  bool hovered = active &&
+      (minecraft->useTouchscreen() ? (_currentlyDown && xm >= x && ym >= y &&
+                                         xm < x + width && ym < y + height)
+                                   : false);
 
   minecraft->textures->loadAndBindTexture("gui/touchgui.png");
 

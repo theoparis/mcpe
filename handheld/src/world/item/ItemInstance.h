@@ -43,7 +43,7 @@ public:
   float getDestroySpeed(Tile *tile);
 
   bool useOn(Player *player, Level *level, int x, int y, int z, int face,
-             float clickX, float clickY, float clickZ);
+      float clickX, float clickY, float clickZ);
   ItemInstance *use(Level *level, Player *player);
 
   /**

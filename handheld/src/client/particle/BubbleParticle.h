@@ -12,8 +12,8 @@ class BubbleParticle : public Particle {
   typedef Particle super;
 
 public:
-  BubbleParticle(Level *level, float x, float y, float z, float xa, float ya,
-                 float za)
+  BubbleParticle(
+      Level *level, float x, float y, float z, float xa, float ya, float za)
       : super(level, x, y, z, xa, ya, za) {
     rCol = 1.0f;
     gCol = 1.0f;

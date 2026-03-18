@@ -88,8 +88,8 @@ void HuffmanEncodingTree::GenerateFromFrequencyTable(
   // node, where the new node has the weight the sum of the weight of the left
   // and right child nodes.
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (1) {
     huffmanEncodingTreeNodeList.Beginning();
@@ -173,16 +173,16 @@ void HuffmanEncodingTree::GenerateFromFrequencyTable(
 
 // Pass an array of bytes to array and a preallocated BitStream to receive the
 // output
-void HuffmanEncodingTree::EncodeArray(unsigned char *input, size_t sizeInBytes,
-                                      RakNet::BitStream *output) {
+void HuffmanEncodingTree::EncodeArray(
+    unsigned char *input, size_t sizeInBytes, RakNet::BitStream *output) {
   unsigned counter;
 
   // For each input byte, Write out the corresponding series of 1's and 0's that
   // give the encoded representation
   for (counter = 0; counter < sizeInBytes; counter++) {
     output->WriteBits(encodingTable[input[counter]].encoding,
-                      encodingTable[input[counter]].bitLength,
-                      false); // Data is left aligned
+        encodingTable[input[counter]].bitLength,
+        false); // Data is left aligned
   }
 
   // Byte align the output so the unassigned remaining bits don't equate to some
@@ -196,7 +196,7 @@ void HuffmanEncodingTree::EncodeArray(unsigned char *input, size_t sizeInBytes,
     for (counter = 0; counter < 256; counter++)
       if (encodingTable[counter].bitLength > remainingBits) {
         output->WriteBits(encodingTable[counter].encoding, remainingBits,
-                          false); // Data is left aligned
+            false); // Data is left aligned
         break;
       }
 
@@ -209,9 +209,7 @@ void HuffmanEncodingTree::EncodeArray(unsigned char *input, size_t sizeInBytes,
 }
 
 unsigned HuffmanEncodingTree::DecodeArray(RakNet::BitStream *input,
-                                          BitSize_t sizeInBits,
-                                          size_t maxCharsToWrite,
-                                          unsigned char *output) {
+    BitSize_t sizeInBits, size_t maxCharsToWrite, unsigned char *output) {
   HuffmanEncodingTreeNode *currentNode;
 
   unsigned outputWriteIndex;
@@ -244,9 +242,8 @@ unsigned HuffmanEncodingTree::DecodeArray(RakNet::BitStream *input,
 
 // Pass an array of encoded bytes to array and a preallocated BitStream to
 // receive the output
-void HuffmanEncodingTree::DecodeArray(unsigned char *input,
-                                      BitSize_t sizeInBits,
-                                      RakNet::BitStream *output) {
+void HuffmanEncodingTree::DecodeArray(
+    unsigned char *input, BitSize_t sizeInBits, RakNet::BitStream *output) {
   HuffmanEncodingTreeNode *currentNode;
 
   if (sizeInBits <= 0)
@@ -267,8 +264,8 @@ void HuffmanEncodingTree::DecodeArray(unsigned char *input,
     if (currentNode->left == 0 && currentNode->right == 0) // Leaf
     {
       output->WriteBits(&(currentNode->value), sizeof(char) * 8,
-                        true); // Use WriteBits instead of Write(char) because
-                               // we want to avoid TYPE_CHECKING
+          true); // Use WriteBits instead of Write(char) because
+                 // we want to avoid TYPE_CHECKING
       currentNode = root;
     }
   }
@@ -288,8 +285,8 @@ void HuffmanEncodingTree::InsertNodeIntoSortedList(
 
   unsigned counter = 0;
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (1) {
     if (huffmanEncodingTreeNodeList->Peek()->weight < node->weight)

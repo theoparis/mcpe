@@ -3,14 +3,13 @@
 #include "../components/Button.h"
 
 ConfirmScreen::ConfirmScreen(Screen *parent_, const std::string &title1_,
-                             const std::string &title2_, int id_)
+    const std::string &title2_, int id_)
     : parent(parent_), title1(title1_), title2(title2_), id(id_),
       yesButtonText("Ok"), noButtonText("Cancel"), yesButton(0), noButton(0) {}
 
 ConfirmScreen::ConfirmScreen(Screen *parent_, const std::string &title1_,
-                             const std::string &title2_,
-                             const std::string &yesButton_,
-                             const std::string &noButton_, int id_)
+    const std::string &title2_, const std::string &yesButton_,
+    const std::string &noButton_, int id_)
     : parent(parent_), title1(title1_), title2(title2_), id(id_),
       yesButtonText(yesButton_), noButtonText(noButton_) {}
 

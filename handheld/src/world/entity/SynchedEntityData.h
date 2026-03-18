@@ -175,7 +175,7 @@ public:
       }
     } else {
       LOGE("ERROR: Id %d is not correct type. %d != %d!\n", dataItem->getId(),
-           dataItem->getType(), getTypeId(value));
+          dataItem->getType(), getTypeId(value));
     }
   }
   /// Set flag bit. Flag is bit shifted.

@@ -7,8 +7,8 @@ FallingTile::FallingTile(Level *level) : Entity(level), tile(0), data(0) {
   init();
 }
 
-FallingTile::FallingTile(Level *level, float x, float y, float z, int tile,
-                         int data)
+FallingTile::FallingTile(
+    Level *level, float x, float y, float z, int tile, int data)
     : Entity(level), tile(tile), data(data) {
   init();
 
@@ -78,7 +78,7 @@ void FallingTile::tick() {
         // spawnAtLocation(tile, 1);
       }
     } else if (time > SharedConstants::TicksPerSecond * 5 &&
-               !level->isClientSide) {
+        !level->isClientSide) {
       // spawnAtLocation(tile, 1);
       remove();
     }

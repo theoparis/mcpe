@@ -24,7 +24,7 @@ TileEntityRenderDispatcher *TileEntityRenderDispatcher::getInstance() {
 TileEntityRenderDispatcher::~TileEntityRenderDispatcher() {
   std::set<TileEntityRenderer *> destroyed;
   for (RendererCIterator cit = _renderers.begin(); cit != _renderers.end();
-       ++cit) {
+      ++cit) {
     if (destroyed.find(cit->second) == destroyed.end()) {
       destroyed.insert(cit->second);
       delete cit->second;
@@ -39,8 +39,8 @@ void TileEntityRenderDispatcher::destroy() {
   }
 }
 
-void TileEntityRenderDispatcher::prepare(Level *level, Textures *textures,
-                                         Font *font, Mob *player, float a) {
+void TileEntityRenderDispatcher::prepare(
+    Level *level, Textures *textures, Font *font, Mob *player, float a) {
   if (this->level != level)
     setLevel(level);
 
@@ -68,8 +68,8 @@ void TileEntityRenderDispatcher::render(TileEntity *e, float a) {
   }
 }
 
-void TileEntityRenderDispatcher::render(TileEntity *entity, float x, float y,
-                                        float z, float a) {
+void TileEntityRenderDispatcher::render(
+    TileEntity *entity, float x, float y, float z, float a) {
   TileEntityRenderer *renderer = getRenderer(entity);
   if (renderer != NULL) {
     renderer->render(entity, x, y, z, a);
@@ -80,7 +80,7 @@ void TileEntityRenderDispatcher::setLevel(Level *level) {
   this->level = level;
 
   for (RendererCIterator cit = _renderers.begin(); cit != _renderers.end();
-       ++cit)
+      ++cit)
     if (cit->second != NULL)
       cit->second->onNewLevel(level);
 }
@@ -94,8 +94,8 @@ float TileEntityRenderDispatcher::distanceToSqr(float x, float y, float z) {
 
 Font *TileEntityRenderDispatcher::getFont() { return _font; }
 
-TileEntityRenderer *
-TileEntityRenderDispatcher::getRenderer(TileEntity *entity) {
+TileEntityRenderer *TileEntityRenderDispatcher::getRenderer(
+    TileEntity *entity) {
   TileEntityRendererId rendererId = entity->rendererId;
 
   // if (rendererId == TR_QUERY_RENDERER)
@@ -104,8 +104,8 @@ TileEntityRenderDispatcher::getRenderer(TileEntity *entity) {
   return getRenderer(rendererId);
 }
 
-TileEntityRenderer *
-TileEntityRenderDispatcher::getRenderer(TileEntityRendererId rendererId) {
+TileEntityRenderer *TileEntityRenderDispatcher::getRenderer(
+    TileEntityRendererId rendererId) {
   TileEntityRenderer *renderer = NULL;
   RendererCIterator cit = _renderers.find(rendererId);
   if (cit != _renderers.end()) {
@@ -119,7 +119,7 @@ TileEntityRenderDispatcher::TileEntityRenderDispatcher() {
   _renderers.insert(std::make_pair(TR_SIGN_RENDERER, new SignRenderer()));
 
   for (RendererCIterator cit = _renderers.begin(); cit != _renderers.end();
-       ++cit)
+      ++cit)
     cit->second->init(this);
 }
 

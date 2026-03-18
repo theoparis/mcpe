@@ -14,8 +14,8 @@ void SoundEngine::init(Minecraft *mc, Options *options) {
   this->mc = mc;
   this->options = options;
 
-  if (/*!loaded && */ (options == NULL ||
-                       (options->sound != 0 || options->music != 0))) {
+  if (/*!loaded && */ (
+      options == NULL || (options->sound != 0 || options->music != 0))) {
     loadLibrary();
   }
 
@@ -167,7 +167,7 @@ float SoundEngine::_getVolumeMult(float x, float y, float z) {
 
 #if defined(PRE_ANDROID23)
 void SoundEngine::play(const std::string &name, float x, float y, float z,
-                       float volume, float pitch) {
+    float volume, float pitch) {
   // volume *= (2.0f * _getVolumeMult(x, y, z))
   if ((volume *= options->sound) <= 0)
     return;
@@ -184,7 +184,7 @@ void SoundEngine::playUI(const std::string &name, float volume, float pitch) {
 }
 #elif defined(__APPLE__)
 void SoundEngine::play(const std::string &name, float x, float y, float z,
-                       float volume, float pitch) {
+    float volume, float pitch) {
   if ((volume *= options->sound) <= 0)
     return;
 
@@ -210,11 +210,11 @@ void SoundEngine::playUI(const std::string &name, float volume, float pitch) {
 }
 #elif defined(SDL3)
 void SoundEngine::play(const std::string &name, float x, float y, float z,
-                       float volume, float pitch) {}
+    float volume, float pitch) {}
 void SoundEngine::playUI(const std::string &name, float volume, float pitch) {}
 #else
 void SoundEngine::play(const std::string &name, float x, float y, float z,
-                       float volume, float pitch) {
+    float volume, float pitch) {
   if ((volume *= options->sound) <= 0)
     return;
 

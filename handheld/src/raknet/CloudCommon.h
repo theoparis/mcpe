@@ -111,8 +111,8 @@ struct RAK_DLL_EXPORT CloudQueryRow {
   RakNetGUID clientGUID;
 
   /// \internal
-  void Serialize(bool writeToBitstream, BitStream *bitStream,
-                 CloudAllocator *allocator);
+  void Serialize(
+      bool writeToBitstream, BitStream *bitStream, CloudAllocator *allocator);
 };
 
 /// \ingroup CLOUD_GROUP
@@ -136,16 +136,16 @@ struct RAK_DLL_EXPORT CloudQueryResult {
   bool subscribeToResults;
 
   /// \internal
-  void Serialize(bool writeToBitstream, BitStream *bitStream,
-                 CloudAllocator *allocator);
+  void Serialize(
+      bool writeToBitstream, BitStream *bitStream, CloudAllocator *allocator);
   /// \internal
   void SerializeHeader(bool writeToBitstream, BitStream *bitStream);
   /// \internal
-  void SerializeNumRows(bool writeToBitstream, uint32_t &numRows,
-                        BitStream *bitStream);
+  void SerializeNumRows(
+      bool writeToBitstream, uint32_t &numRows, BitStream *bitStream);
   /// \internal
   void SerializeCloudQueryRows(bool writeToBitstream, uint32_t &numRows,
-                               BitStream *bitStream, CloudAllocator *allocator);
+      BitStream *bitStream, CloudAllocator *allocator);
 };
 
 } // Namespace RakNet

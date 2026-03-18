@@ -4,12 +4,11 @@
 #include "../../phys/Vec3.h"
 #include "../Level.h"
 
-const int StairTile::DEAD_SPACES[8][2] = {{2, 6}, {3, 7}, {2, 3}, {6, 7},
-                                          {0, 4}, {1, 5}, {0, 1}, {4, 5}};
+const int StairTile::DEAD_SPACES[8][2] = {
+    {2, 6}, {3, 7}, {2, 3}, {6, 7}, {0, 4}, {1, 5}, {0, 1}, {4, 5}};
 
 int StairTile::getPlacedOnFaceDataValue(Level *level, int x, int y, int z,
-                                        int face, float clickX, float clickY,
-                                        float clickZ, int itemValue) {
+    int face, float clickX, float clickY, float clickZ, int itemValue) {
   if (face == Facing::DOWN || (face != Facing::UP && clickY > 0.5)) {
     return itemValue | UPSIDEDOWN_BIT;
   }
@@ -48,7 +47,7 @@ bool StairTile::setStepShape(LevelSource *level, int x, int y, int z) {
         south = .5f;
         checkInnerPiece = false;
       } else if (backDir == DIR_SOUTH &&
-                 !isLockAttached(level, x, y, z - 1, data)) {
+          !isLockAttached(level, x, y, z - 1, data)) {
         north = .5f;
         checkInnerPiece = false;
       }
@@ -66,7 +65,7 @@ bool StairTile::setStepShape(LevelSource *level, int x, int y, int z) {
         south = .5f;
         checkInnerPiece = false;
       } else if (backDir == DIR_SOUTH &&
-                 !isLockAttached(level, x, y, z - 1, data)) {
+          !isLockAttached(level, x, y, z - 1, data)) {
         north = .5f;
         checkInnerPiece = false;
       }
@@ -84,7 +83,7 @@ bool StairTile::setStepShape(LevelSource *level, int x, int y, int z) {
         east = .5f;
         checkInnerPiece = false;
       } else if (backDir == DIR_EAST &&
-                 !isLockAttached(level, x - 1, y, z, data)) {
+          !isLockAttached(level, x - 1, y, z, data)) {
         west = .5f;
         checkInnerPiece = false;
       }
@@ -99,7 +98,7 @@ bool StairTile::setStepShape(LevelSource *level, int x, int y, int z) {
         east = .5f;
         checkInnerPiece = false;
       } else if (backDir == DIR_EAST &&
-                 !isLockAttached(level, x - 1, y, z, data)) {
+          !isLockAttached(level, x - 1, y, z, data)) {
         west = .5f;
         checkInnerPiece = false;
       }
@@ -144,7 +143,7 @@ bool StairTile::setInnerPieceShape(LevelSource *level, int x, int y, int z) {
         south = .5f;
         hasInnerPiece = true;
       } else if (frontDir == DIR_SOUTH &&
-                 !isLockAttached(level, x, y, z + 1, data)) {
+          !isLockAttached(level, x, y, z + 1, data)) {
         north = .5f;
         south = 1;
         hasInnerPiece = true;
@@ -163,7 +162,7 @@ bool StairTile::setInnerPieceShape(LevelSource *level, int x, int y, int z) {
         south = .5f;
         hasInnerPiece = true;
       } else if (frontDir == DIR_SOUTH &&
-                 !isLockAttached(level, x, y, z + 1, data)) {
+          !isLockAttached(level, x, y, z + 1, data)) {
         north = .5f;
         south = 1;
         hasInnerPiece = true;
@@ -181,7 +180,7 @@ bool StairTile::setInnerPieceShape(LevelSource *level, int x, int y, int z) {
       if (frontDir == DIR_WEST && !isLockAttached(level, x - 1, y, z, data)) {
         hasInnerPiece = true;
       } else if (frontDir == DIR_EAST &&
-                 !isLockAttached(level, x + 1, y, z, data)) {
+          !isLockAttached(level, x + 1, y, z, data)) {
         west = .5f;
         east = 1.0f;
         hasInnerPiece = true;
@@ -196,7 +195,7 @@ bool StairTile::setInnerPieceShape(LevelSource *level, int x, int y, int z) {
       if (frontDir == DIR_WEST && !isLockAttached(level, x - 1, y, z, data)) {
         hasInnerPiece = true;
       } else if (frontDir == DIR_EAST &&
-                 !isLockAttached(level, x + 1, y, z, data)) {
+          !isLockAttached(level, x + 1, y, z, data)) {
         west = .5f;
         east = 1.0f;
         hasInnerPiece = true;
@@ -210,8 +209,8 @@ bool StairTile::setInnerPieceShape(LevelSource *level, int x, int y, int z) {
   return hasInnerPiece;
 }
 
-HitResult StairTile::clip(Level *level, int xt, int yt, int zt, const Vec3 &a,
-                          const Vec3 &b) {
+HitResult StairTile::clip(
+    Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b) {
   HitResult results[8];
 
   int data = level->getData(xt, yt, zt);

@@ -34,11 +34,11 @@ public:
 
   virtual void scale(Mob *mob, float a);
 
-  virtual void render(Entity *mob_, float x, float y, float z, float rot,
-                      float a);
+  virtual void render(
+      Entity *mob_, float x, float y, float z, float rot, float a);
   virtual void renderName(Mob *mob, float x, float y, float z);
   virtual void renderNameTag(Mob *mob, const std::string &name, float x,
-                             float y, float z, int maxDist);
+      float y, float z, int maxDist);
   virtual void additionalRendering(Mob *mob, float a);
 
   virtual void onGraphicsReset();

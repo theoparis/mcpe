@@ -11,7 +11,7 @@ void OreRecipes::addRecipes(Recipes *r) {
       std::make_pair(Tile::ironBlock, ItemInstance(Item::ironIngot, 9)),
       std::make_pair(Tile::emeraldBlock, ItemInstance(Item::emerald, 9)),
       std::make_pair(Tile::lapisBlock,
-                     ItemInstance(Item::dye_powder, 9, DyePowderItem::BLUE))};
+          ItemInstance(Item::dye_powder, 9, DyePowderItem::BLUE))};
   const int NumItems = sizeof(map) / sizeof(Pair);
 
   for (int i = 0; i < NumItems; i++) {
@@ -19,16 +19,16 @@ void OreRecipes::addRecipes(Recipes *r) {
     ItemInstance to = map[i].second;
 
     r->addShapedRecipe(ItemInstance(from), //
-                       "###",              //
-                       "###",              //
-                       "###",              //
+        "###", //
+        "###", //
+        "###", //
 
-                       definition('#', to));
+        definition('#', to));
 
-    r->addShapedRecipe(to,  //
-                       "#", //
+    r->addShapedRecipe(to, //
+        "#", //
 
-                       definition('#', from));
+        definition('#', from));
   }
 
   // r->addShapedRecipe(ItemInstance(Item::goldIngot), //

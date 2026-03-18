@@ -48,8 +48,8 @@ public:
 
   int getResource(int data, Random *random);
 
-  HitResult clip(Level *level, int xt, int yt, int zt, const Vec3 &a,
-                 const Vec3 &b);
+  HitResult clip(
+      Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b);
 
   int getDir(LevelSource *level, int x, int y, int z);
 

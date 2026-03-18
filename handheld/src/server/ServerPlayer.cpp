@@ -29,8 +29,8 @@ ServerPlayer::ServerPlayer(Minecraft *minecraft, Level *level)
 
 ServerPlayer::~ServerPlayer() { setContainerMenu(NULL); }
 
-void ServerPlayer::stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
-                                  bool saveRespawnPoint) {
+void ServerPlayer::stopSleepInBed(
+    bool forcefulWakeUp, bool updateLevelList, bool saveRespawnPoint) {
   if (isSleeping()) {
     AnimatePacket packet(AnimatePacket::WAKE_UP, this);
     _mc->raknetInstance->send(owner, packet);
@@ -77,8 +77,7 @@ void ServerPlayer::openContainer(ChestTileEntity *container) {
   LOGI("Client is opening a container\n");
   nextContainerCounter();
   ContainerOpenPacket packet(_containerCounter, ContainerType::CONTAINER,
-                             container->getName(),
-                             container->getContainerSize());
+      container->getName(), container->getContainerSize());
   _mc->raknetInstance->send(owner, packet);
   setContainerMenu(new ContainerMenu(container, container->runningId));
 }
@@ -87,7 +86,7 @@ void ServerPlayer::openFurnace(FurnaceTileEntity *furnace) {
   LOGI("Client is opening a furnace\n");
   nextContainerCounter();
   ContainerOpenPacket packet(_containerCounter, ContainerType::FURNACE,
-                             furnace->getName(), furnace->getContainerSize());
+      furnace->getName(), furnace->getContainerSize());
   _mc->raknetInstance->send(owner, packet);
   setContainerMenu(new FurnaceMenu(furnace));
 }
@@ -111,15 +110,15 @@ bool ServerPlayer::hasResource(int id) { return true; }
 //
 // IContainerListener
 //
-void ServerPlayer::setContainerData(BaseContainerMenu *menu, int id,
-                                    int value) {
+void ServerPlayer::setContainerData(
+    BaseContainerMenu *menu, int id, int value) {
   ContainerSetDataPacket p(menu->containerId, id, value);
   _mc->raknetInstance->send(owner, p);
   // LOGI("Setting container data for id %d: %d\n", id, value);
 }
 
 void ServerPlayer::slotChanged(BaseContainerMenu *menu, int slot,
-                               const ItemInstance &item, bool isResultSlot) {
+    const ItemInstance &item, bool isResultSlot) {
   if (isResultSlot)
     return;
   ContainerSetSlotPacket p(menu->containerId, slot, item);
@@ -127,8 +126,8 @@ void ServerPlayer::slotChanged(BaseContainerMenu *menu, int slot,
   // LOGI("Slot %d changed\n", slot);
 }
 
-void ServerPlayer::refreshContainer(BaseContainerMenu *menu,
-                                    const std::vector<ItemInstance> &items) {
+void ServerPlayer::refreshContainer(
+    BaseContainerMenu *menu, const std::vector<ItemInstance> &items) {
   ContainerSetContentPacket p(menu->containerId, menu->getItems());
   _mc->raknetInstance->send(owner, p);
   // LOGI("Refreshing container with %d items\n", items.size());

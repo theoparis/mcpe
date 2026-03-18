@@ -12,7 +12,7 @@ class HugeExplosionParticle : public Particle {
 
 public:
   HugeExplosionParticle(Textures *textures, Level *level, float x, float y,
-                        float z, float xa, float ya, float za)
+      float z, float xa, float ya, float za)
       : super(level, x, y, z, 0, 0, 0), life(0),
         lifeTime(6 + sharedRandom.nextInt(4)), textures(textures),
         size(1 - xa * 0.5f) {
@@ -20,7 +20,7 @@ public:
   }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     int tex = (int)((life + a) * 15 / lifeTime);
     if (tex > 15)
       return;

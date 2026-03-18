@@ -22,8 +22,8 @@ void UDPProxyServer::SetSocketFamily(unsigned short _socketFamily) {
 void UDPProxyServer::SetResultHandler(UDPProxyServerResultHandler *rh) {
   resultHandler = rh;
 }
-bool UDPProxyServer::LoginToCoordinator(RakNet::RakString password,
-                                        SystemAddress coordinatorAddress) {
+bool UDPProxyServer::LoginToCoordinator(
+    RakNet::RakString password, SystemAddress coordinatorAddress) {
   unsigned int insertionIndex;
   bool objectExists;
   insertionIndex =
@@ -39,9 +39,9 @@ bool UDPProxyServer::LoginToCoordinator(RakNet::RakString password,
       (MessageID)ID_UDP_PROXY_LOGIN_REQUEST_FROM_SERVER_TO_COORDINATOR);
   outgoingBs.Write(password);
   rakPeerInterface->Send(&outgoingBs, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0,
-                         coordinatorAddress, false);
-  loggingInCoordinators.InsertAtIndex(coordinatorAddress, insertionIndex,
-                                      _FILE_AND_LINE_);
+      coordinatorAddress, false);
+  loggingInCoordinators.InsertAtIndex(
+      coordinatorAddress, insertionIndex, _FILE_AND_LINE_);
   return true;
 }
 void UDPProxyServer::Update(void) { udpForwarder.Update(); }
@@ -89,8 +89,7 @@ PluginReceiveResult UDPProxyServer::OnReceive(Packet *packet) {
           // RakAssert(loggedInCoordinators.GetIndexOf(packet->systemAddress)==(unsigned
           // int)-1);
           loggedInCoordinators.Insert(packet->systemAddress,
-                                      packet->systemAddress, true,
-                                      _FILE_AND_LINE_);
+              packet->systemAddress, true, _FILE_AND_LINE_);
           if (resultHandler)
             resultHandler->OnLoginSuccess(password, this);
           break;
@@ -103,9 +102,8 @@ PluginReceiveResult UDPProxyServer::OnReceive(Packet *packet) {
   }
   return RR_CONTINUE_PROCESSING;
 }
-void UDPProxyServer::OnClosedConnection(
-    const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-    PI2_LostConnectionReason lostConnectionReason) {
+void UDPProxyServer::OnClosedConnection(const SystemAddress &systemAddress,
+    RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason) {
   (void)lostConnectionReason;
   (void)rakNetGUID;
 
@@ -133,12 +131,11 @@ void UDPProxyServer::OnForwardingRequestFromCoordinatorToServer(
   RakNet::TimeMS timeoutOnNoDataMS;
   incomingBs.Read(timeoutOnNoDataMS);
   RakAssert(timeoutOnNoDataMS > 0 &&
-            timeoutOnNoDataMS <= UDP_FORWARDER_MAXIMUM_TIMEOUT);
+      timeoutOnNoDataMS <= UDP_FORWARDER_MAXIMUM_TIMEOUT);
 
   unsigned short forwardingPort;
-  UDPForwarderResult success = udpForwarder.StartForwarding(
-      sourceAddress, targetAddress, timeoutOnNoDataMS, 0, socketFamily,
-      &forwardingPort, 0);
+  UDPForwarderResult success = udpForwarder.StartForwarding(sourceAddress,
+      targetAddress, timeoutOnNoDataMS, 0, socketFamily, &forwardingPort, 0);
   RakNet::BitStream outgoingBs;
   outgoingBs.Write((MessageID)ID_UDP_PROXY_GENERAL);
   outgoingBs.Write(
@@ -150,7 +147,7 @@ void UDPProxyServer::OnForwardingRequestFromCoordinatorToServer(
     outgoingBs.Write(forwardingPort);
   }
   rakPeerInterface->Send(&outgoingBs, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0,
-                         packet->systemAddress, false);
+      packet->systemAddress, false);
 }
 
 #endif // _RAKNET_SUPPORT_*

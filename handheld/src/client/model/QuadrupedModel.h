@@ -15,10 +15,10 @@ public:
   //@Override
   void render(QuadrupedModel *model, float scale);
   void render(Entity *entity, float time, float r, float bob, float yRot,
-              float xRot, float scale);
+      float xRot, float scale);
 
-  void setupAnim(float time, float r, float bob, float yRot, float xRot,
-                 float scale);
+  void setupAnim(
+      float time, float r, float bob, float yRot, float xRot, float scale);
 
   ModelPart head, hair, body, leg0, leg1, leg2, leg3;
 

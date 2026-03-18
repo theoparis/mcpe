@@ -21,7 +21,7 @@ public:
     mousex = Mouse::getX();
     mousey = Mouse::getY();
     return Mouse::getButtonState(MouseAction::ACTION_LEFT) ==
-           MouseAction::DATA_DOWN;
+        MouseAction::DATA_DOWN;
   }
 
   void onConfigChanged(const Config &c) {

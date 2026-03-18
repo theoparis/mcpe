@@ -76,12 +76,10 @@ public:
   void Update(CCTimeType curTime, bool hasDataToSendOrResend);
 
   int GetRetransmissionBandwidth(CCTimeType curTime,
-                                 CCTimeType timeSinceLastTick,
-                                 uint32_t unacknowledgedBytes,
-                                 bool isContinuousSend);
+      CCTimeType timeSinceLastTick, uint32_t unacknowledgedBytes,
+      bool isContinuousSend);
   int GetTransmissionBandwidth(CCTimeType curTime, CCTimeType timeSinceLastTick,
-                               uint32_t unacknowledgedBytes,
-                               bool isContinuousSend);
+      uint32_t unacknowledgedBytes, bool isContinuousSend);
 
   /// Acks do not have to be sent immediately. Instead, they can be buffered up
   /// such that groups of acks are sent at a time This reduces overall bandwidth
@@ -105,15 +103,15 @@ public:
 
   /// Call this when you get a packet pair
   void OnGotPacketPair(DatagramSequenceNumberType datagramSequenceNumber,
-                       uint32_t sizeInBytes, CCTimeType curTime);
+      uint32_t sizeInBytes, CCTimeType curTime);
 
   /// Call this when you get a packet (including packet pairs)
   /// If the DatagramSequenceNumberType is out of order, skippedMessageCount
   /// will be non-zero In that case, send a NAK for every sequence number up to
   /// that count
   bool OnGotPacket(DatagramSequenceNumberType datagramSequenceNumber,
-                   bool isContinuousSend, CCTimeType curTime,
-                   uint32_t sizeInBytes, uint32_t *skippedMessageCount);
+      bool isContinuousSend, CCTimeType curTime, uint32_t sizeInBytes,
+      uint32_t *skippedMessageCount);
 
   /// Call when you get a NAK, with the sequence number of the lost message
   /// Affects the congestion control
@@ -125,16 +123,16 @@ public:
   /// B and AS are used in the calculations in UpdateWindowSizeAndAckOnAckPerSyn
   /// B and AS are updated at most once per SYN
   void OnAck(CCTimeType curTime, CCTimeType rtt, bool hasBAndAS,
-             BytesPerMicrosecond _B, BytesPerMicrosecond _AS,
-             double totalUserDataBytesAcked, bool isContinuousSend,
-             DatagramSequenceNumberType sequenceNumber);
-  void OnDuplicateAck(CCTimeType curTime,
-                      DatagramSequenceNumberType sequenceNumber);
+      BytesPerMicrosecond _B, BytesPerMicrosecond _AS,
+      double totalUserDataBytesAcked, bool isContinuousSend,
+      DatagramSequenceNumberType sequenceNumber);
+  void OnDuplicateAck(
+      CCTimeType curTime, DatagramSequenceNumberType sequenceNumber);
 
   /// Call when you send an ack, to see if the ack should have the B and AS
   /// parameters transmitted Call before calling OnSendAck()
   void OnSendAckGetBAndAS(CCTimeType curTime, bool *hasBAndAS,
-                          BytesPerMicrosecond *_B, BytesPerMicrosecond *_AS);
+      BytesPerMicrosecond *_B, BytesPerMicrosecond *_AS);
 
   /// Call when we send an ack, to write B and AS if needed
   /// B and AS are only written once per SYN, to prevent slow calculations
@@ -181,11 +179,11 @@ public:
   uint32_t GetCWNDLimit(void) const { return (uint32_t)0; }
 
   /// Is a > b, accounting for variable overflow?
-  static bool GreaterThan(DatagramSequenceNumberType a,
-                          DatagramSequenceNumberType b);
+  static bool GreaterThan(
+      DatagramSequenceNumberType a, DatagramSequenceNumberType b);
   /// Is a < b, accounting for variable overflow?
-  static bool LessThan(DatagramSequenceNumberType a,
-                       DatagramSequenceNumberType b);
+  static bool LessThan(
+      DatagramSequenceNumberType a, DatagramSequenceNumberType b);
   //	void SetTimeBetweenSendsLimit(unsigned int bitsPerSecond);
   uint64_t GetBytesPerSecondLimitByCongestionControl(void) const;
 
@@ -196,7 +194,7 @@ protected:
 
   double RTT;
 
-  double cwnd;     // max bytes on wire
+  double cwnd; // max bytes on wire
   double ssThresh; // Threshhold between slow start and congestion avoidance
 
   /// When we get an ack, if oldestUnsentAck==0, set it to the current time

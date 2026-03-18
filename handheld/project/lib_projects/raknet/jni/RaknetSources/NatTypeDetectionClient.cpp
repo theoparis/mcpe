@@ -43,8 +43,8 @@ void NatTypeDetectionClient::DetectNATType(SystemAddress _serverAddress) {
   bs.Write((unsigned char)ID_NAT_TYPE_DETECTION_REQUEST);
   bs.Write(true); // IsRequest
   bs.Write(c2Port);
-  rakPeerInterface->Send(&bs, MEDIUM_PRIORITY, RELIABLE, 0, serverAddress,
-                         false);
+  rakPeerInterface->Send(
+      &bs, MEDIUM_PRIORITY, RELIABLE, 0, serverAddress, false);
 }
 void NatTypeDetectionClient::OnCompletion(NATTypeDetectionResult result) {
   Packet *p =
@@ -66,8 +66,8 @@ void NatTypeDetectionClient::OnCompletion(NATTypeDetectionResult result) {
     RakNet::BitStream bs;
     bs.Write((unsigned char)ID_NAT_TYPE_DETECTION_REQUEST);
     bs.Write(false); // Done
-    rakPeerInterface->Send(&bs, HIGH_PRIORITY, RELIABLE, 0, serverAddress,
-                           false);
+    rakPeerInterface->Send(
+        &bs, HIGH_PRIORITY, RELIABLE, 0, serverAddress, false);
   }
 
   Shutdown();
@@ -139,8 +139,7 @@ void NatTypeDetectionClient::OnTestPortRestricted(Packet *packet) {
   bsOut.Write(
       rakPeerInterface->GetGuidFromSystemAddress(UNASSIGNED_SYSTEM_ADDRESS));
   SocketLayer::SendTo_PC(sockets[0]->s, (const char *)bsOut.GetData(),
-                         bsOut.GetNumberOfBytesUsed(), s3p4Addr, __FILE__,
-                         __LINE__);
+      bsOut.GetNumberOfBytesUsed(), s3p4Addr, __FILE__, __LINE__);
 }
 void NatTypeDetectionClient::Shutdown(void) {
   serverAddress = UNASSIGNED_SYSTEM_ADDRESS;

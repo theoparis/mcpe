@@ -10,8 +10,8 @@ ByteQueue::ByteQueue() {
   data = 0;
 }
 ByteQueue::~ByteQueue() { Clear(_FILE_AND_LINE_); }
-void ByteQueue::WriteBytes(const char *in, unsigned length, const char *file,
-                           unsigned int line) {
+void ByteQueue::WriteBytes(
+    const char *in, unsigned length, const char *file, unsigned int line) {
   unsigned bytesWritten;
   bytesWritten = GetBytesWritten();
   if (lengthAllocated == 0 || length > lengthAllocated - bytesWritten - 1) {
@@ -30,7 +30,7 @@ void ByteQueue::WriteBytes(const char *in, unsigned length, const char *file,
       } else {
         memcpy(data + oldLengthAllocated, data, newAmountToAllocate);
         memmove(data, data + newAmountToAllocate,
-                writeOffset - newAmountToAllocate);
+            writeOffset - newAmountToAllocate);
         writeOffset -= newAmountToAllocate;
       }
     }
@@ -42,7 +42,7 @@ void ByteQueue::WriteBytes(const char *in, unsigned length, const char *file,
     // Wrap
     memcpy(data + writeOffset, in, lengthAllocated - writeOffset);
     memcpy(data, in + (lengthAllocated - writeOffset),
-           length - (lengthAllocated - writeOffset));
+        length - (lengthAllocated - writeOffset));
   }
   writeOffset = (writeOffset + length) % lengthAllocated;
 }

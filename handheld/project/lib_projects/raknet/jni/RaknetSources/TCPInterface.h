@@ -58,16 +58,15 @@ public:
   /// \param[in] socketFamily IP version: For IPV4, use AF_INET (default). For
   /// IPV6, use AF_INET6. To autoselect, use AF_UNSPEC.
   bool Start(unsigned short port, unsigned short maxIncomingConnections,
-             unsigned short maxConnections = 0, int _threadPriority = -99999,
-             unsigned short socketFamily = AF_INET);
+      unsigned short maxConnections = 0, int _threadPriority = -99999,
+      unsigned short socketFamily = AF_INET);
 
   /// Stops the TCP server
   void Stop(void);
 
   /// Connect to the specified host on the specified port
   SystemAddress Connect(const char *host, unsigned short remotePort,
-                        bool block = true,
-                        unsigned short socketFamily = AF_INET);
+      bool block = true, unsigned short socketFamily = AF_INET);
 
 #if OPEN_SSL_CLIENT_SUPPORT == 1
   /// Start SSL on an existing connection, notified with
@@ -80,12 +79,12 @@ public:
 
   /// Sends a byte stream
   void Send(const char *data, unsigned int length,
-            const SystemAddress &systemAddress, bool broadcast);
+      const SystemAddress &systemAddress, bool broadcast);
 
   // Sends a concatenated list of byte streams
   bool SendList(const char **data, const unsigned int *lengths,
-                const int numParameters, const SystemAddress &systemAddress,
-                bool broadcast);
+      const int numParameters, const SystemAddress &systemAddress,
+      bool broadcast);
 
   // Get how many bytes are waiting to be sent. If too many, you may want to
   // skip sending
@@ -110,8 +109,8 @@ public:
   /// to remoteSystems to only get the number of systems we are connected to
   /// \param[in, out] numberOfSystems As input, the size of remoteSystems array.
   /// As output, the number of elements put into the array
-  void GetConnectionList(SystemAddress *remoteSystems,
-                         unsigned short *numberOfSystems) const;
+  void GetConnectionList(
+      SystemAddress *remoteSystems, unsigned short *numberOfSystems) const;
 
   /// Returns just the number of connections we have
   unsigned short GetConnectionCount(void) const;
@@ -141,8 +140,8 @@ public:
   }
 
   /// \brief Returns how many bytes were written.
-  static int Base64Encoding(const char *inputData, int dataLength,
-                            char *outputData);
+  static int Base64Encoding(
+      const char *inputData, int dataLength, char *outputData);
 
   /// Returns if Start() was called successfully
   bool WasStarted(void) const;
@@ -171,12 +170,12 @@ protected:
   };
   */
   //	DataStructures::SingleProducerConsumer<OutgoingMessage>
-  //outgoingMessages; 	DataStructures::SingleProducerConsumer<Packet>
-  //incomingMessages; 	DataStructures::SingleProducerConsumer<SystemAddress>
-  //newIncomingConnections, lostConnections, requestedCloseConnections;
+  // outgoingMessages; 	DataStructures::SingleProducerConsumer<Packet>
+  // incomingMessages; 	DataStructures::SingleProducerConsumer<SystemAddress>
+  // newIncomingConnections, lostConnections, requestedCloseConnections;
   //	DataStructures::SingleProducerConsumer<RemoteClient*> newRemoteClients;
   //	DataStructures::ThreadsafeAllocatingQueue<OutgoingMessage>
-  //outgoingMessages;
+  // outgoingMessages;
   DataStructures::ThreadsafeAllocatingQueue<Packet> incomingMessages;
   DataStructures::ThreadsafeAllocatingQueue<SystemAddress>
       newIncomingConnections, lostConnections, requestedCloseConnections;
@@ -195,8 +194,8 @@ protected:
 
   //	void DeleteRemoteClient(RemoteClient *remoteClient, fd_set
   //*exceptionFD); 	void InsertRemoteClient(RemoteClient* remoteClient);
-  SOCKET SocketConnect(const char *host, unsigned short remotePort,
-                       unsigned short socketFamily);
+  SOCKET SocketConnect(
+      const char *host, unsigned short remotePort, unsigned short socketFamily);
 
   struct ThisPtrPlusSysAddr {
     TCPInterface *tcpInterface;
@@ -247,8 +246,8 @@ struct RemoteClient {
     outgoingDataMutex.Unlock();
   }
   void SetActive(bool a);
-  void SendOrBuffer(const char **data, const unsigned int *lengths,
-                    const int numParameters);
+  void SendOrBuffer(
+      const char **data, const unsigned int *lengths, const int numParameters);
 };
 
 } // namespace RakNet

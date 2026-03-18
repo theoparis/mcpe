@@ -37,11 +37,11 @@ public:
     const float yy = (float)y;
     const float zz = (float)z;
     if (data == Direction::NORTH || data == Direction::SOUTH) {
-      tmpBB.set(xx, yy, zz + 6.0f / 16.0f, xx + 1, yy + 1.5f,
-                zz + 10.0f / 16.0f);
+      tmpBB.set(
+          xx, yy, zz + 6.0f / 16.0f, xx + 1, yy + 1.5f, zz + 10.0f / 16.0f);
     } else {
-      tmpBB.set(xx + 6.0f / 16.0f, yy, zz, xx + 10.0f / 16.0f, yy + 1.5f,
-                zz + 1);
+      tmpBB.set(
+          xx + 6.0f / 16.0f, yy, zz, xx + 10.0f / 16.0f, yy + 1.5f, zz + 1);
     }
     return &tmpBB;
   }

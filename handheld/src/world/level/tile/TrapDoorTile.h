@@ -25,12 +25,11 @@ public:
   bool use(Level *level, int x, int y, int z, Player *player);
   void setOpen(Level *level, int x, int y, int z, bool shouldOpen);
   void neighborChanged(Level *level, int x, int y, int z, int type);
-  HitResult clip(Level *level, int xt, int yt, int zt, const Vec3 &a,
-                 const Vec3 &b);
+  HitResult clip(
+      Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b);
   int getDir(int dir);
   int getPlacedOnFaceDataValue(Level *level, int x, int y, int z, int face,
-                               float clickX, float clickY, float clickZ,
-                               int itemValue);
+      float clickX, float clickY, float clickZ, int itemValue);
   bool mayPlace(Level *level, int x, int y, int z, unsigned char face);
   static bool isOpen(int data);
   static bool attachesTo(int id);

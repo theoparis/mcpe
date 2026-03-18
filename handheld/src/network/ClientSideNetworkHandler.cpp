@@ -81,12 +81,12 @@ bool ClientSideNetworkHandler::isChunkLoaded(int x, int z) {
 
 void ClientSideNetworkHandler::onConnect(const RakNet::RakNetGUID &hostGuid) {
   LOGI("onConnect, server guid: %s, local guid: %s\n", hostGuid.ToString(),
-       rakPeer->GetMyGUID().ToString());
+      rakPeer->GetMyGUID().ToString());
   serverGuid = hostGuid;
 
   clearChunksLoaded();
-  LoginPacket packet(minecraft->user->name.c_str(),
-                     SharedConstants::NetworkProtocolVersion);
+  LoginPacket packet(
+      minecraft->user->name.c_str(), SharedConstants::NetworkProtocolVersion);
   raknetInstance->send(packet);
 }
 
@@ -111,8 +111,8 @@ void ClientSideNetworkHandler::onDisconnect(const RakNet::RakNetGUID &guid) {
 #endif
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      LoginStatusPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, LoginStatusPacket *packet) {
   if (packet->status == LoginStatus::Success) {
     raknetInstance->setIsLoggedIn(true);
     return;
@@ -134,8 +134,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      StartGamePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, StartGamePacket *packet) {
   LOGI("StartGamePacket\n");
 
 #ifdef SDL3
@@ -151,37 +151,37 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   storageSource->deleteLevel(levelId);
   // level = new Level(storageSource->selectLevel(levelId, true), "temp",
   // packet->levelSeed, SharedConstants::StorageVersion);
-  MultiPlayerLevel *level = new MultiPlayerLevel(
-      storageSource->selectLevel(levelId, true), "temp",
-      LevelSettings(packet->levelSeed,
-                    LevelSettings::validateGameType(packet->gameType)),
-      SharedConstants::StorageVersion);
+  MultiPlayerLevel *level =
+      new MultiPlayerLevel(storageSource->selectLevel(levelId, true), "temp",
+          LevelSettings(packet->levelSeed,
+              LevelSettings::validateGameType(packet->gameType)),
+          SharedConstants::StorageVersion);
   level->isClientSide = true;
 
   bool isCreative = (packet->gameType == GameType::Creative);
-  LocalPlayer *player = new LocalPlayer(minecraft, level, minecraft->user,
-                                        level->dimension->id, isCreative);
+  LocalPlayer *player = new LocalPlayer(
+      minecraft, level, minecraft->user, level->dimension->id, isCreative);
   player->owner = rakPeer->GetMyGUID();
   player->entityId = packet->entityId;
   player->moveTo(packet->x, packet->y, packet->z, player->yRot, player->xRot);
 
   LOGI("new pos: %f, %f [%f - %f]\n", player->x, player->z, player->bb.y0,
-       player->bb.y1);
+      player->bb.y1);
 
   minecraft->setLevel(level, "ClientSideNetworkHandler -> setLevel", player);
   minecraft->setIsCreativeMode(isCreative);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      MessagePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, MessagePacket *packet) {
   LOGI("MessagePacket\n");
 #ifndef STANDALONE_SERVER
   minecraft->gui.addMessage(packet->message.C_String());
 #endif
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SetTimePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SetTimePacket *packet) {
   if (!level)
     return;
 
@@ -189,8 +189,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   level->setTime(packet->time);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AddEntityPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AddEntityPacket *packet) {
   if (!level)
     return;
 
@@ -231,17 +231,17 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
 
   mpcast(level)->putEntity(packet->entityId, e);
 }
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AddPaintingPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AddPaintingPacket *packet) {
   if (!level)
     return;
 
   Painting *painting = new Painting(level, packet->xTile, packet->yTile,
-                                    packet->zTile, packet->dir, packet->motive);
+      packet->zTile, packet->dir, packet->motive);
   mpcast(level)->putEntity(packet->entityId, painting);
 }
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AddMobPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AddMobPacket *packet) {
   LOGI("AddMobPacket (%p)\n", level);
 
   if (!level) {
@@ -266,8 +266,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   level->addEntity(mob);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AddPlayerPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AddPlayerPacket *packet) {
   if (!level) {
     // we skip this since we will get this player anyway when we request level
     return;
@@ -282,7 +282,7 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     return;
 
   LOGI("AddPlayerPacket id=%d owner=%s name=%s\n", packet->entityId,
-       packet->owner.ToString(), packet->name.C_String());
+      packet->owner.ToString(), packet->name.C_String());
 
   bool created = false;
   Player *player = findPlayer(level, packet->entityId, &packet->owner);
@@ -324,8 +324,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      RemovePlayerPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, RemovePlayerPacket *packet) {
   if (!level || source == minecraft->player->owner)
     return;
 
@@ -349,27 +349,26 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   // minecraft->gui.addMessage(message);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      RemoveEntityPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, RemoveEntityPacket *packet) {
   if (!level)
     return;
 
   Entity *entity = level->getEntity(packet->entityId);
   LOGI("RemoveEntityPacket %p %p, %d\n", entity, minecraft->player,
-       entity ? (int)(entity->isPlayer()) : -1);
+      entity ? (int)(entity->isPlayer()) : -1);
   if (!entity)
     return;
 
   level->removeEntity(entity);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AddItemEntityPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AddItemEntityPacket *packet) {
   if (!level)
     return;
 
-  ItemEntity *entity = new ItemEntity(
-      level, packet->x, packet->y, packet->z,
+  ItemEntity *entity = new ItemEntity(level, packet->x, packet->y, packet->z,
       ItemInstance(packet->itemId, packet->itemCount, packet->auxValue));
   entity->xd = packet->xa();
   entity->yd = packet->ya();
@@ -380,8 +379,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   mpcast(level)->putEntity(packet->id, entity);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      TakeItemEntityPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, TakeItemEntityPacket *packet) {
   if (!level)
     return;
 
@@ -412,8 +411,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   level->playSound(e, "random.pop", 0.2f, 1.0f * 2.f);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      MovePlayerPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, MovePlayerPacket *packet) {
   if (!level)
     return;
 
@@ -424,13 +423,13 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     return;
   }
   LOGI("MovePlayerPacket id=%d pos=%f,%f,%f rot=%f,%f\n", packet->entityId,
-       packet->x, packet->y, packet->z, packet->yRot, packet->xRot);
-  entity->lerpTo(packet->x, packet->y, packet->z, packet->yRot, packet->xRot,
-                 3);
+      packet->x, packet->y, packet->z, packet->yRot, packet->xRot);
+  entity->lerpTo(
+      packet->x, packet->y, packet->z, packet->yRot, packet->xRot, 3);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      MoveEntityPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, MoveEntityPacket *packet) {
   if (!level)
     return;
 
@@ -443,8 +442,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      UpdateBlockPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, UpdateBlockPacket *packet) {
   if (!level)
     return;
 
@@ -471,8 +470,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ExplodePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ExplodePacket *packet) {
   if (!level)
     return;
   Explosion explosion(level, NULL, packet->x, packet->y, packet->z, packet->r);
@@ -480,28 +479,28 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   explosion.finalizeExplosion();
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      LevelEventPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, LevelEventPacket *packet) {
   if (!level)
     return;
   if (packet->eventId == LevelEvent::ALL_PLAYERS_SLEEPING) {
     minecraft->player->setAllPlayersSleeping();
   } else {
-    minecraft->level->levelEvent(NULL, packet->eventId, packet->x, packet->y,
-                                 packet->z, packet->data);
+    minecraft->level->levelEvent(
+        NULL, packet->eventId, packet->x, packet->y, packet->z, packet->data);
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      TileEventPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, TileEventPacket *packet) {
   if (!level)
     return;
-  minecraft->level->tileEvent(packet->x, packet->y, packet->z, packet->b0,
-                              packet->b1);
+  minecraft->level->tileEvent(
+      packet->x, packet->y, packet->z, packet->b0, packet->b1);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      EntityEventPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, EntityEventPacket *packet) {
   if (!level)
     return;
 
@@ -510,8 +509,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     e->handleEntityEvent(packet->eventId);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ChunkDataPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ChunkDataPacket *packet) {
   if (!level) {
     LOGI("level @ handle ChunkDataPacket is 0\n");
     return;
@@ -576,7 +575,7 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
           // (set << setShift)) >> 1]), setSize >> 1);
 
           memcpy(&blockData.data[(colDataPosition + (set << setShift)) >> 1],
-                 readDataBuffer, setSize >> 1);
+              readDataBuffer, setSize >> 1);
         }
 
         if (((1 << set) << setShift) < y0) {
@@ -605,7 +604,7 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     // 		chunk->recalcHeightmap();
     // 		//chunk->recalcBlockLights();
     level->setTilesDirty((packet->x << 4) + x0, y0, (packet->z << 4) + z0,
-                         (packet->x << 4) + x1, y1, (packet->z << 4) + z1);
+        (packet->x << 4) + x1, y1, (packet->z << 4) + z1);
     // 		int rx = packet->x << 4;
     // 		int rz = packet->z << 4;
     // 		level->updateLight(LightLayer::Block, x0 + rx - 1, y0, z0 + rz -
@@ -639,11 +638,11 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
 
     for (unsigned int i = 0; i < bufferedBlockUpdates.size(); i++) {
       const SBufferedBlockUpdate &update = bufferedBlockUpdates[i];
-      int tileId = Tile::transformToValidBlockId(update.blockId, update.x,
-                                                 update.y, update.z);
+      int tileId = Tile::transformToValidBlockId(
+          update.blockId, update.x, update.y, update.z);
       if (update.setData)
-        level->setTileAndData(update.x, update.y, update.z, tileId,
-                              update.blockData);
+        level->setTileAndData(
+            update.x, update.y, update.z, tileId, update.blockData);
       else
         level->setTile(update.x, update.y, update.z, tileId);
     }
@@ -684,7 +683,7 @@ void ClientSideNetworkHandler::arrangeRequestChunkOrder() {
 
   _ChunkSorter sorter(cx, cz);
   std::sort(requestNextChunkIndexList,
-            requestNextChunkIndexList + NumRequestChunks, sorter);
+      requestNextChunkIndexList + NumRequestChunks, sorter);
 }
 
 void ClientSideNetworkHandler::levelGenerated(Level *level) {
@@ -696,8 +695,8 @@ void ClientSideNetworkHandler::levelGenerated(Level *level) {
   requestNextChunk();
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      PlayerEquipmentPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, PlayerEquipmentPacket *packet) {
   if (!level)
     return;
 
@@ -732,8 +731,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      PlayerArmorEquipmentPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, PlayerArmorEquipmentPacket *packet) {
   if (!level)
     return;
 
@@ -751,8 +750,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   packet->fillIn(player);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      InteractPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, InteractPacket *packet) {
   if (!level)
     return;
 
@@ -767,8 +766,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SetEntityDataPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SetEntityDataPacket *packet) {
   if (!level)
     return;
 
@@ -782,8 +781,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SetEntityMotionPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SetEntityMotionPacket *packet) {
   if (!level)
     return;
 
@@ -797,8 +796,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AnimatePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AnimatePacket *packet) {
   if (!level)
     return;
 
@@ -827,19 +826,19 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      UseItemPacket *packet) {}
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, UseItemPacket *packet) {}
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SetHealthPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SetHealthPacket *packet) {
   if (!level || !minecraft->player)
     return;
 
   minecraft->player->hurtTo(packet->health);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SetSpawnPositionPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SetSpawnPositionPacket *packet) {
   if (!level || !minecraft || !minecraft->player)
     return;
   if (!level->inRange(packet->x, packet->y, packet->z))
@@ -849,8 +848,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   level->getLevelData()->setSpawn(packet->x, packet->y, packet->z);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      HurtArmorPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, HurtArmorPacket *packet) {
   if (!level || !minecraft->player) {
     return;
   }
@@ -858,16 +857,16 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   minecraft->player->hurtArmor(packet->dmg);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      RespawnPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, RespawnPacket *packet) {
   if (level) {
     // LOGI("RespawnPacket! %d\n", findPlayer(level, packet->entityId, NULL));
     NetEventCallback::handle(level, source, packet);
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerOpenPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerOpenPacket *packet) {
   if (!level || !minecraft || !minecraft->player)
     return;
 
@@ -887,33 +886,32 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerClosePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerClosePacket *packet) {
   if (minecraft && minecraft->player && minecraft->player->containerMenu)
     minecraft->player->closeContainer();
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerSetContentPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerSetContentPacket *packet) {
   if (!minecraft || !minecraft->player)
     return;
 
   if (packet->containerId == 0) {
     for (unsigned int i = 0; i < packet->items.size(); ++i) {
-      minecraft->player->inventory->setItem(Inventory::MAX_SELECTION_SIZE + i,
-                                            &packet->items[i]);
+      minecraft->player->inventory->setItem(
+          Inventory::MAX_SELECTION_SIZE + i, &packet->items[i]);
     }
   } else if (minecraft->player->containerMenu &&
-             minecraft->player->containerMenu->containerId ==
-                 packet->containerId) {
+      minecraft->player->containerMenu->containerId == packet->containerId) {
     for (unsigned int i = 0; i < packet->items.size(); ++i) {
       minecraft->player->containerMenu->setSlot(i, &packet->items[i]);
     }
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerSetSlotPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerSetSlotPacket *packet) {
   // LOGI("ContainerSetSlot\n");
 
   if (!minecraft->player || !minecraft->player->containerMenu ||
@@ -925,8 +923,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   minecraft->player->containerMenu->setSlot(packet->slot, &packet->item);
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerSetDataPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerSetDataPacket *packet) {
   // LOGI("ContainerSetData\n");
   if (minecraft->player && minecraft->player->containerMenu &&
       minecraft->player->containerMenu->containerId == packet->containerId) {
@@ -935,15 +933,15 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ChatPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ChatPacket *packet) {
 #ifndef STANDALONE_SERVER
   minecraft->gui.displayClientMessage(packet->message);
 #endif
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SignUpdatePacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SignUpdatePacket *packet) {
   if (!level)
     return;
 
@@ -959,8 +957,8 @@ void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ClientSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AdventureSettingsPacket *packet) {
+void ClientSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AdventureSettingsPacket *packet) {
   if (!level)
     return;
   // assert(level != NULL && "level is NULL @

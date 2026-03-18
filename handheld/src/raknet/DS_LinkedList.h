@@ -159,9 +159,9 @@ public:
   // {CircularLinkedList(original_copy);}  // Converts linked list to circular
   // type
   bool operator=(const CircularLinkedList &original_copy);
-  CircularLinkedList &operator++();    // CircularLinkedList A; ++A;
+  CircularLinkedList &operator++(); // CircularLinkedList A; ++A;
   CircularLinkedList &operator++(int); // Circular_Linked List A; A++;
-  CircularLinkedList &operator--();    // CircularLinkedList A; --A;
+  CircularLinkedList &operator--(); // CircularLinkedList A; --A;
   CircularLinkedList &operator--(int); // Circular_Linked List A; A--;
   bool IsIn(const CircularLinkedListType &input);
   bool Find(const CircularLinkedListType &input);
@@ -215,9 +215,9 @@ public:
   LinkedList(const LinkedList &original_copy);
   ~LinkedList();
   bool operator=(const LinkedList<LinkedListType> &original_copy);
-  LinkedList &operator++();    // LinkedList A; ++A;
+  LinkedList &operator++(); // LinkedList A; ++A;
   LinkedList &operator++(int); // Linked List A; A++;
-  LinkedList &operator--();    // LinkedList A; --A;
+  LinkedList &operator--(); // LinkedList A; --A;
   LinkedList &operator--(int); // Linked List A; A--;
 
 private:
@@ -850,8 +850,8 @@ inline unsigned int CircularLinkedList<CircularLinkedListType>::Size(void) {
 }
 
 template <class CircularLinkedListType>
-inline CircularLinkedListType &
-CircularLinkedList<CircularLinkedListType>::Peek(void) {
+inline CircularLinkedListType &CircularLinkedList<CircularLinkedListType>::Peek(
+    void) {
   // return *(position->item);
   return this->position->item;
 }
@@ -1033,8 +1033,8 @@ CircularLinkedList<CircularLinkedListType>::Mergesort(
 
 template <class CircularLinkedListType>
 CircularLinkedList<CircularLinkedListType>
-CircularLinkedList<CircularLinkedListType>::Merge(CircularLinkedList L1,
-                                                  CircularLinkedList L2) {
+CircularLinkedList<CircularLinkedListType>::Merge(
+    CircularLinkedList L1, CircularLinkedList L2) {
   CircularLinkedList<CircularLinkedListType> X;
   CircularLinkedListType element;
   L1.position = L1.root;
@@ -1074,8 +1074,8 @@ CircularLinkedList<CircularLinkedListType>::Merge(CircularLinkedList L1,
 }
 
 template <class LinkedListType>
-LinkedList<LinkedListType>
-LinkedList<LinkedListType>::Mergesort(const LinkedList &L) {
+LinkedList<LinkedListType> LinkedList<LinkedListType>::Mergesort(
+    const LinkedList &L) {
   unsigned int counter;
   typename LinkedList::node *location;
   LinkedList<LinkedListType> L1;
@@ -1109,8 +1109,8 @@ LinkedList<LinkedListType>::Mergesort(const LinkedList &L) {
 }
 
 template <class LinkedListType>
-LinkedList<LinkedListType> LinkedList<LinkedListType>::Merge(LinkedList L1,
-                                                             LinkedList L2) {
+LinkedList<LinkedListType> LinkedList<LinkedListType>::Merge(
+    LinkedList L1, LinkedList L2) {
   LinkedList<LinkedListType> X;
   LinkedListType element;
   L1.position = L1.root;

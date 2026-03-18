@@ -35,7 +35,7 @@ SynchedEntityData::DataList SynchedEntityData::packDirty() {
 
 void SynchedEntityData::packAll(IDataOutput *output) const {
   for (Map::const_iterator cit = itemsById.begin(); cit != itemsById.end();
-       ++cit)
+      ++cit)
     SynchedEntityData::writeDataItem(output, cit->second);
 
   // add an eof
@@ -75,8 +75,8 @@ SynchedEntityData::DataList SynchedEntityData::unpack(IDataInput *input) {
       int id = input->readShort();
       int count = input->readByte();
       int auxValue = input->readShort();
-      item = new DataItem2<ItemInstance>(itemType, itemId,
-                                         ItemInstance(id, count, auxValue));
+      item = new DataItem2<ItemInstance>(
+          itemType, itemId, ItemInstance(id, count, auxValue));
     } break;
     case TYPE_POS: {
       int x = input->readInt();
@@ -132,15 +132,15 @@ void SynchedEntityData::assignValues(DataList *items) {
   }
 }
 
-void SynchedEntityData::writeDataItem(IDataOutput *output,
-                                      const DataItem *dataItem) {
+void SynchedEntityData::writeDataItem(
+    IDataOutput *output, const DataItem *dataItem) {
   // LOGI("write: %d, %d\n", dataItem->getId(), dataItem->getType());
 
   // pack type and id
   // LOGI("dataItem: %d\n", dataItem);
   int header = ((dataItem->getType() << TYPE_SHIFT) |
-                (dataItem->getId() & MAX_ID_VALUE)) &
-               0xff;
+                   (dataItem->getId() & MAX_ID_VALUE)) &
+      0xff;
   output->writeByte(header);
 
   // write value

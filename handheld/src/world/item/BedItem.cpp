@@ -5,8 +5,7 @@
 #include "../level/Level.h"
 #include "../level/tile/BedTile.h"
 bool BedItem::useOn(ItemInstance *itemInstance, Player *player, Level *level,
-                    int x, int y, int z, int face, float clickX, float clickY,
-                    float clickZ) {
+    int x, int y, int z, int face, float clickX, float clickY, float clickZ) {
   if (face != Facing::UP) {
     return false;
   }
@@ -34,8 +33,8 @@ bool BedItem::useOn(ItemInstance *itemInstance, Player *player, Level *level,
     level->setTileAndData(x, y, z, tile->id, dir);
     // double-check that the bed was successfully placed
     if (level->getTile(x, y, z) == tile->id) {
-      level->setTileAndData(x + xra, y, z + zra, tile->id,
-                            dir + BedTile::HEAD_PIECE_DATA);
+      level->setTileAndData(
+          x + xra, y, z + zra, tile->id, dir + BedTile::HEAD_PIECE_DATA);
     }
 
     itemInstance->count--;

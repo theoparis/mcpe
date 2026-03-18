@@ -9,8 +9,8 @@ class ZombieModel : public HumanoidModel {
   typedef HumanoidModel super;
 
 public:
-  void setupAnim(float time, float r, float bob, float yRot, float xRot,
-                 float scale) {
+  void setupAnim(
+      float time, float r, float bob, float yRot, float xRot, float scale) {
     super::setupAnim(time, r, bob, yRot, xRot, scale);
     if (!holdingLeftHand && !holdingRightHand) {
       float attack2 = (float)Mth::sin(attackTime * Mth::PI);

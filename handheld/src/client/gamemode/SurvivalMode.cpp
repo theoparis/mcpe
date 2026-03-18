@@ -30,9 +30,8 @@ void SurvivalMode::continueDestroyBlock(int x, int y, int z, int face) {
 #ifndef STANDALONE_SERVER
       if (tile != NULL) {
         minecraft->soundEngine->play(tile->soundType->getStepSound(), x + 0.5f,
-                                     y + 0.5f, z + 0.5f,
-                                     (tile->soundType->getVolume() + 1) / 8,
-                                     tile->soundType->getPitch() * 0.5f);
+            y + 0.5f, z + 0.5f, (tile->soundType->getVolume() + 1) / 8,
+            tile->soundType->getPitch() * 0.5f);
       }
 #endif
     }
@@ -71,8 +70,8 @@ bool SurvivalMode::destroyBlock(int x, int y, int z, int face) {
   }
   if (changed && couldDestroy) {
     ItemInstance instance(t, 1, data);
-    Tile::tiles[t]->playerDestroy(minecraft->level, minecraft->player, x, y, z,
-                                  data);
+    Tile::tiles[t]->playerDestroy(
+        minecraft->level, minecraft->player, x, y, z, data);
   }
   return changed;
 }

@@ -111,7 +111,7 @@ public:
       ListTag &o = (ListTag &)rhs;
       if (type == o.type && list.size() == o.list.size()) {
         for (List::const_iterator it = list.begin(), jt = o.list.begin();
-             it != list.end(); ++it, ++jt) {
+            it != list.end(); ++it, ++jt) {
           if ((*it)->equals(**jt))
             return false;
         }

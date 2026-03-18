@@ -14,10 +14,10 @@ public:
     if (Mouse::getButtonState(MouseAction::ACTION_LEFT) != 0) {
       if (removeHoldTicks == 0) {
         *bai = BuildActionIntention(BuildActionIntention::BAI_FIRSTREMOVE |
-                                    BuildActionIntention::BAI_ATTACK);
+            BuildActionIntention::BAI_ATTACK);
       } else {
         *bai = BuildActionIntention(BuildActionIntention::BAI_REMOVE |
-                                    BuildActionIntention::BAI_ATTACK);
+            BuildActionIntention::BAI_ATTACK);
       }
       ++removeHoldTicks;
       return true;
@@ -28,7 +28,7 @@ public:
         buildHoldTicks = 0;
       if (++buildHoldTicks == 1) {
         *bai = BuildActionIntention(BuildActionIntention::BAI_BUILD |
-                                    BuildActionIntention::BAI_INTERACT);
+            BuildActionIntention::BAI_INTERACT);
         return true;
       }
     } else {

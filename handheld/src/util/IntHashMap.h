@@ -30,7 +30,7 @@ public:
   /*public*/ V get(int key) {
     int hash = hash(key);
     for (Entry<V> e = table[indexFor(hash, table.length)]; e != NULL;
-         e = e.next) {
+        e = e.next) {
       if (e.key == key)
         return e.value;
     }
@@ -42,7 +42,7 @@ public:
   const Entry<V> getEntry(int key) {
     int hash = hash(key);
     for (Entry<V> e = table[indexFor(hash, table.length)]; e != NULL;
-         e = e.next) {
+        e = e.next) {
       if (e.key == key)
         return e;
     }

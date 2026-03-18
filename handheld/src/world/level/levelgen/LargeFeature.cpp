@@ -6,7 +6,7 @@ LargeFeature::LargeFeature() : radius(8) {}
 LargeFeature::~LargeFeature() {}
 
 void LargeFeature::apply(ChunkSource *chunkSource, Level *level, int xOffs,
-                         int zOffs, unsigned char *blocks, int blocksSize) {
+    int zOffs, unsigned char *blocks, int blocksSize) {
   int r = radius;
 
   random.setSeed(level->getSeed());

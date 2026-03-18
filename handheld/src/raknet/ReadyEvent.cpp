@@ -84,8 +84,7 @@ bool ReadyEvent::IsEventSet(int eventId) {
       readyEventNodeList.GetIndexFromKey(eventId, &objectExists);
   if (objectExists) {
     return readyEventNodeList[eventIndex]->eventStatus == ID_READY_EVENT_SET ||
-           readyEventNodeList[eventIndex]->eventStatus ==
-               ID_READY_EVENT_ALL_SET;
+        readyEventNodeList[eventIndex]->eventStatus == ID_READY_EVENT_ALL_SET;
   }
   return false;
 }
@@ -143,7 +142,7 @@ bool ReadyEvent::AddToWaitList(int eventId, SystemAddress address) {
   // done so
   // if (IsLocked(eventIndex))
   //	return false; // Not in the list, but event is already completed, or is
-  //starting to complete, and adding more waiters would fail this.
+  // starting to complete, and adding more waiters would fail this.
 
   unsigned i;
   unsigned numAdded = 0;
@@ -213,8 +212,8 @@ unsigned ReadyEvent::GetRemoteWaitListSize(int eventId) const {
   return 0;
 }
 
-SystemAddress ReadyEvent::GetFromWaitListAtIndex(int eventId,
-                                                 unsigned index) const {
+SystemAddress ReadyEvent::GetFromWaitListAtIndex(
+    int eventId, unsigned index) const {
   bool objectExists;
   unsigned readyIndex =
       readyEventNodeList.GetIndexFromKey(eventId, &objectExists);
@@ -223,8 +222,8 @@ SystemAddress ReadyEvent::GetFromWaitListAtIndex(int eventId,
   }
   return UNASSIGNED_SYSTEM_ADDRESS;
 }
-ReadyEventSystemStatus ReadyEvent::GetReadyStatus(int eventId,
-                                                  SystemAddress address) {
+ReadyEventSystemStatus ReadyEvent::GetReadyStatus(
+    int eventId, SystemAddress address) {
   bool objectExists;
   unsigned readyIndex =
       readyEventNodeList.GetIndexFromKey(eventId, &objectExists);
@@ -253,17 +252,17 @@ PluginReceiveResult ReadyEvent::OnReceive(Packet *packet) {
   packetIdentifier = (unsigned char)packet->data[0];
 
   //	bool doPrint = packet->systemAddress.GetPort()==60002 ||
-  //rakPeerInterface->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS).GetPort()==60002;
+  // rakPeerInterface->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS).GetPort()==60002;
 
   switch (packetIdentifier) {
   case ID_READY_EVENT_UNSET:
   case ID_READY_EVENT_SET:
   case ID_READY_EVENT_ALL_SET:
     //		if (doPrint) {if (packet->systemAddress.GetPort()==60002)
-    //RAKNET_DEBUG_PRINTF("FROM 60002: "); else if
+    // RAKNET_DEBUG_PRINTF("FROM 60002: "); else if
     //(rakPeerInterface->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS).port==60002)
-    //RAKNET_DEBUG_PRINTF("TO 60002: ");
-    //RAKNET_DEBUG_PRINTF("ID_READY_EVENT_SET\n");}
+    // RAKNET_DEBUG_PRINTF("TO 60002: ");
+    // RAKNET_DEBUG_PRINTF("ID_READY_EVENT_SET\n");}
     OnReadyEventPacketUpdate(packet);
     return RR_CONTINUE_PROCESSING;
   case ID_READY_EVENT_FORCE_ALL_SET:
@@ -271,18 +270,18 @@ PluginReceiveResult ReadyEvent::OnReceive(Packet *packet) {
     return RR_CONTINUE_PROCESSING;
   case ID_READY_EVENT_QUERY:
     //		if (doPrint) {if (packet->systemAddress.GetPort()==60002)
-    //RAKNET_DEBUG_PRINTF("FROM 60002: "); else if
+    // RAKNET_DEBUG_PRINTF("FROM 60002: "); else if
     //(rakPeerInterface->GetInternalID(UNASSIGNED_SYSTEM_ADDRESS).port==60002)
-    //RAKNET_DEBUG_PRINTF("TO 60002: ");
-    //RAKNET_DEBUG_PRINTF("ID_READY_EVENT_QUERY\n");}
+    // RAKNET_DEBUG_PRINTF("TO 60002: ");
+    // RAKNET_DEBUG_PRINTF("ID_READY_EVENT_QUERY\n");}
     OnReadyEventQuery(packet);
     return RR_STOP_PROCESSING_AND_DEALLOCATE;
   }
 
   return RR_CONTINUE_PROCESSING;
 }
-bool ReadyEvent::AddToWaitListInternal(unsigned eventIndex,
-                                       SystemAddress address) {
+bool ReadyEvent::AddToWaitListInternal(
+    unsigned eventIndex, SystemAddress address) {
   ReadyEventNode *ren = readyEventNodeList[eventIndex];
   bool objectExists;
   unsigned systemIndex =
@@ -362,9 +361,8 @@ void ReadyEvent::OnReadyEventQuery(Packet *packet) {
       SendReadyUpdate(readyIndex, systemIndex, true);
   }
 }
-void ReadyEvent::OnClosedConnection(
-    const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-    PI2_LostConnectionReason lostConnectionReason) {
+void ReadyEvent::OnClosedConnection(const SystemAddress &systemAddress,
+    RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason) {
   (void)systemAddress;
   (void)rakNetGUID;
   (void)lostConnectionReason;
@@ -376,7 +374,7 @@ void ReadyEvent::OnRakPeerShutdown(void) { Clear(); }
 bool ReadyEvent::SetEventByIndex(int eventIndex, bool isReady) {
   ReadyEventNode *ren = readyEventNodeList[eventIndex];
   if ((ren->eventStatus == ID_READY_EVENT_ALL_SET ||
-       ren->eventStatus == ID_READY_EVENT_SET) &&
+          ren->eventStatus == ID_READY_EVENT_SET) &&
       isReady == true)
     return true; // Success - no change
   if (ren->eventStatus == ID_READY_EVENT_UNSET && isReady == false)
@@ -462,8 +460,8 @@ void ReadyEvent::UpdateReadyStatus(unsigned eventIndex) {
   }
   BroadcastReadyUpdate(eventIndex, false);
 }
-void ReadyEvent::SendReadyUpdate(unsigned eventIndex, unsigned systemIndex,
-                                 bool forceIfNotDefault) {
+void ReadyEvent::SendReadyUpdate(
+    unsigned eventIndex, unsigned systemIndex, bool forceIfNotDefault) {
   ReadyEventNode *ren = readyEventNodeList[eventIndex];
   RakNet::BitStream bs;
   // I do this rather than write true or false, so users that do not use
@@ -473,13 +471,13 @@ void ReadyEvent::SendReadyUpdate(unsigned eventIndex, unsigned systemIndex,
     bs.Write(ren->eventStatus);
     bs.Write(ren->eventId);
     SendUnified(&bs, HIGH_PRIORITY, RELIABLE_ORDERED, channel,
-                ren->systemList[systemIndex].systemAddress, false);
+        ren->systemList[systemIndex].systemAddress, false);
 
     ren->systemList[systemIndex].lastSentStatus = ren->eventStatus;
   }
 }
-void ReadyEvent::BroadcastReadyUpdate(unsigned eventIndex,
-                                      bool forceIfNotDefault) {
+void ReadyEvent::BroadcastReadyUpdate(
+    unsigned eventIndex, bool forceIfNotDefault) {
   ReadyEventNode *ren = readyEventNodeList[eventIndex];
   unsigned systemIndex;
   for (systemIndex = 0; systemIndex < ren->systemList.Size(); systemIndex++) {

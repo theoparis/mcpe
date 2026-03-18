@@ -7,12 +7,12 @@
 
 /*public*/ class FrustumData {
   // enum FrustumSide
-  /*public*/ static const int RIGHT = 0;  // The RIGHT side of the frustum
-  /*public*/ static const int LEFT = 1;   // The LEFT    side of the frustum
+  /*public*/ static const int RIGHT = 0; // The RIGHT side of the frustum
+  /*public*/ static const int LEFT = 1; // The LEFT    side of the frustum
   /*public*/ static const int BOTTOM = 2; // The BOTTOM side of the frustum
-  /*public*/ static const int TOP = 3;    // The TOP side of the frustum
-  /*public*/ static const int BACK = 4;   // The BACK   side of the frustum
-  /*public*/ static const int FRONT = 5;  // The FRONT side of the frustum
+  /*public*/ static const int TOP = 3; // The TOP side of the frustum
+  /*public*/ static const int BACK = 4; // The BACK   side of the frustum
+  /*public*/ static const int FRONT = 5; // The FRONT side of the frustum
 
   // Like above, instead of saying a number for the ABC and D of the plane, we
   // want to be more descriptive.
@@ -57,48 +57,48 @@
 
     return true;
   }
-  /*public*/ bool cubeFullyInFrustum(float x1, float y1, float z1, float x2,
-                                     float y2, float z2) {
+  /*public*/ bool cubeFullyInFrustum(
+      float x1, float y1, float z1, float x2, float y2, float z2) {
     for (int i = 0; i < 6; i++) {
       if (!(m_Frustum[i][A] * (x1) + m_Frustum[i][B] * (y1) +
-                m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x2) + m_Frustum[i][B] * (y1) +
-                m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x1) + m_Frustum[i][B] * (y2) +
-                m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x2) + m_Frustum[i][B] * (y2) +
-                m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z1) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x1) + m_Frustum[i][B] * (y1) +
-                m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x2) + m_Frustum[i][B] * (y1) +
-                m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x1) + m_Frustum[i][B] * (y2) +
-                m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
+              0))
         return false;
       if (!(m_Frustum[i][A] * (x2) + m_Frustum[i][B] * (y2) +
-                m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
-            0))
+                  m_Frustum[i][C] * (z2) + m_Frustum[i][D] >
+              0))
         return false;
     }
 
     return true;
   }
 
-  /*public*/ bool cubeInFrustum(float x1, float y1, float z1, float x2,
-                                float y2, float z2) {
+  /*public*/ bool cubeInFrustum(
+      float x1, float y1, float z1, float x2, float y2, float z2) {
     for (int i = 0; i < 6; i++) {
       if (m_Frustum[i][A] * (x1) + m_Frustum[i][B] * (y1) +
               m_Frustum[i][C] * (z1) + m_Frustum[i][D] >

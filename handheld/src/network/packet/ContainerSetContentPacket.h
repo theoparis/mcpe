@@ -9,8 +9,8 @@ class ContainerSetContentPacket : public Packet {
 public:
   ContainerSetContentPacket() {}
 
-  ContainerSetContentPacket(int containerId,
-                            const std::vector<ItemInstance> &newItems)
+  ContainerSetContentPacket(
+      int containerId, const std::vector<ItemInstance> &newItems)
       : containerId(containerId), items(newItems.begin(), newItems.end()) {}
 
   void write(RakNet::BitStream *bitStream) {

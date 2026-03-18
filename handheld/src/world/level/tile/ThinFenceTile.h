@@ -12,7 +12,7 @@ class ThinFenceTile : public Tile {
 
 public:
   ThinFenceTile(int id, int tex, int edgeTex, const Material *material,
-                bool dropsResources)
+      bool dropsResources)
       : super(id, tex, material), edgeTexture(edgeTex),
         dropsResources(dropsResources) {}
 
@@ -45,7 +45,7 @@ public:
 
   /*@Override*/
   void addAABBs(Level *level, int x, int y, int z, const AABB *box,
-                std::vector<AABB> &boxes) {
+      std::vector<AABB> &boxes) {
     bool n = attachsTo(level->getTile(x, y, z - 1));
     bool s = attachsTo(level->getTile(x, y, z + 1));
     bool w = attachsTo(level->getTile(x - 1, y, z));

@@ -8,7 +8,7 @@ class HangingEntityItem : public Item {
 public:
   HangingEntityItem(int id, int type);
   bool useOn(ItemInstance *itemInstance, Player *player, Level *level, int x,
-             int y, int z, int face, float clickX, float clickY, float clickZ);
+      int y, int z, int face, float clickX, float clickY, float clickZ);
 
 private:
   HangingEntity *createEntity(Level *level, int x, int y, int z, int dir);

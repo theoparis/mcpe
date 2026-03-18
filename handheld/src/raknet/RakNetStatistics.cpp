@@ -14,17 +14,15 @@ using namespace RakNet;
 // Verbosity level currently supports 0 (low), 1 (medium), 2 (high)
 // Buffer must be hold enough to hold the output string.  See the source to get
 // an idea of how many bytes will be output
-void RAK_DLL_EXPORT RakNet::StatisticsToString(RakNetStatistics *s,
-                                               char *buffer,
-                                               int verbosityLevel) {
+void RAK_DLL_EXPORT RakNet::StatisticsToString(
+    RakNetStatistics *s, char *buffer, int verbosityLevel) {
   if (s == 0) {
     sprintf(buffer, "stats is a NULL pointer in statsToString\n");
     return;
   }
 
   if (verbosityLevel == 0) {
-    sprintf(
-        buffer,
+    sprintf(buffer,
         "Bytes per second sent     %" PRINTF_64_BIT_MODIFIER "u\n"
         "Bytes per second received %" PRINTF_64_BIT_MODIFIER "u\n"
         "Current packetloss        %.1f%%\n",
@@ -32,8 +30,7 @@ void RAK_DLL_EXPORT RakNet::StatisticsToString(RakNetStatistics *s,
         (long long unsigned int)s->valueOverLastSecond[ACTUAL_BYTES_RECEIVED],
         s->packetlossLastSecond * 100.0f);
   } else if (verbosityLevel == 1) {
-    sprintf(
-        buffer,
+    sprintf(buffer,
         "Actual bytes per second sent       %" PRINTF_64_BIT_MODIFIER "u\n"
         "Actual bytes per second received   %" PRINTF_64_BIT_MODIFIER "u\n"
         "Message bytes per second pushed    %" PRINTF_64_BIT_MODIFIER "u\n"
@@ -52,32 +49,31 @@ void RAK_DLL_EXPORT RakNet::StatisticsToString(RakNetStatistics *s,
         (long long unsigned int)s->runningTotal[USER_MESSAGE_BYTES_PUSHED],
         s->packetlossLastSecond * 100.0f, s->packetlossTotal * 100.0f,
         (long long unsigned int)(uint64_t)((RakNet::GetTimeUS() -
-                                            s->connectionStartTime) /
-                                           1000000));
+                                               s->connectionStartTime) /
+            1000000));
 
     if (s->BPSLimitByCongestionControl != 0) {
       char buff2[128];
       sprintf(buff2,
-              "Send capacity                    %" PRINTF_64_BIT_MODIFIER
-              "u bytes per second (%.0f%%)\n",
-              (long long unsigned int)s->BPSLimitByCongestionControl,
-              100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
-                  s->BPSLimitByCongestionControl);
+          "Send capacity                    %" PRINTF_64_BIT_MODIFIER
+          "u bytes per second (%.0f%%)\n",
+          (long long unsigned int)s->BPSLimitByCongestionControl,
+          100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
+              s->BPSLimitByCongestionControl);
       strcat(buffer, buff2);
     }
     if (s->BPSLimitByOutgoingBandwidthLimit != 0) {
       char buff2[128];
       sprintf(buff2,
-              "Send limit                       %" PRINTF_64_BIT_MODIFIER
-              "u (%.0f%%)\n",
-              (long long unsigned int)s->BPSLimitByOutgoingBandwidthLimit,
-              100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
-                  s->BPSLimitByOutgoingBandwidthLimit);
+          "Send limit                       %" PRINTF_64_BIT_MODIFIER
+          "u (%.0f%%)\n",
+          (long long unsigned int)s->BPSLimitByOutgoingBandwidthLimit,
+          100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
+              s->BPSLimitByOutgoingBandwidthLimit);
       strcat(buffer, buff2);
     }
   } else {
-    sprintf(
-        buffer,
+    sprintf(buffer,
         "Actual bytes per second sent         %" PRINTF_64_BIT_MODIFIER "u\n"
         "Actual bytes per second received     %" PRINTF_64_BIT_MODIFIER "u\n"
         "Message bytes per second sent        %" PRINTF_64_BIT_MODIFIER "u\n"
@@ -131,27 +127,27 @@ void RAK_DLL_EXPORT RakNet::StatisticsToString(RakNetStatistics *s,
         (long long unsigned int)s->bytesInResendBuffer,
         s->packetlossLastSecond * 100.0f, s->packetlossTotal * 100.0f,
         (long long unsigned int)(uint64_t)((RakNet::GetTimeUS() -
-                                            s->connectionStartTime) /
-                                           1000000));
+                                               s->connectionStartTime) /
+            1000000));
 
     if (s->BPSLimitByCongestionControl != 0) {
       char buff2[128];
       sprintf(buff2,
-              "Send capacity                    %" PRINTF_64_BIT_MODIFIER
-              "u bytes per second (%.0f%%)\n",
-              (long long unsigned int)s->BPSLimitByCongestionControl,
-              100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
-                  s->BPSLimitByCongestionControl);
+          "Send capacity                    %" PRINTF_64_BIT_MODIFIER
+          "u bytes per second (%.0f%%)\n",
+          (long long unsigned int)s->BPSLimitByCongestionControl,
+          100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
+              s->BPSLimitByCongestionControl);
       strcat(buffer, buff2);
     }
     if (s->BPSLimitByOutgoingBandwidthLimit != 0) {
       char buff2[128];
       sprintf(buff2,
-              "Send limit                       %" PRINTF_64_BIT_MODIFIER
-              "u (%.0f%%)\n",
-              (long long unsigned int)s->BPSLimitByOutgoingBandwidthLimit,
-              100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
-                  s->BPSLimitByOutgoingBandwidthLimit);
+          "Send limit                       %" PRINTF_64_BIT_MODIFIER
+          "u (%.0f%%)\n",
+          (long long unsigned int)s->BPSLimitByOutgoingBandwidthLimit,
+          100.0f * s->valueOverLastSecond[ACTUAL_BYTES_SENT] /
+              s->BPSLimitByOutgoingBandwidthLimit);
       strcat(buffer, buff2);
     }
   }

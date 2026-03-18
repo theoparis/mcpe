@@ -64,7 +64,7 @@ public:
   /// \param[in] input The new element.
   /// \param[in] position The position of the new element.
   void Insert(const list_type &input, const unsigned int position,
-              const char *file, unsigned int line);
+      const char *file, unsigned int line);
 
   /// \brief Insert at the end of the list.
   /// \param[in] input The new element.
@@ -77,8 +77,7 @@ public:
   /// \param[in] filler The element use to fill new allocated capacity.
   /// \param[in] position The position of input in the list.
   void Replace(const list_type &input, const list_type filler,
-               const unsigned int position, const char *file,
-               unsigned int line);
+      const unsigned int position, const char *file, unsigned int line);
 
   /// \brief Replace the last element of the list by \a input.
   /// \param[in] input The element used to replace the last element.
@@ -109,8 +108,8 @@ public:
   unsigned int Size(void) const;
 
   /// \brief Clear the list
-  void Clear(bool doNotDeallocateSmallBlocks, const char *file,
-             unsigned int line);
+  void Clear(
+      bool doNotDeallocateSmallBlocks, const char *file, unsigned int line);
 
   /// \brief Preallocate the list, so it needs fewer reallocations at runtime.
   void Preallocate(unsigned countNeeded, const char *file, unsigned int line);
@@ -148,8 +147,8 @@ template <class list_type> List<list_type>::List(const List &original_copy) {
     list_size = 0;
     allocation_size = 0;
   } else {
-    listArray = RakNet::OP_NEW_ARRAY<list_type>(original_copy.list_size,
-                                                _FILE_AND_LINE_);
+    listArray = RakNet::OP_NEW_ARRAY<list_type>(
+        original_copy.list_size, _FILE_AND_LINE_);
 
     for (unsigned int counter = 0; counter < original_copy.list_size; ++counter)
       listArray[counter] = original_copy.listArray[counter];
@@ -175,11 +174,11 @@ List<list_type> &List<list_type>::operator=(const List &original_copy) {
     }
 
     else {
-      listArray = RakNet::OP_NEW_ARRAY<list_type>(original_copy.list_size,
-                                                  _FILE_AND_LINE_);
+      listArray = RakNet::OP_NEW_ARRAY<list_type>(
+          original_copy.list_size, _FILE_AND_LINE_);
 
       for (unsigned int counter = 0; counter < original_copy.list_size;
-           ++counter)
+          ++counter)
         listArray[counter] = original_copy.listArray[counter];
       // Don't call constructors, assignment operators, etc.
       // memcpy(listArray, original_copy.listArray,
@@ -193,8 +192,8 @@ List<list_type> &List<list_type>::operator=(const List &original_copy) {
 }
 
 template <class list_type>
-inline list_type &
-List<list_type>::operator[](const unsigned int position) const {
+inline list_type &List<list_type>::operator[](
+    const unsigned int position) const {
 #ifdef _DEBUG
   if (position >= list_size) {
     RakAssert(position < list_size);
@@ -210,8 +209,8 @@ inline list_type &List<list_type>::Get(const unsigned int position) const {
 }
 
 template <class list_type>
-void List<list_type>::Push(const list_type &input, const char *file,
-                           unsigned int line) {
+void List<list_type>::Push(
+    const list_type &input, const char *file, unsigned int line) {
   Insert(input, file, line);
 }
 
@@ -225,8 +224,7 @@ template <class list_type> inline list_type &List<list_type>::Pop(void) {
 
 template <class list_type>
 void List<list_type>::Insert(const list_type &input,
-                             const unsigned int position, const char *file,
-                             unsigned int line) {
+    const unsigned int position, const char *file, unsigned int line) {
 #ifdef _DEBUG
   if (position > list_size) {
     RakAssert(position <= list_size);
@@ -273,8 +271,8 @@ void List<list_type>::Insert(const list_type &input,
 }
 
 template <class list_type>
-void List<list_type>::Insert(const list_type &input, const char *file,
-                             unsigned int line) {
+void List<list_type>::Insert(
+    const list_type &input, const char *file, unsigned int line) {
   // Reallocate list if necessary
 
   if (list_size == allocation_size) {
@@ -311,9 +309,8 @@ void List<list_type>::Insert(const list_type &input, const char *file,
 
 template <class list_type>
 inline void List<list_type>::Replace(const list_type &input,
-                                     const list_type filler,
-                                     const unsigned int position,
-                                     const char *file, unsigned int line) {
+    const list_type filler, const unsigned int position, const char *file,
+    unsigned int line) {
   if ((list_size > 0) && (position < list_size)) {
     // Direct replacement
     listArray[position] = input;
@@ -417,8 +414,8 @@ inline unsigned int List<list_type>::Size(void) const {
 }
 
 template <class list_type>
-void List<list_type>::Clear(bool doNotDeallocateSmallBlocks, const char *file,
-                            unsigned int line) {
+void List<list_type>::Clear(
+    bool doNotDeallocateSmallBlocks, const char *file, unsigned int line) {
   if (allocation_size == 0)
     return;
 
@@ -453,8 +450,8 @@ void List<list_type>::Compress(const char *file, unsigned int line) {
 }
 
 template <class list_type>
-void List<list_type>::Preallocate(unsigned countNeeded, const char *file,
-                                  unsigned int line) {
+void List<list_type>::Preallocate(
+    unsigned countNeeded, const char *file, unsigned int line) {
   unsigned amountToAllocate = allocation_size;
   if (allocation_size == 0)
     amountToAllocate = 16;

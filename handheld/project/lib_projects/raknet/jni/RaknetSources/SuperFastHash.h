@@ -11,8 +11,8 @@
 // is 20% faster than the one on that page but has more collisions
 
 uint32_t SuperFastHash(const char *data, int length);
-uint32_t SuperFastHashIncremental(const char *data, int len,
-                                  unsigned int lastHash);
+uint32_t SuperFastHashIncremental(
+    const char *data, int len, unsigned int lastHash);
 uint32_t SuperFastHashFile(const char *filename);
 uint32_t SuperFastHashFilePtr(FILE *fp);
 

@@ -67,7 +67,7 @@ public:
     // We either want to clear all mobs, or a new level is created
     if (wantClear || newLevel) {
       for (std::map<int, Mob *>::iterator it = _mobs.begin(); it != _mobs.end();
-           ++it)
+          ++it)
         delete it->second;
       _mobs.clear();
 

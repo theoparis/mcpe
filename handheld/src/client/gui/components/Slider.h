@@ -5,7 +5,7 @@
 #include "GuiElement.h"
 enum SliderType {
   SliderProgress, // Sets slider between {0..1}
-  SliderStep      // Uses the closest step
+  SliderStep // Uses the closest step
 };
 class Slider : public GuiElement {
   typedef GuiElement super;
@@ -13,9 +13,9 @@ class Slider : public GuiElement {
 public:
   // Creates a progress slider with no steps
   Slider(Minecraft *minecraft, const Options::Option *option, float progressMin,
-         float progressMax);
+      float progressMax);
   Slider(Minecraft *minecraft, const Options::Option *option,
-         const std::vector<int> &stepVec);
+      const std::vector<int> &stepVec);
   virtual void render(Minecraft *minecraft, int xm, int ym);
 
   virtual void mouseClicked(Minecraft *minecraft, int x, int y, int buttonNum);

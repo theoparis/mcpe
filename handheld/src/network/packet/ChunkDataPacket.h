@@ -42,9 +42,8 @@ public:
                 setSize);
             // block data is only 4 bits per block
             chunkData.Write(
-                (const char
-                     *)(&blockData
-                             .data[(colDataPosition + (set << setShift)) >> 1]),
+                (const char *)(&blockData
+                        .data[(colDataPosition + (set << setShift)) >> 1]),
                 setSize >> 1);
           }
         }

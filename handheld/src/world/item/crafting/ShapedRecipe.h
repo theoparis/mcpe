@@ -10,7 +10,7 @@
 class ShapedRecipe : public Recipe {
 public:
   ShapedRecipe(int width, int height, ItemInstance *recipeItems,
-               const ItemInstance &result)
+      const ItemInstance &result)
       : width(width), height(height), recipeItems(recipeItems),
         resultId(result.id), result(result)
   //@todo: move slots to upper left
@@ -56,8 +56,8 @@ public:
   }
 
 private:
-  bool matches(CraftingContainer *craftSlots, int xOffs, int yOffs,
-               bool xFlip) {
+  bool matches(
+      CraftingContainer *craftSlots, int xOffs, int yOffs, bool xFlip) {
     for (int x = 0; x < 3; x++) {
       for (int y = 0; y < 3; y++) {
         int xs = x - xOffs;

@@ -67,8 +67,8 @@ void TelnetTransport::Send(SystemAddress systemAddress, const char *data, ...) {
   }
   va_list ap;
   va_start(ap, data);
-  _vsnprintf(text + prefixLength, REMOTE_MAX_TEXT_INPUT - prefixLength, data,
-             ap);
+  _vsnprintf(
+      text + prefixLength, REMOTE_MAX_TEXT_INPUT - prefixLength, data, ap);
   va_end(ap);
   text[REMOTE_MAX_TEXT_INPUT - 1] = 0;
 
@@ -126,8 +126,8 @@ Packet *TelnetTransport::Receive(void) {
         remoteClient->textInput[i] = 8;
       strcat(remoteClient->textInput, remoteClient->lastSentTextInput);
       tcpInterface->Send((const char *)remoteClient->textInput,
-                         (unsigned int)strlen(remoteClient->textInput),
-                         p->systemAddress, false);
+          (unsigned int)strlen(remoteClient->textInput), p->systemAddress,
+          false);
       strcpy(remoteClient->textInput, remoteClient->lastSentTextInput);
       remoteClient->cursorPosition =
           (unsigned int)strlen(remoteClient->textInput);
@@ -168,8 +168,8 @@ Packet *TelnetTransport::Receive(void) {
       char spaceThenBack[2];
       spaceThenBack[0] = ' ';
       spaceThenBack[1] = 8;
-      tcpInterface->Send((const char *)spaceThenBack, 2, p->systemAddress,
-                         false);
+      tcpInterface->Send(
+          (const char *)spaceThenBack, 2, p->systemAddress, false);
     }
 
     gotLine = ReassembleLine(remoteClient, p->data[i]);
@@ -179,12 +179,12 @@ Packet *TelnetTransport::Receive(void) {
           (Packet *)rakMalloc_Ex(sizeof(Packet), _FILE_AND_LINE_);
       reassembledLine->length = (unsigned int)strlen(remoteClient->textInput);
       memcpy(remoteClient->lastSentTextInput, remoteClient->textInput,
-             reassembledLine->length + 1);
+          reassembledLine->length + 1);
       RakAssert(reassembledLine->length < REMOTE_MAX_TEXT_INPUT);
       reassembledLine->data = (unsigned char *)rakMalloc_Ex(
           reassembledLine->length + 1, _FILE_AND_LINE_);
       memcpy(reassembledLine->data, remoteClient->textInput,
-             reassembledLine->length);
+          reassembledLine->length);
 #ifdef _PRINTF_DEBUG
       memset(remoteClient->textInput, 0, REMOTE_MAX_TEXT_INPUT);
 #endif
@@ -217,7 +217,7 @@ SystemAddress TelnetTransport::HasNewIncomingConnection(void) {
     command[0] = 255; // IAC
     // command[1]=253; // WON'T
     command[1] = 251; // WILL
-    command[2] = 1;   // ECHO
+    command[2] = 1; // ECHO
     tcpInterface->Send((const char *)command, 3, newConnection, false);
 
     /*

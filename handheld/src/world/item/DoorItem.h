@@ -23,7 +23,7 @@ public:
   }
 
   bool useOn(ItemInstance *instance, Player *player, Level *level, int x, int y,
-             int z, int face, float clickX, float clickY, float clickZ) {
+      int z, int face, float clickX, float clickY, float clickZ) {
     if (face != Facing::UP)
       return false;
     y++;
@@ -58,17 +58,15 @@ public:
     if (dir == 3)
       xra = +1;
 
-    int solidLeft =
-        (level->isSolidBlockingTile(x - xra, y, z - zra) ? 1 : 0) +
+    int solidLeft = (level->isSolidBlockingTile(x - xra, y, z - zra) ? 1 : 0) +
         (level->isSolidBlockingTile(x - xra, y + 1, z - zra) ? 1 : 0);
-    int solidRight =
-        (level->isSolidBlockingTile(x + xra, y, z + zra) ? 1 : 0) +
+    int solidRight = (level->isSolidBlockingTile(x + xra, y, z + zra) ? 1 : 0) +
         (level->isSolidBlockingTile(x + xra, y + 1, z + zra) ? 1 : 0);
 
     bool doorLeft = (level->getTile(x - xra, y, z - zra) == tile->id) ||
-                    (level->getTile(x - xra, y + 1, z - zra) == tile->id);
+        (level->getTile(x - xra, y + 1, z - zra) == tile->id);
     bool doorRight = (level->getTile(x + xra, y, z + zra) == tile->id) ||
-                     (level->getTile(x + xra, y + 1, z + zra) == tile->id);
+        (level->getTile(x + xra, y + 1, z + zra) == tile->id);
 
     bool flip = false;
     if (doorLeft && !doorRight)

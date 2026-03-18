@@ -8,8 +8,8 @@
 
 I18n::Map I18n::_strings;
 
-void I18n::loadLanguage(AppPlatform *platform,
-                        const std::string &languageCode) {
+void I18n::loadLanguage(
+    AppPlatform *platform, const std::string &languageCode) {
   _strings.clear();
   fillTranslations(platform, "lang/en_US.lang", true);
 
@@ -34,8 +34,8 @@ std::string I18n::get(const std::string &id) {
   return id + '<'; // lang.getElement(id);
 }
 
-void I18n::fillTranslations(AppPlatform *platform, const std::string &filename,
-                            bool overwrite) {
+void I18n::fillTranslations(
+    AppPlatform *platform, const std::string &filename, bool overwrite) {
   BinaryBlob blob = platform->readAssetFile(filename);
   if (!blob.data || blob.size <= 0)
     return;
@@ -91,8 +91,8 @@ std::string I18n::getDescriptionString(const ItemInstance &item) {
 
   // Remove all materials from the identifier, since swordWood should
   // be read as just sword
-  const char *materials[] = {"wood",  "iron",    "stone", "diamond", "gold",
-                             "brick", "emerald", "lapis", "cloth"};
+  const char *materials[] = {"wood", "iron", "stone", "diamond", "gold",
+      "brick", "emerald", "lapis", "cloth"};
 
   Util::removeAll(s, materials, sizeof(materials) / sizeof(const char *));
   if (I18n::get(s, trans))

@@ -88,8 +88,7 @@ public:
   /// and passed to the Send() or SendLists() function. Identifies this update
   /// for ID_SND_RECEIPT_LOSS and ID_SND_RECEIPT_ACKED
   void BeginUnreliableAckedSerialize(SerializationContext *context,
-                                     RakNetGUID _guid, BitStream *_bitStream,
-                                     uint32_t _sendReceipt);
+      RakNetGUID _guid, BitStream *_bitStream, uint32_t _sendReceipt);
 
   /// \brief Call before doing one or more SerializeVariable calls for data that
   /// may be sent differently to every remote system (such as an invisibility
@@ -107,8 +106,8 @@ public:
   /// This can be a stack object just passed to the function.
   /// \param[in] _guid Which system we are sending to
   /// \param[in] _bitSteam Which bitStream to write to
-  void BeginUniqueSerialize(SerializationContext *context, RakNetGUID _guid,
-                            BitStream *_bitStream);
+  void BeginUniqueSerialize(
+      SerializationContext *context, RakNetGUID _guid, BitStream *_bitStream);
 
   /// \brief Call before doing one or more SerializeVariable calls for data that
   /// is sent with the same value to every remote system (such as health,
@@ -125,8 +124,7 @@ public:
   /// variables will be written, rather than checking against prior sent values.
   /// \param[in] _bitSteam Which bitStream to write to
   void BeginIdenticalSerialize(SerializationContext *context,
-                               bool _isFirstSerializeToThisSystem,
-                               BitStream *_bitStream);
+      bool _isFirstSerializeToThisSystem, BitStream *_bitStream);
 
   /// \brief Call after BeginUnreliableAckedSerialize(), BeginUniqueSerialize(),
   /// or BeginIdenticalSerialize(), then after calling SerializeVariable() one
@@ -186,8 +184,8 @@ public:
   /// \param[in] receiptId Encoded in bytes 1-4 inclusive of ID_SND_RECEIPT_LOSS
   /// and ID_SND_RECEIPT_ACKED
   /// \param[in] messageArrived True for ID_SND_RECEIPT_ACKED, false otherwise
-  void OnMessageReceipt(RakNetGUID guid, uint32_t receiptId,
-                        bool messageArrived);
+  void OnMessageReceipt(
+      RakNetGUID guid, uint32_t receiptId, bool messageArrived);
 
   /// Call to Serialize a variable
   /// Will write to the bitSteam passed to \a context true, variableValue if the
@@ -204,8 +202,8 @@ public:
   /// \param[in] variable A variable to write to the bitStream passed to \a
   /// context
   template <class VarType>
-  void SerializeVariable(SerializationContext *context,
-                         const VarType &variable) {
+  void SerializeVariable(
+      SerializationContext *context, const VarType &variable) {
     if (context->newSystemSend) {
       if (context->variableHistory->variableListDeltaTracker
               .IsPastEndOfList() == false) {
@@ -223,8 +221,8 @@ public:
       context->anyVariablesWritten |=
           context->variableHistory->variableListDeltaTracker
               .WriteVarToBitstream(variable, context->bitStream,
-                                   context->changedVariables->bitField,
-                                   context->changedVariables->bitWriteIndex++);
+                  context->changedVariables->bitField,
+                  context->changedVariables->bitWriteIndex++);
     } else {
       if (context->variableHistoryIdentical) {
         // Identical serialization to a number of systems
@@ -251,8 +249,8 @@ public:
   /// context
   template <class VarType>
   bool DeserializeVariable(DeserializationContext *context, VarType &variable) {
-    return VariableListDeltaTracker::ReadVarFromBitstream(variable,
-                                                          context->bitStream);
+    return VariableListDeltaTracker::ReadVarFromBitstream(
+        variable, context->bitStream);
   }
 
 protected:
@@ -268,8 +266,8 @@ protected:
   // static int Replica2ObjectComp( const uint32_t &key, ChangedVariablesList*
   // const &data );
 
-  static int UpdatedVariablesListPtrComp(const uint32_t &key,
-                                         ChangedVariablesList *const &data);
+  static int UpdatedVariablesListPtrComp(
+      const uint32_t &key, ChangedVariablesList *const &data);
 
   // For each remote system, track the last values of variables we sent to them,
   // and the history of what values changed per call to Send() Every serialize
@@ -280,8 +278,7 @@ protected:
   struct RemoteSystemVariableHistory {
     RakNetGUID guid;
     VariableListDeltaTracker variableListDeltaTracker;
-    DataStructures::OrderedList<
-        uint32_t, ChangedVariablesList *,
+    DataStructures::OrderedList<uint32_t, ChangedVariablesList *,
         VariableDeltaSerializer::UpdatedVariablesListPtrComp>
         updatedVariablesHistory;
   };
@@ -300,8 +297,8 @@ protected:
   RakNet::BitStream identicalSerializationBs;
 
   void FreeVarsAssociatedWithReceipt(RakNetGUID guid, uint32_t receiptId);
-  void DirtyAndFreeVarsAssociatedWithReceipt(RakNetGUID guid,
-                                             uint32_t receiptId);
+  void DirtyAndFreeVarsAssociatedWithReceipt(
+      RakNetGUID guid, uint32_t receiptId);
   unsigned int GetVarsWrittenPerRemoteSystemListIndex(RakNetGUID guid);
   void RemoveRemoteSystemVariableHistory(void);
 
@@ -310,8 +307,7 @@ protected:
   ChangedVariablesList *AllocChangedVariablesList(void);
   void FreeChangedVariablesList(ChangedVariablesList *changedVariables);
   void StoreChangedVariablesList(RemoteSystemVariableHistory *variableHistory,
-                                 ChangedVariablesList *changedVariables,
-                                 uint32_t sendReceipt);
+      ChangedVariablesList *changedVariables, uint32_t sendReceipt);
 
   RemoteSystemVariableHistory *StartVariableHistoryWrite(RakNetGUID guid);
   unsigned int GetRemoteSystemHistoryListIndex(RakNetGUID guid);

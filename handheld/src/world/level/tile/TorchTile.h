@@ -43,8 +43,7 @@ public:
   }
 
   int getPlacedOnFaceDataValue(Level *level, int x, int y, int z, int face,
-                               float clickX, float clickY, float clickZ,
-                               int itemValue) {
+      float clickX, float clickY, float clickZ, int itemValue) {
     int dir = itemValue;
 
     if (face == 1 && isConnection(level, x, y - 1, z))
@@ -105,8 +104,8 @@ public:
     }
   }
 
-  HitResult clip(Level *level, int x, int y, int z, const Vec3 &a,
-                 const Vec3 &b) {
+  HitResult clip(
+      Level *level, int x, int y, int z, const Vec3 &a, const Vec3 &b) {
     int dir = level->getData(x, y, z) & 7;
 
     float r = 0.15f;

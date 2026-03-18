@@ -50,11 +50,9 @@ void SimpleChooseLevelScreen::render(int xm, int ym, float a) {
   glEnable2(GL_BLEND);
 
   drawCenteredString(minecraft->font, "Mobs, health and gather resources",
-                     width / 2, bSurvival->y + bSurvival->height + 4,
-                     0xffcccccc);
+      width / 2, bSurvival->y + bSurvival->height + 4, 0xffcccccc);
   drawCenteredString(minecraft->font, "Unlimited resources and flying",
-                     width / 2, bCreative->y + bCreative->height + 4,
-                     0xffcccccc);
+      width / 2, bCreative->y + bCreative->height + 4, 0xffcccccc);
 
   Screen::render(xm, ym, a);
   glDisable2(GL_BLEND);

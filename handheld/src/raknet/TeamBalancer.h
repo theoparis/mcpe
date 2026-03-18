@@ -186,9 +186,8 @@ protected:
   /// \internal
   virtual PluginReceiveResult OnReceive(Packet *packet);
   /// \internal
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   /// \internal
   void OnAttach(void);
 
@@ -209,43 +208,42 @@ protected:
   DataStructures::List<unsigned short> teamMemberCounts;
   DataStructures::List<TeamMember> teamMembers;
   unsigned int GetMemberIndex(NetworkID memberId, RakNetGUID guid) const;
-  unsigned int
-  AddTeamMember(const TeamMember &tm); // Returns index of new member
+  unsigned int AddTeamMember(
+      const TeamMember &tm); // Returns index of new member
   void RemoveTeamMember(unsigned int index);
   void EvenTeams(void);
   unsigned int GetMemberIndexToSwitchTeams(
       const DataStructures::List<TeamId> &sourceTeamNumbers,
       TeamId targetTeamNumber);
-  void GetOverpopulatedTeams(DataStructures::List<TeamId> &overpopulatedTeams,
-                             int maxTeamSize);
+  void GetOverpopulatedTeams(
+      DataStructures::List<TeamId> &overpopulatedTeams, int maxTeamSize);
   void SwitchMemberTeam(unsigned int teamMemberIndex, TeamId destinationTeam);
   void NotifyTeamAssigment(unsigned int teamMemberIndex);
   bool WeAreHost(void) const;
   PluginReceiveResult OnTeamAssigned(Packet *packet);
   PluginReceiveResult OnRequestedTeamChangePending(Packet *packet);
   PluginReceiveResult OnTeamsLocked(Packet *packet);
-  void GetMinMaxTeamMembers(int &minMembersOnASingleTeam,
-                            int &maxMembersOnASingleTeam);
-  TeamId
-  GetNextDefaultTeam(void); // Accounting for team balancing and team limits,
-                            // get the team a player should be placed on
-  bool TeamWouldBeOverpopulatedOnAddition(
-      TeamId teamId,
+  void GetMinMaxTeamMembers(
+      int &minMembersOnASingleTeam, int &maxMembersOnASingleTeam);
+  TeamId GetNextDefaultTeam(
+      void); // Accounting for team balancing and team limits,
+             // get the team a player should be placed on
+  bool TeamWouldBeOverpopulatedOnAddition(TeamId teamId,
       unsigned int teamMemberSize); // Accounting for team balancing and team
                                     // limits, would this team be overpopulated
                                     // if a member was added to it?
-  bool TeamWouldBeUnderpopulatedOnLeave(TeamId teamId,
-                                        unsigned int teamMemberSize);
+  bool TeamWouldBeUnderpopulatedOnLeave(
+      TeamId teamId, unsigned int teamMemberSize);
   TeamId GetSmallestNonFullTeam(void) const;
   TeamId GetFirstNonFullTeam(void) const;
   void MoveMemberThatWantsToJoinTeam(TeamId teamId);
   TeamId MoveMemberThatWantsToJoinTeamInternal(TeamId teamId);
   void NotifyTeamsLocked(RakNetGUID target, TeamId requestedTeam);
-  void NotifyTeamSwitchPending(RakNetGUID target, TeamId requestedTeam,
-                               NetworkID memberId);
+  void NotifyTeamSwitchPending(
+      RakNetGUID target, TeamId requestedTeam, NetworkID memberId);
   void NotifyNoTeam(NetworkID memberId, RakNetGUID target);
-  void SwapTeamMembersByRequest(unsigned int memberIndex1,
-                                unsigned int memberIndex2);
+  void SwapTeamMembersByRequest(
+      unsigned int memberIndex1, unsigned int memberIndex2);
   void RemoveByGuid(RakNetGUID rakNetGUID);
   bool TeamsWouldBeEvenOnSwitch(TeamId t1, TeamId t2);
 };

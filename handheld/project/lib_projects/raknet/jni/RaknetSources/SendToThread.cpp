@@ -18,17 +18,16 @@ DataStructures::ThreadsafeAllocatingQueue<SendToThread::SendToThreadBlock>
 ThreadPool<SendToThread::SendToThreadBlock *, SendToThread::SendToThreadBlock *>
     SendToThread::threadPool;
 
-SendToThread::SendToThreadBlock *
-SendToWorkerThread(SendToThread::SendToThreadBlock *input, bool *returnOutput,
-                   void *perThreadData) {
+SendToThread::SendToThreadBlock *SendToWorkerThread(
+    SendToThread::SendToThreadBlock *input, bool *returnOutput,
+    void *perThreadData) {
   (void)perThreadData;
   *returnOutput = false;
   //	RakNet::TimeUS *mostRecentTime=(RakNet::TimeUS *)input->data;
   //	*mostRecentTime=RakNet::GetTimeUS();
   SocketLayer::SendTo(input->s, input->data, input->dataWriteOffset,
-                      input->systemAddress,
-                      input->remotePortRakNetWasStartedOn_PS3,
-                      input->extraSocketOptions, _FILE_AND_LINE_);
+      input->systemAddress, input->remotePortRakNetWasStartedOn_PS3,
+      input->extraSocketOptions, _FILE_AND_LINE_);
   SendToThread::objectQueue.Push(input);
   return 0;
 }
@@ -65,8 +64,7 @@ SendToThread::SendToThreadBlock *SendToThread::AllocateBlock(void) {
 }
 void SendToThread::ProcessBlock(SendToThread::SendToThreadBlock *threadedSend) {
   RakAssert(threadedSend->dataWriteOffset > 0 &&
-            threadedSend->dataWriteOffset <=
-                MAXIMUM_MTU_SIZE - UDP_HEADER_SIZE);
+      threadedSend->dataWriteOffset <= MAXIMUM_MTU_SIZE - UDP_HEADER_SIZE);
   threadPool.AddInput(SendToWorkerThread, threadedSend);
 }
 #endif

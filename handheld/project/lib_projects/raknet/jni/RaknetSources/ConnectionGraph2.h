@@ -52,9 +52,7 @@ public:
   /// \return True if \a remoteSystemGuid was found. Otherwise false, and \a
   /// saOut, \a guidOut remain unchanged. \a outLength will be set to 0.
   bool GetConnectionListForRemoteSystem(RakNetGUID remoteSystemGuid,
-                                        SystemAddress *saOut,
-                                        RakNetGUID *guidOut,
-                                        unsigned int *outLength);
+      SystemAddress *saOut, RakNetGUID *guidOut, unsigned int *outLength);
 
   /// Returns if g1 is connected to g2
   bool ConnectionExists(RakNetGUID g1, RakNetGUID g2);
@@ -90,8 +88,8 @@ public:
   /// otherwise
   /// \param[in] The packet->SystemAddress member
   /// \param[in] The packet->guid member
-  void AddParticipant(const SystemAddress &systemAddress,
-                      RakNetGUID rakNetGUID);
+  void AddParticipant(
+      const SystemAddress &systemAddress, RakNetGUID rakNetGUID);
 
   /// Get the participants added with AddParticipant()
   /// \param[out] participantList Participants added with AddParticipant();
@@ -105,13 +103,13 @@ public:
     uint16_t sendersPingToThatSystem;
   };
   /// \internal
-  static int SystemAddressAndGuidComp(const SystemAddressAndGuid &key,
-                                      const SystemAddressAndGuid &data);
+  static int SystemAddressAndGuidComp(
+      const SystemAddressAndGuid &key, const SystemAddressAndGuid &data);
 
   /// \internal
   struct RemoteSystem {
     DataStructures::OrderedList<SystemAddressAndGuid, SystemAddressAndGuid,
-                                ConnectionGraph2::SystemAddressAndGuidComp>
+        ConnectionGraph2::SystemAddressAndGuidComp>
         remoteConnections;
     RakNetGUID guid;
   };
@@ -120,19 +118,18 @@ public:
 
 protected:
   /// \internal
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   /// \internal
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming);
+      RakNetGUID rakNetGUID, bool isIncoming);
   /// \internal
   virtual PluginReceiveResult OnReceive(Packet *packet);
 
   // List of systems I am connected to, which in turn stores which systems they
   // are connected to
   DataStructures::OrderedList<RakNetGUID, RemoteSystem *,
-                              ConnectionGraph2::RemoteSystemComp>
+      ConnectionGraph2::RemoteSystemComp>
       remoteSystems;
 
   bool autoProcessNewConnections;

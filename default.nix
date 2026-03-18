@@ -7,8 +7,10 @@
   nixfmt,
   nixd,
   llvmPackages,
-  libGL,
-  angle,
+  libglvnd,
+  shaderc,
+  vulkan-headers,
+  vulkan-loader,
   libpng,
   openal,
   sdl3,
@@ -27,10 +29,13 @@ stdenv.mkDerivation {
     nixfmt
     nixd
     llvmPackages.clang-tools
+    shaderc
   ];
   buildInputs = [
-    libGL
-    angle
+    libglvnd
+    libglvnd.dev
+    vulkan-loader
+    vulkan-headers
     libpng
     openal
     sdl3
@@ -41,7 +46,6 @@ stdenv.mkDerivation {
 
   cmakeFlags = [
     "-GNinja"
-    "-DBUILD_WITH_NIX=ON"
   ];
 
   postInstall = ''

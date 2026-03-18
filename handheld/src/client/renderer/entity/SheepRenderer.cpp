@@ -18,8 +18,8 @@ int SheepRenderer::prepareArmor(Mob *mob, int layer, float a) {
     float brightness = sheep->getBrightness(a);
     int color = sheep->getColor();
     glColor4f2(brightness * Sheep::COLOR[color][0],
-               brightness * Sheep::COLOR[color][1],
-               brightness * Sheep::COLOR[color][2], 1);
+        brightness * Sheep::COLOR[color][1],
+        brightness * Sheep::COLOR[color][2], 1);
     return 1;
   }
   return -1;

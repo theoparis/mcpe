@@ -42,7 +42,7 @@ void StemTile::tick(Level *level, int x, int y, int z, Random *random) {
           int below = level->getTile(xx, y - 1, zz);
           if (level->getTile(xx, y, zz) == 0 &&
               (below == Tile::farmland->id || below == Tile::dirt->id ||
-               below == Tile::grass->id)) {
+                  below == Tile::grass->id)) {
             level->setTile(xx, y, zz, fruit->id);
             break;
           }
@@ -138,8 +138,8 @@ int StemTile::getConnectDir(LevelSource *level, int x, int y, int z) {
   return -1;
 }
 
-void StemTile::spawnResources(Level *level, int x, int y, int z, int data,
-                              float odds) {
+void StemTile::spawnResources(
+    Level *level, int x, int y, int z, int data, float odds) {
   super::spawnResources(level, x, y, z, data, odds);
 
   if (level->isClientSide) {

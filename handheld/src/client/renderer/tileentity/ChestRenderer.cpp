@@ -6,8 +6,8 @@
 #include "../gles.h"
 #include "TileEntityRenderer.h"
 
-void ChestRenderer::render(TileEntity *entity, float x, float y, float z,
-                           float a) {
+void ChestRenderer::render(
+    TileEntity *entity, float x, float y, float z, float a) {
   ChestTileEntity *chest = (ChestTileEntity *)entity;
   int data = 0;
 

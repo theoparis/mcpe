@@ -6,8 +6,8 @@ void Feature::placeBlock(Level *level, int x, int y, int z, int tile) {
   placeBlock(level, x, y, z, tile, 0);
 }
 
-void Feature::placeBlock(Level *level, int x, int y, int z, int tile,
-                         int data) {
+void Feature::placeBlock(
+    Level *level, int x, int y, int z, int tile, int data) {
   if (doUpdate) {
     level->setTileAndData(x, y, z, tile, data);
     /*

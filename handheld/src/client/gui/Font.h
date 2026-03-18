@@ -10,6 +10,7 @@
 
 class Textures;
 class Options;
+class GraphicsBackend;
 
 class Font {
 public:
@@ -20,6 +21,8 @@ public:
 
   void init(Options *options);
   void onGraphicsReset();
+  static void setGraphicsBackend(
+      GraphicsBackend *graphicsBackend, float width, float height);
 
   void draw(const char *str, float x, float y, int color);
   void draw(const std::string &str, float x, float y, int color);
@@ -36,10 +39,10 @@ public:
 
 private:
   void buildChar(unsigned char i, float x = 0, float y = 0);
-  void drawSlow(const std::string &str, float x, float y, int color,
-                bool darken = false);
-  void drawSlow(const char *str, float x, float y, int color,
-                bool darken = false);
+  void drawSlow(
+      const std::string &str, float x, float y, int color, bool darken = false);
+  void drawSlow(
+      const char *str, float x, float y, int color, bool darken = false);
 
 public:
   int fontTexture;
@@ -64,6 +67,8 @@ private:
   int _cols;
   int _rows;
   unsigned char _charOffset;
+  int _textureWidth;
+  int _textureHeight;
 };
 
 #endif /*NET_MINECRAFT_CLIENT_GUI__Font_H__*/

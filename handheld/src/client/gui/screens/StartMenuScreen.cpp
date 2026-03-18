@@ -87,7 +87,7 @@ void StartMenuScreen::setupPositions() {
 
   copyrightPosX = width - minecraft->font->width(copyright) - 1;
   versionPosX = (width - minecraft->font->width(version)) /
-                2; // - minecraft->font->width(version) - 2;
+      2; // - minecraft->font->width(version) - 2;
 }
 
 void StartMenuScreen::tick() { _updateLicense(); }
@@ -140,15 +140,22 @@ void StartMenuScreen::render(int xm, int ym, float a) {
     const float scale = 2.0f * wh / (float)data->w;
     const float h = scale * (float)data->h;
 
-    // Render title text
-    Tesselator &t = Tesselator::instance;
-    glColor4f2(1, 1, 1, 1);
-    t.begin();
-    t.vertexUV(x - wh, y + h, blitOffset, 0, 1);
-    t.vertexUV(x + wh, y + h, blitOffset, 1, 1);
-    t.vertexUV(x + wh, y + 0, blitOffset, 1, 0);
-    t.vertexUV(x - wh, y + 0, blitOffset, 0, 0);
-    t.draw();
+    GraphicsTexturedQuad quad;
+    quad.x = x - wh;
+    quad.y = y;
+    quad.width = wh * 2.0f;
+    quad.height = h;
+    if (!tryDrawTexturedQuad(quad)) {
+      // Render title text
+      Tesselator &t = Tesselator::instance;
+      glColor4f2(1, 1, 1, 1);
+      t.begin();
+      t.vertexUV(x - wh, y + h, blitOffset, 0, 1);
+      t.vertexUV(x + wh, y + h, blitOffset, 1, 1);
+      t.vertexUV(x + wh, y + 0, blitOffset, 1, 0);
+      t.vertexUV(x - wh, y + 0, blitOffset, 0, 0);
+      t.draw();
+    }
   }
 
   // #if defined(SDL3)

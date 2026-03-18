@@ -23,7 +23,7 @@ GameMode::GameMode(Minecraft *minecraft)
 /*virtual*/
 Player *GameMode::createPlayer(Level *level) {
   return new LocalPlayer(minecraft, level, minecraft->user,
-                         level->dimension->id, isCreativeType());
+      level->dimension->id, isCreativeType());
 }
 
 /*virtual*/
@@ -69,9 +69,8 @@ bool GameMode::destroyBlock(int x, int y, int z, int face) {
   if (changed) {
 #ifndef STANDALONE_SERVER
     minecraft->soundEngine->play(oldTile->soundType->getBreakSound(), x + 0.5f,
-                                 y + 0.5f, z + 0.5f,
-                                 (oldTile->soundType->getVolume() + 1) / 2,
-                                 oldTile->soundType->getPitch() * 0.8f);
+        y + 0.5f, z + 0.5f, (oldTile->soundType->getVolume() + 1) / 2,
+        oldTile->soundType->getPitch() * 0.8f);
 #endif
     oldTile->destroy(level, x, y, z, data);
     if (minecraft->options.destroyVibration)
@@ -86,14 +85,14 @@ bool GameMode::destroyBlock(int x, int y, int z, int face) {
 }
 /*virtual*/
 bool GameMode::useItemOn(Player *player, Level *level, ItemInstance *item,
-                         int x, int y, int z, int face, const Vec3 &hit) {
+    int x, int y, int z, int face, const Vec3 &hit) {
   float clickX = hit.x - x;
   float clickY = hit.y - y;
   float clickZ = hit.z - z;
   item = player->inventory->getSelected();
   if (level->isClientSide) {
-    UseItemPacket packet(x, y, z, face, item, player->entityId, clickX, clickY,
-                         clickZ);
+    UseItemPacket packet(
+        x, y, z, face, item, player->entityId, clickX, clickY, clickZ);
     minecraft->raknetInstance->send(packet);
   }
   int t = level->getTile(x, y, z);
@@ -136,9 +135,8 @@ bool GameMode::useItem(Player *player, Level *level, ItemInstance *item) {
   return false;
 }
 
-ItemInstance *GameMode::handleInventoryMouseClick(int containerId, int slotNum,
-                                                  int buttonNum,
-                                                  Player *player) {
+ItemInstance *GameMode::handleInventoryMouseClick(
+    int containerId, int slotNum, int buttonNum, Player *player) {
   // return player.containerMenu.clicked(slotNum, buttonNum, player);
   return NULL;
 }
@@ -154,8 +152,8 @@ void GameMode::initPlayer(Player *player) { initAbilities(player->abilities); }
 
 void GameMode::releaseUsingItem(Player *player) {
   if (minecraft->level->isClientSide) {
-    PlayerActionPacket packet(PlayerActionPacket::RELEASE_USE_ITEM, 0, 0, 0, 0,
-                              player->entityId);
+    PlayerActionPacket packet(
+        PlayerActionPacket::RELEASE_USE_ITEM, 0, 0, 0, 0, player->entityId);
     minecraft->raknetInstance->send(packet);
   }
   player->releaseUsingItem();

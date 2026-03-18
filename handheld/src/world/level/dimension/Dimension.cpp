@@ -40,8 +40,8 @@ bool Dimension::isValidSpawn(int x, int z) {
 float Dimension::getTimeOfDay(long time, float a) { return 1; }
 
 ChunkSource *Dimension::createRandomLevelSource() {
-  return new RandomLevelSource(
-      level, level->getSeed(), level->getLevelData()->getGeneratorVersion(),
+  return new RandomLevelSource(level, level->getSeed(),
+      level->getLevelData()->getGeneratorVersion(),
       !level->isClientSide && level->getLevelData()->getSpawnMobs());
   // return new PerformanceTestChunkSource(level);
 }

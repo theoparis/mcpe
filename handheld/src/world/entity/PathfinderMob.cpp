@@ -24,8 +24,7 @@ PathfinderMob::~PathfinderMob() {
 
 bool PathfinderMob::canSpawn() {
   return super::canSpawn() &&
-         getWalkTargetValue(Mth::floor(x), Mth::floor(bb.y0), Mth::floor(z)) >=
-             0;
+      getWalkTargetValue(Mth::floor(x), Mth::floor(bb.y0), Mth::floor(z)) >= 0;
 }
 
 bool PathfinderMob::isPathFinding() { return !path.isEmpty(); }
@@ -57,8 +56,8 @@ void PathfinderMob::updateAi() {
     attackTarget = findAttackTarget();
     if (attackTarget != NULL) {
       level->findPath(&path, this, attackTarget, maxDist, false,
-                      false); //(pathfinderMask&CAN_OPEN_DOORS) != 0,
-                              //(pathfinderMask&AVOID_WATER) != 0);
+          false); //(pathfinderMask&CAN_OPEN_DOORS) != 0,
+                  //(pathfinderMask&AVOID_WATER) != 0);
       attackTargetId = attackTarget->entityId;
       // LOGI("path.empty: %d\n", path.isEmpty());
     }
@@ -87,8 +86,8 @@ void PathfinderMob::updateAi() {
   if (!holdGround &&
       (attackTarget != NULL && (path.isEmpty() || random.nextInt(20) == 0))) {
     level->findPath(&path, this, attackTarget, maxDist, false,
-                    false); //(pathfinderMask&CAN_OPEN_DOORS) != 0,
-                            //(pathfinderMask&AVOID_WATER) != 0);
+        false); //(pathfinderMask&CAN_OPEN_DOORS) != 0,
+                //(pathfinderMask&AVOID_WATER) != 0);
   } else if (!holdGround) {
     if (path.isEmpty() && (random.nextInt(180) == 0)) {
       doStroll = true;
@@ -206,8 +205,8 @@ void PathfinderMob::findRandomStrollLocation() {
     // LOGI("Finding a new strolling location! %d, %d, %d (%d, %d, %d) for
     // %p\n", xBest, yBest, zBest, (int)x, (int)y, (int)z, this);
     level->findPath(&path, this, xBest, yBest, zBest, 10, false,
-                    false); //(pathfinderMask&CAN_OPEN_DOORS) != 0,
-                            //(pathfinderMask&AVOID_WATER) != 0);
+        false); //(pathfinderMask&CAN_OPEN_DOORS) != 0,
+                //(pathfinderMask&AVOID_WATER) != 0);
   }
   TIMER_POP();
 }

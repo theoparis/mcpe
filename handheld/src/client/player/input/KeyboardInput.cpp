@@ -65,8 +65,8 @@ void KeyboardInput::tick(Player *player) {
 #endif
 
   if (keys[KEY_CRAFT])
-    player->startCrafting((int)player->x, (int)player->y, (int)player->z,
-                          Recipe::SIZE_2X2);
+    player->startCrafting(
+        (int)player->x, (int)player->y, (int)player->z, Recipe::SIZE_2X2);
 
   // printf("\n>- %f %f\n", xa, ya);
 }

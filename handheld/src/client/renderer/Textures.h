@@ -5,17 +5,27 @@
 
 #include "TextureData.h"
 #include "gles.h"
+#include <cstdint>
 #include <map>
 #include <string>
 #include <utility>
+#include <vector>
 
 class DynamicTexture;
 class Options;
 class AppPlatform;
+class GraphicsBackend;
 
-typedef GLuint TextureId;
+typedef int TextureId;
 typedef std::map<std::string, TextureId> TextureMap;
-typedef std::map<TextureId, TextureData> TextureImageMap;
+
+struct TextureRecord {
+  TextureRecord() : graphicsId(0) {}
+
+  uint32_t graphicsId;
+  TextureData image;
+};
+typedef std::map<TextureId, TextureRecord> TextureRecordMap;
 
 //@todo: Should probably delete the data buffers with image data
 //       after we've created an OpenGL-texture, and rewrite the
@@ -23,26 +33,19 @@ typedef std::map<TextureId, TextureData> TextureImageMap;
 //       it's only read ~once anyway.
 class Textures {
 public:
-  Textures(Options *options_, AppPlatform *platform_);
+  Textures(
+      Options *options_, AppPlatform *platform_, GraphicsBackend *graphics_);
   ~Textures();
 
   void addDynamicTexture(DynamicTexture *dynamicTexture);
 
-  __inline void bind(TextureId id) {
-    if (id != Textures::InvalidId && lastBoundTexture != id) {
-      glBindTexture2(GL_TEXTURE_2D, id);
-      lastBoundTexture = id;
-      ++textureChanges;
-    } else if (id == Textures::InvalidId) {
-      LOGI("invalidId!\n");
-    }
-  }
-  TextureId loadTexture(const std::string &resourceName,
-                        bool inTextureFolder = true);
+  void bind(TextureId id);
+  TextureId loadTexture(
+      const std::string &resourceName, bool inTextureFolder = true);
   TextureId loadAndBindTexture(const std::string &resourceName);
 
-  TextureId assignTexture(const std::string &resourceName,
-                          const TextureData &img);
+  TextureId assignTexture(
+      const std::string &resourceName, const TextureData &img);
   const TextureData *getTemporaryTextureData(TextureId id);
 
   void tick(bool uploadToGraphicsCard);
@@ -64,16 +67,26 @@ public:
   static const TextureId InvalidId;
 
 private:
+  TextureId createTextureRecord(
+      const std::string &resourceName, uint32_t graphicsId,
+      const TextureData &img);
+  TextureRecord *getRecord(TextureId id);
+  const TextureRecord *getRecord(TextureId id) const;
+  void uploadTextureRegion(TextureId id, int x, int y, int width, int height,
+      const unsigned char *data, TextureFormat format, bool transparent);
+
   TextureMap idMap;
-  TextureImageMap loadedImages;
+  TextureRecordMap loadedImages;
 
   Options *options;
   AppPlatform *platform;
+  GraphicsBackend *graphics;
 
   bool clamp;
   bool blur;
 
-  int lastBoundTexture;
+  TextureId lastBoundTexture;
+  TextureId nextId;
   std::vector<DynamicTexture *> dynamicTextures;
 };
 

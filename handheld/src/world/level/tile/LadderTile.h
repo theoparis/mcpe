@@ -70,8 +70,7 @@ public:
   }
 
   int getPlacedOnFaceDataValue(Level *level, int x, int y, int z, int face,
-                               float clickX, float clickY, float clickZ,
-                               int itemValue) {
+      float clickX, float clickY, float clickZ, int itemValue) {
     int dir = itemValue;
 
     if ((dir == 0 || face == 2) && level->isSolidBlockingTile(x, y, z + 1))

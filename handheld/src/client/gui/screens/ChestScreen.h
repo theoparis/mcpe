@@ -35,18 +35,18 @@ public:
   // IInventoryPaneCallback
   bool addItem(const Touch::InventoryPane *pane, int itemId);
   bool isAllowed(int slot);
-  std::vector<const ItemInstance *>
-  getItems(const Touch::InventoryPane *forPane);
+  std::vector<const ItemInstance *> getItems(
+      const Touch::InventoryPane *forPane);
   // const ItemList& getItems(const ItemPane* forPane);
 private:
   void setupPane();
 
-  void drawSlotItemAt(Tesselator &t, const ItemInstance *item, int x, int y,
-                      bool selected);
-  bool handleAddItem(FillingContainer *from, FillingContainer *to,
-                     int itemIndex);
-  void handleRenderPane(Touch::InventoryPane *pane, Tesselator &t, int xm,
-                        int ym, float a);
+  void drawSlotItemAt(
+      Tesselator &t, const ItemInstance *item, int x, int y, bool selected);
+  bool handleAddItem(
+      FillingContainer *from, FillingContainer *to, int itemIndex);
+  void handleRenderPane(
+      Touch::InventoryPane *pane, Tesselator &t, int xm, int ym, float a);
 
   std::string currentItemDesc;
   ImageButton btnClose;

@@ -19,7 +19,7 @@ public:
   }
 
   BreakingItemParticle(Level *level, float x, float y, float z, float xa,
-                       float ya, float za, Item *item)
+      float ya, float za, Item *item)
       : super(level, x, y, z, 0, 0, 0) {
     _init(item);
 
@@ -41,7 +41,7 @@ public:
   int getParticleTexture() { return ParticleEngine::ITEM_TEXTURE; }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     float u0 = (tex % 16 + uo / 4.0f) / 16.0f;
     float u1 = u0 + 0.999f / 16.0f / 4;
     float v0 = (tex / 16 + vo / 4.0f) / 16.0f;

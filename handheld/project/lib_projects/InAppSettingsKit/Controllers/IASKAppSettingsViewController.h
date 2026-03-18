@@ -46,7 +46,7 @@
 //(UIViewController<MFMailComposeViewControllerDelegate>*)viewControllerForMailComposeView;
 ////@iaskmail
 //- (void)mailComposeController:(MFMailComposeViewController*)controller
-//didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error;
+// didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error;
 
 - (void)settingsViewController:(IASKAppSettingsViewController *)sender
             buttonTappedForKey:(NSString *)key;

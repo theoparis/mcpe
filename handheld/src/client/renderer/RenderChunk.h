@@ -3,16 +3,20 @@
 
 // package net.minecraft.client.renderer;
 
+#include "../../App.h"
 #include "../../world/phys/Vec3.h"
 #include "gles.h"
 
 class RenderChunk {
 public:
   RenderChunk();
-  RenderChunk(GLuint vboId_, int vertexCount_);
+  RenderChunk(
+      GLuint vboId_, int vertexCount_, GraphicsMeshHandle meshHandle_ = 0);
 
   GLuint vboId;
   GLsizei vertexCount;
+  GraphicsMeshHandle meshHandle;
+  GraphicsWorldPass pass;
   int id;
   Vec3 pos;
 

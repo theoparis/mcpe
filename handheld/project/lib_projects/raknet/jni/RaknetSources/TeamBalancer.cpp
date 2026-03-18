@@ -120,8 +120,8 @@ void TeamBalancer::RequestSpecificTeam(NetworkID memberId, TeamId desiredTeam) {
   bsOut.Write((MessageID)ID_REQUEST_SPECIFIC_TEAM);
   bsOut.Write(memberId);
   bsOut.Write(desiredTeam);
-  rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, hostGuid,
-                         false);
+  rakPeerInterface->Send(
+      &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, hostGuid, false);
 }
 void TeamBalancer::CancelRequestSpecificTeam(NetworkID memberId) {
   for (unsigned int i = 0; i < myTeamMembers.Size(); i++) {
@@ -133,8 +133,8 @@ void TeamBalancer::CancelRequestSpecificTeam(NetworkID memberId) {
       bsOut.Write((MessageID)ID_TEAM_BALANCER_INTERNAL);
       bsOut.Write((MessageID)ID_CANCEL_TEAM_REQUEST);
       bsOut.Write(memberId);
-      rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                             hostGuid, false);
+      rakPeerInterface->Send(
+          &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, hostGuid, false);
 
       return;
     }
@@ -167,8 +167,8 @@ void TeamBalancer::RequestAnyTeam(NetworkID memberId) {
   bsOut.Write((MessageID)ID_TEAM_BALANCER_INTERNAL);
   bsOut.Write((MessageID)ID_REQUEST_ANY_TEAM);
   bsOut.Write(memberId);
-  rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, hostGuid,
-                         false);
+  rakPeerInterface->Send(
+      &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, hostGuid, false);
 }
 TeamId TeamBalancer::GetMyTeam(NetworkID memberId) const {
   // Return team returned by last ID_TEAM_BALANCER_TEAM_ASSIGNED packet
@@ -211,8 +211,8 @@ PluginReceiveResult TeamBalancer::OnReceive(Packet *packet) {
         bsOut.Write(myTeamMembers[i].currentTeam);
         bsOut.Write(myTeamMembers[i].requestedTeam);
       }
-      rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                             hostGuid, false);
+      rakPeerInterface->Send(
+          &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, hostGuid, false);
     }
   } break;
   case ID_TEAM_BALANCER_INTERNAL: {
@@ -268,9 +268,8 @@ PluginReceiveResult TeamBalancer::OnReceive(Packet *packet) {
 
   return RR_CONTINUE_PROCESSING;
 }
-void TeamBalancer::OnClosedConnection(
-    const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-    PI2_LostConnectionReason lostConnectionReason) {
+void TeamBalancer::OnClosedConnection(const SystemAddress &systemAddress,
+    RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason) {
   (void)systemAddress;
   (void)lostConnectionReason;
 
@@ -327,7 +326,7 @@ void TeamBalancer::OnStatusUpdateToNewHost(Packet *packet) {
         tm.currentTeam > teamLimits.Size()) {
       RakAssert("Current team out of range in "
                 "TeamBalancer::OnStatusUpdateToNewHost" &&
-                0);
+          0);
       return;
     }
 
@@ -335,7 +334,7 @@ void TeamBalancer::OnStatusUpdateToNewHost(Packet *packet) {
         tm.requestedTeam > teamLimits.Size()) {
       RakAssert("Requested team out of range in "
                 "TeamBalancer::OnStatusUpdateToNewHost" &&
-                0);
+          0);
       return;
     }
 
@@ -358,8 +357,8 @@ void TeamBalancer::OnStatusUpdateToNewHost(Packet *packet) {
         } else {
           // Assign to requested team if possible. Otherwise, assign to a
           // default team
-          if (TeamWouldBeOverpopulatedOnAddition(tm.requestedTeam,
-                                                 teamMembers.Size()) == false) {
+          if (TeamWouldBeOverpopulatedOnAddition(
+                  tm.requestedTeam, teamMembers.Size()) == false) {
             tm.currentTeam = tm.requestedTeam;
           } else {
             tm.currentTeam = GetNextDefaultTeam();
@@ -438,8 +437,8 @@ void TeamBalancer::OnRequestSpecificTeam(Packet *packet) {
     tm.memberGuid = packet->guid;
 
     // Assign to requested team if possible. Otherwise, assign to a default team
-    if (TeamWouldBeOverpopulatedOnAddition(tm.requestedTeam,
-                                           teamMembers.Size()) == false) {
+    if (TeamWouldBeOverpopulatedOnAddition(
+            tm.requestedTeam, teamMembers.Size()) == false) {
       tm.currentTeam = tm.requestedTeam;
       tm.requestedTeam = UNASSIGNED_TEAM_ID;
     } else {
@@ -469,7 +468,7 @@ void TeamBalancer::OnRequestSpecificTeam(Packet *packet) {
       // their team, they can swap
       unsigned int swappableMemberIndex;
       for (swappableMemberIndex = 0; swappableMemberIndex < teamMembers.Size();
-           swappableMemberIndex++) {
+          swappableMemberIndex++) {
         if (teamMembers[swappableMemberIndex].currentTeam == tm.requestedTeam &&
             teamMembers[swappableMemberIndex].requestedTeam ==
                 oldTeamThisUserWasOn)
@@ -487,8 +486,8 @@ void TeamBalancer::OnRequestSpecificTeam(Packet *packet) {
     }
   }
 }
-unsigned int TeamBalancer::GetMemberIndex(NetworkID memberId,
-                                          RakNetGUID guid) const {
+unsigned int TeamBalancer::GetMemberIndex(
+    NetworkID memberId, RakNetGUID guid) const {
   for (unsigned int i = 0; i < teamMembers.Size(); i++) {
     if (teamMembers[i].memberGuid == guid &&
         teamMembers[i].memberId == memberId)
@@ -517,8 +516,8 @@ void TeamBalancer::RemoveTeamMember(unsigned int index) {
       teamMemberCounts[teamMembers[index].currentTeam] - 1;
   teamMembers.RemoveAtIndexFast(index);
 }
-void TeamBalancer::GetMinMaxTeamMembers(int &minMembersOnASingleTeam,
-                                        int &maxMembersOnASingleTeam) {
+void TeamBalancer::GetMinMaxTeamMembers(
+    int &minMembersOnASingleTeam, int &maxMembersOnASingleTeam) {
   minMembersOnASingleTeam = teamMembers.Size() / teamLimits.Size();
   if ((teamMembers.Size() % teamLimits.Size()) == 0)
     maxMembersOnASingleTeam = minMembersOnASingleTeam;
@@ -539,15 +538,15 @@ void TeamBalancer::EvenTeams(void) {
   TeamId teamMemberCountsIndex;
   unsigned int memberIndexToSwitch;
   for (teamMemberCountsIndex = 0;
-       teamMemberCountsIndex < teamMemberCounts.Size();
-       teamMemberCountsIndex++) {
+      teamMemberCountsIndex < teamMemberCounts.Size();
+      teamMemberCountsIndex++) {
     while (teamMemberCounts[teamMemberCountsIndex] < minMembersOnASingleTeam &&
-           teamMemberCounts[teamMemberCountsIndex] <
-               teamLimits[teamMemberCountsIndex]) {
+        teamMemberCounts[teamMemberCountsIndex] <
+            teamLimits[teamMemberCountsIndex]) {
       GetOverpopulatedTeams(overpopulatedTeams, maxMembersOnASingleTeam);
       RakAssert(overpopulatedTeams.Size() > 0);
-      memberIndexToSwitch = GetMemberIndexToSwitchTeams(overpopulatedTeams,
-                                                        teamMemberCountsIndex);
+      memberIndexToSwitch = GetMemberIndexToSwitchTeams(
+          overpopulatedTeams, teamMemberCountsIndex);
       RakAssert(memberIndexToSwitch != (unsigned int)-1);
       SwitchMemberTeam(memberIndexToSwitch, teamMemberCountsIndex);
       // Tell this member he switched teams
@@ -581,8 +580,8 @@ unsigned int TeamBalancer::GetMemberIndexToSwitchTeams(
     return (unsigned int)-1;
   }
 }
-void TeamBalancer::SwitchMemberTeam(unsigned int teamMemberIndex,
-                                    TeamId destinationTeam) {
+void TeamBalancer::SwitchMemberTeam(
+    unsigned int teamMemberIndex, TeamId destinationTeam) {
   teamMemberCounts[teamMembers[teamMemberIndex].currentTeam] =
       teamMemberCounts[teamMembers[teamMemberIndex].currentTeam] - 1;
   teamMemberCounts[destinationTeam] = teamMemberCounts[destinationTeam] + 1;
@@ -608,11 +607,11 @@ void TeamBalancer::NotifyTeamAssigment(unsigned int teamMemberIndex) {
   bsOut.Write(teamMembers[teamMemberIndex].currentTeam);
   bsOut.Write(teamMembers[teamMemberIndex].memberId);
   rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                         teamMembers[teamMemberIndex].memberGuid, false);
+      teamMembers[teamMemberIndex].memberGuid, false);
 }
 bool TeamBalancer::WeAreHost(void) const {
   return hostGuid ==
-         rakPeerInterface->GetGuidFromSystemAddress(UNASSIGNED_SYSTEM_ADDRESS);
+      rakPeerInterface->GetGuidFromSystemAddress(UNASSIGNED_SYSTEM_ADDRESS);
 }
 PluginReceiveResult TeamBalancer::OnTeamAssigned(Packet *packet) {
   if (packet->guid != hostGuid)
@@ -736,9 +735,8 @@ TeamId TeamBalancer::MoveMemberThatWantsToJoinTeamInternal(TeamId teamId) {
 
   if (membersThatWantToJoinTheTeam.Size() > 0) {
     TeamId oldTeam;
-    unsigned int swappedMemberIndex =
-        membersThatWantToJoinTheTeam[randomMT() %
-                                     membersThatWantToJoinTheTeam.Size()];
+    unsigned int swappedMemberIndex = membersThatWantToJoinTheTeam[randomMT() %
+        membersThatWantToJoinTheTeam.Size()];
     oldTeam = teamMembers[swappedMemberIndex].currentTeam;
     SwitchMemberTeam(swappedMemberIndex, teamId);
     NotifyTeamAssigment(swappedMemberIndex);
@@ -750,21 +748,20 @@ void TeamBalancer::NotifyTeamsLocked(RakNetGUID target, TeamId requestedTeam) {
   BitStream bsOut;
   bsOut.Write((MessageID)ID_TEAM_BALANCER_TEAMS_LOCKED);
   bsOut.Write(requestedTeam);
-  rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, target,
-                         false);
+  rakPeerInterface->Send(
+      &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, target, false);
 }
-void TeamBalancer::NotifyTeamSwitchPending(RakNetGUID target,
-                                           TeamId requestedTeam,
-                                           NetworkID memberId) {
+void TeamBalancer::NotifyTeamSwitchPending(
+    RakNetGUID target, TeamId requestedTeam, NetworkID memberId) {
   BitStream bsOut;
   bsOut.Write((MessageID)ID_TEAM_BALANCER_REQUESTED_TEAM_CHANGE_PENDING);
   bsOut.Write(requestedTeam);
   bsOut.Write(memberId);
-  rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, target,
-                         false);
+  rakPeerInterface->Send(
+      &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, target, false);
 }
-void TeamBalancer::SwapTeamMembersByRequest(unsigned int memberIndex1,
-                                            unsigned int memberIndex2) {
+void TeamBalancer::SwapTeamMembersByRequest(
+    unsigned int memberIndex1, unsigned int memberIndex2) {
   TeamId index1Team = teamMembers[memberIndex1].currentTeam;
   teamMembers[memberIndex1].currentTeam = teamMembers[memberIndex2].currentTeam;
   teamMembers[memberIndex2].currentTeam = index1Team;
@@ -776,14 +773,14 @@ void TeamBalancer::NotifyNoTeam(NetworkID memberId, RakNetGUID target) {
   bsOut.Write((MessageID)ID_TEAM_BALANCER_TEAM_ASSIGNED);
   bsOut.Write((unsigned char)UNASSIGNED_TEAM_ID);
   bsOut.Write(memberId);
-  rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, target,
-                         false);
+  rakPeerInterface->Send(
+      &bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, target, false);
 }
 bool TeamBalancer::TeamsWouldBeEvenOnSwitch(TeamId t1, TeamId t2) {
   RakAssert(teamMembers.Size() != 0);
   return TeamWouldBeOverpopulatedOnAddition(t1, teamMembers.Size() - 1) ==
-             false &&
-         TeamWouldBeUnderpopulatedOnLeave(t2, teamMembers.Size() - 1) == false;
+      false &&
+      TeamWouldBeUnderpopulatedOnLeave(t2, teamMembers.Size() - 1) == false;
 }
 
 #endif // _RAKNET_SUPPORT_*

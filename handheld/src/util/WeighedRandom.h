@@ -28,11 +28,11 @@ public:
   }
 
   template <typename T>
-  static const WeighedRandomItem *getRandomItem(Random *random, const T &items,
-                                                int totalWeight) {
+  static const WeighedRandomItem *getRandomItem(
+      Random *random, const T &items, int totalWeight) {
     int selection = random->nextInt(totalWeight);
     for (typename T::const_iterator it = items.begin(); it != items.end();
-         ++it) {
+        ++it) {
       selection -= it->randomWeight;
       if (selection < 0) {
         return &(*it);
@@ -41,14 +41,14 @@ public:
     return NULL;
   }
   template <typename T>
-  static const WeighedRandomItem *getRandomItem(Random *random,
-                                                const T &items) {
+  static const WeighedRandomItem *getRandomItem(
+      Random *random, const T &items) {
     return getRandomItem(random, items, getTotalWeight(items));
   }
 
   template <typename T>
-  static int getRandomItemIndex(Random *random, const T &items,
-                                int totalWeight) {
+  static int getRandomItemIndex(
+      Random *random, const T &items, int totalWeight) {
     int selection = random->nextInt(totalWeight);
     for (unsigned int i = 0; i < items.size(); ++i) {
       selection -= items[i].randomWeight;

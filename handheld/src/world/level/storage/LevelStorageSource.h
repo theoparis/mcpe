@@ -33,8 +33,8 @@ public:
   virtual void getLevelList(LevelSummaryList &dest) {};
 
   virtual LevelData *getDataTagFor(const std::string &levelId) = 0;
-  virtual LevelStorage *selectLevel(const std::string &levelId,
-                                    bool createPlayerDir) = 0;
+  virtual LevelStorage *selectLevel(
+      const std::string &levelId, bool createPlayerDir) = 0;
   /**
    * Tests if a levelId can be used to store a level. For example, a levelId
    * can't be called COM1 on Windows systems, because that is a reserved file
@@ -49,13 +49,13 @@ public:
 
   virtual void clearAll() = 0;
   virtual void deleteLevel(const std::string &levelId) = 0;
-  virtual void renameLevel(const std::string &levelId,
-                           const std::string &newLevelName) = 0;
+  virtual void renameLevel(
+      const std::string &levelId, const std::string &newLevelName) = 0;
 
   virtual bool isConvertible(const std::string &levelId) = 0;
   virtual bool requiresConversion(const std::string &levelId) = 0;
-  virtual bool convertLevel(const std::string &levelId,
-                            ProgressListener *progress) = 0;
+  virtual bool convertLevel(
+      const std::string &levelId, ProgressListener *progress) = 0;
 };
 
 #endif /*NET_MINECRAFT_WORLD_LEVEL_STORAGE__LevelStorageSource_H__*/

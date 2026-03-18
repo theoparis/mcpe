@@ -2,8 +2,8 @@
 #define FILE_H__
 
 #include <cstdio>
-#include <string>
 #include <cstring>
+#include <string>
 
 bool DeleteDirectory(const std::string &, bool noRecycleBin = true);
 
@@ -22,10 +22,10 @@ bool DeleteDirectory(const std::string &dir, bool noRecycleBin /*true*/) {
   pszFrom[len + 1] = 0;
 
   SHFILEOPSTRUCT fileop;
-  fileop.hwnd = NULL;       // no status display
+  fileop.hwnd = NULL; // no status display
   fileop.wFunc = FO_DELETE; // delete operation
-  fileop.pFrom = pszFrom;   // source file name as double null terminated string
-  fileop.pTo = NULL;        // no destination needed
+  fileop.pFrom = pszFrom; // source file name as double null terminated string
+  fileop.pTo = NULL; // no destination needed
   fileop.fFlags = FOF_NOCONFIRMATION | FOF_SILENT; // do not prompt the user
 
   if (!noRecycleBin)

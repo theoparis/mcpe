@@ -25,7 +25,7 @@ public:
   float getValue(float x, float y, float z);
 
   void add(float *buffer, float _x, float _y, float _z, int xSize, int ySize,
-           int zSize, float xs, float ys, float zs, float pow);
+      int zSize, float xs, float ys, float zs, float pow);
 
   int hashCode();
 

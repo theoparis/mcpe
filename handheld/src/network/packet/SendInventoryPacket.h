@@ -13,7 +13,7 @@ public:
     Inventory *inv = player->inventory;
     numItems = 0;
     for (int i = Inventory::MAX_SELECTION_SIZE; i < inv->getContainerSize();
-         ++i) {
+        ++i) {
       ++numItems;
       ItemInstance *item = inv->getItem(i);
       items.push_back(item ? *item : ItemInstance());

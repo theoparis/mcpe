@@ -20,8 +20,8 @@ float TripodCameraRenderer::getFlashTime(const TripodCamera *c, float a) {
   return (c->life - a) * 0.125f;
 }
 
-void TripodCameraRenderer::render(Entity *cam_, float x, float y, float z,
-                                  float rot, float a) {
+void TripodCameraRenderer::render(
+    Entity *cam_, float x, float y, float z, float rot, float a) {
   TripodCamera *cam = (TripodCamera *)cam_;
 
   glPushMatrix2();
@@ -41,7 +41,7 @@ void TripodCameraRenderer::render(Entity *cam_, float x, float y, float z,
   bindTexture("gui/items.png");
   t.begin();
   tileRenderer.tesselateCrossTexture(&tripod, 0, -0.5f, -0.5f,
-                                     -0.5f); //, y, z);
+      -0.5f); //, y, z);
   t.draw();
 
   // Render tripod

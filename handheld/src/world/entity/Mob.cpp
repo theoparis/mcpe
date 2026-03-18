@@ -42,9 +42,9 @@ Mob::Mob(Level *level)
       swinging(false), swingTime(0), lastHurt(0), dmgSpill(0),
       bypassArmor(false) {
   entityData.define(SharedFlagsInformation::DATA_SHARED_FLAGS_ID,
-                    (SynchedEntityData::TypeChar)0);
-  entityData.define(DATA_AIR_SUPPLY_ID,
-                    (SynchedEntityData::TypeShort)TOTAL_AIR_SUPPLY);
+      (SynchedEntityData::TypeChar)0);
+  entityData.define(
+      DATA_AIR_SUPPLY_ID, (SynchedEntityData::TypeShort)TOTAL_AIR_SUPPLY);
 
   _init();
   health = getMaxHealth();
@@ -81,8 +81,8 @@ float Mob::getWalkingSpeedModifier() {
 bool Mob::canSee(Entity *target) {
   return !level
               ->clip(Vec3(x, y + getHeadHeight(), z),
-                     Vec3(target->x, target->y + target->getHeadHeight(),
-                          target->z))
+                  Vec3(target->x, target->y + target->getHeadHeight(),
+                      target->z))
               .isHit();
 }
 
@@ -138,8 +138,8 @@ void Mob::baseTick() {
         float xo = random.nextFloat() - random.nextFloat();
         float yo = random.nextFloat() - random.nextFloat();
         float zo = random.nextFloat() - random.nextFloat();
-        level->addParticle(PARTICLETYPE(bubble), x + xo, y + yo, z + zo, xd, yd,
-                           zd);
+        level->addParticle(
+            PARTICLETYPE(bubble), x + xo, y + yo, z + zo, xd, yd, zd);
       }
       hurt(NULL, 2);
     }
@@ -163,16 +163,15 @@ void Mob::baseTick() {
       remove();
       for (int i = 0; i < 20; i++) {
         float xa = (2.0f * random.nextFloat() - 1.0f) *
-                   (2.0f * random.nextFloat() - 1.0f) * 0.02f;
+            (2.0f * random.nextFloat() - 1.0f) * 0.02f;
         float ya = (2.0f * random.nextFloat() - 1.0f) *
-                   (2.0f * random.nextFloat() - 1.0f) * 0.02f;
+            (2.0f * random.nextFloat() - 1.0f) * 0.02f;
         float za = (2.0f * random.nextFloat() - 1.0f) *
-                   (2.0f * random.nextFloat() - 1.0f) * 0.02f;
+            (2.0f * random.nextFloat() - 1.0f) * 0.02f;
         level->addParticle(PARTICLETYPE(explode),
-                           x + random.nextFloat() * bbWidth * 2 - bbWidth,
-                           y + random.nextFloat() * bbHeight,
-                           z + random.nextFloat() * bbWidth * 2 - bbWidth, xa,
-                           ya, za);
+            x + random.nextFloat() * bbWidth * 2 - bbWidth,
+            y + random.nextFloat() * bbHeight,
+            z + random.nextFloat() * bbWidth * 2 - bbWidth, xa, ya, za);
       }
     }
   }
@@ -189,8 +188,8 @@ void Mob::baseTick() {
     if (autoSendPosRot) {
       if (autoSendPosRot &&
           (std::abs(x - sentX) > .1f || std::abs(y - sentY) > .05f ||
-           std::abs(z - sentZ) > .1f || std::abs(sentRotX - xRot) > 1 ||
-           std::abs(sentRotY - yRot) > 1)) {
+              std::abs(z - sentZ) > .1f || std::abs(sentRotX - xRot) > 1 ||
+              std::abs(sentRotY - yRot) > 1)) {
         MoveEntityPacket_PosRot packet(this);
         level->raknetInstance->send(packet);
         sentX = x;
@@ -411,8 +410,8 @@ bool Mob::hurt(Entity *source, int dmg) {
 
   if (health <= 0) {
     if (sound)
-      level->playSound(this, getDeathSound(), getSoundVolume(),
-                       getVoicePitch());
+      level->playSound(
+          this, getDeathSound(), getSoundVolume(), getVoicePitch());
     die(source);
   } else {
     if (sound)
@@ -508,19 +507,17 @@ void Mob::causeFallDamage(float distance) {
   int dmg = (int)ceil((distance - 3));
 
   if (dmg > 0) {
-    level->playSound(this, (dmg > 4) ? "damage.fallbig" : "damage.fallsmall",
-                     0.75f, 1);
+    level->playSound(
+        this, (dmg > 4) ? "damage.fallbig" : "damage.fallsmall", 0.75f, 1);
 
     hurt(NULL, dmg);
 
-    int t =
-        level->getTile(Mth::floor(x), Mth::floor(y - 0.2f - this->heightOffset),
-                       Mth::floor(z));
+    int t = level->getTile(Mth::floor(x),
+        Mth::floor(y - 0.2f - this->heightOffset), Mth::floor(z));
     if (t > 0) {
       const Tile::SoundType *soundType = Tile::tiles[t]->soundType;
       level->playSound(this, soundType->getStepSound(),
-                       soundType->getVolume() * 0.5f,
-                       soundType->getPitch() * 0.75f);
+          soundType->getVolume() * 0.5f, soundType->getPitch() * 0.75f);
     }
   }
 }
@@ -555,22 +552,22 @@ void Mob::travel(float xa, float ya) {
     float friction = 0.91f;
     if (onGround) {
       friction = 0.6f * 0.91f;
-      int t = level->getTile(Mth::floor(x), Mth::floor(bb.y0 - 0.5f),
-                             Mth::floor(z));
+      int t = level->getTile(
+          Mth::floor(x), Mth::floor(bb.y0 - 0.5f), Mth::floor(z));
       if (t > 0) {
         friction = Tile::tiles[t]->friction * 0.91f;
       }
     }
 
     float friction2 = (0.6f * 0.6f * 0.91f * 0.91f * 0.6f * 0.91f) /
-                      (friction * friction * friction);
+        (friction * friction * friction);
     moveRelative(xa, ya, (onGround ? walkingSpeed * friction2 : flyingSpeed));
 
     friction = 0.91f;
     if (onGround) {
       friction = 0.6f * 0.91f;
-      int t = level->getTile(Mth::floor(x), Mth::floor(bb.y0 - 0.5f),
-                             Mth::floor(z));
+      int t = level->getTile(
+          Mth::floor(x), Mth::floor(bb.y0 - 0.5f), Mth::floor(z));
       if (t > 0) {
         friction = Tile::tiles[t]->friction * 0.91f;
       }
@@ -618,7 +615,7 @@ bool Mob::onLadder() {
   int yt = Mth::floor(bb.y0);
   int zt = Mth::floor(z);
   return level->getTile(xt, yt, zt) == Tile::ladder->id ||
-         level->getTile(xt, yt + 1, zt) == Tile::ladder->id;
+      level->getTile(xt, yt + 1, zt) == Tile::ladder->id;
 }
 
 bool Mob::isShootable() { return true; }
@@ -865,7 +862,7 @@ void Mob::beforeRemove() {}
 
 bool Mob::canSpawn() {
   return level->isUnobstructed(bb) && level->getCubes(this, bb).size() == 0 &&
-         !level->containsAnyLiquid(bb);
+      !level->containsAnyLiquid(bb);
 }
 
 void Mob::outOfWorld() {

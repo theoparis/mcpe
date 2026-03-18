@@ -29,7 +29,7 @@ public:
 
   //@Override
   bool mineBlock(ItemInstance *itemInstance, int tile, int x, int y,
-                 int z /*, Mob* owner*/) {
+      int z /*, Mob* owner*/) {
     itemInstance->hurt(1); //, owner);
     return true;
   }
@@ -59,7 +59,7 @@ protected:
   const Tier &tier;
 
   DiggerItem(int id, int attackDamage, const Tier &tier,
-             const TileList &tiles = TileList())
+      const TileList &tiles = TileList())
       : super(id), speed(tier.getSpeed()), tier(tier) {
     setTiles(tiles);
 

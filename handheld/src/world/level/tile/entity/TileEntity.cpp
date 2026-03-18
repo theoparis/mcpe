@@ -174,8 +174,7 @@ bool TileEntity::isType(TileEntity *te, int Type) {
 }
 
 int partitionTileEntities(const std::vector<TileEntity *> &in,
-                          std::vector<TileEntity *> &keep,
-                          std::vector<TileEntity *> &dontKeep) {
+    std::vector<TileEntity *> &keep, std::vector<TileEntity *> &dontKeep) {
   std::map<TilePos, TileEntity *> m;
   for (unsigned int i = 0; i < in.size(); ++i) {
     TileEntity *e = in[i];

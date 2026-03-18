@@ -15,8 +15,8 @@ public:
       return BinaryBlob();
 
     if (_assetManager != NULL) {
-      AAsset *asset = AAssetManager_open(_assetManager, filename.c_str(),
-                                         AASSET_MODE_BUFFER);
+      AAsset *asset = AAssetManager_open(
+          _assetManager, filename.c_str(), AASSET_MODE_BUFFER);
       if (asset != NULL) {
         const int len = AAsset_getLength(asset);
         const void *buf = len > 0 ? AAsset_getBuffer(asset) : NULL;

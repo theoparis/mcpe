@@ -35,19 +35,18 @@ public:
 
   static RowList Shape(const std::string &r0);
   static RowList Shape(const std::string &r0, const std::string &r1);
-  static RowList Shape(const std::string &r0, const std::string &r1,
-                       const std::string &r2);
+  static RowList Shape(
+      const std::string &r0, const std::string &r1, const std::string &r2);
 
+  void addShapedRecipe(
+      const ItemInstance &result, const std::string &r0, const TypeList &types);
   void addShapedRecipe(const ItemInstance &result, const std::string &r0,
-                       const TypeList &types);
+      const std::string &, const TypeList &types);
   void addShapedRecipe(const ItemInstance &result, const std::string &r0,
-                       const std::string &, const TypeList &types);
-  void addShapedRecipe(const ItemInstance &result, const std::string &r0,
-                       const std::string &r1, const std::string &r2,
-                       const TypeList &types);
+      const std::string &r1, const std::string &r2, const TypeList &types);
 
-  void addShapedRecipe(const ItemInstance &result, const RowList &rows,
-                       const TypeList &types);
+  void addShapedRecipe(
+      const ItemInstance &result, const RowList &rows, const TypeList &types);
 
   void addShapelessRecipe(const ItemInstance &result, const TypeList &types);
 
@@ -88,8 +87,8 @@ Recipes::TypeList definition(char c0, T t, char c1, U u, char c2, V v) {
 }
 
 template <class T, class U, class V, class W>
-Recipes::TypeList definition(char c0, T t, char c1, U u, char c2, V v, char c3,
-                             W w) {
+Recipes::TypeList definition(
+    char c0, T t, char c1, U u, char c2, V v, char c3, W w) {
   Recipes::TypeList list;
   list.push_back(Recipes::Type(c0, t));
   list.push_back(Recipes::Type(c1, u));

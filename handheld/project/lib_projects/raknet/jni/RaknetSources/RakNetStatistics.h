@@ -127,8 +127,8 @@ struct RAK_DLL_EXPORT RakNetStatistics {
 /// 1 medium
 /// 2 high
 /// 3 debugging congestion control
-void RAK_DLL_EXPORT StatisticsToString(RakNetStatistics *s, char *buffer,
-                                       int verbosityLevel);
+void RAK_DLL_EXPORT StatisticsToString(
+    RakNetStatistics *s, char *buffer, int verbosityLevel);
 
 } // namespace RakNet
 

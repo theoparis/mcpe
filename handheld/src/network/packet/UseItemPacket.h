@@ -19,7 +19,7 @@ public:
   UseItemPacket() {}
 
   UseItemPacket(int x, int y, int z, int face, const ItemInstance *item,
-                int entityId, float clickX, float clickY, float clickZ)
+      int entityId, float clickX, float clickY, float clickZ)
       : x(x), y(y), z(z), face(face), itemId(item ? item->id : 0),
         itemData(item ? item->getAuxValue() : 0), entityId(entityId),
         clickX(clickX), clickY(clickY), clickZ(clickZ) {}

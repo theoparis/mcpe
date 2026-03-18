@@ -49,7 +49,7 @@ RakWString &RakWString::operator=(const RakWString &right) {
   }
   c_strCharLength = right.GetLength();
   memcpy(c_str, right.C_String(),
-         (right.GetLength() + 1) * MAX_BYTES_PER_UNICODE_CHAR);
+      (right.GetLength() + 1) * MAX_BYTES_PER_UNICODE_CHAR);
 
   return *this;
 }
@@ -125,9 +125,8 @@ RakWString &RakWString::operator+=(const RakWString &right) {
     newCStr = (wchar_t *)rakMalloc_Ex(
         (newCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR, _FILE_AND_LINE_);
   else
-    newCStr = (wchar_t *)rakRealloc_Ex(
-        c_str, (newCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR,
-        _FILE_AND_LINE_);
+    newCStr = (wchar_t *)rakRealloc_Ex(c_str,
+        (newCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR, _FILE_AND_LINE_);
   if (!newCStr) {
     notifyOutOfMemory(_FILE_AND_LINE_);
     return *this;
@@ -136,7 +135,7 @@ RakWString &RakWString::operator+=(const RakWString &right) {
   c_strCharLength = newCharLength;
   if (isEmpty) {
     memcpy(newCStr, right.C_String(),
-           (right.GetLength() + 1) * MAX_BYTES_PER_UNICODE_CHAR);
+        (right.GetLength() + 1) * MAX_BYTES_PER_UNICODE_CHAR);
   } else {
     wcscat(c_str, right.C_String());
   }
@@ -154,9 +153,8 @@ RakWString &RakWString::operator+=(const wchar_t *const right) {
     newCStr = (wchar_t *)rakMalloc_Ex(
         (newCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR, _FILE_AND_LINE_);
   else
-    newCStr = (wchar_t *)rakRealloc_Ex(
-        c_str, (newCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR,
-        _FILE_AND_LINE_);
+    newCStr = (wchar_t *)rakRealloc_Ex(c_str,
+        (newCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR, _FILE_AND_LINE_);
   if (!newCStr) {
     notifyOutOfMemory(_FILE_AND_LINE_);
     return *this;
@@ -206,7 +204,7 @@ unsigned long RakWString::ToInteger(const RakWString &rs) {
   const char *str = (const char *)rs.C_String();
   size_t i;
   for (i = 0; i < rs.GetLength() * MAX_BYTES_PER_UNICODE_CHAR * sizeof(wchar_t);
-       i++) {
+      i++) {
     c = *str++;
     hash = c + (hash << 6) + (hash << 16) - hash;
   }
@@ -234,31 +232,28 @@ void RakWString::FPrintf(FILE *fp) { fprintf(fp, "%ls", C_String()); }
 void RakWString::Serialize(BitStream *bs) const {
   bs->WriteCasted<unsigned short>(c_strCharLength);
   bs->WriteAlignedBytes((const unsigned char *)c_str,
-                        (const unsigned int)(c_strCharLength + 1) *
-                            MAX_BYTES_PER_UNICODE_CHAR);
+      (const unsigned int)(c_strCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR);
 }
 void RakWString::Serialize(const wchar_t *const str, BitStream *bs) {
   size_t length = wcslen(str);
   bs->WriteCasted<unsigned short>(length);
   bs->WriteAlignedBytes((const unsigned char *)str,
-                        (const unsigned int)length *
-                            MAX_BYTES_PER_UNICODE_CHAR);
+      (const unsigned int)length * MAX_BYTES_PER_UNICODE_CHAR);
 }
 bool RakWString::Deserialize(BitStream *bs) {
   Clear();
   size_t length;
   bs->ReadCasted<unsigned short>(length);
   if (length > 0) {
-    c_str = (wchar_t *)rakMalloc_Ex((length + 1) * MAX_BYTES_PER_UNICODE_CHAR,
-                                    _FILE_AND_LINE_);
+    c_str = (wchar_t *)rakMalloc_Ex(
+        (length + 1) * MAX_BYTES_PER_UNICODE_CHAR, _FILE_AND_LINE_);
     if (!c_str) {
       notifyOutOfMemory(_FILE_AND_LINE_);
       return false;
     }
     c_strCharLength = (size_t)length;
     return bs->ReadAlignedBytes((unsigned char *)c_str,
-                                (const unsigned int)(c_strCharLength + 1) *
-                                    MAX_BYTES_PER_UNICODE_CHAR);
+        (const unsigned int)(c_strCharLength + 1) * MAX_BYTES_PER_UNICODE_CHAR);
   } else {
     return true;
   }
@@ -268,8 +263,7 @@ bool RakWString::Deserialize(wchar_t *str, BitStream *bs) {
   bs->ReadCasted<unsigned short>(length);
   if (length > 0) {
     return bs->ReadAlignedBytes((unsigned char *)str,
-                                (const unsigned int)(length + 1) *
-                                    MAX_BYTES_PER_UNICODE_CHAR);
+        (const unsigned int)(length + 1) * MAX_BYTES_PER_UNICODE_CHAR);
   } else {
     wcscpy(str, L"");
   }

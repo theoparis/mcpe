@@ -12,8 +12,8 @@ class ProgressListener;
 
 class ExternalFileLevelStorageSource : public LevelStorageSource {
 public:
-  ExternalFileLevelStorageSource(const std::string &externalPath,
-                                 const std::string &temporaryFilesPath);
+  ExternalFileLevelStorageSource(
+      const std::string &externalPath, const std::string &temporaryFilesPath);
 
   std::string getName();
   void getLevelList(LevelSummaryList &dest);

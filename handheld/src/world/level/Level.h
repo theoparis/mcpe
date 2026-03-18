@@ -70,8 +70,7 @@ public:
   static const short SEA_LEVEL = DEPTH / 2 - 1;
 
   static const int MAX_BRIGHTNESS = 15;
-  static const int TICKS_PER_DAY =
-      SharedConstants::TicksPerSecond * 60 *
+  static const int TICKS_PER_DAY = SharedConstants::TicksPerSecond * 60 *
       16; // SharedConstants::TicksPerSecond * 60 * 12; // ORG:20*60*20
   static const int MIDDLE_OF_NIGHT_TIME = 12000;
   static const int genDepthBits = 7;
@@ -80,12 +79,12 @@ public:
   static const int genDepthMinusOne = genDepth - 1;
 
   Level(LevelStorage *levelStorage, const std::string &levelName,
-        const LevelSettings &settings, int generatorVersion,
-        Dimension *fixedDimension = NULL);
+      const LevelSettings &settings, int generatorVersion,
+      Dimension *fixedDimension = NULL);
   virtual ~Level();
 
   void _init(const std::string &levelName, const LevelSettings &settings,
-             int levelVersion, Dimension *fixedDimension);
+      int levelVersion, Dimension *fixedDimension);
 
   void validateSpawn();
 
@@ -137,22 +136,22 @@ public:
   int getRawBrightness(int x, int y, int z, bool propagate);
   float getBrightness(int x, int y, int z);
   int getBrightness(const LightLayer &layer, int x, int y, int z);
-  void setBrightness(const LightLayer &layer, int x, int y, int z,
-                     int brightness);
-  void updateLightIfOtherThan(const LightLayer &layer, int x, int y, int z,
-                              int expected);
+  void setBrightness(
+      const LightLayer &layer, int x, int y, int z, int brightness);
+  void updateLightIfOtherThan(
+      const LightLayer &layer, int x, int y, int z, int expected);
 
   int getLightsToUpdate();
   bool updateLights();
   void setUpdateLights(bool doUpdate);
+  void updateLight(
+      const LightLayer &layer, int x0, int y0, int z0, int x1, int y1, int z1);
   void updateLight(const LightLayer &layer, int x0, int y0, int z0, int x1,
-                   int y1, int z1);
-  void updateLight(const LightLayer &layer, int x0, int y0, int z0, int x1,
-                   int y1, int z1, bool join);
+      int y1, int z1, bool join);
 
   // HitResult clip(const Vec3& a, const Vec3& b);
   HitResult clip(const Vec3 &a, const Vec3 &b, bool liquid = false,
-                 bool solidOnly = false);
+      bool solidOnly = false);
 
   bool addEntity(Entity *e);
   void removeEntity(Entity *e);
@@ -162,8 +161,8 @@ public:
   Entity *getEntity(int entityId);
   Mob *getMob(int entityId);
 
-  Biome::MobSpawnerData getRandomMobSpawnAt(const MobCategory &mobCategory,
-                                            int x, int y, int z);
+  Biome::MobSpawnerData getRandomMobSpawnAt(
+      const MobCategory &mobCategory, int x, int y, int z);
 
   void addListener(LevelListener *listener);
   void removeListener(LevelListener *listener);
@@ -208,8 +207,8 @@ public:
   bool containsMaterial(const AABB &box, const Material *material);
   bool containsLiquid(const AABB &box, const Material *material);
 
-  bool checkAndHandleWater(const AABB &box, const Material *material,
-                           Entity *e);
+  bool checkAndHandleWater(
+      const AABB &box, const Material *material, Entity *e);
   void extinguishFire(int x, int y, int z, int face);
 
   // void addEntities(const EntityList& list);
@@ -228,14 +227,14 @@ public:
 
   int getSeaLevel();
 
-  bool mayPlace(int tileId, int x, int y, int z, bool ignoreEntities,
-                unsigned char face);
+  bool mayPlace(
+      int tileId, int x, int y, int z, bool ignoreEntities, unsigned char face);
   bool mayInteract(Player *player, int xt, int yt, int zt);
 
   bool findPath(Path *path, Entity *from, Entity *to, float maxDist,
-                bool canOpenDoors, bool avoidWater);
+      bool canOpenDoors, bool avoidWater);
   bool findPath(Path *path, Entity *from, int xBest, int yBest, int zBest,
-                float maxDist, bool canOpenDoors, bool avoidWater);
+      float maxDist, bool canOpenDoors, bool avoidWater);
 
   bool getDirectSignal(int x, int y, int z, int dir);
   bool hasDirectSignal(int x, int y, int z);
@@ -268,13 +267,13 @@ public:
   void loadEntities();
 
   void addParticle(const std::string &id, float x, float y, float z, float xd,
-                   float yd, float zd, int data = 0);
+      float yd, float zd, int data = 0);
   void addParticle(ParticleType::Id id, float x, float y, float z, float xd,
-                   float yd, float zd, int data = 0);
-  void playSound(Entity *entity, const std::string &name, float volume,
-                 float pitch);
+      float yd, float zd, int data = 0);
+  void playSound(
+      Entity *entity, const std::string &name, float volume, float pitch);
   void playSound(float x, float y, float z, const std::string &name,
-                 float volume, float pitch);
+      float volume, float pitch);
   void levelEvent(Player *source, int type, int x, int y, int z, int data);
   void tileEvent(int x, int y, int z, int b0, int b1);
   void broadcastEntityEvent(Entity *e, char eventId);

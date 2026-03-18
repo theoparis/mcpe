@@ -13,14 +13,13 @@ namespace Touch {
 static const int By = 6; // Border Frame height
 
 InventoryPane::InventoryPane(IInventoryPaneCallback *screen, Minecraft *mc,
-                             const IntRectangle &rect, int paneWidth,
-                             float clickMarginH, int numItems, int itemSize,
-                             int itemBorderSize)
+    const IntRectangle &rect, int paneWidth, float clickMarginH, int numItems,
+    int itemSize, int itemBorderSize)
     : screen(screen), mc(mc), paneWidth(paneWidth), rect(rect),
       super(SF_LockX | /*SF_Scissor|*/ SF_ShowScrollbar | SF_NoHoldSelect,
-            rect,                                   // Pane rect
-            IntRectangle(0, 0, itemSize, itemSize), // Item rect
-            0, numItems, Gui::GuiScale),
+          rect, // Pane rect
+          IntRectangle(0, 0, itemSize, itemSize), // Item rect
+          0, numItems, Gui::GuiScale),
       BorderPixels(itemBorderSize), lastItemIndex(-1), lastItemTicks(-1),
       fillMarginX(2), fillMarginY(4), markerType(1), markerIndex(-1),
       markerShare(0), renderDecorations(true) {
@@ -44,8 +43,8 @@ InventoryPane::~InventoryPane() { delete _clickArea; }
 void InventoryPane::renderBatch(std::vector<GridItem> &items, float alpha) {
   // fill(bg.x, bg.y, bg.w, bg.h, 0xff333333);
   fill((float)(bbox.x - fillMarginX - 1), (float)(bbox.y - fillMarginY),
-       (float)(bbox.x + bbox.w + fillMarginX + 1),
-       (float)(bbox.y + bbox.h + fillMarginY), 0xff333333);
+      (float)(bbox.x + bbox.w + fillMarginX + 1),
+      (float)(bbox.y + bbox.h + fillMarginY), 0xff333333);
   // fill(0.0f, (float)(bbox.y-fillMarginY), 400.0f, (float)(bbox.y + bbox.h +
   // fillMarginY), 0xff333333);//(float)(bbox.x-fillMarginX),
   // (float)(bbox.y-fillMarginY), (float)(bbox.x + bbox.w + fillMarginX),
@@ -65,12 +64,12 @@ void InventoryPane::renderBatch(std::vector<GridItem> &items, float alpha) {
 
   t.beginOverride();
   t.colorABGR(0xffffffff);
+  mc->textures->loadAndBindTexture("gui/gui.png");
   for (unsigned int i = 0; i < items.size(); ++i) {
     GridItem &item = items[i];
     blit(item.xf, item.yf, 200, 46, (float)itemBbox.w, (float)itemBbox.h, 16,
-         16);
+        16);
   }
-  mc->textures->loadAndBindTexture("gui/gui.png");
   t.endOverrideAndDraw();
 
   GridItem *marked = NULL;
@@ -102,8 +101,8 @@ void InventoryPane::renderBatch(std::vector<GridItem> &items, float alpha) {
     t.noColor();
     float xx = Gui::floorAlignToScreenPixel(item.xf + BorderPixels + 4);
     float yy = Gui::floorAlignToScreenPixel(item.yf + BorderPixels + 4);
-    ItemRenderer::renderGuiItem(NULL, mc->textures, citem, xx, yy, 16, 16,
-                                false);
+    ItemRenderer::renderGuiItem(
+        NULL, mc->textures, citem, xx, yy, 16, 16, false);
 
     if (j == markerIndex && markerShare >= 0)
       marked = &item, mxx = xx, myy = yy;
@@ -116,7 +115,7 @@ void InventoryPane::renderBatch(std::vector<GridItem> &items, float alpha) {
     const float yy1 = yy0 + 2;
     fill(mxx, yy0, mxx + 16.0f, yy1, 0xff606060);
     fill(mxx, yy0, mxx + markerShare * 16.0f, yy1,
-         markerType == 1 ? 0xff00ff00 : 0xff476543);
+        markerType == 1 ? 0xff00ff00 : 0xff476543);
     glEnable2(GL_BLEND);
     glEnable2(GL_TEXTURE_2D);
   }
@@ -155,8 +154,8 @@ void InventoryPane::renderBatch(std::vector<GridItem> &items, float alpha) {
         continue;
 
       if (citem->isDamaged()) {
-        ItemRenderer::renderGuiItemDecorations(citem, item.xf + 8,
-                                               item.yf + 12);
+        ItemRenderer::renderGuiItemDecorations(
+            citem, item.xf + 8, item.yf + 12);
       }
     }
 
@@ -170,9 +169,9 @@ void InventoryPane::renderBatch(std::vector<GridItem> &items, float alpha) {
   // 0x99000000, 0x00000000); fillGradient(bbox.x - 1, bbox.y + bbox.h - 20,
   // bbox.x + bbox.w + 1, bbox.y + bbox.h, 0x00000000, 0x99000000);
   fillGradient(bg.x - fillMarginX, bbox.y, bg.w + fillMarginX, bbox.y + 20,
-               0x99000000, 0x00000000);
+      0x99000000, 0x00000000);
   fillGradient(bg.x - fillMarginX, bbox.y + bbox.h - 20, bg.w + fillMarginX,
-               bbox.y + bbox.h, 0x00000000, 0x99000000);
+      bbox.y + bbox.h, 0x00000000, 0x99000000);
 
   drawScrollBar(hScroll);
   drawScrollBar(vScroll);

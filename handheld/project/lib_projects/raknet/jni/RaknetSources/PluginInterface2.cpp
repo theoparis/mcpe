@@ -19,19 +19,17 @@ PluginInterface2::PluginInterface2() {
 }
 PluginInterface2::~PluginInterface2() {}
 void PluginInterface2::SendUnified(const RakNet::BitStream *bitStream,
-                                   PacketPriority priority,
-                                   PacketReliability reliability,
-                                   char orderingChannel,
-                                   const AddressOrGUID systemIdentifier,
-                                   bool broadcast) {
+    PacketPriority priority, PacketReliability reliability,
+    char orderingChannel, const AddressOrGUID systemIdentifier,
+    bool broadcast) {
   if (rakPeerInterface)
     rakPeerInterface->Send(bitStream, priority, reliability, orderingChannel,
-                           systemIdentifier, broadcast);
+        systemIdentifier, broadcast);
 #if _RAKNET_SUPPORT_PacketizedTCP == 1 && _RAKNET_SUPPORT_TCPInterface == 1
   else
     packetizedTCP->Send((const char *)bitStream->GetData(),
-                        bitStream->GetNumberOfBytesUsed(),
-                        systemIdentifier.systemAddress, broadcast);
+        bitStream->GetNumberOfBytesUsed(), systemIdentifier.systemAddress,
+        broadcast);
 #endif
 }
 Packet *PluginInterface2::AllocatePacketUnified(unsigned dataSize) {
@@ -61,21 +59,17 @@ void PluginInterface2::DeallocPacketUnified(Packet *packet) {
 #endif
 }
 bool PluginInterface2::SendListUnified(const char **data, const int *lengths,
-                                       const int numParameters,
-                                       PacketPriority priority,
-                                       PacketReliability reliability,
-                                       char orderingChannel,
-                                       const AddressOrGUID systemIdentifier,
-                                       bool broadcast) {
+    const int numParameters, PacketPriority priority,
+    PacketReliability reliability, char orderingChannel,
+    const AddressOrGUID systemIdentifier, bool broadcast) {
   if (rakPeerInterface) {
     return rakPeerInterface->SendList(data, lengths, numParameters, priority,
-                                      reliability, orderingChannel,
-                                      systemIdentifier, broadcast) != 0;
+               reliability, orderingChannel, systemIdentifier, broadcast) != 0;
   }
 #if _RAKNET_SUPPORT_PacketizedTCP == 1 && _RAKNET_SUPPORT_TCPInterface == 1
   else {
     return packetizedTCP->SendList(data, lengths, numParameters,
-                                   systemIdentifier.systemAddress, broadcast);
+        systemIdentifier.systemAddress, broadcast);
   }
 #else
   return false;

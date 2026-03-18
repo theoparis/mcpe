@@ -74,10 +74,9 @@ public:
   void setScreen(Screen *);
 
   virtual void selectLevel(const std::string &levelId,
-                           const std::string &levelName,
-                           const LevelSettings &settings);
+      const std::string &levelName, const LevelSettings &settings);
   virtual void setLevel(Level *level, const std::string &message = "",
-                        LocalPlayer *forceInsertPlayer = NULL);
+      LocalPlayer *forceInsertPlayer = NULL);
 
   void generateLevel(const std::string &message, Level *level);
   LevelStorageSource *getLevelSource();

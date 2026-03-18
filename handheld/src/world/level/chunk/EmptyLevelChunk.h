@@ -62,8 +62,8 @@ public:
 
   int getBrightness(const LightLayer &layer, int x, int y, int z) { return 7; }
 
-  void setBrightness(const LightLayer &layer, int x, int y, int z,
-                     int brightness) {
+  void setBrightness(
+      const LightLayer &layer, int x, int y, int z, int brightness) {
     return;
   }
 
@@ -122,7 +122,7 @@ bool shouldSave(bool force) {
   void setBlocks(unsigned char *newBlocks, int sub) { return; }
 
   int getBlocksAndData(unsigned char *data, int x0, int y0, int z0, int x1,
-                       int y1, int z1, int p) {
+      int y1, int z1, int p) {
     int xs = x1 - x0;
     int ys = y1 - y0;
     int zs = z1 - z0;
@@ -131,12 +131,12 @@ bool shouldSave(bool force) {
     int len = s + s / 2 * 3;
 
     memset(data + p, Tile::invisible_bedrock->id,
-           len); // Arrays.fill(data, p, p + len, (char) 0);
+        len); // Arrays.fill(data, p, p + len, (char) 0);
     return len;
   }
 
   int setBlocksAndData(unsigned char *data, int x0, int y0, int z0, int x1,
-                       int y1, int z1, int p) {
+      int y1, int z1, int p) {
     int xs = x1 - x0;
     int ys = y1 - y0;
     int zs = z1 - z0;
@@ -147,8 +147,8 @@ bool shouldSave(bool force) {
 
   Random getRandom(long l) {
     return /*new*/ Random((level->getSeed() + x * x * 4987142 + x * 5947611 +
-                           z * z * 4392871l + z * 389711) ^
-                          l);
+                              z * z * 4392871l + z * 389711) ^
+        l);
   }
 
   bool isEmpty() { return true; }

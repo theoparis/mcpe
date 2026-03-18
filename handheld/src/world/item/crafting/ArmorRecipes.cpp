@@ -4,42 +4,42 @@
 
 static RowList shapes[] = {
     // Helmet
-    Recipes::Shape("XXX",  //
-                   "X X"), //
+    Recipes::Shape("XXX", //
+        "X X"), //
 
     // Chest plate
-    Recipes::Shape("X X",  //
-                   "XXX",  //
-                   "XXX"), //
+    Recipes::Shape("X X", //
+        "XXX", //
+        "XXX"), //
 
     // Leggings
-    Recipes::Shape("XXX",  //
-                   "X X",  //
-                   "X X"), //
+    Recipes::Shape("XXX", //
+        "X X", //
+        "X X"), //
 
     // Boots
     Recipes::Shape("X X", //
-                   "X X") //
+        "X X") //
 };
 
 void ArmorRecipes::addRecipes(Recipes *r) {
   int materialIds[] = {Item::leather->id,
-                       /*((Tile*)Tile::fire)->id,*/ Item::ironIngot->id,
-                       Item::emerald->id, Item::goldIngot->id};
+      /*((Tile*)Tile::fire)->id,*/ Item::ironIngot->id, Item::emerald->id,
+      Item::goldIngot->id};
 
   const int NumMaterials = sizeof(materialIds) / sizeof(int);
   const int NumRecipes = sizeof(shapes) / sizeof(RowList);
 
   Item *map[NumRecipes][NumMaterials] = {
       {Item::helmet_cloth, /*Item::helmet_chain,*/ Item::helmet_iron,
-       Item::helmet_diamond, Item::helmet_gold},
+          Item::helmet_diamond, Item::helmet_gold},
       {Item::chestplate_cloth,
-       /*Item::chestplate_chain,*/ Item::chestplate_iron,
-       Item::chestplate_diamond, Item::chestplate_gold},
+          /*Item::chestplate_chain,*/ Item::chestplate_iron,
+          Item::chestplate_diamond, Item::chestplate_gold},
       {Item::leggings_cloth, /*Item::leggings_chain,*/ Item::leggings_iron,
-       Item::leggings_diamond, Item::leggings_gold},
+          Item::leggings_diamond, Item::leggings_gold},
       {Item::boots_cloth, /*Item::boots_chain,*/ Item::boots_iron,
-       Item::boots_diamond, Item::boots_gold},
+          Item::boots_diamond, Item::boots_gold},
   };
 
   // const int OVERRIDDEN_MaterialCount = 2;
@@ -49,7 +49,7 @@ void ArmorRecipes::addRecipes(Recipes *r) {
       Item *target = (Item *)map[t][m];
 
       r->addShapedRecipe(ItemInstance(target), shapes[t],
-                         definition('X', Item::items[materialId]));
+          definition('X', Item::items[materialId]));
     }
   }
 }

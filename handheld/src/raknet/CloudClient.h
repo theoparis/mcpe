@@ -53,8 +53,8 @@ public:
   /// passed here will be used instead.
   /// \param[in] _allocator An instance of CloudAllocator
   /// \param[in] _callback An instance of CloudClientCallback
-  virtual void SetDefaultCallbacks(CloudAllocator *_allocator,
-                                   CloudClientCallback *_callback);
+  virtual void SetDefaultCallbacks(
+      CloudAllocator *_allocator, CloudClientCallback *_callback);
 
   /// \brief Uploads data to the cloud
   /// \details Data uploaded to the cloud will be stored by the server sent to,
@@ -73,7 +73,7 @@ public:
   /// \param[in] systemIdentifier A remote system running CloudServer that we
   /// are already connected to.
   virtual void Post(CloudKey *cloudKey, const unsigned char *data,
-                    uint32_t dataLengthBytes, RakNetGUID systemIdentifier);
+      uint32_t dataLengthBytes, RakNetGUID systemIdentifier);
 
   /// \brief Releases one or more data previously uploaded with Post()
   /// \details If a remote system has subscribed to one or more of the \a keys
@@ -83,8 +83,8 @@ public:
   /// remove uploads from multiple Post() calls at once.
   /// \param[in] systemIdentifier A remote system running CloudServer that we
   /// are already connected to.
-  virtual void Release(DataStructures::List<CloudKey> &keys,
-                       RakNetGUID systemIdentifier);
+  virtual void Release(
+      DataStructures::List<CloudKey> &keys, RakNetGUID systemIdentifier);
 
   /// \brief Gets data from the cloud
   /// \details For a given query containing one or more keys, return data that
@@ -113,11 +113,11 @@ public:
   /// parameter is treated as subscribing to all updates from all clients.
   virtual bool Get(CloudQuery *cloudQuery, RakNetGUID systemIdentifier);
   virtual bool Get(CloudQuery *cloudQuery,
-                   DataStructures::List<RakNetGUID> &specificSystems,
-                   RakNetGUID systemIdentifier);
+      DataStructures::List<RakNetGUID> &specificSystems,
+      RakNetGUID systemIdentifier);
   virtual bool Get(CloudQuery *cloudQuery,
-                   DataStructures::List<CloudQueryRow *> &specificSystems,
-                   RakNetGUID systemIdentifier);
+      DataStructures::List<CloudQueryRow *> &specificSystems,
+      RakNetGUID systemIdentifier);
 
   /// \brief Unsubscribe from updates previously subscribed to using Get() with
   /// the CloudQuery::subscribeToResults set to true The \a keys and \a
@@ -128,15 +128,14 @@ public:
   /// from any system. To do this, first Unsubscribe() from all systems, and
   /// call Get() with the \a specificSystems parameter explicilty listing the
   /// systems you want to subscribe to.
+  virtual void Unsubscribe(
+      DataStructures::List<CloudKey> &keys, RakNetGUID systemIdentifier);
   virtual void Unsubscribe(DataStructures::List<CloudKey> &keys,
-                           RakNetGUID systemIdentifier);
+      DataStructures::List<RakNetGUID> &specificSystems,
+      RakNetGUID systemIdentifier);
   virtual void Unsubscribe(DataStructures::List<CloudKey> &keys,
-                           DataStructures::List<RakNetGUID> &specificSystems,
-                           RakNetGUID systemIdentifier);
-  virtual void
-  Unsubscribe(DataStructures::List<CloudKey> &keys,
-              DataStructures::List<CloudQueryRow *> &specificSystems,
-              RakNetGUID systemIdentifier);
+      DataStructures::List<CloudQueryRow *> &specificSystems,
+      RakNetGUID systemIdentifier);
 
   /// \brief Call this when you get ID_CLOUD_GET_RESPONSE
   /// If \a callback or \a allocator are 0, the default callbacks passed to
@@ -147,7 +146,7 @@ public:
   /// \param[in] _allocator Allocator to be used to allocate data. If 0, default
   /// is used.
   virtual void OnGetReponse(Packet *packet, CloudClientCallback *_callback = 0,
-                            CloudAllocator *_allocator = 0);
+      CloudAllocator *_allocator = 0);
 
   /// \brief Call this when you get ID_CLOUD_GET_RESPONSE
   /// Different form of OnGetReponse that returns to a structure that you pass,
@@ -160,7 +159,7 @@ public:
   /// \param[in] _allocator Allocator to be used to allocate data. If 0, default
   /// is used.
   virtual void OnGetReponse(CloudQueryResult *cloudQueryResult, Packet *packet,
-                            CloudAllocator *_allocator = 0);
+      CloudAllocator *_allocator = 0);
 
   /// \brief Call this when you get ID_CLOUD_SUBSCRIPTION_NOTIFICATION
   /// If \a callback or \a allocator are 0, the default callbacks passed to
@@ -171,8 +170,7 @@ public:
   /// \param[in] _allocator Allocator to be used to allocate data. If 0, default
   /// is used.
   virtual void OnSubscriptionNotification(Packet *packet,
-                                          CloudClientCallback *_callback = 0,
-                                          CloudAllocator *_allocator = 0);
+      CloudClientCallback *_callback = 0, CloudAllocator *_allocator = 0);
 
   /// \brief Call this when you get ID_CLOUD_SUBSCRIPTION_NOTIFICATION
   /// Different form of OnSubscriptionNotification that returns to a structure
@@ -186,13 +184,12 @@ public:
   /// \param[in] _allocator Allocator to be used to allocate data. If 0, default
   /// is used.
   virtual void OnSubscriptionNotification(bool *wasUpdated, CloudQueryRow *row,
-                                          Packet *packet,
-                                          CloudAllocator *_allocator = 0);
+      Packet *packet, CloudAllocator *_allocator = 0);
 
   /// If you never specified an allocator, and used the non-callback form of
   /// OnGetReponse(), deallocate cloudQueryResult with this function
-  virtual void
-  DeallocateWithDefaultAllocator(CloudQueryResult *cloudQueryResult);
+  virtual void DeallocateWithDefaultAllocator(
+      CloudQueryResult *cloudQueryResult);
 
   /// If you never specified an allocator, and used the non-callback form of
   /// OnSubscriptionNotification(), deallocate row with this function
@@ -222,8 +219,8 @@ public:
   /// be deallocated after the function returns by default. Set to false to not
   /// deallocate these pointers. The pointers are allocated through
   /// CloudAllocator.
-  virtual void OnGet(RakNet::CloudQueryResult *result,
-                     bool *deallocateRowsAfterReturn) {
+  virtual void OnGet(
+      RakNet::CloudQueryResult *result, bool *deallocateRowsAfterReturn) {
     (void)result;
     (void)deallocateRowsAfterReturn;
   }
@@ -236,8 +233,7 @@ public:
   /// the function returns by default. Set to false to not deallocate these
   /// pointers. The pointers are allocated through CloudAllocator.
   virtual void OnSubscriptionNotification(RakNet::CloudQueryRow *result,
-                                          bool wasUpdated,
-                                          bool *deallocateRowAfterReturn) {
+      bool wasUpdated, bool *deallocateRowAfterReturn) {
     (void)result;
     (void)wasUpdated;
     (void)deallocateRowAfterReturn;

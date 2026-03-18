@@ -5,8 +5,8 @@
 
 using namespace RakNet;
 
-bool RakNet::CanConnect(NATTypeDetectionResult type1,
-                        NATTypeDetectionResult type2) {
+bool RakNet::CanConnect(
+    NATTypeDetectionResult type1, NATTypeDetectionResult type2) {
   /// If one system is NAT_TYPE_SYMMETRIC, the other must be
   /// NAT_TYPE_ADDRESS_RESTRICTED or less If one system is
   /// NAT_TYPE_PORT_RESTRICTED, the other must be NAT_TYPE_PORT_RESTRICTED or
@@ -17,18 +17,18 @@ bool RakNet::CanConnect(NATTypeDetectionResult type1,
       {true, true, true, true, true, false, false, false}, // None
       {true, true, true, true, true, false, false, false}, // Full Cone
       {true, true, true, true, true, false, false, false}, // Address restricted
-      {true, true, true, true, false, false, false, false},  // Port restricted
+      {true, true, true, true, false, false, false, false}, // Port restricted
       {true, true, true, false, false, false, false, false}, // Symmetric
       {false, false, false, false, false, false, false, false}, // Unknown
       {false, false, false, false, false, false, false, false}, // InProgress
-      {false, false, false, false, false, false, false, false}  // Supports_UPNP
+      {false, false, false, false, false, false, false, false} // Supports_UPNP
   };
 
   return connectionGraph[(int)type1][(int)type2];
 }
 
-const char *
-RakNet::NATTypeDetectionResultToString(NATTypeDetectionResult type) {
+const char *RakNet::NATTypeDetectionResultToString(
+    NATTypeDetectionResult type) {
   switch (type) {
   case NAT_TYPE_NONE:
     return "None";
@@ -55,8 +55,8 @@ RakNet::NATTypeDetectionResultToString(NATTypeDetectionResult type) {
 // None and relaxed can connect to anything
 // Moderate can connect to moderate or less
 // Strict can connect to relaxed or less
-const char *
-RakNet::NATTypeDetectionResultToStringFriendly(NATTypeDetectionResult type) {
+const char *RakNet::NATTypeDetectionResultToStringFriendly(
+    NATTypeDetectionResult type) {
   switch (type) {
   case NAT_TYPE_NONE:
     return "Open";
@@ -101,7 +101,7 @@ int RakNet::NatTypeRecvFrom(char *data, SOCKET socket, SystemAddress &sender) {
   sa.sin_family = AF_INET;
   sa.sin_port = 0;
   int len = recvfrom__(socket, data, MAXIMUM_MTU_SIZE, flag, (sockaddr *)&sa,
-                       (socklen_t *)&len2);
+      (socklen_t *)&len2);
   if (len > 0) {
     sender.address.addr4.sin_family = AF_INET;
     sender.address.addr4.sin_addr.s_addr = sa.sin_addr.s_addr;

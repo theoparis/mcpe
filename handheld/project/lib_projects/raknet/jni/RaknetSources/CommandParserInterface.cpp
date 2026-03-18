@@ -26,8 +26,8 @@ using namespace RakNet;
 
 const unsigned char CommandParserInterface::VARIABLE_NUMBER_OF_PARAMETERS = 255;
 
-int RakNet::RegisteredCommandComp(const char *const &key,
-                                  const RegisteredCommand &data) {
+int RakNet::RegisteredCommandComp(
+    const char *const &key, const RegisteredCommand &data) {
   return _stricmp(key, data.command);
 }
 
@@ -35,11 +35,9 @@ CommandParserInterface::CommandParserInterface() {}
 CommandParserInterface::~CommandParserInterface() {}
 
 void CommandParserInterface::ParseConsoleString(char *str,
-                                                const char delineator,
-                                                unsigned char delineatorToggle,
-                                                unsigned *numParameters,
-                                                char **parameterList,
-                                                unsigned parameterListLength) {
+    const char delineator, unsigned char delineatorToggle,
+    unsigned *numParameters, char **parameterList,
+    unsigned parameterListLength) {
   unsigned strIndex, parameterListIndex;
   unsigned strLen;
   bool replaceDelineator = true;
@@ -93,16 +91,15 @@ void CommandParserInterface::SendCommandList(
     transport->Send(systemAddress, "No registered commands\r\n");
 }
 void CommandParserInterface::RegisterCommand(unsigned char parameterCount,
-                                             const char *command,
-                                             const char *commandHelp) {
+    const char *command, const char *commandHelp) {
   RegisteredCommand rc;
   rc.command = command;
   rc.commandHelp = commandHelp;
   rc.parameterCount = parameterCount;
   commandList.Insert(command, rc, true, _FILE_AND_LINE_);
 }
-bool CommandParserInterface::GetRegisteredCommand(const char *command,
-                                                  RegisteredCommand *rc) {
+bool CommandParserInterface::GetRegisteredCommand(
+    const char *command, RegisteredCommand *rc) {
   bool objectExists;
   unsigned index;
   index = commandList.GetIndexFromKey(command, &objectExists);
@@ -124,38 +121,33 @@ void CommandParserInterface::OnConnectionLost(
   (void)transport;
 }
 void CommandParserInterface::ReturnResult(bool res, const char *command,
-                                          TransportInterface *transport,
-                                          const SystemAddress &systemAddress) {
+    TransportInterface *transport, const SystemAddress &systemAddress) {
   if (res)
     transport->Send(systemAddress, "%s returned true.\r\n", command);
   else
     transport->Send(systemAddress, "%s returned false.\r\n", command);
 }
 void CommandParserInterface::ReturnResult(int res, const char *command,
-                                          TransportInterface *transport,
-                                          const SystemAddress &systemAddress) {
+    TransportInterface *transport, const SystemAddress &systemAddress) {
   transport->Send(systemAddress, "%s returned %i.\r\n", command, res);
 }
 void CommandParserInterface::ReturnResult(const char *command,
-                                          TransportInterface *transport,
-                                          const SystemAddress &systemAddress) {
+    TransportInterface *transport, const SystemAddress &systemAddress) {
   transport->Send(systemAddress, "Successfully called %s.\r\n", command);
 }
 void CommandParserInterface::ReturnResult(char *res, const char *command,
-                                          TransportInterface *transport,
-                                          const SystemAddress &systemAddress) {
+    TransportInterface *transport, const SystemAddress &systemAddress) {
   transport->Send(systemAddress, "%s returned %s.\r\n", command, res);
 }
 void CommandParserInterface::ReturnResult(SystemAddress res,
-                                          const char *command,
-                                          TransportInterface *transport,
-                                          const SystemAddress &systemAddress) {
+    const char *command, TransportInterface *transport,
+    const SystemAddress &systemAddress) {
   char addr[128];
   systemAddress.ToString(false, addr);
   char addr2[128];
   res.ToString(false, addr2);
   transport->Send(systemAddress, "%s returned %s %s:%i\r\n", command, addr,
-                  addr2, res.GetPort());
+      addr2, res.GetPort());
 }
 
 #ifdef _MSC_VER

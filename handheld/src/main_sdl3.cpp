@@ -1,63 +1,94 @@
-#pragma once
 #include "MinecraftApp.h"
-#include "client/renderer/gles.h"
-#include <cassert>
 
 #include <cmath>
+#include <cstring>
 #include <cstdlib>
 #include <fstream>
+#include <memory>
+#include <optional>
 #include <png.h>
+#include <string_view>
 #include <vector>
 
 #include <SDL3/SDL.h>
 #include <unistd.h>
 
-#define check() assert(glGetError() == 0)
-
 #include "App.h"
 #include "platform/input/Keyboard.h"
 #include "platform/input/Mouse.h"
 #include "platform/input/Multitouch.h"
+#include "platform/sdl3/Sdl3GraphicsDriver.h"
+#include "platform/sdl3/Sdl3VulkanBackend.h"
 
 int width = 848;
 int height = 480;
 
-static void png_funcReadFile(png_structp pngPtr, png_bytep data,
-                             png_size_t length) {
+static void png_funcReadFile(
+    png_structp pngPtr, png_bytep data, png_size_t length) {
   ((std::istream *)png_get_io_ptr(pngPtr))->read((char *)data, length);
+}
+
+static auto getExecutablePath() -> std::string {
+  char buffer[4096] = {};
+  const ssize_t size = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+  if (size <= 0) {
+    return {};
+  }
+
+  buffer[(size_t)size] = '\0';
+  return std::string(buffer);
 }
 
 class AppPlatform_SDL3 : public AppPlatform {
 public:
-  bool isTouchscreen() { return false; }
+  static auto isTouchscreen() -> bool { return false; }
+  auto supportsTouchscreen() -> bool override { return false; }
 
-  std::vector<std::string> getDataSearchPaths() const {
+  static auto getDataSearchPaths() -> std::vector<std::string> {
     std::vector<std::string> paths;
     auto addPath = [&](const std::string &p) {
-      if (p.empty())
+      if (p.empty()) {
         return;
+      }
       std::string out = p;
-      while (!out.empty() && out.back() == '/')
+      while (!out.empty() && out.back() == '/') {
         out.pop_back();
-      if (!out.empty())
+      }
+      if (!out.empty()) {
         paths.push_back(out);
+      }
     };
 
-    if (const char *env = std::getenv("MCPE_DATA_DIR"))
+    if (const char *env = std::getenv("MCPE_DATA_DIR")) {
       addPath(env);
+    }
 
 #ifdef MCPE_INSTALL_DATA_DIR
     addPath(MCPE_INSTALL_DATA_DIR);
 #endif
 
+    if (const char *runfiles = std::getenv("RUNFILES_DIR")) {
+      addPath(std::string(runfiles) + "/_main/data");
+    }
+
+    if (const char *testSrcDir = std::getenv("TEST_SRCDIR")) {
+      addPath(std::string(testSrcDir) + "/_main/data");
+    }
+
     addPath("/usr/share/mcpe");
     addPath("/usr/local/share/mcpe");
 
     const char *base = SDL_GetBasePath();
-    if (base) {
+    if (base != nullptr) {
       std::string basePath(base);
       addPath(basePath + "/data");
+      addPath(basePath + "/mcpe-sdl3.runfiles/_main/data");
       addPath(basePath + "/../share/mcpe");
+    }
+
+    const std::string exePath = getExecutablePath();
+    if (!exePath.empty()) {
+      addPath(exePath + ".runfiles/_main/data");
     }
 
     addPath("data");
@@ -66,34 +97,36 @@ public:
     return paths;
   }
 
-  BinaryBlob readAssetFile(const std::string &filename) override {
+  auto readAssetFile(const std::string &filename) -> BinaryBlob override {
     const auto roots = getDataSearchPaths();
     for (const auto &root : roots) {
       std::string path = root + "/" + filename;
       std::ifstream file(path.c_str(), std::ios::binary);
-      if (!file)
+      if (!file) {
         continue;
+      }
 
       file.seekg(0, std::ios::end);
       std::streamsize size = file.tellg();
-      if (size <= 0)
+      if (size <= 0) {
         continue;
+      }
       file.seekg(0, std::ios::beg);
 
-      unsigned char *data = new unsigned char[(size_t)size];
+      auto *data = new unsigned char[(size_t)size];
       if (!file.read(reinterpret_cast<char *>(data), size)) {
         delete[] data;
         continue;
       }
 
-      return BinaryBlob(data, (unsigned int)size);
+      return {data, (unsigned int)size};
     }
 
-    return BinaryBlob();
+    return {};
   }
 
-  TextureData loadTexture(const std::string &filename_,
-                          bool textureFolder) override {
+  auto loadTexture(const std::string &filename_, bool textureFolder)
+      -> TextureData override {
     TextureData out;
 
     std::string rel = textureFolder ? "images/" + filename_ : filename_;
@@ -101,19 +134,21 @@ public:
     for (const auto &root : roots) {
       std::string filename = root + "/" + rel;
       std::ifstream source(filename.c_str(), std::ios::binary);
-      if (!source)
+      if (!source) {
         continue;
+      }
 
       png_structp pngPtr =
-          png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+          png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
 
-      if (!pngPtr)
+      if (pngPtr == nullptr) {
         return out;
+      }
 
       png_infop infoPtr = png_create_info_struct(pngPtr);
 
-      if (!infoPtr) {
-        png_destroy_read_struct(&pngPtr, NULL, NULL);
+      if (infoPtr == nullptr) {
+        png_destroy_read_struct(&pngPtr, nullptr, nullptr);
         return out;
       }
 
@@ -149,58 +184,117 @@ public:
   }
 };
 
-static bool _inited_egl = false;
+struct LaunchOptions {
+  int commandPort = 0;
+};
+
+static bool _surface_ready = false;
 static bool _app_inited = false;
 static int _app_window_normal = true;
 
-static void move_surface(App *app, AppContext *state, uint32_t x, uint32_t y,
-                         uint32_t w, uint32_t h);
-
-static void initEgl(App *app, AppContext *state, uint32_t w, uint32_t h) {
-  move_surface(app, state, 16, 16, w, h);
+static auto parseBackendName(std::string_view name) -> bool {
+  if (name == "gles" || name == "opengl" || name == "gl") {
+    fprintf(stderr,
+        "SDL3 Bazel build no longer supports the OpenGL renderer; "
+        "falling back to Vulkan.\n");
+    return true;
+  }
+  if (name == "vulkan" || name == "vk") {
+    return true;
+  }
+  return false;
 }
 
-static void deinitEgl(AppContext *state) {
-  if (!_inited_egl) {
-    return;
+static auto parseLaunchOptions(int argc, char **argv) -> LaunchOptions {
+  LaunchOptions options;
+
+  if (const char *env = std::getenv("MCPE_RENDERER")) {
+    if (!parseBackendName(env)) {
+      fprintf(stderr, "Ignoring unknown MCPE_RENDERER value: %s\n", env);
+    }
   }
 
-  SDL_GL_MakeCurrent(state->window, nullptr);
-  SDL_GL_DestroyContext(state->context);
-  SDL_DestroyWindow(state->window);
-  state->window = NULL;
+  for (int i = 1; i < argc; ++i) {
+    const std::string_view arg(argv[i]);
+    constexpr std::string_view backendEq = "--renderer=";
+    constexpr std::string_view backendLongEq = "--backend=";
 
-  // state->doRender = false;
-  _inited_egl = false;
+    if (arg.starts_with(backendEq)) {
+      if (!parseBackendName(arg.substr(backendEq.size()))) {
+        fprintf(stderr, "Ignoring unknown renderer value: %.*s\n",
+            (int)arg.substr(backendEq.size()).size(),
+            arg.substr(backendEq.size()).data());
+      }
+      continue;
+    }
+    if (arg.starts_with(backendLongEq)) {
+      if (!parseBackendName(arg.substr(backendLongEq.size()))) {
+        fprintf(stderr, "Ignoring unknown backend value: %.*s\n",
+            (int)arg.substr(backendLongEq.size()).size(),
+            arg.substr(backendLongEq.size()).data());
+      }
+      continue;
+    }
+    if (arg == "--renderer" || arg == "--backend") {
+      if (i + 1 < argc) {
+        if (!parseBackendName(argv[i + 1])) {
+          fprintf(stderr, "Ignoring unknown renderer value: %s\n", argv[i + 1]);
+        }
+        ++i;
+      }
+      continue;
+    }
+    if (arg.starts_with("--")) {
+      continue;
+    }
+
+    if (options.commandPort == 0) {
+      options.commandPort = atoi(argv[i]);
+    }
+  }
+
+  return options;
 }
 
-void move_surface(App *app, AppContext *state, uint32_t x, uint32_t y,
-                  uint32_t w, uint32_t h) {
-  int32_t success = 0;
+static auto backendWindowTitle() -> const char * {
+  return "Minecraft - pocket edition [Vulkan]";
+}
 
-  deinitEgl(state);
-  // printf("initEgl\n");
-
-  state->context = SDL_GL_CreateContext(state->window);
-  if (!state->context) {
-    fprintf(stderr, "Failed to create GL context: %s\n", SDL_GetError());
-    return;
+static auto resetSurface(
+    App *app, Sdl3GraphicsDriver &graphics, AppContext *state, uint32_t w,
+    uint32_t h) -> bool {
+  std::string error;
+  if (!graphics.resetSurface(*state, w, h, error)) {
+    fprintf(stderr, "Failed to reset %s surface: %s\n", graphics.name(),
+        error.c_str());
+    return false;
   }
 
-  SDL_ShowWindow(state->window);
-  SDL_RaiseWindow(state->window);
-  SDL_GL_MakeCurrent(state->window, state->context);
-  SDL_GL_SetSwapInterval(0);
-
-  _inited_egl = true;
-
+  _surface_ready = true;
   if (!_app_inited) {
-    _app_inited = true;
     app->init(*state);
-  } else {
-    app->onGraphicsReset(*state);
+    _app_inited = true;
+    app->setSize(w, h);
+    return true;
   }
+
   app->setSize(w, h);
+  app->onGraphicsReset(*state);
+  return true;
+}
+
+static void destroySurface(Sdl3GraphicsDriver &graphics, AppContext *state) {
+  if (!_surface_ready) {
+    return;
+  }
+
+  graphics.destroySurface(*state);
+  _surface_ready = false;
+}
+
+static void teardownGraphics(Sdl3GraphicsDriver &graphics, AppContext *state) {
+  destroySurface(graphics, state);
+  graphics.destroyWindow(*state);
 }
 
 void teardown() { SDL_Quit(); }
@@ -240,7 +334,8 @@ static unsigned char transformKey(int key) {
   return 0;
 }
 
-int handleEvents(App *app, AppContext *state) {
+int handleEvents(
+    App *app, AppContext *state, Sdl3GraphicsDriver &graphicsBackend) {
   static float relAccumX = 0.0f;
   static float relAccumY = 0.0f;
   SDL_Event event;
@@ -338,7 +433,14 @@ int handleEvents(App *app, AppContext *state) {
         SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED == event.type) {
       width = event.window.data1;
       height = event.window.data2;
-      app->setSize(width, height);
+
+      if (graphicsBackend.kind() == GraphicsBackendKind::Vulkan) {
+        if (!resetSurface(app, graphicsBackend, state, width, height)) {
+          return -1;
+        }
+      } else {
+        app->setSize(width, height);
+      }
       continue;
     }
   }
@@ -346,84 +448,85 @@ int handleEvents(App *app, AppContext *state) {
   return 0;
 }
 
-void updateWindowPosition(App *app, AppContext *state) {
+void updateWindowPosition(
+    App *app, AppContext *state, Sdl3GraphicsDriver &graphicsBackend) {
   int newWidth = 0;
   int newHeight = 0;
-  SDL_GetWindowSize(state->window, &newWidth, &newHeight);
+  SDL_GetWindowSizeInPixels(state->window, &newWidth, &newHeight);
 
   if (newWidth != width || newHeight != height) {
     width = newWidth;
     height = newHeight;
-    app->setSize(width, height);
+
+    if (graphicsBackend.kind() == GraphicsBackendKind::Vulkan) {
+      resetSurface(app, graphicsBackend, state, width, height);
+    } else {
+      app->setSize(width, height);
+    }
   }
 }
 
 int main(int argc, char **argv) {
   if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
-    printf("Couldn't initialize SDL\n");
+    fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
     return -1;
   }
 
-  // std::string path = argv[0];
-  // int e = path.rfind('/');
-  // if (e != std::string::npos) {
-  //   path = path.substr(0, e);
-  //   chdir(path.c_str());
-  // }
-
   char buf[1024];
   getcwd(buf, 1000);
-  // printf("getcwd: %s\n", buf);
-
-  // printf("HOME: %s\n", getenv("HOME"));
 
   atexit(teardown);
-  // setGrabbed(false);;
 
-  // printf("storage: %s\n", app->externalStoragePath.c_str());
+  const LaunchOptions options = parseLaunchOptions(argc, argv);
 
   AppContext context;
   AppPlatform_SDL3 platform;
   context.doRender = true;
   context.platform = &platform;
 
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 1);
-  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-  context.window = SDL_CreateWindow("Minecraft", width, height,
-                                    SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
-  if (!context.window) {
-    fprintf(stderr, "Failed to create window: %s\n", SDL_GetError());
+  std::unique_ptr<Sdl3GraphicsDriver> graphicsBackend =
+      std::make_unique<Sdl3VulkanBackend>();
+  context.graphics = graphicsBackend.get();
+
+  std::string error;
+  if (!graphicsBackend->createWindow(
+          context, backendWindowTitle(), width, height, error)) {
+    fprintf(stderr, "Failed to create %s window: %s\n", graphicsBackend->name(),
+        error.c_str());
     return EXIT_FAILURE;
   }
-  SDL_SetWindowTitle(context.window, "Minecraft - pocket edition");
+
+  LOGI("Running Vulkan mode without hidden GL compatibility context\n");
+
   SDL_StartTextInput(context.window);
 
-  MinecraftApp *app = new MinecraftApp(context.window);
+  auto minecraftApp = std::make_unique<MinecraftApp>(context.window);
   std::string storagePath = getenv("HOME");
   storagePath += "/.minecraft/";
-  app->externalStoragePath = storagePath;
-  app->externalCacheStoragePath = storagePath;
+  minecraftApp->externalStoragePath = storagePath;
+  minecraftApp->externalCacheStoragePath = storagePath;
 
-  int commandPort = 0;
-  if (argc > 1) {
-    commandPort = atoi(argv[1]);
+  if (options.commandPort != 0)
+    minecraftApp->commandPort = options.commandPort;
+
+  std::unique_ptr<App> app = std::move(minecraftApp);
+
+  if (!resetSurface(app.get(), *graphicsBackend, &context, width, height)) {
+    app.reset();
+    teardownGraphics(*graphicsBackend, &context);
+    return EXIT_FAILURE;
   }
-
-  if (commandPort != 0)
-    app->commandPort = commandPort;
-
-  initEgl(app, &context, width, height);
 
   bool running = true;
   while (running) {
-    updateWindowPosition(app, &context);
+    updateWindowPosition(app.get(), &context, *graphicsBackend);
 
-    running = handleEvents(app, &context) == 0;
+    running = handleEvents(app.get(), &context, *graphicsBackend) == 0;
     app->update();
   }
 
-  deinitEgl(&context);
+  app.reset();
+  teardownGraphics(*graphicsBackend, &context);
 
   return 0;
 }

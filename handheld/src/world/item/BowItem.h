@@ -21,7 +21,7 @@ public:
     this->setMaxDamage(384);
   }
   void releaseUsing(ItemInstance *itemInstance, Level *level, Player *player,
-                    int durationLeft) {
+      int durationLeft) {
     int timeHeld = getUseDuration(itemInstance) - durationLeft;
     float pow = timeHeld / (float)MAX_DRAW_DURATION;
     pow = ((pow * pow) + pow * 2) / 3;
@@ -32,7 +32,7 @@ public:
 
     itemInstance->hurt(1);
     level->playSound(player, "random.bow", 1.0f,
-                     1.0f / (random.nextFloat() * 0.4f + 1.2f) + pow * 0.5f);
+        1.0f / (random.nextFloat() * 0.4f + 1.2f) + pow * 0.5f);
     player->inventory->removeResource(Item::arrow->id);
     if (!level->isClientSide) {
       Arrow *arrow = new Arrow(level, player, pow * 2.0f);

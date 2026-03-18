@@ -28,7 +28,7 @@ SoundSystemSL::SoundSystemSL()
 SoundSystemSL::~SoundSystemSL() {
   toRemoveMutex.unlock();
   for (SoundList::iterator it = playingBuffers.begin();
-       it != playingBuffers.end(); ++it)
+      it != playingBuffers.end(); ++it)
     (**it)->Destroy(*it);
   (*objOutput)->Destroy(objOutput);
 
@@ -48,8 +48,8 @@ void SoundSystemSL::init() {
   SLboolean required[MAX_NUMBER_INTERFACES];
   SLInterfaceID iidArray[MAX_NUMBER_INTERFACES];
 
-  SLEngineOption EngineOption[] = {(SLuint32)SL_ENGINEOPTION_THREADSAFE,
-                                   (SLuint32)SL_BOOLEAN_TRUE};
+  SLEngineOption EngineOption[] = {
+      (SLuint32)SL_ENGINEOPTION_THREADSAFE, (SLuint32)SL_BOOLEAN_TRUE};
 
   /* Create OpenSL ES (destroy first if needed)*/
   if (SoundSystemSL::objEngine != 0)
@@ -68,8 +68,8 @@ void SoundSystemSL::init() {
   }
 
   (*SoundSystemSL::objEngine)
-      ->GetInterface(SoundSystemSL::objEngine, SL_IID_ENGINE,
-                     (void *)&engEngine);
+      ->GetInterface(
+          SoundSystemSL::objEngine, SL_IID_ENGINE, (void *)&engEngine);
   checkErr(res);
 
   /* Create Output Mix object to be used by player - no interfaces
@@ -106,7 +106,7 @@ void SoundSystemSL::setListenerAngle(float deg) {
 }
 
 void SoundSystemSL::playAt(const SoundDesc &sound, float x, float y, float z,
-                           float volume, float pitch) {
+    float volume, float pitch) {
   removeStoppedSounds();
 
   if (numBuffersPlaying >= MAX_BUFFERS_PLAYING)
@@ -115,15 +115,11 @@ void SoundSystemSL::playAt(const SoundDesc &sound, float x, float y, float z,
   /* Setup the data source structure for the player */
   SLDataLocator_AndroidSimpleBufferQueue uri = {
       SL_DATALOCATOR_ANDROIDSIMPLEBUFFERQUEUE, 2};
-  SLDataFormat_PCM mime = {SL_DATAFORMAT_PCM,
-                           sound.channels,
-                           sound.frameRate * 1000,
-                           sound.byteWidth << 3,
-                           sound.byteWidth << 3,
-                           sound.channels == 1
-                               ? SL_SPEAKER_FRONT_CENTER
-                               : SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
-                           SL_BYTEORDER_LITTLEENDIAN};
+  SLDataFormat_PCM mime = {SL_DATAFORMAT_PCM, sound.channels,
+      sound.frameRate * 1000, sound.byteWidth << 3, sound.byteWidth << 3,
+      sound.channels == 1 ? SL_SPEAKER_FRONT_CENTER
+                          : SL_SPEAKER_FRONT_LEFT | SL_SPEAKER_FRONT_RIGHT,
+      SL_BYTEORDER_LITTLEENDIAN};
   SLDataSource audioSource = {&uri, &mime};
   SLDataLocator_OutputMix locator_outputmix;
   SLDataSink audioSink;
@@ -149,7 +145,7 @@ void SoundSystemSL::playAt(const SoundDesc &sound, float x, float y, float z,
   /* Create the 3D player */
   SLresult res = (*engEngine)
                      ->CreateAudioPlayer(engEngine, &player, &audioSource,
-                                         &audioSink, 2, iidArray, required);
+                         &audioSink, 2, iidArray, required);
   // printf("SL: Created audio player\n");
   checkErr(res);
 
@@ -173,7 +169,7 @@ void SoundSystemSL::playAt(const SoundDesc &sound, float x, float y, float z,
       maxVolume - 2000 * (1 - volume); // Mth::lerp(SL_MILLIBEL_MIN, maxVolume,
                                        // 0.95f + 0.05f*volume);
   LOGI("min: %d, max: %d, current: %d (%f)\n", SL_MILLIBEL_MIN, maxVolume,
-       mbelVolume, volume);
+      mbelVolume, volume);
   res = (*volumeItf)->SetVolumeLevel(volumeItf, mbelVolume);
   checkErr(res);
 
@@ -184,8 +180,8 @@ void SoundSystemSL::playAt(const SoundDesc &sound, float x, float y, float z,
   // t_context* context = new t_context(); //{ player, &toRemoveMutex };
   // context->obj = player;
   // context->mutex = &toRemoveMutex;
-  res = (*buffer1)->RegisterCallback(buffer1, SoundSystemSL::removePlayer,
-                                     (void *)player);
+  res = (*buffer1)->RegisterCallback(
+      buffer1, SoundSystemSL::removePlayer, (void *)player);
   checkErr(res);
 
   res = (*buffer1)->Enqueue(buffer1, sound.frames, sound.size);
@@ -233,8 +229,8 @@ void SoundSystemSL::removeStoppedSounds() {
   }
 }
 
-void SoundSystemSL::removePlayer(SLAndroidSimpleBufferQueueItf bq,
-                                 void *context_) {
+void SoundSystemSL::removePlayer(
+    SLAndroidSimpleBufferQueueItf bq, void *context_) {
   // t_context* context = (t_context*) context_;
   // context->mutex->lock();
   // SoundSystemSL::toRemove.push_back( context->obj );

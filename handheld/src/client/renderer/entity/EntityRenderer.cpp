@@ -203,8 +203,9 @@ Font *EntityRenderer::getFont() { return entityRenderDispatcher->getFont(); }
 //			for (int zt = z0; zt <= z1; zt++) {
 //				int t = level.getTile(xt, yt - 1, zt);
 //				if (t > 0 && level.getRawBrightness(xt, yt, zt)
-//> 3) { 					renderTileShadow(Tile.tiles[t], x, y + e.getShadowHeightOffs(), z, xt,
-//yt, zt, pow, r, xo, yo + e.getShadowHeightOffs(), zo);
+//> 3) { 					renderTileShadow(Tile.tiles[t],
+//x, y + e.getShadowHeightOffs(), z, xt, yt, zt, pow, r, xo, yo +
+// e.getShadowHeightOffs(), zo);
 //				}
 //			}
 //			tt.end();
@@ -220,11 +221,11 @@ Font *EntityRenderer::getFont() { return entityRenderDispatcher->getFont(); }
 
 // void renderTileShadow(Tile tt, float x, float y, float z, int xt, int yt, int
 // zt, float pow, float r, float xo, float yo, float zo) { 	Tesselator t =
-//Tesselator.instance; 	if (!tt.isCubeShaped()) return;
+// Tesselator.instance; 	if (!tt.isCubeShaped()) return;
 
 //	float a = ((pow - (y - (yt + yo)) / 2) * 0.5f) *
-//getLevel().getBrightness(xt, yt, zt); 	if (a < 0) return; 	if (a > 1) a = 1;
-//	t.color(1, 1, 1, (float) a);
+// getLevel().getBrightness(xt, yt, zt); 	if (a < 0) return; 	if (a >
+// 1) a = 1; 	t.color(1, 1, 1, (float) a);
 //	// glColor4f2(1, 1, 1, (float) a);
 
 //	float x0 = xt + tt.xx0 + xo;

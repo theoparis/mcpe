@@ -37,7 +37,7 @@ public:
   }
 
   bool mineBlock(ItemInstance *itemInstance, int tile, int x, int y,
-                 int z /*, Mob* owner*/) {
+      int z /*, Mob* owner*/) {
     itemInstance->hurt(2); //, owner);
     return true;
   }

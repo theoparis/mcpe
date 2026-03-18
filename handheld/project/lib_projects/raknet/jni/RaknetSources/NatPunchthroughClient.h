@@ -156,7 +156,7 @@ public:
   /// ID_NAT_GROUP_PUNCH_FAILED on failures of various types However, if you
   /// lose connection to the facilitator, you may not necessarily get above
   bool OpenNATGroup(DataStructures::List<RakNetGUID> destinationSystems,
-                    const SystemAddress &facilitator);
+      const SystemAddress &facilitator);
 
   /// Modify the system configuration if desired
   /// Don't modify the variables in the structure while punchthrough is in
@@ -171,7 +171,7 @@ public:
   /// Get the port mappings you should pass to UPNP (for miniupnpc-1.5, for the
   /// function UPNP_AddPortMapping)
   void GetUPNPPortMappings(char *externalPort, char *internalPort,
-                           const SystemAddress &natPunchthroughServerAddress);
+      const SystemAddress &natPunchthroughServerAddress);
 
   /// \internal For plugin handling
   virtual void Update(void);
@@ -181,12 +181,11 @@ public:
 
   /// \internal For plugin handling
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming);
+      RakNetGUID rakNetGUID, bool isIncoming);
 
   /// \internal For plugin handling
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
 
   virtual void OnAttach(void);
   virtual void OnDetach(void);
@@ -200,10 +199,10 @@ protected:
   void OnNatGroupPunchthroughReply(Packet *packet);
   void OnGetMostRecentPort(Packet *packet);
   void OnConnectAtTime(Packet *packet);
-  unsigned int GetPendingOpenNATIndex(RakNetGUID destination,
-                                      const SystemAddress &facilitator);
-  void SendPunchthrough(RakNetGUID destination,
-                        const SystemAddress &facilitator);
+  unsigned int GetPendingOpenNATIndex(
+      RakNetGUID destination, const SystemAddress &facilitator);
+  void SendPunchthrough(
+      RakNetGUID destination, const SystemAddress &facilitator);
   void SendTTL(const SystemAddress &sa);
   void SendOutOfBand(SystemAddress sa, MessageID oobId);
   void OnPunchthroughFailure(void);
@@ -275,9 +274,8 @@ protected:
   };
   DataStructures::List<GroupPunchRequest *> groupPunchRequests;
   void UpdateGroupPunchOnNatResult(SystemAddress facilitator,
-                                   RakNetGUID targetSystem,
-                                   SystemAddress targetSystemAddress,
-                                   int result); // 0=failed, 1=success, 2=ignore
+      RakNetGUID targetSystem, SystemAddress targetSystemAddress,
+      int result); // 0=failed, 1=success, 2=ignore
 };
 
 } // namespace RakNet

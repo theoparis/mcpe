@@ -51,7 +51,7 @@ public:
 
     int belowTile = level->getTile(x, y - 1, z);
     if ((belowTile != ((Tile *)Tile::grass)->id &&
-         belowTile != Tile::dirt->id) ||
+            belowTile != Tile::dirt->id) ||
         y >= Level::DEPTH - treeHeight - 1)
       return false;
 
@@ -68,16 +68,16 @@ public:
               (random->nextInt(2) == 0 || yo == 0))
             continue;
           if (!Tile::solid[level->getTile(xx, yy, zz)])
-            placeBlock(level, xx, yy, zz, Tile::leaves->id,
-                       LeafTile::BIRCH_LEAF);
+            placeBlock(
+                level, xx, yy, zz, Tile::leaves->id, LeafTile::BIRCH_LEAF);
         }
       }
     }
     for (int hh = 0; hh < treeHeight; hh++) {
       int t = level->getTile(x, y + hh, z);
       if (t == 0 || t == ((Tile *)Tile::leaves)->id)
-        placeBlock(level, x, y + hh, z, Tile::treeTrunk->id,
-                   TreeTile::BIRCH_TRUNK);
+        placeBlock(
+            level, x, y + hh, z, Tile::treeTrunk->id, TreeTile::BIRCH_TRUNK);
     }
     return true;
   }

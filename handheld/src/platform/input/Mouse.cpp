@@ -3,8 +3,8 @@
 //
 // MouseAction
 //
-MouseAction::MouseAction(char actionButtonId, char buttonData, short x, short y,
-                         char pointerId) {
+MouseAction::MouseAction(
+    char actionButtonId, char buttonData, short x, short y, char pointerId) {
   this->action = actionButtonId;
   this->data = buttonData;
   this->x = x;
@@ -14,7 +14,7 @@ MouseAction::MouseAction(char actionButtonId, char buttonData, short x, short y,
 }
 
 MouseAction::MouseAction(char actionButtonId, char buttonData, short x, short y,
-                         short dx, short dy, char pointerId) {
+    short dx, short dy, char pointerId) {
   this->action = actionButtonId;
   this->data = buttonData;
   this->x = x;
@@ -93,7 +93,7 @@ void MouseDevice::feed(char actionButtonId, char buttonData, short x, short y) {
 }
 
 void MouseDevice::feed(char actionButtonId, char buttonData, short x, short y,
-                       short dx, short dy) {
+    short dx, short dy) {
 
   _inputs.push_back(MouseAction(actionButtonId, buttonData, x, y, dx, dy, 0));
 
@@ -155,7 +155,7 @@ void Mouse::feed(char actionButtonId, char buttonData, short x, short y) {
   feed(actionButtonId, buttonData, x, y, 0, 0);
 }
 void Mouse::feed(char actionButtonId, char buttonData, short x, short y,
-                 short dx, short dy) {
+    short dx, short dy) {
   // LOGI("Mouse::feed: %d, %d, xy: %d, %d\n", actionButtonId, buttonData, x,
   // y);
   return _instance.feed(actionButtonId, buttonData, x, y, dx, dy);

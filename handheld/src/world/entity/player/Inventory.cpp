@@ -10,7 +10,7 @@
 
 Inventory::Inventory(Player *player, bool creativeMode)
     : super(36 + Inventory::MAX_SELECTION_SIZE, MAX_SELECTION_SIZE,
-            ContainerType::INVENTORY, creativeMode),
+          ContainerType::INVENTORY, creativeMode),
       player(player), selected(0) {
   setupDefault();
   compressLinkedSlotList(0);
@@ -149,14 +149,14 @@ void Inventory::setupDefault() {
     addItem(new ItemInstance(Tile::stairs_quartz));
     addItem(
         new ItemInstance(Tile::stoneSlabHalf, 1, StoneSlabTile::STONE_SLAB));
-    addItem(new ItemInstance(Tile::stoneSlabHalf, 1,
-                             StoneSlabTile::COBBLESTONE_SLAB));
+    addItem(new ItemInstance(
+        Tile::stoneSlabHalf, 1, StoneSlabTile::COBBLESTONE_SLAB));
     addItem(new ItemInstance(Tile::stoneSlabHalf, 1, StoneSlabTile::WOOD_SLAB));
     addItem(
         new ItemInstance(Tile::stoneSlabHalf, 1, StoneSlabTile::BRICK_SLAB));
     addItem(new ItemInstance(Tile::stoneSlabHalf, 1, StoneSlabTile::SAND_SLAB));
-    addItem(new ItemInstance(Tile::stoneSlabHalf, 1,
-                             StoneSlabTile::SMOOTHBRICK_SLAB));
+    addItem(new ItemInstance(
+        Tile::stoneSlabHalf, 1, StoneSlabTile::SMOOTHBRICK_SLAB));
 
     addItem(
         new ItemInstance(Tile::quartzBlock, 1, QuartzBlockTile::TYPE_DEFAULT));
@@ -317,8 +317,8 @@ float Inventory::getDestroySpeed(Tile *tile) {
   return 1.0f;
 }
 
-bool Inventory::moveToSelectionSlot(int selectionSlot, int inventorySlot,
-                                    bool propagate) {
+bool Inventory::moveToSelectionSlot(
+    int selectionSlot, int inventorySlot, bool propagate) {
   return linkSlot(selectionSlot, inventorySlot, propagate);
 }
 

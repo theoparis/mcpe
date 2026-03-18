@@ -221,8 +221,8 @@ public:
     MessageID lastSentStatus, lastReceivedStatus;
     SystemAddress systemAddress;
   };
-  static int RemoteSystemCompBySystemAddress(const SystemAddress &key,
-                                             const RemoteSystem &data);
+  static int RemoteSystemCompBySystemAddress(
+      const SystemAddress &key, const RemoteSystem &data);
   /// \internal
   /// An event, with a set of systems we are waiting for, a set of systems that
   /// are signaled, and a set of systems with completed events
@@ -230,20 +230,19 @@ public:
     int eventId; // Sorted on this
     MessageID eventStatus;
     DataStructures::OrderedList<SystemAddress, RemoteSystem,
-                                ReadyEvent::RemoteSystemCompBySystemAddress>
+        ReadyEvent::RemoteSystemCompBySystemAddress>
         systemList;
   };
-  static int ReadyEventNodeComp(const int &key,
-                                ReadyEvent::ReadyEventNode *const &data);
+  static int ReadyEventNodeComp(
+      const int &key, ReadyEvent::ReadyEventNode *const &data);
 
 protected:
   // --------------------------------------------------------------------------------------------
   // Packet handling functions
   // --------------------------------------------------------------------------------------------
   virtual PluginReceiveResult OnReceive(Packet *packet);
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   virtual void OnRakPeerShutdown(void);
 
   void Clear(void);
@@ -261,8 +260,8 @@ protected:
   */
 
   void SendReadyStateQuery(unsigned eventId, SystemAddress address);
-  void SendReadyUpdate(unsigned eventIndex, unsigned systemIndex,
-                       bool forceIfNotDefault);
+  void SendReadyUpdate(
+      unsigned eventIndex, unsigned systemIndex, bool forceIfNotDefault);
   void BroadcastReadyUpdate(unsigned eventIndex, bool forceIfNotDefault);
   void RemoveFromAllLists(SystemAddress address);
   void OnReadyEventQuery(Packet *packet);
@@ -276,7 +275,7 @@ protected:
   bool SetEventByIndex(int eventIndex, bool isReady);
 
   DataStructures::OrderedList<int, ReadyEventNode *,
-                              ReadyEvent::ReadyEventNodeComp>
+      ReadyEvent::ReadyEventNodeComp>
       readyEventNodeList;
   unsigned char channel;
 };

@@ -9,8 +9,8 @@ NATPuchHandler::~NATPuchHandler() { delete tcpInterface; }
 
 void NATPuchHandler::initialize() { tcpInterface->Start(0, 64); }
 
-void NATPuchHandler::registerToGameList(const RakNet::RakString &serverName,
-                                        int port) {
+void NATPuchHandler::registerToGameList(
+    const RakNet::RakString &serverName, int port) {
   HTTPConnection httpConnection;
   httpConnection.Init(tcpInterface, "johanbernhardsson.se");
   PHPDirectoryServer2 directoryServer;

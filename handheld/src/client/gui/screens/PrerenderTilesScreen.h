@@ -24,7 +24,7 @@ public:
 
     // Copy over the inventory items
     for (int i = Inventory::MAX_SELECTION_SIZE;
-         i < inventory->getContainerSize(); ++i)
+        i < inventory->getContainerSize(); ++i)
       addItem(inventory->getItem(i));
 
     // Fill the inventory with all the recipe items we don't already have:
@@ -32,7 +32,7 @@ public:
     const FurnaceRecipes::Map &furnaceRecipes =
         FurnaceRecipes::getInstance()->getRecipes();
     for (FurnaceRecipes::Map::const_iterator cit = furnaceRecipes.begin();
-         cit != furnaceRecipes.end(); ++cit) {
+        cit != furnaceRecipes.end(); ++cit) {
       ItemInstance ingredient(cit->first, 1, 0);
       addItem(&ingredient);
       ItemInstance result = cit->second;
@@ -59,16 +59,26 @@ public:
     // Manually added stuff
     // Example: the one that's spawned from tiles when destroyed
     int items[] = {
-        Tile::sapling->id,       LeafTile::BIRCH_LEAF,
-        Tile::sapling->id,       LeafTile::EVERGREEN_LEAF,
-        Tile::sapling->id,       LeafTile::NORMAL_LEAF,
-        Tile::dirt->id,          0,
-        Tile::reeds->id,         0,
-        Tile::gravel->id,        0,
-        Item::apple->id,         0,
-        Tile::grass_carried->id, 0,
-        Tile::web->id,           0,
-        Item::sign->id,          0,
+        Tile::sapling->id,
+        LeafTile::BIRCH_LEAF,
+        Tile::sapling->id,
+        LeafTile::EVERGREEN_LEAF,
+        Tile::sapling->id,
+        LeafTile::NORMAL_LEAF,
+        Tile::dirt->id,
+        0,
+        Tile::reeds->id,
+        0,
+        Tile::gravel->id,
+        0,
+        Item::apple->id,
+        0,
+        Tile::grass_carried->id,
+        0,
+        Tile::web->id,
+        0,
+        Item::sign->id,
+        0,
     };
     for (int i = 0; i < sizeof(items) / sizeof(int); i += 2) {
       ItemInstance item(items[i], 1, items[i + 1]);
@@ -117,7 +127,7 @@ public:
     }*/
     int j = 0;
     for (std::vector<ItemInstance>::iterator i = mItems.begin();
-         i != mItems.end(); ++i) {
+        i != mItems.end(); ++i) {
       ItemInstance *item = &(*i);
 
       // LOGI("desc: %d - %s. %d\n", i, item->toString().c_str());
@@ -127,11 +137,11 @@ public:
       if (item->id < 256 &&
           TileRenderer::canRender(Tile::tiles[item->id]->getRenderShape())) {
         LOGI("0, %d, %d, %d, 0\n", j, item->id, item->getAuxValue());
-        ItemRenderer::renderGuiItemCorrect(minecraft->font, minecraft->textures,
-                                           item, x, y);
+        ItemRenderer::renderGuiItemCorrect(
+            minecraft->font, minecraft->textures, item, x, y);
       } else if (item->getIcon() >= 0) {
         LOGI("1, %d, %d, %d, %d\n", j, item->id, item->getAuxValue(),
-             item->getIcon());
+            item->getIcon());
       }
       j++;
     }
@@ -154,7 +164,7 @@ public:
 
     bool found = false;
     for (std::vector<ItemInstance>::iterator i = mItems.begin();
-         i != mItems.end(); ++i) {
+        i != mItems.end(); ++i) {
       ItemInstance *jitem = &*i;
       if (jitem->id != item->id)
         continue;

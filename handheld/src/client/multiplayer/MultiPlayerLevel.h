@@ -31,7 +31,7 @@ class MultiPlayerLevel : public Level {
 
 public:
   MultiPlayerLevel(LevelStorage *levelStorage, const std::string &levelName,
-                   const LevelSettings &settings, int levelVersion)
+      const LevelSettings &settings, int levelVersion)
       : super(levelStorage, levelName, settings, levelVersion) {
     // super(new MockedLevelStorage(), "MpServer", Dimension.getNew(dimension),
     // levelSettings); this->difficulty = difficulty; setSpawnPos(new Pos(8, 64,
@@ -58,7 +58,7 @@ public:
     }
 
     for (ResetInfoList::iterator it = updatesToReset.begin();
-         it != updatesToReset.end();) {
+        it != updatesToReset.end();) {
       ResetInfo &r = *it;
       if (--r.ticks == 0) {
         super::setTileAndDataNoUpdate(r.x, r.y, r.z, r.tile, r.data);
@@ -71,7 +71,7 @@ public:
 
   void clearResetRegion(int x0, int y0, int z0, int x1, int y1, int z1) {
     for (ResetInfoList::iterator it = updatesToReset.begin();
-         it != updatesToReset.end();) {
+        it != updatesToReset.end();) {
       ResetInfo &r = *it;
       if (r.x >= x0 && r.y >= y0 && r.z >= z0 && r.x <= x1 && r.y <= y1 &&
           r.z <= z1) {

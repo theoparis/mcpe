@@ -19,12 +19,11 @@ public:
   float w, e, n, s;
 
   static NinePatchDescription createSymmetrical(int texWidth, int texHeight,
-                                                const IntRectangle &src,
-                                                int xCutAt, int yCutAt);
+      const IntRectangle &src, int xCutAt, int yCutAt);
 
 private:
   NinePatchDescription(float x, float y, float x1, float x2, float x3, float y1,
-                       float y2, float y3, float w, float e, float n, float s);
+      float y2, float y3, float w, float e, float n, float s);
 
   int imgW;
   int imgH;
@@ -35,7 +34,7 @@ class NinePatchLayer : public GuiElement {
 
 public:
   NinePatchLayer(const NinePatchDescription &desc, const std::string &imageName,
-                 Textures *textures, float w = 32, float h = 32);
+      Textures *textures, float w = 32, float h = 32);
   virtual ~NinePatchLayer() {};
   void setSize(float w, float h);
 
@@ -71,8 +70,7 @@ public:
   NinePatchFactory(Textures *textures, const std::string &imageName);
 
   NinePatchLayer *createSymmetrical(const IntRectangle &src, int xCutAt,
-                                    int yCutAt, float w = 32.0f,
-                                    float h = 32.0f);
+      int yCutAt, float w = 32.0f, float h = 32.0f);
 
 private:
   Textures *textures;

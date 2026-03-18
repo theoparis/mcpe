@@ -37,12 +37,11 @@ public:
   void updateDefaultShape();
 
   void addAABBs(Level *level, int x, int y, int z, const AABB *box,
-                std::vector<AABB> &boxes);
+      std::vector<AABB> &boxes);
 
   // void onPlace(Level* level, int x, int y, int z);
   int getPlacedOnFaceDataValue(Level *level, int x, int y, int z, int face,
-                               float clickX, float clickY, float clickZ,
-                               int itemValue);
+      float clickX, float clickY, float clickZ, int itemValue);
 
   int getResource(int data, Random *random);
   int getResourceCount(Random *random);

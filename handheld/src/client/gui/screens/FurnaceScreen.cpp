@@ -48,7 +48,7 @@ static const float BlockPixels = 24;
 static const int ItemSize = (int)(BlockPixels + 2 * BorderPixels);
 
 static const int Bx = 10; // Border Frame width
-static const int By = 6;  // Border Frame height
+static const int By = 6; // Border Frame height
 
 FurnaceScreen::FurnaceScreen(Player *player, FurnaceTileEntity *furnace)
     : super(new FurnaceMenu(furnace)), //@huge @attn
@@ -131,13 +131,12 @@ void FurnaceScreen::setupPositions() {
   const int paneWidth = realWidth + Bx + Bx;
   const int realBx = (paneWidth - realWidth) / 2;
 
-  inventoryPaneRect =
-      IntRectangle(realBx,
+  inventoryPaneRect = IntRectangle(realBx,
 #ifdef __APPLE__
-                   26 + By - ((width == 240) ? 1 : 0), realWidth,
-                   ((width == 240) ? 1 : 0) + height - By - By - 28);
+      26 + By - ((width == 240) ? 1 : 0), realWidth,
+      ((width == 240) ? 1 : 0) + height - By - By - 28);
 #else
-                   26 + By, realWidth, height - By - By - 28);
+      26 + By, realWidth, height - By - By - 28);
 #endif
 
   // Right - Slots, description etc
@@ -182,8 +181,8 @@ void FurnaceScreen::tick() {
   }
 }
 
-void FurnaceScreen::handleRenderPane(Touch::InventoryPane *pane, Tesselator &t,
-                                     int xm, int ym, float a) {
+void FurnaceScreen::handleRenderPane(
+    Touch::InventoryPane *pane, Tesselator &t, int xm, int ym, float a) {
   if (pane) {
     int ms, id;
     pane->markerIndex = -1;
@@ -232,13 +231,13 @@ void FurnaceScreen::render(int xm, int ym, float a) {
   t.colorABGR(0xffffffff);
 
   drawSlotItemAt(t, furnace->getItem(btnIngredient.id), btnIngredient.x,
-                 btnIngredient.y, btnIngredient.id == selectedSlot);
+      btnIngredient.y, btnIngredient.id == selectedSlot);
   drawSlotItemAt(t, furnace->getItem(btnFuel.id), btnFuel.x, btnFuel.y,
-                 btnFuel.id == selectedSlot);
+      btnFuel.id == selectedSlot);
 
   const ItemInstance *resultSlotItem = furnace->getItem(btnResult.id);
   drawSlotItemAt(t, resultSlotItem, btnResult.x, btnResult.y,
-                 btnResult.id == selectedSlot);
+      btnResult.id == selectedSlot);
 
   if (!burnResult.isNull()) {
     if (!resultSlotItem || resultSlotItem->isNull()) {
@@ -247,14 +246,13 @@ void FurnaceScreen::render(int xm, int ym, float a) {
       t.colorABGR(0x33ffffff);
       t.noColor();
       ItemRenderer::renderGuiItem(minecraft->font, minecraft->textures,
-                                  &burnResult, (float)(btnResult.x + 7),
-                                  (float)(btnResult.y + 8), true);
+          &burnResult, (float)(btnResult.x + 7), (float)(btnResult.y + 8),
+          true);
       t.endOverrideAndDraw();
       glDisable2(GL_BLEND);
     }
     minecraft->font->drawWordWrap(currentItemDesc, (float)btnResult.x - 24,
-                                  (float)(btnResult.y + btnResult.height + 6),
-                                  descWidth, rgbActive);
+        (float)(btnResult.y + btnResult.height + 6), descWidth, rgbActive);
   }
 
   minecraft->textures->loadAndBindTexture("gui/spritesheet.png");
@@ -308,7 +306,7 @@ void FurnaceScreen::recheckRecipes() {
     Inventory *inv = (minecraft->player)->inventory;
 
     for (int i = Inventory::MAX_SELECTION_SIZE; i < inv->getContainerSize();
-         ++i) {
+        ++i) {
       if (ItemInstance *item = inv->getItem(i)) {
         // Fuel material
         if (FurnaceTileEntity::isFuel(*item)) {
@@ -337,8 +335,8 @@ void FurnaceScreen::recheckRecipes() {
   // sortCanCraftPredicate);
 }
 
-bool FurnaceScreen::addItem(const Touch::InventoryPane *forPane,
-                            int itemIndex) {
+bool FurnaceScreen::addItem(
+    const Touch::InventoryPane *forPane, int itemIndex) {
   // LOGI("items.size, index: %d, %d\n", inventoryItems.size(), itemIndex);
   const ItemInstance *item = inventoryItems[itemIndex];
   if (!item || item->isNull())
@@ -383,8 +381,8 @@ bool FurnaceScreen::isAllowed(int slot) { // LOGI("items.size, index: %d, %d\n",
 
 bool FurnaceScreen::renderGameBehind() { return false; }
 
-std::vector<const ItemInstance *>
-FurnaceScreen::getItems(const Touch::InventoryPane *forPane) {
+std::vector<const ItemInstance *> FurnaceScreen::getItems(
+    const Touch::InventoryPane *forPane) {
   return inventoryItems;
 }
 
@@ -404,7 +402,7 @@ void FurnaceScreen::updateItems() {
   ItemList all(listFuel.begin(), listFuel.end());
   all.insert(all.end(), listIngredient.begin(), listIngredient.end());
   for (int i = Inventory::MAX_SELECTION_SIZE;
-       i < minecraft->player->inventory->getContainerSize(); ++i) {
+      i < minecraft->player->inventory->getContainerSize(); ++i) {
     ItemInstance *item = minecraft->player->inventory->getItem(i);
     if (!item)
       continue;
@@ -432,8 +430,8 @@ void FurnaceScreen::updateItems() {
   }
 }
 
-bool FurnaceScreen::canMoveToFurnace(int inventorySlot,
-                                     const ItemInstance *item) {
+bool FurnaceScreen::canMoveToFurnace(
+    int inventorySlot, const ItemInstance *item) {
   if (!isAllowed(inventorySlot))
     return false;
   ItemInstance *jitem = furnace->getItem(selectedSlot);
@@ -474,18 +472,18 @@ void FurnaceScreen::setupInventoryPane() {
   // IntRectangle(0, 0, 100, 100)
   if (inventoryPane)
     delete inventoryPane;
-  inventoryPane = new Touch::InventoryPane(
-      this, minecraft, inventoryPaneRect, inventoryPaneRect.w, BorderPixels,
-      inventoryItems.size(), ItemSize, (int)BorderPixels);
+  inventoryPane = new Touch::InventoryPane(this, minecraft, inventoryPaneRect,
+      inventoryPaneRect.w, BorderPixels, inventoryItems.size(), ItemSize,
+      (int)BorderPixels);
   inventoryPane->fillMarginX = 0;
   inventoryPane->fillMarginY = 0;
-  guiPaneFrame->setSize((float)inventoryPaneRect.w + 2,
-                        (float)inventoryPaneRect.h + 2);
+  guiPaneFrame->setSize(
+      (float)inventoryPaneRect.w + 2, (float)inventoryPaneRect.h + 2);
   // LOGI("Creating new pane: %d %p\n", inventoryItems.size(), inventoryPane);
 }
 
-void FurnaceScreen::drawSlotItemAt(Tesselator &t, const ItemInstance *item,
-                                   int x, int y, bool selected) {
+void FurnaceScreen::drawSlotItemAt(
+    Tesselator &t, const ItemInstance *item, int x, int y, bool selected) {
   float xx = (float)x;
   float yy = (float)y;
 
@@ -495,8 +493,8 @@ void FurnaceScreen::drawSlotItemAt(Tesselator &t, const ItemInstance *item,
     guiSlotMarker->draw(t, xx - 2, yy - 2);
 
   if (item && !item->isNull()) {
-    ItemRenderer::renderGuiItem(minecraft->font, minecraft->textures, item,
-                                xx + 7, yy + 8, true);
+    ItemRenderer::renderGuiItem(
+        minecraft->font, minecraft->textures, item, xx + 7, yy + 8, true);
     minecraft->gui.renderSlotText(item, xx + 3, yy + 3, true, true);
   }
 }

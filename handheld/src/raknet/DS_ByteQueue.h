@@ -20,8 +20,8 @@ class ByteQueue {
 public:
   ByteQueue();
   ~ByteQueue();
-  void WriteBytes(const char *in, unsigned length, const char *file,
-                  unsigned int line);
+  void WriteBytes(
+      const char *in, unsigned length, const char *file, unsigned int line);
   bool ReadBytes(char *out, unsigned maxLengthToRead, bool peek);
   unsigned GetBytesWritten(void) const;
   char *PeekContiguousBytes(unsigned int *outLength) const;

@@ -18,7 +18,7 @@ public:
   TilePlanterItem(int id, Tile *tile) : super(id) { tileId = tile->id; }
 
   bool useOn(ItemInstance *instance, Player *player, Level *level, int x, int y,
-             int z, int face, float clickX, float clickY, float clickZ) {
+      int z, int face, float clickX, float clickY, float clickZ) {
     if (level->getTile(x, y, z) == Tile::topSnow->id) {
       face = 0;
     } else {

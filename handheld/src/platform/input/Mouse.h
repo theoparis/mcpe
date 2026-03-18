@@ -15,10 +15,10 @@ public:
   static const char DATA_UP = 0;
   static const char DATA_DOWN = 1;
 
-  MouseAction(char actionButtonId, char buttonData, short x, short y,
-              char pointerId);
+  MouseAction(
+      char actionButtonId, char buttonData, short x, short y, char pointerId);
   MouseAction(char actionButtonId, char buttonData, short x, short y, short dx,
-              short dy, char pointerId);
+      short dy, char pointerId);
 
   bool isButton() const;
 
@@ -64,7 +64,7 @@ public:
 
   void feed(char actionButtonId, char buttonData, short x, short y);
   void feed(char actionButtonId, char buttonData, short x, short y, short dx,
-            short dy);
+      short dy);
 
 private:
   int _index;
@@ -102,7 +102,7 @@ public:
 
   static void feed(char actionButtonId, char buttonData, short x, short y);
   static void feed(char actionButtonId, char buttonData, short x, short y,
-                   short dx, short dy);
+      short dx, short dy);
 
 private:
   static MouseDevice _instance;

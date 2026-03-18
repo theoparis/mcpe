@@ -19,16 +19,16 @@
     this->zOff = zOff;
   }
 
-  /*public*/ bool cubeFullyInFrustum(float x0, float y0, float z0, float x1,
-                                     float y1, float z1) {
-    return frustum.cubeFullyInFrustum(x0 - xOff, y0 - yOff, z0 - zOff,
-                                      x1 - xOff, y1 - yOff, z1 - zOff);
+  /*public*/ bool cubeFullyInFrustum(
+      float x0, float y0, float z0, float x1, float y1, float z1) {
+    return frustum.cubeFullyInFrustum(
+        x0 - xOff, y0 - yOff, z0 - zOff, x1 - xOff, y1 - yOff, z1 - zOff);
   }
 
-  /*public*/ bool cubeInFrustum(float x0, float y0, float z0, float x1,
-                                float y1, float z1) {
-    return frustum.cubeInFrustum(x0 - xOff, y0 - yOff, z0 - zOff, x1 - xOff,
-                                 y1 - yOff, z1 - zOff);
+  /*public*/ bool cubeInFrustum(
+      float x0, float y0, float z0, float x1, float y1, float z1) {
+    return frustum.cubeInFrustum(
+        x0 - xOff, y0 - yOff, z0 - zOff, x1 - xOff, y1 - yOff, z1 - zOff);
   }
 
   /*public*/ bool isVisible(AABB bb) {

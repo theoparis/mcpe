@@ -44,7 +44,7 @@ Player::Player(Level *level, bool isCreative)
 
   Pos spawnPos = level->getSharedSpawnPos();
   this->moveTo((float)spawnPos.x + 0.5f, (float)(spawnPos.y + 1),
-               (float)spawnPos.z + 0.5f, 0, 0);
+      (float)spawnPos.z + 0.5f, 0, 0);
 
   health = MAX_HEALTH;
   modelName = "humanoid";
@@ -78,9 +78,9 @@ int Player::startSleepInBed(int x, int y, int z) {
     float vRange = 5;
     EntityList monsters;
     level->getEntitiesOfClass(MobTypes::BaseEnemy,
-                              AABB(x - hRange, y - vRange, z - hRange,
-                                   x + hRange, y + vRange, z + hRange),
-                              monsters);
+        AABB(x - hRange, y - vRange, z - hRange, x + hRange, y + vRange,
+            z + hRange),
+        monsters);
     if (!monsters.empty()) {
       return BedSleepingResult::NOT_SAFE;
     }
@@ -124,20 +124,19 @@ int Player::startSleepInBed(int x, int y, int z) {
   return BedSleepingResult::OK;
 }
 
-void Player::stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
-                            bool saveRespawnPoint) {
+void Player::stopSleepInBed(
+    bool forcefulWakeUp, bool updateLevelList, bool saveRespawnPoint) {
   if (!isSleeping())
     return;
   setSize(0.6f, 1.8f);
   setDefaultHeadHeight();
   Pos standUp = bedPosition;
   if (level->getTile(int(bedPosition.x), int(bedPosition.y),
-                     int(bedPosition.z)) == Tile::bed->id) {
+          int(bedPosition.z)) == Tile::bed->id) {
     BedTile::setOccupied(level, int(bedPosition.x), int(bedPosition.y),
-                         int(bedPosition.z), false);
-    bool foundStandUpPosition = BedTile::findStandUpPosition(
-        level, int(bedPosition.x), int(bedPosition.y), int(bedPosition.z), 0,
-        standUp);
+        int(bedPosition.z), false);
+    bool foundStandUpPosition = BedTile::findStandUpPosition(level,
+        int(bedPosition.x), int(bedPosition.y), int(bedPosition.z), 0, standUp);
     if (!foundStandUpPosition) {
       standUp = Pos(bedPosition.x, bedPosition.y, bedPosition.z);
     }
@@ -156,8 +155,8 @@ void Player::stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
   // want to save this position but I like it.
   if (true || saveRespawnPoint) {
     Pos newRespawnPos;
-    BedTile::findStandUpPosition(level, bedPosition.x, bedPosition.y,
-                                 bedPosition.z, 0, newRespawnPos);
+    BedTile::findStandUpPosition(
+        level, bedPosition.x, bedPosition.y, bedPosition.z, 0, newRespawnPos);
     setRespawnPosition(newRespawnPos);
   }
   entityData.clearFlag<SharedFlagsInformation::SharedFlagsInformationType>(
@@ -212,7 +211,7 @@ float Player::getSleepRotation() {
 
 bool Player::checkBed() {
   return (level->getTile(bedPosition.x, bedPosition.y, bedPosition.z) ==
-          Tile::bed->id);
+      Tile::bed->id);
 }
 
 void Player::tick() {
@@ -266,26 +265,26 @@ ItemInstance *Player::getUseItem() { return &useItem; }
 
 void Player::spawnEatParticles(const ItemInstance *useItem, int count) {
   if (useItem->getUseAnimation() == UseAnim::drink) {
-    level->playSound(this, "random.drink", 0.5f,
-                     level->random.nextFloat() * 0.1f + 0.9f);
+    level->playSound(
+        this, "random.drink", 0.5f, level->random.nextFloat() * 0.1f + 0.9f);
   } else if (useItem->getUseAnimation() == UseAnim::eat) {
     for (int i = 0; i < count; i++) {
       const float xx = -xRot * Mth::PI / 180;
       const float yy = -yRot * Mth::PI / 180;
-      Vec3 d((random.nextFloat() - 0.5f) * 0.1f, Mth::random() * 0.1f + 0.1f,
-             0);
+      Vec3 d(
+          (random.nextFloat() - 0.5f) * 0.1f, Mth::random() * 0.1f + 0.1f, 0);
       d.xRot(xx);
       d.yRot(yy);
       Vec3 p((random.nextFloat() - 0.5f) * 0.3f,
-             -random.nextFloat() * 0.6f - 0.3f, 0.6f);
+          -random.nextFloat() * 0.6f - 0.3f, 0.6f);
       p.xRot(xx);
       p.yRot(yy);
       p = p.add(x, y + getHeadHeight(), z);
       level->addParticle(PARTICLETYPE(iconcrack), p.x, p.y, p.z, d.x,
-                         d.y + 0.05f, d.z, useItem->getItem()->id);
+          d.y + 0.05f, d.z, useItem->getItem()->id);
     }
     level->playSound(this, "random.eat", .5f + .5f * random.nextInt(2),
-                     (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f);
+        (random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f);
   }
 }
 
@@ -570,8 +569,7 @@ void Player::readAdditionalSaveData(CompoundTag *entityTag) {
     playerIsSleeping = entityTag->getBoolean("Sleeping");
     sleepCounter = entityTag->getShort("SleepTimer");
     bedPosition = Pos(entityTag->getInt("BedPositionX"),
-                      entityTag->getInt("BedPositionY"),
-                      entityTag->getInt("BedPositionZ"));
+        entityTag->getInt("BedPositionY"), entityTag->getInt("BedPositionZ"));
   } else {
     playerIsSleeping = false;
     bedPosition = Pos(0, 0, 0);
@@ -591,8 +589,7 @@ void Player::readAdditionalSaveData(CompoundTag *entityTag) {
   if (entityTag->contains("SpawnX") && entityTag->contains("SpawnY") &&
       entityTag->contains("SpawnZ")) {
     respawnPosition.set(entityTag->getInt("SpawnX"),
-                        entityTag->getInt("SpawnY"),
-                        entityTag->getInt("SpawnZ"));
+        entityTag->getInt("SpawnY"), entityTag->getInt("SpawnZ"));
   }
   playerHasRespawnPosition = respawnPosition.y >= 0;
 }
@@ -660,8 +657,9 @@ bool Player::hurt(Entity *source, int dmg) {
     stopSleepInBed(true, true, false);
   }
 
-  if (source != NULL && (source->getCreatureBaseType() == MobTypes::BaseEnemy ||
-                         source->getEntityTypeId() == EntityTypes::IdArrow)) {
+  if (source != NULL &&
+      (source->getCreatureBaseType() == MobTypes::BaseEnemy ||
+          source->getEntityTypeId() == EntityTypes::IdArrow)) {
 
     if (source->isMob() && level->adventureSettings.noMvP)
       return false;
@@ -880,7 +878,7 @@ void Player::hurtArmor(int dmg) {
 
 int Player::getArmorTypeHash() {
   return (armor[0].id) + (armor[1].id << 8) + (armor[2].id << 16) +
-         (armor[3].id << 24);
+      (armor[3].id << 24);
 }
 
 int Player::getArmorValue() {

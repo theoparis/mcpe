@@ -7,8 +7,8 @@ public:
   void render(Entity *entity, float x, float y, float z, float rot, float a);
 
 private:
-  void renderPainting(Painting *painting, int w, int h, int uo, int vo,
-                      float a);
+  void renderPainting(
+      Painting *painting, int w, int h, int uo, int vo, float a);
 };
 
 #endif /* NET_MINECRAFT_CLIENT_RENDERER_ENTITY__PaintingRenderer_H__ */

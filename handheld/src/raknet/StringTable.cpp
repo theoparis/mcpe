@@ -57,8 +57,8 @@ void StringTable::AddString(const char *str, bool copyString) {
   // If this assert hits you need to increase the range of StringTableType
   RakAssert(orderedStringList.Size() < (StringTableType)-1);
 }
-void StringTable::EncodeString(const char *input, int maxCharsToWrite,
-                               RakNet::BitStream *output) {
+void StringTable::EncodeString(
+    const char *input, int maxCharsToWrite, RakNet::BitStream *output) {
   unsigned index;
   bool objectExists;
   // This is fast because the list is kept ordered.
@@ -73,8 +73,8 @@ void StringTable::EncodeString(const char *input, int maxCharsToWrite,
   }
 }
 
-bool StringTable::DecodeString(char *output, int maxCharsToWrite,
-                               RakNet::BitStream *input) {
+bool StringTable::DecodeString(
+    char *output, int maxCharsToWrite, RakNet::BitStream *input) {
   bool hasIndex = false;
   RakAssert(maxCharsToWrite > 0);
 

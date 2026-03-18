@@ -17,16 +17,16 @@ public:
   OptionsGroup(std::string labelID);
   virtual void setupPositions();
   virtual void render(Minecraft *minecraft, int xm, int ym);
-  virtual OptionsGroup &addOptionItem(const Options::Option *option,
-                                      Minecraft *minecraft);
+  virtual OptionsGroup &addOptionItem(
+      const Options::Option *option, Minecraft *minecraft);
 
 protected:
-  virtual void createToggle(const Options::Option *option,
-                            Minecraft *minecraft);
-  virtual void createProgressSlider(const Options::Option *option,
-                                    Minecraft *minecraft);
-  virtual void createStepSlider(const Options::Option *option,
-                                Minecraft *minecraft);
+  virtual void createToggle(
+      const Options::Option *option, Minecraft *minecraft);
+  virtual void createProgressSlider(
+      const Options::Option *option, Minecraft *minecraft);
+  virtual void createStepSlider(
+      const Options::Option *option, Minecraft *minecraft);
   std::string label;
 };
 

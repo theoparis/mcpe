@@ -15,7 +15,7 @@ public:
   StartGamePacket() {}
 
   StartGamePacket(long seed, int levelGeneratorVersion, int gameType,
-                  int entityId, float x, float y, float z)
+      int entityId, float x, float y, float z)
       : levelSeed(seed), levelGeneratorVersion(levelGeneratorVersion),
         gameType(gameType), entityId(entityId), x(x), y(y), z(z) {}
 

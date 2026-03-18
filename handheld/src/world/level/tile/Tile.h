@@ -38,7 +38,7 @@ public:
         : volume(volume), pitch(pitch), breakSound("step." + name),
           stepSound("step." + name) {}
     SoundType(const std::string &name, const std::string &breakSound,
-              float volume, float pitch)
+        float volume, float pitch)
         : volume(volume), pitch(pitch), stepSound("step." + name),
           breakSound(breakSound) {}
 
@@ -232,8 +232,8 @@ public:
 
   virtual bool isCubeShaped();
   virtual int getRenderShape();
-  virtual void setShape(float x0, float y0, float z0, float x1, float y1,
-                        float z1);
+  virtual void setShape(
+      float x0, float y0, float z0, float x1, float y1, float z1);
   virtual void updateShape(LevelSource *level, int x, int y, int z) {}
   virtual void updateDefaultShape() {}
 
@@ -242,8 +242,8 @@ public:
   virtual float getBrightness(LevelSource *level, int x, int y, int z);
 
   static bool isFaceVisible(Level *level, int x, int y, int z, int f);
-  virtual bool shouldRenderFace(LevelSource *level, int x, int y, int z,
-                                int face);
+  virtual bool shouldRenderFace(
+      LevelSource *level, int x, int y, int z, int face);
 
   virtual int getTexture(int face);
   virtual int getTexture(int face, int data);
@@ -253,7 +253,7 @@ public:
   // Make a copy if you need to save this AABB (rather then using as a temp)
   virtual AABB *getAABB(Level *level, int x, int y, int z);
   virtual void addAABBs(Level *level, int x, int y, int z, const AABB *box,
-                        std::vector<AABB> &boxes);
+      std::vector<AABB> &boxes);
   virtual AABB getTileAABB(Level *level, int x, int y, int z);
 
   virtual bool isSolidRender();
@@ -280,16 +280,16 @@ public:
   virtual float getDestroyProgress(Player *player);
 
   virtual void spawnResources(Level *level, int x, int y, int z, int data);
-  virtual void spawnResources(Level *level, int x, int y, int z, int data,
-                              float odds);
+  virtual void spawnResources(
+      Level *level, int x, int y, int z, int data, float odds);
   virtual bool spawnBurnResources(Level *level, float x, float y, float z);
-  void popResource(Level *level, int x, int y, int z,
-                   const ItemInstance &itemInstance);
+  void popResource(
+      Level *level, int x, int y, int z, const ItemInstance &itemInstance);
 
   virtual float getExplosionResistance(Entity *source);
 
-  virtual HitResult clip(Level *level, int xt, int yt, int zt, const Vec3 &a,
-                         const Vec3 &b);
+  virtual HitResult clip(
+      Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b);
 
   virtual void wasExploded(Level *level, int x, int y, int z) {}
 
@@ -299,12 +299,11 @@ public:
 
   virtual void stepOn(Level *level, int x, int y, int z, Entity *entity) {}
 
-  virtual void fallOn(Level *level, int x, int y, int z, Entity *entity,
-                      float fallDistance) {}
+  virtual void fallOn(
+      Level *level, int x, int y, int z, Entity *entity, float fallDistance) {}
 
   virtual int getPlacedOnFaceDataValue(Level *level, int x, int y, int z,
-                                       int face, float clickX, float clickY,
-                                       float clickZ, int itemValue) {
+      int face, float clickX, float clickY, float clickZ, int itemValue) {
     return itemValue;
   }
   virtual void setPlacedBy(Level *level, int x, int y, int z, Mob *by) {}
@@ -313,8 +312,8 @@ public:
 
   virtual void attack(Level *level, int x, int y, int z, Player *player) {}
 
-  virtual void handleEntityInside(Level *level, int x, int y, int z, Entity *e,
-                                  Vec3 &current) {}
+  virtual void handleEntityInside(
+      Level *level, int x, int y, int z, Entity *e, Vec3 &current) {}
 
   virtual int getColor(LevelSource *level, int x, int y, int z);
 
@@ -326,8 +325,8 @@ public:
   virtual void entityInside(Level *level, int x, int y, int z, Entity *entity) {
   }
 
-  virtual void playerDestroy(Level *level, Player *player, int x, int y, int z,
-                             int data);
+  virtual void playerDestroy(
+      Level *level, Player *player, int x, int y, int z, int data);
 
   virtual bool canSurvive(Level *level, int x, int y, int z);
 

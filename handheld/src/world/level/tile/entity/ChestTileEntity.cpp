@@ -176,7 +176,7 @@ void ChestTileEntity::tick() {
         xc += 0.5f;
 
       level->playSound(xc, y + 0.5f, zc, "random.chestopen", 0.5f,
-                       level->random.nextFloat() * 0.1f + 0.9f);
+          level->random.nextFloat() * 0.1f + 0.9f);
     }
   }
   if ((openCount == 0 && openness > 0) || (openCount > 0 && openness < 1)) {
@@ -199,7 +199,7 @@ void ChestTileEntity::tick() {
           xc += 0.5f;
 
         level->playSound(xc, y + 0.5f, zc, "random.chestclosed", 0.5f,
-                         level->random.nextFloat() * 0.1f + 0.9f);
+            level->random.nextFloat() * 0.1f + 0.9f);
       }
     }
     if (openness < 0) {

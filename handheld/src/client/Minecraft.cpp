@@ -232,8 +232,7 @@ Minecraft::~Minecraft() {
 
 // Only called by server
 void Minecraft::selectLevel(const std::string &levelId,
-                            const std::string &levelName,
-                            const LevelSettings &settings) {
+    const std::string &levelName, const LevelSettings &settings) {
 #if defined(CREATORMODE)
   level = new CreatorLevel(
 #else
@@ -250,7 +249,7 @@ void Minecraft::selectLevel(const std::string &levelId,
 }
 
 void Minecraft::setLevel(Level *level, const std::string &message /* ="" */,
-                         LocalPlayer *forceInsertPlayer /* = NULL */) {
+    LocalPlayer *forceInsertPlayer /* = NULL */) {
   cameraTargetPlayer = NULL;
   LOGI("Seed is %ld\n", level->getSeed());
 
@@ -559,7 +558,7 @@ void Minecraft::tick(int nTick, int maxTick) {
       TIMER_POP_PUSH("animateTick");
       if (player) {
         level->animateTick(Mth::floor(player->x), Mth::floor(player->y),
-                           Mth::floor(player->z));
+            Mth::floor(player->z));
       }
 #endif
     }
@@ -780,8 +779,8 @@ void Minecraft::tickInput() {
           };
 
           int mobType = (forceId > 0)
-                            ? forceId
-                            : types[Mth::random(sizeof(types) / sizeof(int))];
+              ? forceId
+              : types[Mth::random(sizeof(types) / sizeof(int))];
           mob = MobFactory::CreateMob(mobType, level);
 
           //((Animal*)mob)->setAge(-1000);
@@ -791,7 +790,7 @@ void Minecraft::tickInput() {
               4 - 8 * Mth::random() + 4 * Mth::cos(Mth::DEGRAD * player->yRot);
           if (mob &&
               !MobSpawner::addMob(level, mob, player->x + dx, player->y,
-                                  player->z + dz, Mth::random() * 360, 0, true))
+                  player->z + dz, Mth::random() * 360, 0, true))
             delete mob;
         }
       }
@@ -815,7 +814,7 @@ void Minecraft::tickInput() {
 
       if (key == Keyboard::KEY_O) {
         for (int i = Inventory::MAX_SELECTION_SIZE;
-             i < player->inventory->getContainerSize(); ++i)
+            i < player->inventory->getContainerSize(); ++i)
           if (player->inventory->getItem(i))
             player->inventory->dropSlot(i, false);
       }
@@ -824,8 +823,8 @@ void Minecraft::tickInput() {
       }
       if (key == Keyboard::KEY_M) {
         options.difficulty = (options.difficulty == Difficulty::PEACEFUL)
-                                 ? Difficulty::NORMAL
-                                 : Difficulty::PEACEFUL;
+            ? Difficulty::NORMAL
+            : Difficulty::PEACEFUL;
         // setIsCreativeMode( !isCreativeMode() );
       }
 
@@ -870,12 +869,12 @@ void Minecraft::tickInput() {
       // Destroy and attack is on same button
       if (key == options.keyDestroy.key && isPressed) {
         BuildActionIntention bai(BuildActionIntention::BAI_REMOVE |
-                                 BuildActionIntention::BAI_ATTACK);
+            BuildActionIntention::BAI_ATTACK);
         handleBuildAction(&bai);
       } else // Build and use/interact is on same button
         if (key == options.keyUse.key && isPressed) {
           BuildActionIntention bai(BuildActionIntention::BAI_BUILD |
-                                   BuildActionIntention::BAI_INTERACT);
+              BuildActionIntention::BAI_INTERACT);
           handleBuildAction(&bai);
         }
     }
@@ -894,19 +893,19 @@ void Minecraft::tickInput() {
 
   bool isTryingToDestroyBlock =
       (options.useMouseForDigging
-           ? (Mouse::isButtonDown(MouseAction::ACTION_LEFT) && mouseDiggable)
-           : Keyboard::isKeyDown(options.keyDestroy.key)) ||
+              ? (Mouse::isButtonDown(MouseAction::ACTION_LEFT) && mouseDiggable)
+              : Keyboard::isKeyDown(options.keyDestroy.key)) ||
       (buildHandled && bai.isRemove());
 
   TIMER_POP_PUSH("handlemouse");
 #ifdef SDL3
   handleMouseDown(MouseAction::ACTION_LEFT, isTryingToDestroyBlock);
   handleMouseClick(buildHandled && bai.isInteract() ||
-                   options.useMouseForDigging &&
-                       Mouse::isButtonDown(MouseAction::ACTION_RIGHT));
+      options.useMouseForDigging &&
+          Mouse::isButtonDown(MouseAction::ACTION_RIGHT));
 #else
   handleMouseDown(MouseAction::ACTION_LEFT,
-                  isTryingToDestroyBlock || (buildHandled && bai.isInteract()));
+      isTryingToDestroyBlock || (buildHandled && bai.isInteract()));
 #endif
 
   lastTickTime = getTimeMs();
@@ -982,8 +981,8 @@ void Minecraft::handleBuildAction(BuildActionIntention *action) {
     if (action->isAttack()) {
       player->swing();
       // LOGI("attacking!\n");
-      InteractPacket packet(InteractPacket::Attack, player->entityId,
-                            hitResult.entity->entityId);
+      InteractPacket packet(
+          InteractPacket::Attack, player->entityId, hitResult.entity->entityId);
       raknetInstance->send(packet);
       gameMode->attack(player, hitResult.entity);
     } else if (action->isInteract()) {
@@ -991,7 +990,7 @@ void Minecraft::handleBuildAction(BuildActionIntention *action) {
         mayUse = false;
       // LOGI("interacting!\n");
       InteractPacket packet(InteractPacket::Interact, player->entityId,
-                            hitResult.entity->entityId);
+          hitResult.entity->entityId);
       raknetInstance->send(packet);
       gameMode->interact(player, hitResult.entity);
     }
@@ -1018,8 +1017,8 @@ void Minecraft::handleBuildAction(BuildActionIntention *action) {
       gameMode->startDestroyBlock(x, y, z, hitResult.f);
     } else {
       ItemInstance *item = player->inventory->getSelected();
-      if (gameMode->useItemOn(player, level, item, x, y, z, face,
-                              hitResult.pos)) {
+      if (gameMode->useItemOn(
+              player, level, item, x, y, z, face, hitResult.pos)) {
         mayUse = false;
         player->swing();
 #ifdef SDL3
@@ -1097,7 +1096,7 @@ void Minecraft::setScreen(Screen *screen) {
     releaseMouse();
     // ScreenSizeCalculator ssc = new ScreenSizeCalculator(options, width,
     // height);
-    int screenWidth = (int)(width * Gui::InvGuiScale);   // ssc.getWidth();
+    int screenWidth = (int)(width * Gui::InvGuiScale); // ssc.getWidth();
     int screenHeight = (int)(height * Gui::InvGuiScale); // ssc.getHeight();
     screen->init(this, screenWidth, screenHeight);
 
@@ -1150,7 +1149,7 @@ void Minecraft::init() {
 
   LOGI("IS TOUCHSCREEN? %d\n", options.useTouchScreen);
 
-  textures = new Textures(&options, platform());
+  textures = new Textures(&options, platform(), graphics());
   textures->addDynamicTexture(new WaterTexture());
   textures->addDynamicTexture(new WaterSideTexture());
   gui.texturesLoaded(textures);
@@ -1219,8 +1218,8 @@ void Minecraft::setSize(int w, int h) {
 
 #ifdef WIN32
   char resbuf[128];
-  sprintf(resbuf, "            %d x %d @ scale %.2f", width, height,
-          Gui::GuiScale);
+  sprintf(
+      resbuf, "            %d x %d @ scale %.2f", width, height, Gui::GuiScale);
   // gui.addMessage(resbuf);
 #endif
 #endif /* STANDALONE_SERVER */
@@ -1254,13 +1253,11 @@ void Minecraft::_reloadInput() {
   } else {
 #if defined(ANDROID) ||                                                        \
     (defined(__APPLE__) && defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
-    inputHolder = new CustomInputHolder(
-        new XperiaPlayInput(&options),
+    inputHolder = new CustomInputHolder(new XperiaPlayInput(&options),
         new ControllerTurnInput(2, ControllerTurnInput::MODE_DELTA),
         new IBuildInput());
 #else
-    inputHolder = new CustomInputHolder(
-        new KeyboardInput(&options),
+    inputHolder = new CustomInputHolder(new KeyboardInput(&options),
         new MouseTurnInput(MouseTurnInput::MODE_DELTA, width / 2, height / 2),
         new MouseBuildInput());
 #endif
@@ -1296,8 +1293,8 @@ void Minecraft::cancelLocateMultiplayer() {
 bool Minecraft::joinMultiplayer(const PingedCompatibleServer &server) {
   if (isLookingForMultiplayer && netCallback) {
     isLookingForMultiplayer = false;
-    return raknetInstance->connect(server.address.ToString(false),
-                                   server.address.GetPort());
+    return raknetInstance->connect(
+        server.address.ToString(false), server.address.GetPort());
   }
   return false;
 }
@@ -1512,11 +1509,11 @@ bool Minecraft::isKindleFire(int kindleVersion) {
   std::string model =
       platform()->getPlatformStringVar(PlatformStringVars::DEVICE_BUILD_MODEL);
   std::string modelLower(model);
-  std::transform(modelLower.begin(), modelLower.end(), modelLower.begin(),
-                 tolower);
+  std::transform(
+      modelLower.begin(), modelLower.end(), modelLower.begin(), tolower);
 
   return (modelLower.find("kindle") != std::string::npos) &&
-         (modelLower.find("fire") != std::string::npos);
+      (modelLower.find("fire") != std::string::npos);
 }
 
 bool Minecraft::transformResolution(int *w, int *h) {

@@ -114,8 +114,8 @@ public:
         level->setTileAndDataNoUpdate(x + ox, y, z + oz, this->id, data);
         level->setTileAndDataNoUpdate(x + ox + 1, y, z + oz, this->id, data);
         level->setTileAndDataNoUpdate(x + ox, y, z + oz + 1, this->id, data);
-        level->setTileAndDataNoUpdate(x + ox + 1, y, z + oz + 1, this->id,
-                                      data);
+        level->setTileAndDataNoUpdate(
+            x + ox + 1, y, z + oz + 1, this->id, data);
       } else {
         level->setTileAndDataNoUpdate(x, y, z, this->id, data);
       }
@@ -127,7 +127,7 @@ public:
 
   bool isSapling(Level *level, int x, int y, int z, int type) {
     return (level->getTile(x, y, z) == id) &&
-           ((level->getData(x, y, z) & TYPE_MASK) == type);
+        ((level->getData(x, y, z) & TYPE_MASK) == type);
   }
 
 protected:

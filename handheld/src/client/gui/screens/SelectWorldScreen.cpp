@@ -20,11 +20,11 @@ static float Max(float a, float b) { return a > b ? a : b; }
 //
 // World Selection List
 //
-WorldSelectionList::WorldSelectionList(Minecraft *minecraft, int width,
-                                       int height)
+WorldSelectionList::WorldSelectionList(
+    Minecraft *minecraft, int width, int height)
     : _height(height), hasPickedLevel(false), currentTick(0), stoppedTick(-1),
-      mode(0), RolledSelectionListH(minecraft, width, height, 0, width, 26,
-                                    height - 32, 120) {}
+      mode(0), RolledSelectionListH(
+                   minecraft, width, height, 0, width, 26, height - 32, 120) {}
 
 int WorldSelectionList::getNumberOfItems() { return (int)levels.size(); }
 
@@ -69,13 +69,20 @@ void WorldSelectionList::renderItem(int i, int x, int y, int h, Tesselator &t) {
   // float x1 = (float)x + (float)itemWidth;
 
   const float IY = (float)y - 8;
-  t.begin();
-  t.color(textColor);
-  t.vertexUV((float)(centerx - 32), IY, blitOffset, 0, 0);
-  t.vertexUV((float)(centerx - 32), IY + 48, blitOffset, 0, 1);
-  t.vertexUV((float)(centerx + 32), IY + 48, blitOffset, 1, 1);
-  t.vertexUV((float)(centerx + 32), IY, blitOffset, 1, 0);
-  t.draw();
+  GraphicsTexturedQuad quad;
+  quad.x = (float)(centerx - 32);
+  quad.y = IY;
+  quad.width = 64.0f;
+  quad.height = 48.0f;
+  if (!tryDrawTexturedQuad(quad, 0xff000000 | textColor)) {
+    t.begin();
+    t.color(textColor);
+    t.vertexUV((float)(centerx - 32), IY, blitOffset, 0, 0);
+    t.vertexUV((float)(centerx - 32), IY + 48, blitOffset, 0, 1);
+    t.vertexUV((float)(centerx + 32), IY + 48, blitOffset, 1, 1);
+    t.vertexUV((float)(centerx + 32), IY, blitOffset, 1, 0);
+    t.draw();
+  }
 }
 
 void WorldSelectionList::stepLeft() {
@@ -257,8 +264,8 @@ void SelectWorldScreen::buttonClicked(Button *button) {
   }
   if (button->id == bWorldView.id) {
     // Try to "click" the item in the middle
-    worldsList->selectItem(worldsList->getItemAtPosition(width / 2, height / 2),
-                           false);
+    worldsList->selectItem(
+        worldsList->getItemAtPosition(width / 2, height / 2), false);
   }
 }
 
@@ -274,9 +281,8 @@ bool SelectWorldScreen::isIndexValid(int index) {
   return worldsList && index >= 0 && index < worldsList->getNumberOfItems();
 }
 
-static char ILLEGAL_FILE_CHARACTERS[] = {'/',  '\n', '\r', '\t', '\0',
-                                         '\f', '`',  '?',  '*',  '\\',
-                                         '<',  '>',  '|',  '\"', ':'};
+static char ILLEGAL_FILE_CHARACTERS[] = {'/', '\n', '\r', '\t', '\0', '\f', '`',
+    '?', '*', '\\', '<', '>', '|', '\"', ':'};
 
 void SelectWorldScreen::tick() {
   if (_state == _STATE_CREATEWORLD) {
@@ -331,10 +337,10 @@ void SelectWorldScreen::tick() {
           isCreative = false;
 
         // Start a new level with the given name and seed
-        LevelSettings settings(seed, isCreative ? GameType::Creative
-                                                : GameType::Survival);
+        LevelSettings settings(
+            seed, isCreative ? GameType::Creative : GameType::Survival);
         LOGI("Creating a level with id '%s', name '%s' and seed '%d'\n",
-             levelId.c_str(), levelName.c_str(), seed);
+            levelId.c_str(), levelName.c_str(), seed);
         minecraft->selectLevel(levelId, levelName, settings);
         minecraft->hostMultiplayer();
         minecraft->setScreen(new ProgressScreen());
@@ -351,7 +357,7 @@ void SelectWorldScreen::tick() {
 
   if (worldsList->hasPickedLevel) {
     minecraft->selectLevel(worldsList->pickedLevel.id,
-                           worldsList->pickedLevel.name, LevelSettings::None());
+        worldsList->pickedLevel.name, LevelSettings::None());
     minecraft->hostMultiplayer();
     minecraft->setScreen(new ProgressScreen());
     _hasStartedLevel = true;
@@ -473,8 +479,7 @@ void SelectWorldScreen::keyPressed(int eventKey) {
 //
 DeleteWorldScreen::DeleteWorldScreen(const LevelSummary &level)
     : ConfirmScreen(NULL, "Are you sure you want to delete this world?",
-                    "'" + level.name + "' will be lost forever!", "Delete",
-                    "Cancel", 0),
+          "'" + level.name + "' will be lost forever!", "Delete", "Cancel", 0),
       _level(level) {
   tabButtonIndex = 1;
 }

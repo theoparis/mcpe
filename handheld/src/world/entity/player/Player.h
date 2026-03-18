@@ -129,8 +129,8 @@ public:
   int getItemInHandIcon(ItemInstance *item, int layer);
   bool isSleeping();
   virtual int startSleepInBed(int x, int y, int z);
-  virtual void stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
-                              bool saveRespawnPoint);
+  virtual void stopSleepInBed(
+      bool forcefulWakeUp, bool updateLevelList, bool saveRespawnPoint);
   virtual int getSleepTimer();
   void setAllPlayersSleeping();
   float getSleepRotation();

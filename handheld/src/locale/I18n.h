@@ -13,8 +13,8 @@ class I18n {
   typedef std::map<std::string, std::string> Map;
 
 public:
-  static void loadLanguage(AppPlatform *platform,
-                           const std::string &languageCode);
+  static void loadLanguage(
+      AppPlatform *platform, const std::string &languageCode);
 
   static bool get(const std::string &id, std::string &out);
   static std::string get(const std::string &id);
@@ -25,8 +25,8 @@ public:
   static std::string getDescriptionString(const ItemInstance &item);
 
 private:
-  static void fillTranslations(AppPlatform *platform,
-                               const std::string &filename, bool overwrite);
+  static void fillTranslations(
+      AppPlatform *platform, const std::string &filename, bool overwrite);
   static Map _strings;
 };
 

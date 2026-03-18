@@ -185,6 +185,6 @@ void PauseScreen::updateServerVisibilityText() {
   ServerSideNetworkHandler *ss =
       (ServerSideNetworkHandler *)minecraft->netCallback;
   bServerVisibility->msg = ss->allowsIncomingConnections()
-                               ? "Server is visible"
-                               : "Server is invisible";
+      ? "Server is visible"
+      : "Server is invisible";
 }

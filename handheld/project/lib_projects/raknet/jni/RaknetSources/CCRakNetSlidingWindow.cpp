@@ -26,8 +26,8 @@ CCRakNetSlidingWindow::CCRakNetSlidingWindow() {}
 // ----------------------------------------------------------------------------------------------------------------------------
 CCRakNetSlidingWindow::~CCRakNetSlidingWindow() {}
 // ----------------------------------------------------------------------------------------------------------------------------
-void CCRakNetSlidingWindow::Init(CCTimeType curTime,
-                                 uint32_t maxDatagramPayload) {
+void CCRakNetSlidingWindow::Init(
+    CCTimeType curTime, uint32_t maxDatagramPayload) {
   (void)curTime;
 
   RTT = UNSET_TIME_US;
@@ -42,15 +42,15 @@ void CCRakNetSlidingWindow::Init(CCTimeType curTime,
   _isContinuousSend = false;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-void CCRakNetSlidingWindow::Update(CCTimeType curTime,
-                                   bool hasDataToSendOrResend) {
+void CCRakNetSlidingWindow::Update(
+    CCTimeType curTime, bool hasDataToSendOrResend) {
   (void)curTime;
   (void)hasDataToSendOrResend;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-int CCRakNetSlidingWindow::GetRetransmissionBandwidth(
-    CCTimeType curTime, CCTimeType timeSinceLastTick,
-    uint32_t unacknowledgedBytes, bool isContinuousSend) {
+int CCRakNetSlidingWindow::GetRetransmissionBandwidth(CCTimeType curTime,
+    CCTimeType timeSinceLastTick, uint32_t unacknowledgedBytes,
+    bool isContinuousSend) {
   (void)curTime;
   (void)isContinuousSend;
   (void)timeSinceLastTick;
@@ -58,9 +58,9 @@ int CCRakNetSlidingWindow::GetRetransmissionBandwidth(
   return unacknowledgedBytes;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-int CCRakNetSlidingWindow::GetTransmissionBandwidth(
-    CCTimeType curTime, CCTimeType timeSinceLastTick,
-    uint32_t unacknowledgedBytes, bool isContinuousSend) {
+int CCRakNetSlidingWindow::GetTransmissionBandwidth(CCTimeType curTime,
+    CCTimeType timeSinceLastTick, uint32_t unacknowledgedBytes,
+    bool isContinuousSend) {
   (void)curTime;
   (void)timeSinceLastTick;
 
@@ -72,8 +72,8 @@ int CCRakNetSlidingWindow::GetTransmissionBandwidth(
     return 0;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-bool CCRakNetSlidingWindow::ShouldSendACKs(CCTimeType curTime,
-                                           CCTimeType estimatedTimeToNextTick) {
+bool CCRakNetSlidingWindow::ShouldSendACKs(
+    CCTimeType curTime, CCTimeType estimatedTimeToNextTick) {
   CCTimeType rto = GetSenderRTOForACK();
   (void)estimatedTimeToNextTick;
 
@@ -88,8 +88,8 @@ bool CCRakNetSlidingWindow::ShouldSendACKs(CCTimeType curTime,
   return curTime >= oldestUnsentAck + SYN;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-DatagramSequenceNumberType
-CCRakNetSlidingWindow::GetNextDatagramSequenceNumber(void) {
+DatagramSequenceNumberType CCRakNetSlidingWindow::GetNextDatagramSequenceNumber(
+    void) {
   return nextDatagramSequenceNumber;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -169,11 +169,9 @@ void CCRakNetSlidingWindow::OnNAK(
 }
 // ----------------------------------------------------------------------------------------------------------------------------
 void CCRakNetSlidingWindow::OnAck(CCTimeType curTime, CCTimeType rtt,
-                                  bool hasBAndAS, BytesPerMicrosecond _B,
-                                  BytesPerMicrosecond _AS,
-                                  double totalUserDataBytesAcked,
-                                  bool isContinuousSend,
-                                  DatagramSequenceNumberType sequenceNumber) {
+    bool hasBAndAS, BytesPerMicrosecond _B, BytesPerMicrosecond _AS,
+    double totalUserDataBytesAcked, bool isContinuousSend,
+    DatagramSequenceNumberType sequenceNumber) {
   (void)_B;
   (void)totalUserDataBytesAcked;
   (void)_AS;
@@ -207,14 +205,14 @@ void CCRakNetSlidingWindow::OnAck(CCTimeType curTime, CCTimeType rtt,
         if (cwnd > ssThresh && ssThresh != 0) {
           cwnd = ssThresh;
           cwnd += MAXIMUM_MTU_INCLUDING_UDP_HEADER *
-                  MAXIMUM_MTU_INCLUDING_UDP_HEADER / cwnd;
+              MAXIMUM_MTU_INCLUDING_UDP_HEADER / cwnd;
         }
       }
     }
   } else {
     if (isNewCongestionControlPeriod)
       cwnd += MAXIMUM_MTU_INCLUDING_UDP_HEADER *
-              MAXIMUM_MTU_INCLUDING_UDP_HEADER / cwnd;
+          MAXIMUM_MTU_INCLUDING_UDP_HEADER / cwnd;
   }
 }
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -226,9 +224,7 @@ void CCRakNetSlidingWindow::OnDuplicateAck(
 }
 // ----------------------------------------------------------------------------------------------------------------------------
 void CCRakNetSlidingWindow::OnSendAckGetBAndAS(CCTimeType curTime,
-                                               bool *hasBAndAS,
-                                               BytesPerMicrosecond *_B,
-                                               BytesPerMicrosecond *_AS) {
+    bool *hasBAndAS, BytesPerMicrosecond *_B, BytesPerMicrosecond *_AS) {
   (void)curTime;
   (void)_B;
   (void)_AS;
@@ -276,8 +272,8 @@ uint32_t CCRakNetSlidingWindow::GetMTU(void) const {
   return MAXIMUM_MTU_INCLUDING_UDP_HEADER;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-BytesPerMicrosecond
-CCRakNetSlidingWindow::GetLocalReceiveRate(CCTimeType currentTime) const {
+BytesPerMicrosecond CCRakNetSlidingWindow::GetLocalReceiveRate(
+    CCTimeType currentTime) const {
   (void)currentTime;
 
   return 0; // TODO
@@ -289,17 +285,17 @@ double CCRakNetSlidingWindow::GetRTT(void) const {
   return RTT;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-bool CCRakNetSlidingWindow::GreaterThan(DatagramSequenceNumberType a,
-                                        DatagramSequenceNumberType b) {
+bool CCRakNetSlidingWindow::GreaterThan(
+    DatagramSequenceNumberType a, DatagramSequenceNumberType b) {
   // a > b?
   const DatagramSequenceNumberType halfSpan =
       (DatagramSequenceNumberType)(((DatagramSequenceNumberType)(const uint32_t)-1) /
-                                   (DatagramSequenceNumberType)2);
+          (DatagramSequenceNumberType)2);
   return b != a && b - a > halfSpan;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-bool CCRakNetSlidingWindow::LessThan(DatagramSequenceNumberType a,
-                                     DatagramSequenceNumberType b) {
+bool CCRakNetSlidingWindow::LessThan(
+    DatagramSequenceNumberType a, DatagramSequenceNumberType b) {
   // a < b?
   const DatagramSequenceNumberType halfSpan =
       ((DatagramSequenceNumberType)(const uint32_t)-1) /
@@ -307,8 +303,8 @@ bool CCRakNetSlidingWindow::LessThan(DatagramSequenceNumberType a,
   return b != a && b - a < halfSpan;
 }
 // ----------------------------------------------------------------------------------------------------------------------------
-uint64_t
-CCRakNetSlidingWindow::GetBytesPerSecondLimitByCongestionControl(void) const {
+uint64_t CCRakNetSlidingWindow::GetBytesPerSecondLimitByCongestionControl(
+    void) const {
   return 0; // TODO
 }
 // ----------------------------------------------------------------------------------------------------------------------------

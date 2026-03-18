@@ -21,10 +21,8 @@ public:
   /// \param[out] preallocatedDestination Write your data here
   /// \return The number of bytes read, or 0 if none
   virtual unsigned int GetFilePart(const char *filename,
-                                   unsigned int startReadBytes,
-                                   unsigned int numBytesToRead,
-                                   void *preallocatedDestination,
-                                   FileListNodeContext context);
+      unsigned int startReadBytes, unsigned int numBytesToRead,
+      void *preallocatedDestination, FileListNodeContext context);
 };
 
 } // namespace RakNet

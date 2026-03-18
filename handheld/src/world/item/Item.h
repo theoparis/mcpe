@@ -228,28 +228,27 @@ public:
     return this;
   }
 
-  virtual bool useOn(ItemInstance *itemInstance, Level *level, int x, int y,
-                     int z, int face) {
+  virtual bool useOn(
+      ItemInstance *itemInstance, Level *level, int x, int y, int z, int face) {
     return false;
   }
 
   virtual bool useOn(ItemInstance *itemInstance, Player *player, Level *level,
-                     int x, int y, int z, int face, float clickX, float clickY,
-                     float clickZ) {
+      int x, int y, int z, int face, float clickX, float clickY, float clickZ) {
     return false;
   }
 
   virtual int getUseDuration(ItemInstance *itemInstance) { return 0; }
 
-  virtual ItemInstance useTimeDepleted(ItemInstance *itemInstance, Level *level,
-                                       Player *player);
+  virtual ItemInstance useTimeDepleted(
+      ItemInstance *itemInstance, Level *level, Player *player);
 
   virtual float getDestroySpeed(ItemInstance *itemInstance, Tile *tile) {
     return 1;
   }
 
-  virtual ItemInstance *use(ItemInstance *itemInstance, Level *level,
-                            Player *player) {
+  virtual ItemInstance *use(
+      ItemInstance *itemInstance, Level *level, Player *player) {
     return itemInstance;
   }
 
@@ -268,8 +267,8 @@ public:
 
   virtual void hurtEnemy(ItemInstance *itemInstance, Mob *mob) {}
 
-  virtual bool mineBlock(ItemInstance *itemInstance, int tile, int x, int y,
-                         int z) {
+  virtual bool mineBlock(
+      ItemInstance *itemInstance, int tile, int x, int y, int z) {
     return false;
   }
 
@@ -330,7 +329,7 @@ public:
   }
 
   virtual void releaseUsing(ItemInstance *itemInstance, Level *level,
-                            Player *player, int durationLeft) {}
+      Player *player, int durationLeft) {}
   virtual UseAnim::UseAnimation getUseAnimation() { return UseAnim::none; }
 
 protected:

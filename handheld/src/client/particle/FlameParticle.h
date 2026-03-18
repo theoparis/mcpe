@@ -12,8 +12,8 @@ class FlameParticle : public Particle {
   float oSize;
 
 public:
-  FlameParticle(Level *level, float x, float y, float z, float xa, float ya,
-                float za)
+  FlameParticle(
+      Level *level, float x, float y, float z, float xa, float ya, float za)
       : super(level, x, y, z, xa, ya, za) {
     xd = xd * 0.01f + xa;
     yd = yd * 0.01f + ya;
@@ -33,7 +33,7 @@ public:
   }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     float s = (age + a) / (float)lifetime;
     size = oSize * (1 - s * s * 0.5f);
     super::render(t, a, xa, ya, za, xa2, za2);

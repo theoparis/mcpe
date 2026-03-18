@@ -31,14 +31,14 @@ public:
   /// \param [in] input Array of bytes to encode
   /// \param [in] sizeInBytes size of \a input
   /// \param [out] output The bitstream to write to
-  void EncodeArray(unsigned char *input, size_t sizeInBytes,
-                   RakNet::BitStream *output);
+  void EncodeArray(
+      unsigned char *input, size_t sizeInBytes, RakNet::BitStream *output);
 
   // \brief Decodes an array encoded by EncodeArray().
   unsigned DecodeArray(RakNet::BitStream *input, BitSize_t sizeInBits,
-                       size_t maxCharsToWrite, unsigned char *output);
-  void DecodeArray(unsigned char *input, BitSize_t sizeInBits,
-                   RakNet::BitStream *output);
+      size_t maxCharsToWrite, unsigned char *output);
+  void DecodeArray(
+      unsigned char *input, BitSize_t sizeInBits, RakNet::BitStream *output);
 
   /// \brief Given a frequency table of 256 elements, all with a frequency of 1
   /// or more, generate the tree.
@@ -61,10 +61,9 @@ private:
 
   CharacterEncoding encodingTable[256];
 
-  void
-  InsertNodeIntoSortedList(HuffmanEncodingTreeNode *node,
-                           DataStructures::LinkedList<HuffmanEncodingTreeNode *>
-                               *huffmanEncodingTreeNodeList) const;
+  void InsertNodeIntoSortedList(HuffmanEncodingTreeNode *node,
+      DataStructures::LinkedList<HuffmanEncodingTreeNode *>
+          *huffmanEncodingTreeNodeList) const;
 };
 
 } // namespace RakNet

@@ -68,13 +68,13 @@ std::vector<const Motive *> Motive::getAllMotivesAsList() {
 const Motive *Motive::getMotiveByName(const std::string &name) {
   std::vector<const Motive *> allMovies = getAllMotivesAsList();
   for (std::vector<const Motive *>::iterator i = allMovies.begin();
-       i != allMovies.end(); ++i) {
+      i != allMovies.end(); ++i) {
     if ((*i)->name == name)
       return *i;
   }
   return DefaultImage;
 }
 
-Motive::Motive(std::string name, int w, int h, int uo, int vo,
-               bool isPublic /*= true*/)
+Motive::Motive(
+    std::string name, int w, int h, int uo, int vo, bool isPublic /*= true*/)
     : name(name), w(w), h(h), uo(uo), vo(vo), isPublic(isPublic) {}

@@ -49,8 +49,8 @@ void NetherReactorTileEntity::tick() {
       if (checkLevelChange(progress / SharedConstants::TicksPerSecond)) {
         curLevel++;
         spawnItems(getNumItemsPerLevel(curLevel));
-        trySpawnPigZombies(NUM_PIG_ZOMBIE_SLOTS,
-                           getNumEnemiesPerLevel(curLevel));
+        trySpawnPigZombies(
+            NUM_PIG_ZOMBIE_SLOTS, getNumEnemiesPerLevel(curLevel));
       }
     }
     if (progress > SharedConstants::TicksPerSecond * 46) {
@@ -115,9 +115,8 @@ void NetherReactorTileEntity::spawnItems(int numItems) {
     spawnItem();
   }
 }
-Vec3 NetherReactorTileEntity::getSpawnPosition(float minDistance,
-                                               float varibleDistance,
-                                               float offset) {
+Vec3 NetherReactorTileEntity::getSpawnPosition(
+    float minDistance, float varibleDistance, float offset) {
   float distance = minDistance + level->random.nextFloat() * varibleDistance;
   float rad = level->random.nextFloat() * Mth::TWO_PI;
   return Vec3(sin(rad) * distance + x, offset + y, cos(rad) * distance + z);
@@ -126,21 +125,21 @@ void NetherReactorTileEntity::spawnEnemy() {
   Mob *mob = MobFactory::CreateMob(MobTypes::PigZombie, level);
   Vec3 enemyPosition = getSpawnPosition(3, 4, -1);
   while (enemyPosition.x < 0 || enemyPosition.z < 0 ||
-         enemyPosition.x >= LEVEL_WIDTH || enemyPosition.z >= LEVEL_DEPTH) {
+      enemyPosition.x >= LEVEL_WIDTH || enemyPosition.z >= LEVEL_DEPTH) {
     enemyPosition = getSpawnPosition(3, 4, -1);
   }
   MobSpawner::addMob(level, mob, enemyPosition.x, enemyPosition.y,
-                     enemyPosition.z, 0, 0, true);
+      enemyPosition.z, 0, 0, true);
 }
 
 void NetherReactorTileEntity::spawnItem() {
   Vec3 itemPosition = getSpawnPosition(3, 4, -1);
   while (itemPosition.x < 0 || itemPosition.z < 0 ||
-         itemPosition.x >= LEVEL_WIDTH || itemPosition.z >= LEVEL_DEPTH) {
+      itemPosition.x >= LEVEL_WIDTH || itemPosition.z >= LEVEL_DEPTH) {
     itemPosition = getSpawnPosition(3, 4, -1);
   }
-  ItemEntity *item = new ItemEntity(level, itemPosition.x, itemPosition.y,
-                                    itemPosition.z, getSpawnItem());
+  ItemEntity *item = new ItemEntity(
+      level, itemPosition.x, itemPosition.y, itemPosition.z, getSpawnItem());
 
   item->throwTime = 10;
   item->age = item->getLifeTime() - SharedConstants::TicksPerSecond * 30;
@@ -171,9 +170,8 @@ ItemInstance NetherReactorTileEntity::getSpawnItem() {
 
 ItemInstance NetherReactorTileEntity::GetLowOddsSpawnItem() {
   if (level->random.nextInt(10) <= 9) {
-    static Item *items[] = {Item::arrow,   Item::bed,      Item::bone,
-                            Item::book,    Item::bow,      Item::bowl,
-                            Item::feather, Item::painting, Item::door_wood};
+    static Item *items[] = {Item::arrow, Item::bed, Item::bone, Item::book,
+        Item::bow, Item::bowl, Item::feather, Item::painting, Item::door_wood};
     int itemIndex = level->random.nextInt(sizeof(items) / 4);
     Item *itemToSpawn = items[itemIndex];
     return ItemInstance(itemToSpawn);
@@ -233,14 +231,14 @@ int NetherReactorTileEntity::numOfFreeEnemySlots() {
   return NUM_PIG_ZOMBIE_SLOTS - numPigZombiesFound;
 }
 
-void NetherReactorTileEntity::trySpawnPigZombies(int maxNumOfEnemies,
-                                                 int maxToSpawn) {
+void NetherReactorTileEntity::trySpawnPigZombies(
+    int maxNumOfEnemies, int maxToSpawn) {
   if (level->difficulty == Difficulty::PEACEFUL)
     return;
   int currentNumOfPigZombies = NUM_PIG_ZOMBIE_SLOTS - numOfFreeEnemySlots();
   if (currentNumOfPigZombies < maxNumOfEnemies) {
     for (int a = 0; a < maxToSpawn && currentNumOfPigZombies < maxNumOfEnemies;
-         ++a) {
+        ++a) {
       spawnEnemy();
       currentNumOfPigZombies++;
     }
@@ -265,14 +263,14 @@ void NetherReactorTileEntity::tickGlowingRedstoneTransformation(
   }
 }
 
-void NetherReactorTileEntity::turnLayerToGlowingObsidian(int layer,
-                                                         const int type) {
+void NetherReactorTileEntity::turnLayerToGlowingObsidian(
+    int layer, const int type) {
   NetherReactorPattern pattern;
   for (int checkX = -1; checkX <= 1; ++checkX) {
     for (int checkZ = -1; checkZ <= 1; ++checkZ) {
       if (pattern.getTileAt(layer, checkX + 1, checkZ + 1) == type) {
-        level->setTile(x + checkX, y - 1 + layer, z + checkZ,
-                       Tile::glowingObsidian->id);
+        level->setTile(
+            x + checkX, y - 1 + layer, z + checkZ, Tile::glowingObsidian->id);
       }
     }
   }
@@ -284,8 +282,8 @@ void NetherReactorTileEntity::turnGlowingObsidianLayerToObsidian(int layer) {
     for (int checkZ = -1; checkZ <= 1; ++checkZ) {
       if (level->getTile(x + checkX, y - 1 + layer, z + checkZ) !=
           Tile::netherReactor->id) {
-        level->setTile(x + checkX, y - 1 + layer, z + checkZ,
-                       Tile::obsidian->id);
+        level->setTile(
+            x + checkX, y - 1 + layer, z + checkZ, Tile::obsidian->id);
       }
     }
   }
@@ -301,9 +299,7 @@ void NetherReactorTileEntity::buildDome(int x, int y, int z) {
 }
 
 void NetherReactorTileEntity::buildHollowedVolume(int x, int y, int z,
-                                                  int expandWidth, int height,
-                                                  const int wallTileId,
-                                                  const int clearTileId) {
+    int expandWidth, int height, const int wallTileId, const int clearTileId) {
   for (int curY = 0; curY < height; ++curY) {
     for (int curX = -expandWidth; curX <= expandWidth; ++curX) {
       for (int curZ = -expandWidth; curZ <= expandWidth; ++curZ) {
@@ -318,9 +314,8 @@ void NetherReactorTileEntity::buildHollowedVolume(int x, int y, int z,
   }
 }
 
-void NetherReactorTileEntity::buildFloorVolume(int x, int y, int z,
-                                               int expandWidth, int height,
-                                               const int tileId) {
+void NetherReactorTileEntity::buildFloorVolume(
+    int x, int y, int z, int expandWidth, int height, const int tileId) {
   for (int curY = 0; curY < height; ++curY) {
     for (int curX = -expandWidth; curX <= expandWidth; ++curX) {
       for (int curZ = -expandWidth; curZ <= expandWidth; ++curZ) {
@@ -331,10 +326,7 @@ void NetherReactorTileEntity::buildFloorVolume(int x, int y, int z,
 }
 
 void NetherReactorTileEntity::buildCrockedRoofVolume(bool inverted, int x,
-                                                     int y, int z,
-                                                     int expandWidth,
-                                                     int height,
-                                                     const int tileId) {
+    int y, int z, int expandWidth, int height, const int tileId) {
   int fullHeight = height + expandWidth;
   for (int curX = -expandWidth; curX <= expandWidth; ++curX) {
     for (int curZ = -expandWidth; curZ <= expandWidth; ++curZ) {
@@ -352,7 +344,7 @@ void NetherReactorTileEntity::buildCrockedRoofVolume(bool inverted, int x,
 
 bool NetherReactorTileEntity::isEdge(int curX, int expandWidth, int curZ) {
   return (curX == -expandWidth || curX == expandWidth) ||
-         (curZ == -expandWidth || curZ == expandWidth);
+      (curZ == -expandWidth || curZ == expandWidth);
 }
 
 void NetherReactorTileEntity::deterioateDome(int x, int y, int z) {
@@ -363,10 +355,7 @@ void NetherReactorTileEntity::deterioateDome(int x, int y, int z) {
 }
 
 void NetherReactorTileEntity::deterioateCrockedRoofVolume(bool inverted, int x,
-                                                          int y, int z,
-                                                          int expandWidth,
-                                                          int height,
-                                                          int tileId) {
+    int y, int z, int expandWidth, int height, int tileId) {
   int fullHeight = height + expandWidth;
   for (int curX = -expandWidth; curX <= expandWidth; ++curX) {
     for (int curZ = -expandWidth; curZ <= expandWidth; ++curZ) {
@@ -383,9 +372,8 @@ void NetherReactorTileEntity::deterioateCrockedRoofVolume(bool inverted, int x,
   }
 }
 
-void NetherReactorTileEntity::deterioateHollowedVolume(int x, int y, int z,
-                                                       int expandWidth,
-                                                       int height, int tileId) {
+void NetherReactorTileEntity::deterioateHollowedVolume(
+    int x, int y, int z, int expandWidth, int height, int tileId) {
   for (int curY = 0; curY < height; ++curY) {
     for (int curX = -expandWidth; curX <= expandWidth; ++curX) {
       for (int curZ = -expandWidth; curZ <= expandWidth; ++curZ) {

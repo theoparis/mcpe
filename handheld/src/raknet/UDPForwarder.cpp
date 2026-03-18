@@ -158,7 +158,7 @@ void UDPForwarder::UpdateThreaded_Old(void) {
             forwardList[i]
                 ->timeLastDatagramForwarded && // Account for timestamp wrap
         curTime > forwardList[i]->timeLastDatagramForwarded +
-                      forwardList[i]->timeoutOnNoDataMS) {
+                forwardList[i]->timeoutOnNoDataMS) {
       RakNet::OP_DELETE(forwardList[i], _FILE_AND_LINE_);
       forwardList.RemoveAtIndex(i);
     } else
@@ -170,8 +170,8 @@ void UDPForwarder::UpdateThreaded_Old(void) {
 
   for (i = 0; i < forwardList.Size(); i++) {
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
     FD_SET(forwardList[i]->socket, &readFD);
     //		FD_SET(forwardList[i]->readSocket, &exceptionFD);
@@ -207,7 +207,7 @@ void UDPForwarder::UpdateThreaded_Old(void) {
       len2 = sizeof(sa);
       sa.sin_family = AF_INET;
       receivedDataLen = recvfrom__(forwardEntry->socket, data, MAXIMUM_MTU_SIZE,
-                                   flag, (sockaddr *)&sa, (socklen_t *)&len2);
+          flag, (sockaddr *)&sa, (socklen_t *)&len2);
 
       if (receivedDataLen < 0) {
 #if defined(_WIN32) && defined(_DEBUG)
@@ -216,15 +216,14 @@ void UDPForwarder::UpdateThreaded_Old(void) {
         if (dwIOError != WSAECONNRESET && dwIOError != WSAEINTR &&
             dwIOError != WSAETIMEDOUT) {
           LPVOID messageBuffer;
-          FormatMessage(
-              FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-                  FORMAT_MESSAGE_IGNORE_INSERTS,
+          FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                  FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
               NULL, dwIOError,
               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
               (LPTSTR)&messageBuffer, 0, NULL);
           // something has gone wrong here...
-          RAKNET_DEBUG_PRINTF("recvfrom failed:Error code - %d\n%s", dwIOError,
-                              messageBuffer);
+          RAKNET_DEBUG_PRINTF(
+              "recvfrom failed:Error code - %d\n%s", dwIOError, messageBuffer);
 
           // Free the buffer.
           LocalFree(messageBuffer);
@@ -242,16 +241,16 @@ void UDPForwarder::UpdateThreaded_Old(void) {
 
         if (forwardEntry->srcAndDest.source.GetPort() != portnum) {
           unsigned int index;
-          SrcAndDest srcAndDest(forwardEntry->srcAndDest.dest,
-                                forwardEntry->srcAndDest.source);
+          SrcAndDest srcAndDest(
+              forwardEntry->srcAndDest.dest, forwardEntry->srcAndDest.source);
           bool objectExists;
           index = forwardList.GetIndexFromKey(srcAndDest, &objectExists);
           if (objectExists) {
             forwardList.RemoveAtIndex(index);
           }
           forwardEntry->srcAndDest.source.SetPort(portnum);
-          forwardList.Insert(forwardEntry->srcAndDest, forwardEntry, true,
-                             _FILE_AND_LINE_);
+          forwardList.Insert(
+              forwardEntry->srcAndDest, forwardEntry, true, _FILE_AND_LINE_);
         }
       }
 
@@ -268,7 +267,7 @@ void UDPForwarder::UpdateThreaded_Old(void) {
         saOut.sin_family = AF_INET;
         do {
           len = sendto__(forwardEntry->socket, data, receivedDataLen, 0,
-                         (const sockaddr *)&saOut, sizeof(saOut));
+              (const sockaddr *)&saOut, sizeof(saOut));
         } while (len == 0);
 
         // printf("1. Forwarding after %i ms\n",
@@ -285,16 +284,16 @@ void UDPForwarder::UpdateThreaded_Old(void) {
 
         if (forwardEntry->srcAndDest.dest.GetPort() != portnum) {
           unsigned int index;
-          SrcAndDest srcAndDest(forwardEntry->srcAndDest.source,
-                                forwardEntry->srcAndDest.dest);
+          SrcAndDest srcAndDest(
+              forwardEntry->srcAndDest.source, forwardEntry->srcAndDest.dest);
           bool objectExists;
           index = forwardList.GetIndexFromKey(srcAndDest, &objectExists);
           if (objectExists) {
             forwardList.RemoveAtIndex(index);
           }
           forwardEntry->srcAndDest.dest.SetPort(portnum);
-          forwardList.Insert(forwardEntry->srcAndDest, forwardEntry, true,
-                             _FILE_AND_LINE_);
+          forwardList.Insert(
+              forwardEntry->srcAndDest, forwardEntry, true, _FILE_AND_LINE_);
         }
       }
 
@@ -311,7 +310,7 @@ void UDPForwarder::UpdateThreaded_Old(void) {
         saOut.sin_family = AF_INET;
         do {
           len = sendto__(forwardEntry->socket, data, receivedDataLen, 0,
-                         (const sockaddr *)&saOut, sizeof(saOut));
+              (const sockaddr *)&saOut, sizeof(saOut));
         } while (len == 0);
 
         // printf("2. Forwarding after %i ms\n",
@@ -345,7 +344,7 @@ void UDPForwarder::UpdateThreaded(void) {
             forwardList[i]
                 ->timeLastDatagramForwarded && // Account for timestamp wrap
         curTime > forwardList[i]->timeLastDatagramForwarded +
-                      forwardList[i]->timeoutOnNoDataMS) {
+                forwardList[i]->timeoutOnNoDataMS) {
       RakNet::OP_DELETE(forwardList[i], _FILE_AND_LINE_);
       forwardList.RemoveAtIndex(i);
     } else
@@ -357,8 +356,8 @@ void UDPForwarder::UpdateThreaded(void) {
 
   for (i = 0; i < forwardList.Size(); i++) {
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
     FD_SET(forwardList[i]->socket, &readFD);
     //		FD_SET(forwardList[i]->readSocket, &exceptionFD);
@@ -398,7 +397,7 @@ void UDPForwarder::UpdateThreaded(void) {
       const int flag = 0;
       int receivedDataLen, len = 0;
       receivedDataLen = recvfrom__(forwardEntry->socket, data, MAXIMUM_MTU_SIZE,
-                                   flag, sockAddrPtr, socketlenPtr);
+          flag, sockAddrPtr, socketlenPtr);
 
       if (receivedDataLen < 0) {
 #if defined(_WIN32) && defined(_DEBUG)
@@ -407,15 +406,14 @@ void UDPForwarder::UpdateThreaded(void) {
         if (dwIOError != WSAECONNRESET && dwIOError != WSAEINTR &&
             dwIOError != WSAETIMEDOUT) {
           LPVOID messageBuffer;
-          FormatMessage(
-              FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-                  FORMAT_MESSAGE_IGNORE_INSERTS,
+          FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
+                  FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
               NULL, dwIOError,
               MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
               (LPTSTR)&messageBuffer, 0, NULL);
           // something has gone wrong here...
-          RAKNET_DEBUG_PRINTF("recvfrom failed:Error code - %d\n%s", dwIOError,
-                              messageBuffer);
+          RAKNET_DEBUG_PRINTF(
+              "recvfrom failed:Error code - %d\n%s", dwIOError, messageBuffer);
 
           // Free the buffer.
           LocalFree(messageBuffer);
@@ -435,7 +433,7 @@ void UDPForwarder::UpdateThreaded(void) {
         sockAddrIn6 = (sockaddr_in6 *)&their_addr;
         memcpy(&receivedAddr.address.addr6, sockAddrIn6, sizeof(sockaddr_in6));
         //	receivedAddr.address.addr6.sin6_port=ntohs(
-        //sockAddrIn6->sin6_port );
+        // sockAddrIn6->sin6_port );
       }
 
       if (forwardEntry->srcAndDest.source.EqualsExcludingPort(receivedAddr) &&
@@ -446,14 +444,14 @@ void UDPForwarder::UpdateThreaded(void) {
         if (forwardEntry->srcAndDest.source.GetPort() !=
             receivedAddr.GetPort()) {
           unsigned int index;
-          SrcAndDest srcAndDest(forwardEntry->srcAndDest.dest,
-                                forwardEntry->srcAndDest.source);
+          SrcAndDest srcAndDest(
+              forwardEntry->srcAndDest.dest, forwardEntry->srcAndDest.source);
           bool objectExists;
           index = forwardList.GetIndexFromKey(srcAndDest, &objectExists);
           forwardList.RemoveAtIndex(index);
           forwardEntry->srcAndDest.source.SetPort(receivedAddr.GetPort());
-          forwardList.Push(forwardEntry, forwardEntry->srcAndDest,
-                           _FILE_AND_LINE_);
+          forwardList.Push(
+              forwardEntry, forwardEntry->srcAndDest, _FILE_AND_LINE_);
         }
       }
 
@@ -464,15 +462,13 @@ void UDPForwarder::UpdateThreaded(void) {
 
         if (forwardEntry->srcAndDest.dest.address.addr4.sin_family == AF_INET) {
           do {
-            len = sendto__(
-                forwardEntry->socket, data, receivedDataLen, 0,
+            len = sendto__(forwardEntry->socket, data, receivedDataLen, 0,
                 (const sockaddr *)&forwardEntry->srcAndDest.dest.address.addr4,
                 sizeof(sockaddr_in));
           } while (len == 0);
         } else {
           do {
-            len = sendto__(
-                forwardEntry->socket, data, receivedDataLen, 0,
+            len = sendto__(forwardEntry->socket, data, receivedDataLen, 0,
                 (const sockaddr *)&forwardEntry->srcAndDest.dest.address.addr6,
                 sizeof(sockaddr_in));
           } while (len == 0);
@@ -491,13 +487,13 @@ void UDPForwarder::UpdateThreaded(void) {
 
         if (forwardEntry->srcAndDest.dest.GetPort() != receivedAddr.GetPort()) {
           unsigned int index;
-          SrcAndDest srcAndDest(forwardEntry->srcAndDest.source,
-                                forwardEntry->srcAndDest.dest);
+          SrcAndDest srcAndDest(
+              forwardEntry->srcAndDest.source, forwardEntry->srcAndDest.dest);
           index = forwardList.GetIndexOf(srcAndDest);
           forwardList.RemoveAtIndex(index);
           forwardEntry->srcAndDest.dest.SetPort(receivedAddr.GetPort());
-          forwardList.Push(forwardEntry, forwardEntry->srcAndDest,
-                           _FILE_AND_LINE_);
+          forwardList.Push(
+              forwardEntry, forwardEntry->srcAndDest, _FILE_AND_LINE_);
         }
       }
 
@@ -509,16 +505,16 @@ void UDPForwarder::UpdateThreaded(void) {
             AF_INET) {
           do {
             len = sendto__(forwardEntry->socket, data, receivedDataLen, 0,
-                           (const sockaddr *)&forwardEntry->srcAndDest.source
-                               .address.addr4,
-                           sizeof(sockaddr_in));
+                (const sockaddr *)&forwardEntry->srcAndDest.source.address
+                    .addr4,
+                sizeof(sockaddr_in));
           } while (len == 0);
         } else {
           do {
             len = sendto__(forwardEntry->socket, data, receivedDataLen, 0,
-                           (const sockaddr *)&forwardEntry->srcAndDest.source
-                               .address.addr6,
-                           sizeof(sockaddr_in));
+                (const sockaddr *)&forwardEntry->srcAndDest.source.address
+                    .addr6,
+                sizeof(sockaddr_in));
           } while (len == 0);
         }
 
@@ -539,9 +535,9 @@ int UDPForwarder::GetMaxForwardEntries(void) const { return maxForwardEntries; }
 int UDPForwarder::GetUsedForwardEntries(void) const {
   return (int)forwardList.Size();
 }
-UDPForwarderResult UDPForwarder::AddForwardingEntry(
-    SrcAndDest srcAndDest, RakNet::TimeMS timeoutOnNoDataMS,
-    unsigned short *port, const char *forceHostAddress, short socketFamily) {
+UDPForwarderResult UDPForwarder::AddForwardingEntry(SrcAndDest srcAndDest,
+    RakNet::TimeMS timeoutOnNoDataMS, unsigned short *port,
+    const char *forceHostAddress, short socketFamily) {
   (void)socketFamily;
 
   unsigned int insertionIndex;
@@ -562,14 +558,14 @@ UDPForwarderResult UDPForwarder::AddForwardingEntry(
 
     // This doubles the max throughput rate
     sock_opt = 1024 * 256;
-    setsockopt__(fe->socket, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt,
-                 sizeof(sock_opt));
+    setsockopt__(
+        fe->socket, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt, sizeof(sock_opt));
 
     // Immediate hard close. Don't linger the readSocket, or recreating the
     // readSocket quickly on Vista fails.
     sock_opt = 0;
-    setsockopt__(fe->socket, SOL_SOCKET, SO_LINGER, (char *)&sock_opt,
-                 sizeof(sock_opt));
+    setsockopt__(
+        fe->socket, SOL_SOCKET, SO_LINGER, (char *)&sock_opt, sizeof(sock_opt));
 
     listenerSocketAddress.sin_family = AF_INET;
 
@@ -582,7 +578,7 @@ UDPForwarderResult UDPForwarder::AddForwardingEntry(
     }
 
     int ret = bind__(fe->socket, (struct sockaddr *)&listenerSocketAddress,
-                     sizeof(listenerSocketAddress));
+        sizeof(listenerSocketAddress));
     if (ret == -1) {
       RakNet::OP_DELETE(fe, _FILE_AND_LINE_);
       return UDPFORWARDER_BIND_FAILED;
@@ -597,8 +593,8 @@ UDPForwarderResult UDPForwarder::AddForwardingEntry(
     struct addrinfo hints;
     memset(&hints, 0, sizeof(addrinfo)); // make sure the struct is empty
     hints.ai_family = socketFamily;
-    hints.ai_socktype = SOCK_DGRAM;      // UDP sockets
-    hints.ai_flags = AI_PASSIVE;         // fill in my IP for me
+    hints.ai_socktype = SOCK_DGRAM; // UDP sockets
+    hints.ai_flags = AI_PASSIVE; // fill in my IP for me
     struct addrinfo *servinfo = 0, *aip; // will point to the results
 
     RakAssert(forceHostAddress == 0 || forceHostAddress[0] != 0);
@@ -631,14 +627,14 @@ UDPForwarderResult UDPForwarder::AddForwardingEntry(
     // This doubles the max throughput rate
     int sock_opt;
     sock_opt = 1024 * 256;
-    setsockopt__(fe->socket, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt,
-                 sizeof(sock_opt));
+    setsockopt__(
+        fe->socket, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt, sizeof(sock_opt));
 
     // Immediate hard close. Don't linger the readSocket, or recreating the
     // readSocket quickly on Vista fails.
     sock_opt = 0;
-    setsockopt__(fe->socket, SOL_SOCKET, SO_LINGER, (char *)&sock_opt,
-                 sizeof(sock_opt));
+    setsockopt__(
+        fe->socket, SOL_SOCKET, SO_LINGER, (char *)&sock_opt, sizeof(sock_opt));
 #endif // #if RAKNET_SUPPORT_IPV6!=1
 
     //		unsigned int oldSize = forwardList.Size();
@@ -650,11 +646,10 @@ UDPForwarderResult UDPForwarder::AddForwardingEntry(
 
   return UDPFORWARDER_FORWARDING_ALREADY_EXISTS;
 }
-UDPForwarderResult UDPForwarder::StartForwarding(
-    SystemAddress source, SystemAddress destination,
-    RakNet::TimeMS timeoutOnNoDataMS, const char *forceHostAddress,
-    unsigned short socketFamily, unsigned short *forwardingPort,
-    SOCKET *forwardingSocket) {
+UDPForwarderResult UDPForwarder::StartForwarding(SystemAddress source,
+    SystemAddress destination, RakNet::TimeMS timeoutOnNoDataMS,
+    const char *forceHostAddress, unsigned short socketFamily,
+    unsigned short *forwardingPort, SOCKET *forwardingSocket) {
   // Invalid parameters?
   if (timeoutOnNoDataMS == 0 ||
       timeoutOnNoDataMS > UDP_FORWARDER_MAXIMUM_TIMEOUT ||
@@ -689,21 +684,19 @@ UDPForwarderResult UDPForwarder::StartForwarding(
     threadOperationOutgoingMutex.Unlock();
   }
 #else
-  return StartForwardingThreaded(
-      source, destination, timeoutOnNoDataMS, forceHostAddress, socketFamily,
-      srcToDestPort, destToSourcePort, srcToDestSocket, destToSourceSocket);
+  return StartForwardingThreaded(source, destination, timeoutOnNoDataMS,
+      forceHostAddress, socketFamily, srcToDestPort, destToSourcePort,
+      srcToDestSocket, destToSourceSocket);
 #endif
 }
-UDPForwarderResult UDPForwarder::StartForwardingThreaded(
-    SystemAddress source, SystemAddress destination,
-    RakNet::TimeMS timeoutOnNoDataMS, const char *forceHostAddress,
-    unsigned short socketFamily, unsigned short *forwardingPort,
-    SOCKET *forwardingSocket) {
+UDPForwarderResult UDPForwarder::StartForwardingThreaded(SystemAddress source,
+    SystemAddress destination, RakNet::TimeMS timeoutOnNoDataMS,
+    const char *forceHostAddress, unsigned short socketFamily,
+    unsigned short *forwardingPort, SOCKET *forwardingSocket) {
   SrcAndDest srcAndDest(source, destination);
 
-  UDPForwarderResult result =
-      AddForwardingEntry(srcAndDest, timeoutOnNoDataMS, forwardingPort,
-                         forceHostAddress, socketFamily);
+  UDPForwarderResult result = AddForwardingEntry(srcAndDest, timeoutOnNoDataMS,
+      forwardingPort, forceHostAddress, socketFamily);
 
   if (result != UDPFORWARDER_SUCCESS)
     return result;
@@ -718,8 +711,8 @@ UDPForwarderResult UDPForwarder::StartForwardingThreaded(
 
   return UDPFORWARDER_SUCCESS;
 }
-void UDPForwarder::StopForwarding(SystemAddress source,
-                                  SystemAddress destination) {
+void UDPForwarder::StopForwarding(
+    SystemAddress source, SystemAddress destination) {
 #ifdef UDP_FORWARDER_EXECUTE_THREADED
   ThreadOperation threadOperation;
   threadOperation.source = source;
@@ -732,8 +725,8 @@ void UDPForwarder::StopForwarding(SystemAddress source,
   StopForwardingThreaded(source, destination);
 #endif
 }
-void UDPForwarder::StopForwardingThreaded(SystemAddress source,
-                                          SystemAddress destination) {
+void UDPForwarder::StopForwardingThreaded(
+    SystemAddress source, SystemAddress destination) {
   SrcAndDest srcAndDest(destination, source);
 
   bool objectExists;
@@ -764,12 +757,12 @@ RAK_THREAD_DECLARATION(UpdateUDPForwarder) {
             threadOperation.socketFamily, &threadOperation.forwardingPort,
             &threadOperation.forwardingSocket);
         udpForwarder->threadOperationOutgoingMutex.Lock();
-        udpForwarder->threadOperationOutgoingQueue.Push(threadOperation,
-                                                        _FILE_AND_LINE_);
+        udpForwarder->threadOperationOutgoingQueue.Push(
+            threadOperation, _FILE_AND_LINE_);
         udpForwarder->threadOperationOutgoingMutex.Unlock();
       } else {
-        udpForwarder->StopForwardingThreaded(threadOperation.source,
-                                             threadOperation.destination);
+        udpForwarder->StopForwardingThreaded(
+            threadOperation.source, threadOperation.destination);
       }
 
       udpForwarder->threadOperationIncomingMutex.Lock();

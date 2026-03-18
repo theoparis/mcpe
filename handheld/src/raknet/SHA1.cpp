@@ -227,7 +227,7 @@ void CSHA1::Final() {
   for (i = 0; i < 8; i++)
     finalcount[i] =
         (unsigned char)((m_count[(i >= 4 ? 0 : 1)] >> ((3 - (i & 3)) * 8)) &
-                        255); // Endian independent
+            255); // Endian independent
 
   Update((unsigned char *)"\200", 1);
 

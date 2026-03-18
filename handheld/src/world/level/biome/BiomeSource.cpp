@@ -54,7 +54,7 @@ Biome *BiomeSource::getBiome(int x, int z) {
 // float BiomeSource::getTemperature( int x, int z )
 //{
 //	temperatures = temperatureMap->getRegion(temperatures, x, z, 1, 1,
-//tempScale, tempScale, 0.5f); 	return temperatures[0];
+// tempScale, tempScale, 0.5f); 	return temperatures[0];
 // }
 
 Biome **BiomeSource::getBiomeBlock(int x, int z, int w, int h) {
@@ -62,20 +62,20 @@ Biome **BiomeSource::getBiomeBlock(int x, int z, int w, int h) {
   return biomes;
 }
 
-Biome **BiomeSource::getBiomeBlock(Biome **biomes__, int x, int z, int w,
-                                   int h) {
+Biome **BiomeSource::getBiomeBlock(
+    Biome **biomes__, int x, int z, int w, int h) {
   // for (int i = 0; i < w*h; ++i) biomes__[i] = Biome::tundra;
   // const int size = w * h;
   // if (lenBiomes < size) {
   //	//printf("changing to size: %d (was %d). %d, %d (%d, %d)\n", size,
-  //lenBiomes, x, z, w, h); 	if (biomes) delete[] biomes; 	biomes = new
-  //Biome*[size]; 	lenBiomes = size;
+  // lenBiomes, x, z, w, h); 	if (biomes) delete[] biomes; 	biomes = new
+  // Biome*[size]; 	lenBiomes = size;
   // }
 
-  temperatures = temperatureMap->getRegion(temperatures, x, z, w, w, tempScale,
-                                           tempScale, 0.25f);
-  downfalls = downfallMap->getRegion(downfalls, x, z, w, w, downfallScale,
-                                     downfallScale, 0.3333f);
+  temperatures = temperatureMap->getRegion(
+      temperatures, x, z, w, w, tempScale, tempScale, 0.25f);
+  downfalls = downfallMap->getRegion(
+      downfalls, x, z, w, w, downfallScale, downfallScale, 0.3333f);
   noises =
       noiseMap->getRegion(noises, x, z, w, w, noiseScale, noiseScale, 0.588f);
 
@@ -111,8 +111,8 @@ Biome **BiomeSource::getBiomeBlock(Biome **biomes__, int x, int z, int w,
   return biomes;
 }
 
-float *BiomeSource::getTemperatureBlock(/*float* temperatures__, */ int x,
-                                        int z, int w, int h) {
+float *BiomeSource::getTemperatureBlock(
+    /*float* temperatures__, */ int x, int z, int w, int h) {
   // LOGI("gTempBlock: 1\n");
   // const int size = w * h;
   // if (lenTemperatures < size) {
@@ -122,8 +122,8 @@ float *BiomeSource::getTemperatureBlock(/*float* temperatures__, */ int x,
   // }
 
   float *ot = temperatures;
-  temperatures = temperatureMap->getRegion(temperatures, x, z, w, h, tempScale,
-                                           tempScale, 0.25f);
+  temperatures = temperatureMap->getRegion(
+      temperatures, x, z, w, h, tempScale, tempScale, 0.25f);
   noises =
       noiseMap->getRegion(noises, x, z, w, h, noiseScale, noiseScale, 0.588f);
 
@@ -168,5 +168,5 @@ float *BiomeSource::getTemperatureBlock(/*float* temperatures__, */ int x,
 //	//}
 //
 //	downfalls = downfallMap->getRegion(downfalls, x, z, w, w, downfallScale,
-//downfallScale, 0.5f); 	return downfalls;
+// downfallScale, 0.5f); 	return downfalls;
 // }

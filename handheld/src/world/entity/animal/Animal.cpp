@@ -20,7 +20,7 @@ bool Animal::canSpawn() {
   int yt = Mth::floor(bb.y0);
   int zt = Mth::floor(z);
   return level->getTile(xt, yt - 1, zt) == ((Tile *)Tile::grass)->id &&
-         level->getRawBrightness(xt, yt, zt) > 8 && super::canSpawn();
+      level->getRawBrightness(xt, yt, zt) > 8 && super::canSpawn();
 }
 
 int Animal::getAmbientSoundInterval() {
@@ -54,9 +54,9 @@ Entity *Animal::findAttackTarget() {
   // } else {
   //	/*			if (getAge() == 0) {
   //	List<Entity> players = level.getEntitiesOfClass(Player.class,
-  //bb.expand(r, r, r)); 	for (int i = 0; i < players.size(); i++) { 	Player p =
-  //(Player) players.get(i); 	if (p.getSelectedItem() != null &&
-  //this.isFood(p.getSelectedItem())) { 	return p;
+  // bb.expand(r, r, r)); 	for (int i = 0; i < players.size(); i++) {
+  // Player p = (Player) players.get(i); 	if (p.getSelectedItem() != null
+  //&& this.isFood(p.getSelectedItem())) { 	return p;
   //	}
   //	}
   //	} else if (getAge() > 0) {

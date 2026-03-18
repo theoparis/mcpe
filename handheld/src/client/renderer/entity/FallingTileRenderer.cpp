@@ -11,8 +11,8 @@ FallingTileRenderer::FallingTileRenderer() {
 
 FallingTileRenderer::~FallingTileRenderer() { delete tileRenderer; }
 
-void FallingTileRenderer::render(Entity *e, float x, float y, float z,
-                                 float rot, float a) {
+void FallingTileRenderer::render(
+    Entity *e, float x, float y, float z, float rot, float a) {
   FallingTile *tile = (FallingTile *)e;
 
   glPushMatrix();
@@ -25,7 +25,7 @@ void FallingTileRenderer::render(Entity *e, float x, float y, float z,
 
   if (tt != NULL) {
     tileRenderer->renderBlock(tt, level, Mth::floor(tile->x),
-                              Mth::floor(tile->y), Mth::floor(tile->z));
+        Mth::floor(tile->y), Mth::floor(tile->z));
   }
   glPopMatrix();
 }

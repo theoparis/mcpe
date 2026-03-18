@@ -3,7 +3,7 @@
 
 const int LEVEL_HEIGHT = 128;
 const int CHUNK_CACHE_WIDTH = 16; // in chunks
-const int CHUNK_WIDTH = 16;       // in blocks
+const int CHUNK_WIDTH = 16; // in blocks
 const int CHUNK_DEPTH = 16;
 const int LEVEL_WIDTH = CHUNK_CACHE_WIDTH * CHUNK_WIDTH;
 const int LEVEL_DEPTH = CHUNK_CACHE_WIDTH * CHUNK_DEPTH;

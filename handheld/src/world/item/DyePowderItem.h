@@ -45,7 +45,7 @@ public:
 
   ///*@Override*/
   bool useOn(ItemInstance *itemInstance, Player *player, Level *level, int x,
-             int y, int z, int face, float clickX, float clickY, float clickZ);
+      int y, int z, int face, float clickX, float clickY, float clickZ);
 
   ///*@Override*/
   void interactEnemy(ItemInstance *itemInstance, Mob *mob);

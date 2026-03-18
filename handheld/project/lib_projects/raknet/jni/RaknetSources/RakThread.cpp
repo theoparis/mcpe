@@ -18,11 +18,11 @@ using namespace RakNet;
 #endif
 
 #if defined(_WIN32_WCE)
-int RakThread::Create(LPTHREAD_START_ROUTINE start_address, void *arglist,
-                      int priority)
+int RakThread::Create(
+    LPTHREAD_START_ROUTINE start_address, void *arglist, int priority)
 #elif defined(_WIN32)
-int RakThread::Create(unsigned __stdcall start_address(void *), void *arglist,
-                      int priority)
+int RakThread::Create(
+    unsigned __stdcall start_address(void *), void *arglist, int priority)
 
 #else
 int RakThread::Create(void *start_address(void *), void *arglist, int priority)
@@ -34,11 +34,11 @@ int RakThread::Create(void *start_address(void *), void *arglist, int priority)
 
 #if defined(_WIN32_WCE)
   threadHandle = CreateThread(NULL, MAX_ALLOCA_STACK_ALLOCATION * 2,
-                              start_address, arglist, 0, (DWORD *)&threadID);
+      start_address, arglist, 0, (DWORD *)&threadID);
   SetThreadPriority(threadHandle, priority);
 #else
   threadHandle = (HANDLE)_beginthreadex(NULL, MAX_ALLOCA_STACK_ALLOCATION * 2,
-                                        start_address, arglist, 0, &threadID);
+      start_address, arglist, 0, &threadID);
 #endif
   SetThreadPriority(threadHandle, priority);
 

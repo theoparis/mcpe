@@ -48,7 +48,7 @@ public:
 
     int belowTile = level->getTile(x, y - 1, z);
     if ((belowTile != ((Tile *)Tile::grass)->id &&
-         belowTile != Tile::dirt->id) ||
+            belowTile != Tile::dirt->id) ||
         y >= Level::DEPTH - treeHeight - 1)
       return false;
 

@@ -1,4 +1,5 @@
 #include "RolledSelectionListV.h"
+#include "../../../App.h"
 #include "../../../platform/input/Mouse.h"
 #include "../../../util/Mth.h"
 #include "../../Minecraft.h"
@@ -6,9 +7,26 @@
 #include "../../renderer/Textures.h"
 #include "../../renderer/gles.h"
 
+namespace {
+GraphicsQuadColor quadColor(int rgb, int alpha = 255) {
+  GraphicsQuadColor out;
+  out.r = (float)((rgb >> 16) & 0xff) / 255.0f;
+  out.g = (float)((rgb >> 8) & 0xff) / 255.0f;
+  out.b = (float)(rgb & 0xff) / 255.0f;
+  out.a = (float)alpha / 255.0f;
+  return out;
+}
+
+void setUniformColor(GraphicsQuad &quad, const GraphicsQuadColor &color) {
+  quad.topLeft = color;
+  quad.topRight = color;
+  quad.bottomRight = color;
+  quad.bottomLeft = color;
+}
+} // namespace
+
 RolledSelectionListV::RolledSelectionListV(Minecraft *minecraft_, int width_,
-                                           int height_, int x0_, int x1_,
-                                           int y0_, int y1_, int itemHeight_)
+    int height_, int x0_, int x1_, int y0_, int y1_, int itemHeight_)
     : minecraft(minecraft_), width(width_), height(height_), x0((float)x0_),
       x1((float)x1_), y0((float)y0_), y1((float)y1_), itemHeight(itemHeight_),
       selectionY(-1), lastSelectionTime(0), lastSelection(-1),
@@ -29,8 +47,8 @@ void RolledSelectionListV::setComponentSelected(bool selected) {
   _componentSelected = selected;
 }
 
-void RolledSelectionListV::setRenderHeader(bool _renderHeader,
-                                           int _headerHeight) {
+void RolledSelectionListV::setRenderHeader(
+    bool _renderHeader, int _headerHeight) {
   doRenderHeader = _renderHeader;
   headerHeight = _headerHeight;
 
@@ -281,14 +299,29 @@ void RolledSelectionListV::renderHoleBackground(
   minecraft->textures->loadAndBindTexture("gui/background.png");
   glColor4f2(1.0f, 1, 1, 1);
   float s = 32;
-  t.begin();
-  t.color(0x505050, a1);
-  t.vertexUV(0, y1, 0, 0, y1 / s);
-  t.vertexUV((float)width, y1, 0, width / s, y1 / s);
-  t.color(0x505050, a0);
-  t.vertexUV((float)width, y0, 0, width / s, y0 / s);
-  t.vertexUV(0, y0, 0, 0, y0 / s);
-  t.draw();
+  GraphicsQuad holeQuad;
+  holeQuad.x = 0.0f;
+  holeQuad.y = y0;
+  holeQuad.width = (float)width;
+  holeQuad.height = y1 - y0;
+  holeQuad.u0 = 0.0f;
+  holeQuad.v0 = y0 / s;
+  holeQuad.u1 = width / s;
+  holeQuad.v1 = y1 / s;
+  holeQuad.topLeft = quadColor(0x505050, a0);
+  holeQuad.topRight = quadColor(0x505050, a0);
+  holeQuad.bottomRight = quadColor(0x505050, a1);
+  holeQuad.bottomLeft = quadColor(0x505050, a1);
+  if (!tryDrawQuad(holeQuad)) {
+    t.begin();
+    t.color(0x505050, a1);
+    t.vertexUV(0, y1, 0, 0, y1 / s);
+    t.vertexUV((float)width, y1, 0, width / s, y1 / s);
+    t.color(0x505050, a0);
+    t.vertexUV((float)width, y0, 0, width / s, y0 / s);
+    t.vertexUV(0, y0, 0, 0, y0 / s);
+    t.draw();
+  }
   // printf("x, y, x1, y1: %d, %d, %d, %d\n", 0, (int)y0, width, (int)y1);
 }
 
@@ -314,12 +347,24 @@ void RolledSelectionListV::renderDirtBackground() {
   float s = 32;
   const float uvy = (float)((int)yo);
   Tesselator &t = Tesselator::instance;
-  t.begin();
-  t.color(0x202020);
-  t.vertexUV(x0, by1, 0, x0 / s, (by1 + uvy) / s);
-  t.vertexUV(x1, by1, 0, x1 / s, (by1 + uvy) / s);
-  t.vertexUV(x1, by0, 0, x1 / s, (by0 + uvy) / s);
-  t.vertexUV(x0, by0, 0, x0 / s, (by0 + uvy) / s);
-  t.draw();
+  GraphicsQuad backgroundQuad;
+  backgroundQuad.x = x0;
+  backgroundQuad.y = by0;
+  backgroundQuad.width = x1 - x0;
+  backgroundQuad.height = by1 - by0;
+  backgroundQuad.u0 = x0 / s;
+  backgroundQuad.v0 = (by0 + uvy) / s;
+  backgroundQuad.u1 = x1 / s;
+  backgroundQuad.v1 = (by1 + uvy) / s;
+  setUniformColor(backgroundQuad, quadColor(0x202020));
+  if (!tryDrawQuad(backgroundQuad)) {
+    t.begin();
+    t.color(0x202020);
+    t.vertexUV(x0, by1, 0, x0 / s, (by1 + uvy) / s);
+    t.vertexUV(x1, by1, 0, x1 / s, (by1 + uvy) / s);
+    t.vertexUV(x1, by0, 0, x1 / s, (by0 + uvy) / s);
+    t.vertexUV(x0, by0, 0, x0 / s, (by0 + uvy) / s);
+    t.draw();
+  }
   // LOGI("%f, %f - %f, %f\n", x0, by0, x1, by1);
 }

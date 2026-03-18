@@ -21,8 +21,7 @@ void PigZombie::tick() {
     stunedTime--;
   if (playAngrySoundIn > 0) {
     if (--playAngrySoundIn == 0) {
-      level->playSound(
-          x, y, z, "mob.zombiepig.zpigangry", getSoundVolume() * 2,
+      level->playSound(x, y, z, "mob.zombiepig.zpigangry", getSoundVolume() * 2,
           ((random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f) * 1.8f);
     }
   }
@@ -33,7 +32,7 @@ std::string PigZombie::getTexture() { return "mob/pigzombie.png"; }
 
 bool PigZombie::canSpawn() {
   return level->difficulty > Difficulty::PEACEFUL &&
-         level->isUnobstructed(bb) && level->getCubes(this, bb).empty();
+      level->isUnobstructed(bb) && level->getCubes(this, bb).empty();
 }
 
 void PigZombie::addAdditonalSaveData(CompoundTag *entityTag) {

@@ -16,8 +16,8 @@ class Particle : public Entity {
 public:
   static float xOff, yOff, zOff;
 
-  Particle(Level *level, float x, float y, float z, float xa, float ya,
-           float za);
+  Particle(
+      Level *level, float x, float y, float z, float xa, float ya, float za);
 
   virtual ~Particle() {}
 
@@ -26,7 +26,7 @@ public:
 
   virtual void tick();
   virtual void render(Tesselator &t, float a, float xa, float ya, float za,
-                      float xa2, float za2);
+      float xa2, float za2);
 
   virtual int getParticleTexture();
 

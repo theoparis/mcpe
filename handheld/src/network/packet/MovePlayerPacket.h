@@ -10,8 +10,8 @@ public:
 
   MovePlayerPacket() {}
 
-  MovePlayerPacket(int entityId, float x, float y, float z, float xRot,
-                   float yRot)
+  MovePlayerPacket(
+      int entityId, float x, float y, float z, float xRot, float yRot)
       : entityId(entityId), x(x), y(y), z(z), xRot(xRot), yRot(yRot) {}
 
   void write(RakNet::BitStream *bitStream) {

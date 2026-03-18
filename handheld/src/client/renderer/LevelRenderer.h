@@ -46,11 +46,11 @@ public:
   void renderEntities(Vec3 cam, Culler *culler, float a);
   void renderSameAsLast(int layer, float alpha);
   void renderHit(Player *player, const HitResult &h, int mode,
-                 /*ItemInstance*/ void *inventoryItem, float a);
+      /*ItemInstance*/ void *inventoryItem, float a);
   void renderHitOutline(Player *player, const HitResult &h, int mode,
-                        /*ItemInstance*/ void *inventoryItem, float a);
+      /*ItemInstance*/ void *inventoryItem, float a);
   void renderHitSelect(Player *player, const HitResult &h, int mode,
-                       /*ItemInstance*/ void *inventoryItem, float a);
+      /*ItemInstance*/ void *inventoryItem, float a);
   void entityAdded(Entity *entity);
 
   void tick();
@@ -64,9 +64,9 @@ public:
   // void addParticle(ParticleType::Id name, float x, float y, float z, float
   // xa, float ya, float za, int data);
   void addParticle(const std::string &name, float x, float y, float z, float xa,
-                   float ya, float za, int data);
+      float ya, float za, int data);
   void playSound(const std::string &name, float x, float y, float z,
-                 float volume, float pitch);
+      float volume, float pitch);
   void takePicture(TripodCamera *cam, Entity *entity);
 
   void levelEvent(Player *source, int type, int x, int y, int z, int data);

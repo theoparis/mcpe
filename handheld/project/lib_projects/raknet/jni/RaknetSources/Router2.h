@@ -98,11 +98,9 @@ public:
   // --------------------------------------------------------------------------------------------
   virtual PluginReceiveResult OnReceive(Packet *packet);
   virtual void Update(void);
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
-  virtual void OnFailedConnectionAttempt(
-      Packet *packet,
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnFailedConnectionAttempt(Packet *packet,
       PI2_FailedConnectionAttemptReason failedConnectionAttemptReason);
   virtual void OnRakPeerShutdown(void);
 
@@ -167,10 +165,9 @@ protected:
   bool OnForwardingSuccess(Packet *packet);
   int GetLargestPingAmongConnectedSystems(void) const;
   void ReturnToUser(MessageID messageId, RakNetGUID endpointGuid,
-                    const SystemAddress &systemAddress,
-                    bool wasGeneratedLocally);
-  bool ConnectInternal(RakNetGUID endpointGuid,
-                       bool returnConnectionLostOnFailure);
+      const SystemAddress &systemAddress, bool wasGeneratedLocally);
+  bool ConnectInternal(
+      RakNetGUID endpointGuid, bool returnConnectionLostOnFailure);
 
   UDPForwarder *udpForwarder;
   int maximumForwardingRequests;
@@ -185,17 +182,16 @@ protected:
   void ClearMinipunches(void);
   void ClearForwardedConnections(void);
   void ClearAll(void);
-  int ReturnFailureOnCannotForward(RakNetGUID sourceGuid,
-                                   RakNetGUID endpointGuid);
-  void SendFailureOnCannotForward(RakNetGUID sourceGuid,
-                                  RakNetGUID endpointGuid);
+  int ReturnFailureOnCannotForward(
+      RakNetGUID sourceGuid, RakNetGUID endpointGuid);
+  void SendFailureOnCannotForward(
+      RakNetGUID sourceGuid, RakNetGUID endpointGuid);
   void SendForwardingSuccess(MessageID messageId, RakNetGUID sourceGuid,
-                             RakNetGUID endpointGuid,
-                             unsigned short sourceToDstPort);
-  void SendOOBFromRakNetPort(OutOfBandIdentifiers oob, BitStream *extraData,
-                             SystemAddress sa);
-  void SendOOBFromSpecifiedSocket(OutOfBandIdentifiers oob, SystemAddress sa,
-                                  SOCKET socket);
+      RakNetGUID endpointGuid, unsigned short sourceToDstPort);
+  void SendOOBFromRakNetPort(
+      OutOfBandIdentifiers oob, BitStream *extraData, SystemAddress sa);
+  void SendOOBFromSpecifiedSocket(
+      OutOfBandIdentifiers oob, SystemAddress sa, SOCKET socket);
   void SendOOBMessages(MiniPunchRequest *mpr);
 
   Router2DebugInterface *debugInterface;

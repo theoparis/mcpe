@@ -21,11 +21,9 @@ using namespace RakNet;
 STATIC_FACTORY_DEFINITIONS(EmailSender, EmailSender);
 
 const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
-                              const char *sender, const char *recipient,
-                              const char *senderName, const char *recipientName,
-                              const char *subject, const char *body,
-                              FileList *attachedFiles, bool doPrintf,
-                              const char *password) {
+    const char *sender, const char *recipient, const char *senderName,
+    const char *recipientName, const char *subject, const char *body,
+    FileList *attachedFiles, bool doPrintf, const char *password) {
   RakNet::Packet *packet;
   char query[1024];
   TCPInterface tcpInterface;
@@ -97,8 +95,8 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
     bs.Write(&zero, 1);
     // bs.Write("not.my.real.password",(const unsigned
     // int)strlen("not.my.real.password"));
-    TCPInterface::Base64Encoding((const char *)bs.GetData(),
-                                 bs.GetNumberOfBytesUsed(), outputData);
+    TCPInterface::Base64Encoding(
+        (const char *)bs.GetData(), bs.GetNumberOfBytesUsed(), outputData);
     sprintf(query, "AUTH PLAIN %s", outputData);
     tcpInterface.Send(query, (unsigned int)strlen(query), emailServer, false);
     response = GetResponse(&tcpInterface, emailServer, doPrintf);
@@ -124,8 +122,8 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
   if (response != 0)
     return response;
 
-  tcpInterface.Send("DATA\r\n", (unsigned int)strlen("DATA\r\n"), emailServer,
-                    false);
+  tcpInterface.Send(
+      "DATA\r\n", (unsigned int)strlen("DATA\r\n"), emailServer, false);
 
   // Wait for 354...
 
@@ -162,12 +160,12 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
 
   if (attachedFiles && attachedFiles->fileList.Size()) {
     sprintf(query, "Content-type: multipart/mixed; BOUNDARY=\"%s\"\r\n\r\n",
-            boundary);
+        boundary);
     tcpInterface.Send(query, (unsigned int)strlen(query), emailServer, false);
 
     sprintf(query,
-            "This is a multi-part message in MIME format.\r\n\r\n--%s\r\n",
-            boundary);
+        "This is a multi-part message in MIME format.\r\n\r\n--%s\r\n",
+        boundary);
     tcpInterface.Send(query, (unsigned int)strlen(query), emailServer, false);
   }
 
@@ -196,7 +194,7 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
     // Having to process .. is a bug in the mail server - the spec says ONLY
     // \r\n.\r\n should be transformed
     else if (i <= bodyLength - 3 && body[i - 1] == '\n' && body[i + 0] == '.' &&
-             body[i + 1] == '.' && body[i + 2] == '\r' && body[i + 3] == '\n') {
+        body[i + 1] == '.' && body[i + 2] == '\r' && body[i + 3] == '\n') {
       newBody[j++] = '.';
       newBody[j++] = '.';
       newBody[j++] = '.';
@@ -207,7 +205,7 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
     // Transform \n . \n into \n . . \r \n (this is a bug in the mail server -
     // the spec says do not count \n alone but it does)
     else if (i < bodyLength - 1 && body[i - 1] == '\n' && body[i + 0] == '.' &&
-             body[i + 1] == '\n') {
+        body[i + 1] == '\n') {
       newBody[j++] = '.';
       newBody[j++] = '.';
       newBody[j++] = '\r';
@@ -219,7 +217,7 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
     // process .. is a bug too - because the spec says ONLY \r\n.\r\n should be
     // transformed
     else if (i <= bodyLength - 2 && body[i - 1] == '\n' && body[i + 0] == '.' &&
-             body[i + 1] == '.' && body[i + 2] == '\n') {
+        body[i + 1] == '.' && body[i + 2] == '\n') {
       newBody[j++] = '.';
       newBody[j++] = '.';
       newBody[j++] = '.';
@@ -246,21 +244,21 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
       tcpInterface.Send(query, (unsigned int)strlen(query), emailServer, false);
 
       sprintf(query,
-              "Content-Type: APPLICATION/Octet-Stream; SizeOnDisk=%i; "
-              "name=\"%s\"\r\nContent-Transfer-Encoding: "
-              "BASE64\r\nContent-Description: %s\r\n\r\n",
-              attachedFiles->fileList[i].dataLengthBytes,
-              attachedFiles->fileList[i].filename.C_String(),
-              attachedFiles->fileList[i].filename.C_String());
+          "Content-Type: APPLICATION/Octet-Stream; SizeOnDisk=%i; "
+          "name=\"%s\"\r\nContent-Transfer-Encoding: "
+          "BASE64\r\nContent-Description: %s\r\n\r\n",
+          attachedFiles->fileList[i].dataLengthBytes,
+          attachedFiles->fileList[i].filename.C_String(),
+          attachedFiles->fileList[i].filename.C_String());
       tcpInterface.Send(query, (unsigned int)strlen(query), emailServer, false);
 
       newBody = (char *)rakMalloc_Ex(
           (size_t)(attachedFiles->fileList[i].dataLengthBytes * 3) / 2,
           _FILE_AND_LINE_);
 
-      outputOffset = TCPInterface::Base64Encoding(
-          attachedFiles->fileList[i].data,
-          (int)attachedFiles->fileList[i].dataLengthBytes, newBody);
+      outputOffset =
+          TCPInterface::Base64Encoding(attachedFiles->fileList[i].data,
+              (int)attachedFiles->fileList[i].dataLengthBytes, newBody);
 
       // Send the base64 mapped file.
       tcpInterface.Send(newBody, outputOffset, emailServer, false);
@@ -278,8 +276,8 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
   if (response != 0)
     return response;
 
-  tcpInterface.Send("QUIT\r\n", (unsigned int)strlen("QUIT\r\n"), emailServer,
-                    false);
+  tcpInterface.Send(
+      "QUIT\r\n", (unsigned int)strlen("QUIT\r\n"), emailServer, false);
 
   RakSleep(30);
   if (doPrintf) {
@@ -294,14 +292,13 @@ const char *EmailSender::Send(const char *hostAddress, unsigned short hostPort,
 }
 
 const char *EmailSender::GetResponse(TCPInterface *tcpInterface,
-                                     const SystemAddress &emailServer,
-                                     bool doPrintf) {
+    const SystemAddress &emailServer, bool doPrintf) {
   RakNet::Packet *packet;
   RakNet::TimeMS timeout;
   timeout = RakNet::GetTimeMS() + 5000;
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (1) {
     if (tcpInterface->HasLostConnection() == emailServer)
@@ -330,7 +327,7 @@ const char *EmailSender::GetResponse(TCPInterface *tcpInterface,
 #if OPEN_SSL_CLIENT_SUPPORT == 1
       if (strstr((const char *)packet->data, "250-STARTTLS")) {
         tcpInterface->Send("STARTTLS\r\n", (unsigned int)strlen("STARTTLS\r\n"),
-                           packet->systemAddress, false);
+            packet->systemAddress, false);
         return "CONTINUE";
       }
 #endif

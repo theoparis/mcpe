@@ -140,10 +140,10 @@ const Options::Option Options::Option::MUSIC(0, "options.music", true, false),
     Options::Option::LEFT_HANDED(15, "options.lefthanded", false, true),
     Options::Option::USE_TOUCHSCREEN(16, "options.usetouchscreen", false, true),
     Options::Option::USE_TOUCH_JOYPAD(17, "options.usetouchpad", false, true),
-    Options::Option::DESTROY_VIBRATION(18, "options.destroyvibration", false,
-                                       true),
-    Options::Option::PIXELS_PER_MILLIMETER(19, "options.pixelspermilimeter",
-                                           true, false);
+    Options::Option::DESTROY_VIBRATION(
+        18, "options.destroyvibration", false, true),
+    Options::Option::PIXELS_PER_MILLIMETER(
+        19, "options.pixelspermilimeter", true, false);
 
 /* private */
 const float Options::SOUND_MIN_VALUE = 0.0f;
@@ -157,19 +157,19 @@ const float Options::PIXELS_PER_MILLIMETER_MAX_VALUE = 4.0f;
 const int DIFFICULY_LEVELS[] = {Difficulty::PEACEFUL, Difficulty::NORMAL};
 
 /*private*/
-const char *Options::RENDER_DISTANCE_NAMES[] = {
-    "options.renderDistance.far", "options.renderDistance.normal",
-    "options.renderDistance.short", "options.renderDistance.tiny"};
+const char *Options::RENDER_DISTANCE_NAMES[] = {"options.renderDistance.far",
+    "options.renderDistance.normal", "options.renderDistance.short",
+    "options.renderDistance.tiny"};
 
 /*private*/
-const char *Options::DIFFICULTY_NAMES[] = {
-    "options.difficulty.peaceful", "options.difficulty.easy",
-    "options.difficulty.normal", "options.difficulty.hard"};
+const char *Options::DIFFICULTY_NAMES[] = {"options.difficulty.peaceful",
+    "options.difficulty.easy", "options.difficulty.normal",
+    "options.difficulty.hard"};
 
 /*private*/
-const char *Options::GUI_SCALE[] = {
-    "options.guiScale.auto", "options.guiScale.small",
-    "options.guiScale.normal", "options.guiScale.large"};
+const char *Options::GUI_SCALE[] = {"options.guiScale.auto",
+    "options.guiScale.small", "options.guiScale.normal",
+    "options.guiScale.large"};
 
 void Options::update() {
   viewDistance = 2;
@@ -298,30 +298,30 @@ void Options::load() {
 void Options::save() {
   StringVector stringVec;
   // Game
-  addOptionToSaveOutput(stringVec, OptionStrings::Multiplayer_ServerVisible,
-                        serverVisible);
-  addOptionToSaveOutput(stringVec, OptionStrings::Game_DifficultyLevel,
-                        difficulty);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Multiplayer_ServerVisible, serverVisible);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Game_DifficultyLevel, difficulty);
 
   // Input
-  addOptionToSaveOutput(stringVec, OptionStrings::Controls_InvertMouse,
-                        invertYMouse);
-  addOptionToSaveOutput(stringVec, OptionStrings::Controls_Sensitivity,
-                        sensitivity);
-  addOptionToSaveOutput(stringVec, OptionStrings::Controls_IsLefthanded,
-                        isLeftHanded);
-  addOptionToSaveOutput(stringVec, OptionStrings::Controls_UseTouchScreen,
-                        useTouchScreen);
-  addOptionToSaveOutput(stringVec, OptionStrings::Controls_UseTouchJoypad,
-                        isJoyTouchArea);
-  addOptionToSaveOutput(stringVec, OptionStrings::Controls_FeedbackVibration,
-                        destroyVibration);
-  addOptionToSaveOutput(stringVec, OptionStrings::Graphics_Fancy,
-                        fancyGraphics);
-  addOptionToSaveOutput(stringVec, OptionStrings::Graphics_AmbientOcclusion,
-                        ambientOcclusion);
-  addOptionToSaveOutput(stringVec, OptionStrings::Graphics_ViewDistance,
-                        viewDistance);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Controls_InvertMouse, invertYMouse);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Controls_Sensitivity, sensitivity);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Controls_IsLefthanded, isLeftHanded);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Controls_UseTouchScreen, useTouchScreen);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Controls_UseTouchJoypad, isJoyTouchArea);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Controls_FeedbackVibration, destroyVibration);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Graphics_Fancy, fancyGraphics);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Graphics_AmbientOcclusion, ambientOcclusion);
+  addOptionToSaveOutput(
+      stringVec, OptionStrings::Graphics_ViewDistance, viewDistance);
 
   optionsFile.save(stringVec);
   //
@@ -368,20 +368,20 @@ void Options::save() {
   //    e.printStackTrace();
   //}
 }
-void Options::addOptionToSaveOutput(StringVector &stringVector,
-                                    std::string name, bool boolValue) {
+void Options::addOptionToSaveOutput(
+    StringVector &stringVector, std::string name, bool boolValue) {
   std::stringstream ss;
   ss << name << ":" << boolValue;
   stringVector.push_back(ss.str());
 }
-void Options::addOptionToSaveOutput(StringVector &stringVector,
-                                    std::string name, float floatValue) {
+void Options::addOptionToSaveOutput(
+    StringVector &stringVector, std::string name, float floatValue) {
   std::stringstream ss;
   ss << name << ":" << floatValue;
   stringVector.push_back(ss.str());
 }
-void Options::addOptionToSaveOutput(StringVector &stringVector,
-                                    std::string name, int intValue) {
+void Options::addOptionToSaveOutput(
+    StringVector &stringVector, std::string name, int intValue) {
   std::stringstream ss;
   ss << name << ":" << intValue;
   stringVector.push_back(ss.str());

@@ -22,8 +22,8 @@ public:
   bool tesselateTorchInWorld(Tile *tt, int x, int y, int z);
   bool tesselateLadderInWorld(Tile *tt, int x, int y, int z);
   bool tesselateCactusInWorld(Tile *tt, int x, int y, int z);
-  bool tesselateCactusInWorld(Tile *tt, int x, int y, int z, float r, float g,
-                              float b);
+  bool tesselateCactusInWorld(
+      Tile *tt, int x, int y, int z, float r, float g, float b);
   bool tesselateCrossInWorld(Tile *tt, int x, int y, int z);
   bool tesselateStemInWorld(Tile *_tt, int x, int y, int z);
   bool tesselateWaterInWorld(Tile *tt, int x, int y, int z);
@@ -35,25 +35,23 @@ public:
   bool tesselateBedInWorld(Tile *tt, int x, int y, int z);
   bool tesselateRowInWorld(Tile *tt, int x, int y, int z);
 
-  void tesselateTorch(Tile *tt, float x, float y, float z, float xxa,
-                      float zza);
+  void tesselateTorch(
+      Tile *tt, float x, float y, float z, float xxa, float zza);
   void tesselateCrossTexture(Tile *tt, int data, float x, float y, float z);
-  void tesselateStemTexture(Tile *tt, int data, float h, float x, float y,
-                            float z);
-  void tesselateStemDirTexture(Tile *tt, int data, int dir, float h, float x,
-                               float y, float z);
+  void tesselateStemTexture(
+      Tile *tt, int data, float h, float x, float y, float z);
+  void tesselateStemDirTexture(
+      Tile *tt, int data, int dir, float h, float x, float y, float z);
   void tesselateRowTexture(Tile *tt, int data, float x, float y, float z);
 
   void renderBlock(Tile *tt, LevelSource *level, int x, int y, int z);
 
   /*public*/
   bool tesselateBlockInWorld(Tile *tt, int x, int y, int z);
-  bool tesselateBlockInWorld(Tile *tt, int x, int y, int z, float r, float g,
-                             float b);
+  bool tesselateBlockInWorld(
+      Tile *tt, int x, int y, int z, float r, float g, float b);
   bool tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX, int pY,
-                                                  int pZ, float pBaseRed,
-                                                  float pBaseGreen,
-                                                  float pBaseBlue);
+      int pZ, float pBaseRed, float pBaseGreen, float pBaseBlue);
 
   void renderFaceDown(Tile *tt, float x, float y, float z, int tex);
   void renderFaceUp(Tile *tt, float x, float y, float z, int tex);

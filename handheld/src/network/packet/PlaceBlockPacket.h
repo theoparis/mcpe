@@ -12,8 +12,8 @@ public:
 
   PlaceBlockPacket() {}
 
-  PlaceBlockPacket(int entityId, int x, int y, int z, int facing, int blockId,
-                   int blockData)
+  PlaceBlockPacket(
+      int entityId, int x, int y, int z, int facing, int blockId, int blockData)
       : entityId(entityId), x(x), y((unsigned char)(y & 0xff)), z(z),
         facing((unsigned char)(facing & 0xff)),
         blockId((unsigned char)(blockId & 0xff)),

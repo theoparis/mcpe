@@ -11,15 +11,13 @@
 #include "../level/tile/StemTile.h"
 #include "../level/tile/Tile.h"
 
-const std::string DyePowderItem::COLOR_DESCS[] = {
-    "black",     "red",     "green",  "brown", "blue", "purple",
-    "cyan",      "silver",  "gray",   "pink",  "lime", "yellow",
-    "lightBlue", "magenta", "orange", "white"};
+const std::string DyePowderItem::COLOR_DESCS[] = {"black", "red", "green",
+    "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime",
+    "yellow", "lightBlue", "magenta", "orange", "white"};
 
 const int DyePowderItem::COLOR_RGB[] = {0x1e1b1b, 0xb3312c, 0x3b511a, 0x51301a,
-                                        0x253192, 0x7b2fbe, 0x287697, 0x287697,
-                                        0x434343, 0xd88198, 0x41cd34, 0xdecf2a,
-                                        0x6689d3, 0xc354cd, 0xeb8844, 0xf0f0f0};
+    0x253192, 0x7b2fbe, 0x287697, 0x287697, 0x434343, 0xd88198, 0x41cd34,
+    0xdecf2a, 0x6689d3, 0xc354cd, 0xeb8844, 0xf0f0f0};
 
 DyePowderItem::DyePowderItem(int id) : super(id) {
   setStackedByData(true);
@@ -31,15 +29,15 @@ int DyePowderItem::getIcon(int itemAuxValue) {
   return icon + (colorValue % 8) * ICON_COLUMNS + (colorValue / 8);
 }
 
-std::string
-DyePowderItem::getDescriptionId(const ItemInstance *itemInstance) const {
+std::string DyePowderItem::getDescriptionId(
+    const ItemInstance *itemInstance) const {
   int colorValue = Mth::clamp(itemInstance->getAuxValue(), 0, 15);
   return super::getDescriptionId() + "." + COLOR_DESCS[colorValue];
 }
 
 bool DyePowderItem::useOn(ItemInstance *itemInstance, Player *player,
-                          Level *level, int x, int y, int z, int face,
-                          float clickX, float clickY, float clickZ) {
+    Level *level, int x, int y, int z, int face, float clickX, float clickY,
+    float clickZ) {
   // if (!player->mayBuild(x, y, z)) return false;
 
   if (itemInstance->getAuxValue() == WHITE) {
@@ -61,7 +59,7 @@ bool DyePowderItem::useOn(ItemInstance *itemInstance, Player *player,
       return true;
       }*/
     else if (tile ==
-             Tile::melonStem->id /* || tile == Tile::pumpkinStem->id*/) {
+        Tile::melonStem->id /* || tile == Tile::pumpkinStem->id*/) {
       if (!level->isClientSide) {
         ((StemTile *)Tile::tiles[tile])->growCropsToMax(level, x, y, z);
       }

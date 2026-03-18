@@ -17,7 +17,8 @@ class Chunk {
 
 public:
   Chunk(Level *level_, int x, int y, int z, int size, int lists_,
-        GLuint *ptrBuf = NULL);
+      GLuint *ptrBuf = NULL);
+  ~Chunk();
 
   void setPos(int x, int y, int z);
 
@@ -35,6 +36,8 @@ public:
   int getList(int layer);
 
   RenderChunk &getRenderChunk(int layer);
+  RenderChunk &getGreedyRenderChunk();
+  RenderChunk &getLodRenderChunk();
 
   bool isEmpty();
   void cull(Culler *culler);
@@ -64,6 +67,8 @@ public:
   bool skyLit;
 
   RenderChunk renderChunk[NumLayers];
+  RenderChunk greedyRenderChunk;
+  RenderChunk lodRenderChunk;
 
 private:
   Tesselator &t;

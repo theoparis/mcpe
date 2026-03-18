@@ -18,11 +18,11 @@ DynDnsResult resultTable[13] = {
     // See http://www.dyndns.com/developers/specs/flow.pdf
     {"DNS update success.\nPlease wait up to 60 seconds for the change to take "
      "effect.\n",
-     "good",
-     RC_SUCCESS}, // Even with success, it takes time for the cache to update!
+        "good", RC_SUCCESS}, // Even with success, it takes time for the cache
+                             // to update!
     {"No change", "nochg", RC_NO_CHANGE},
     {"Host has been blocked. You will need to contact DynDNS to reenable.",
-     "abuse", RC_ABUSE},
+        "abuse", RC_ABUSE},
     {"Useragent is blocked", "badagent", RC_BAD_AGENT},
     {"Username/password pair bad", "badauth", RC_BAD_AUTH},
     {"Bad system parameter", "badsys", RC_BAD_SYS},
@@ -51,7 +51,7 @@ void DynDNS::Stop(void) {
 
 // newIPAddress is optional - if left out, DynDNS will use whatever it receives
 void DynDNS::UpdateHostIP(const char *dnsHost, const char *newIPAddress,
-                          const char *usernameAndPassword) {
+    const char *usernameAndPassword) {
   myIPStr[0] = 0;
 
   if (tcp == 0)
@@ -78,8 +78,8 @@ void DynDNS::UpdateHostIP(const char *dnsHost, const char *newIPAddress,
   getString += "Host: members.dyndns.org\n";
   getString += "Authorization: Basic ";
   char outputData[512];
-  TCPInterface::Base64Encoding(usernameAndPassword,
-                               (int)strlen(usernameAndPassword), outputData);
+  TCPInterface::Base64Encoding(
+      usernameAndPassword, (int)strlen(usernameAndPassword), outputData);
   getString += outputData;
   getString += "User-Agent: Jenkins Software LLC - PC - 1.0\n\n";
 }
@@ -99,12 +99,12 @@ void DynDNS::Update(void) {
       checkIpAddress = serverAddress;
       connectPhase = CP_WAITING_FOR_CHECKIP_RESPONSE;
       tcp->Send("GET\n\n", (unsigned int)strlen("GET\n\n"), serverAddress,
-                false); // Needs 2 newlines! This is not documented and wasted a
-                        // lot of my time
+          false); // Needs 2 newlines! This is not documented and wasted a
+                  // lot of my time
     } else {
       connectPhase = CP_WAITING_FOR_DYNDNS_RESPONSE;
       tcp->Send(getString.C_String(), (unsigned int)getString.GetLength(),
-                serverAddress, false);
+          serverAddress, false);
     }
     phaseTimeout = RakNet::GetTime() + 1000;
   }
@@ -115,7 +115,7 @@ void DynDNS::Update(void) {
     tcp->CloseConnection(checkIpAddress);
     tcp->Connect("members.dyndns.org", 80, false);
   } else if (connectPhase == CP_WAITING_FOR_DYNDNS_RESPONSE &&
-             RakNet::GetTime() > phaseTimeout) {
+      RakNet::GetTime() > phaseTimeout) {
     SetCompleted(RC_DYNDNS_TIMEOUT, "DynDNS did not respond");
     return;
   }
@@ -130,11 +130,11 @@ void DynDNS::Update(void) {
       if (result != 0) {
         result += strlen("Connection: close");
         while (*result && (*result == '\r') || (*result == '\n') ||
-               (*result == ' '))
+            (*result == ' '))
           result++;
         for (i = 0; i < 13; i++) {
           if (strncmp(resultTable[i].code, result,
-                      strlen(resultTable[i].code)) == 0) {
+                  strlen(resultTable[i].code)) == 0) {
             if (resultTable[i].resultCode == RC_SUCCESS) {
               // Read my external IP into myIPStr
               // Advance until we hit a number
@@ -158,7 +158,7 @@ void DynDNS::Update(void) {
       } else {
         tcp->DeallocatePacket(packet);
         SetCompleted(RC_PARSING_FAILURE,
-                     "Parsing failure on returned string from DynDNS");
+            "Parsing failure on returned string from DynDNS");
       }
 
       return;
@@ -209,7 +209,7 @@ void DynDNS::Update(void) {
   if (tcp->HasLostConnection() != UNASSIGNED_SYSTEM_ADDRESS) {
     if (connectPhase == CP_WAITING_FOR_DYNDNS_RESPONSE) {
       SetCompleted(RC_CONNECTION_LOST_WITHOUT_RESPONSE,
-                   "Connection lost to DynDNS during GET operation");
+          "Connection lost to DynDNS during GET operation");
     }
   }
 }

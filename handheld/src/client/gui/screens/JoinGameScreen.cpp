@@ -17,8 +17,8 @@ namespace {
 static const int kDefaultPort = 19132;
 static std::string s_cachedUsername = "";
 
-static std::string makeUniqueUsername(const std::string &base,
-                                      Minecraft *minecraft) {
+static std::string makeUniqueUsername(
+    const std::string &base, Minecraft *minecraft) {
   std::string suffix;
 
   if (minecraft && minecraft->raknetInstance) {
@@ -54,12 +54,12 @@ static std::string makeUniqueUsername(const std::string &base,
 static std::string trim(const std::string &value) {
   size_t start = 0;
   while (start < value.size() &&
-         std::isspace(static_cast<unsigned char>(value[start]))) {
+      std::isspace(static_cast<unsigned char>(value[start]))) {
     ++start;
   }
   size_t end = value.size();
-  while (end > start &&
-         std::isspace(static_cast<unsigned char>(value[end - 1]))) {
+  while (
+      end > start && std::isspace(static_cast<unsigned char>(value[end - 1]))) {
     --end;
   }
   return value.substr(start, end - start);
@@ -75,8 +75,8 @@ static bool isDigits(const std::string &value) {
   return true;
 }
 
-static bool parseHostPort(const std::string &input, std::string &host,
-                          int &port) {
+static bool parseHostPort(
+    const std::string &input, std::string &host, int &port) {
   std::string cleaned = trim(input);
   if (cleaned.empty())
     return false;
@@ -195,10 +195,10 @@ void JoinGameScreen::mouseClicked(int x, int y, int buttonNum) {
     return;
 
   bool insideUsername = (x >= usernameX && x <= usernameX + usernameW &&
-                         y >= usernameY && y <= usernameY + usernameH);
+      y >= usernameY && y <= usernameY + usernameH);
   bool insideDirect =
       (x >= directConnectX && x <= directConnectX + directConnectW &&
-       y >= directConnectY && y <= directConnectY + directConnectH);
+          y >= directConnectY && y <= directConnectY + directConnectH);
 
   if (insideUsername) {
     usernameFocused = true;
@@ -416,8 +416,8 @@ void JoinGameScreen::render(int xm, int ym, float a) {
     displayText += "_";
   }
 
-  drawString(minecraft->font, displayText, fieldLeft + 4, fieldTop + 4,
-             textColor);
+  drawString(
+      minecraft->font, displayText, fieldLeft + 4, fieldTop + 4, textColor);
 
   if (hasNetwork) {
 #ifdef SDL3
@@ -432,8 +432,8 @@ void JoinGameScreen::render(int xm, int ym, float a) {
 
     static const char *spinnerTexts[] = {"-", "\\", "|", "/"};
     int n = ((int)(5.5f * getTimeS()) % 4);
-    drawCenteredString(minecraft->font, spinnerTexts[n], spinnerX, 8,
-                       0xffffffff);
+    drawCenteredString(
+        minecraft->font, spinnerTexts[n], spinnerX, 8, 0xffffffff);
   } else {
     std::string s = "WiFi is disabled";
     const int yy = height / 2 - 8;

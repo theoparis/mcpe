@@ -9,8 +9,8 @@ class ContainerOpenPacket : public Packet {
 public:
   ContainerOpenPacket() {}
 
-  ContainerOpenPacket(int containerId, int type, const std::string &title,
-                      int size)
+  ContainerOpenPacket(
+      int containerId, int type, const std::string &title, int size)
       : containerId(containerId), type(type), title(title.c_str()), size(size) {
   }
 

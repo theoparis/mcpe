@@ -30,7 +30,7 @@ public:
   float getBrightness(float a) { return 1; }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     float s = (age + a) / (float)lifetime;
     size = oSize * (1 - s * s);
     super::render(t, a, xa, ya, za, xa2, za2);

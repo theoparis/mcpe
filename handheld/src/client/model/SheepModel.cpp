@@ -21,8 +21,8 @@ void SheepModel::prepareMobModel(Mob *mob, float time, float r, float a) {
   headXRot = sheep->getHeadEatAngleScale(a);
 }
 
-void SheepModel::setupAnim(float time, float r, float bob, float yRot,
-                           float xRot, float scale) {
+void SheepModel::setupAnim(
+    float time, float r, float bob, float yRot, float xRot, float scale) {
   super::setupAnim(time, r, bob, yRot, xRot, scale);
 
   head.xRot = headXRot;

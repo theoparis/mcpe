@@ -77,9 +77,8 @@ TCPInterface::~TCPInterface() {
   RakNet::StringTable::RemoveReference();
 }
 bool TCPInterface::Start(unsigned short port,
-                         unsigned short maxIncomingConnections,
-                         unsigned short maxConnections, int _threadPriority,
-                         unsigned short socketFamily) {
+    unsigned short maxIncomingConnections, unsigned short maxConnections,
+    int _threadPriority, unsigned short socketFamily) {
   (void)socketFamily;
 
   if (isStarted)
@@ -121,7 +120,7 @@ bool TCPInterface::Start(unsigned short port,
     serverAddress.sin_port = htons(port);
 
     if (bind__(listenSocket, (struct sockaddr *)&serverAddress,
-               sizeof(serverAddress)) < 0)
+            sizeof(serverAddress)) < 0)
       return false;
 
     listen__(listenSocket, maxIncomingConnections);
@@ -131,9 +130,9 @@ bool TCPInterface::Start(unsigned short port,
   if (maxIncomingConnections > 0) {
     struct addrinfo hints;
     memset(&hints, 0, sizeof(addrinfo)); // make sure the struct is empty
-    hints.ai_family = socketFamily;      // don't care IPv4 or IPv6
-    hints.ai_socktype = SOCK_STREAM;     // TCP sockets
-    hints.ai_flags = AI_PASSIVE;         // fill in my IP for me
+    hints.ai_family = socketFamily; // don't care IPv4 or IPv6
+    hints.ai_socktype = SOCK_STREAM; // TCP sockets
+    hints.ai_flags = AI_PASSIVE; // fill in my IP for me
     struct addrinfo *servinfo = 0, *aip; // will point to the results
     char portStr[32];
     Itoa(port, portStr, 10);
@@ -245,13 +244,13 @@ void TCPInterface::Stop(void) {
 #endif
 }
 SystemAddress TCPInterface::Connect(const char *host, unsigned short remotePort,
-                                    bool block, unsigned short socketFamily) {
+    bool block, unsigned short socketFamily) {
   if (threadRunning == false)
     return UNASSIGNED_SYSTEM_ADDRESS;
 
   int newRemoteClientIndex = -1;
   for (newRemoteClientIndex = 0; newRemoteClientIndex < remoteClientsLength;
-       newRemoteClientIndex++) {
+      newRemoteClientIndex++) {
     remoteClients[newRemoteClientIndex].isActiveMutex.Lock();
     if (remoteClients[newRemoteClientIndex].isActive == false) {
       remoteClients[newRemoteClientIndex].SetActive(true);
@@ -337,13 +336,12 @@ bool TCPInterface::IsSSLActive(SystemAddress systemAddress) {
 }
 #endif
 void TCPInterface::Send(const char *data, unsigned length,
-                        const SystemAddress &systemAddress, bool broadcast) {
+    const SystemAddress &systemAddress, bool broadcast) {
   SendList(&data, &length, 1, systemAddress, broadcast);
 }
 bool TCPInterface::SendList(const char **data, const unsigned int *lengths,
-                            const int numParameters,
-                            const SystemAddress &systemAddress,
-                            bool broadcast) {
+    const int numParameters, const SystemAddress &systemAddress,
+    bool broadcast) {
   if (isStarted == false)
     return false;
   if (data == 0)
@@ -371,8 +369,8 @@ bool TCPInterface::SendList(const char **data, const unsigned int *lengths,
     if (systemAddress.systemIndex < remoteClientsLength &&
         remoteClients[systemAddress.systemIndex].systemAddress ==
             systemAddress) {
-      remoteClients[systemAddress.systemIndex].SendOrBuffer(data, lengths,
-                                                            numParameters);
+      remoteClients[systemAddress.systemIndex].SendOrBuffer(
+          data, lengths, numParameters);
     } else {
       for (i = 0; i < remoteClientsLength; i++) {
         if (remoteClients[i].systemAddress == systemAddress) {
@@ -386,7 +384,7 @@ bool TCPInterface::SendList(const char **data, const unsigned int *lengths,
 }
 bool TCPInterface::ReceiveHasPackets(void) {
   return headPush.IsEmpty() == false || incomingMessages.IsEmpty() == false ||
-         tailPush.IsEmpty() == false;
+      tailPush.IsEmpty() == false;
 }
 Packet *TCPInterface::Receive(void) {
   if (isStarted == false)
@@ -460,8 +458,8 @@ void TCPInterface::PushBackPacket(Packet *packet, bool pushAtHead) {
     tailPush.Push(packet, _FILE_AND_LINE_);
 }
 bool TCPInterface::WasStarted(void) const { return threadRunning == true; }
-int TCPInterface::Base64Encoding(const char *inputData, int dataLength,
-                                 char *outputData) {
+int TCPInterface::Base64Encoding(
+    const char *inputData, int dataLength, char *outputData) {
   // http://en.wikipedia.org/wiki/Base64
 
   int outputOffset, charCount;
@@ -483,8 +481,8 @@ int TCPInterface::Base64Encoding(const char *inputData, int dataLength,
     // Remaining 2 bits from first byte, placed in position, and 4 high bits
     // from the second byte, masked to ignore bits 7,8
     outputData[outputOffset++] = Base64Map()[((inputData[j * 3 + 0] << 4) |
-                                              (inputData[j * 3 + 1] >> 4)) &
-                                             63];
+                                                 (inputData[j * 3 + 1] >> 4)) &
+        63];
     if ((++charCount % 76) == 0) {
       outputData[outputOffset++] = '\r';
       outputData[outputOffset++] = '\n';
@@ -494,8 +492,8 @@ int TCPInterface::Base64Encoding(const char *inputData, int dataLength,
     // 4 low bits from the second byte and the two high bits from the third
     // byte, masked to ignore bits 7,8
     outputData[outputOffset++] = Base64Map()[((inputData[j * 3 + 1] << 2) |
-                                              (inputData[j * 3 + 2] >> 6)) &
-                                             63]; // Third 6 bits
+                                                 (inputData[j * 3 + 2] >> 6)) &
+        63]; // Third 6 bits
     if ((++charCount % 76) == 0) {
       outputData[outputOffset++] = '\r';
       outputData[outputOffset++] = '\n';
@@ -523,8 +521,8 @@ int TCPInterface::Base64Encoding(const char *inputData, int dataLength,
     // Remaining 2 bits from first byte, placed in position, and 4 high bits
     // from the second byte, masked to ignore bits 7,8
     outputData[outputOffset++] = Base64Map()[((inputData[j * 3 + 0] << 4) |
-                                              (inputData[j * 3 + 1] >> 4)) &
-                                             63];
+                                                 (inputData[j * 3 + 1] >> 4)) &
+        63];
     if ((++charCount % 76) == 0) {
       outputData[outputOffset++] = '\r';
       outputData[outputOffset++] = '\n';
@@ -548,8 +546,8 @@ int TCPInterface::Base64Encoding(const char *inputData, int dataLength,
     // Remaining 2 bits from first byte, placed in position, and 4 high bits
     // from the second byte, masked to ignore bits 7,8
     outputData[outputOffset++] = Base64Map()[((inputData[j * 3 + 0] << 4) |
-                                              (inputData[j * 3 + 1] >> 4)) &
-                                             63];
+                                                 (inputData[j * 3 + 1] >> 4)) &
+        63];
     if ((++charCount % 76) == 0) {
       outputData[outputOffset++] = '\r';
       outputData[outputOffset++] = '\n';
@@ -615,8 +613,8 @@ SystemAddress TCPInterface::HasLostConnection(void) {
     return UNASSIGNED_SYSTEM_ADDRESS;
   }
 }
-void TCPInterface::GetConnectionList(SystemAddress *remoteSystems,
-                                     unsigned short *numberOfSystems) const {
+void TCPInterface::GetConnectionList(
+    SystemAddress *remoteSystems, unsigned short *numberOfSystems) const {
   unsigned short systemCount = 0;
   unsigned short maxToWrite = *numberOfSystems;
   for (int i = 0; i < remoteClientsLength; i++) {
@@ -637,8 +635,8 @@ unsigned short TCPInterface::GetConnectionCount(void) const {
   return systemCount;
 }
 
-unsigned int
-TCPInterface::GetOutgoingDataBufferSize(SystemAddress systemAddress) const {
+unsigned int TCPInterface::GetOutgoingDataBufferSize(
+    SystemAddress systemAddress) const {
   unsigned bytesWritten = 0;
   if (systemAddress.systemIndex < remoteClientsLength &&
       remoteClients[systemAddress.systemIndex].isActive &&
@@ -660,8 +658,8 @@ TCPInterface::GetOutgoingDataBufferSize(SystemAddress systemAddress) const {
   }
   return bytesWritten;
 }
-SOCKET TCPInterface::SocketConnect(const char *host, unsigned short remotePort,
-                                   unsigned short socketFamily) {
+SOCKET TCPInterface::SocketConnect(
+    const char *host, unsigned short remotePort, unsigned short socketFamily) {
   int connectResult;
   (void)socketFamily;
 
@@ -682,19 +680,19 @@ SOCKET TCPInterface::SocketConnect(const char *host, unsigned short remotePort,
   serverAddress.sin_port = htons(remotePort);
 
   int sock_opt = 1024 * 256;
-  setsockopt__(sockfd, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt,
-               sizeof(sock_opt));
+  setsockopt__(
+      sockfd, SOL_SOCKET, SO_RCVBUF, (char *)&sock_opt, sizeof(sock_opt));
 
   memcpy((char *)&serverAddress.sin_addr.s_addr, (char *)server->h_addr,
-         server->h_length);
+      server->h_length);
 
   blockingSocketListMutex.Lock();
   blockingSocketList.Insert(sockfd, _FILE_AND_LINE_);
   blockingSocketListMutex.Unlock();
 
   // This is blocking
-  connectResult = connect__(sockfd, (struct sockaddr *)&serverAddress,
-                            sizeof(struct sockaddr));
+  connectResult = connect__(
+      sockfd, (struct sockaddr *)&serverAddress, sizeof(struct sockaddr));
 
 #else
 
@@ -763,8 +761,8 @@ RAK_THREAD_DECLARATION(RakNet::ConnectionAttemptLoop) {
   // Notify user that the connection attempt has completed.
   if (tcpInterface->threadRunning) {
     tcpInterface->completedConnectionAttemptMutex.Lock();
-    tcpInterface->completedConnectionAttempts.Push(systemAddress,
-                                                   _FILE_AND_LINE_);
+    tcpInterface->completedConnectionAttempts.Push(
+        systemAddress, _FILE_AND_LINE_);
     tcpInterface->completedConnectionAttemptMutex.Unlock();
   }
 
@@ -808,8 +806,8 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
           sslSystemAddress->systemIndex < sts->remoteClientsLength &&
           sts->remoteClients[sslSystemAddress->systemIndex].systemAddress ==
               *sslSystemAddress) {
-        sts->remoteClients[sslSystemAddress->systemIndex].InitSSL(sts->ctx,
-                                                                  sts->meth);
+        sts->remoteClients[sslSystemAddress->systemIndex].InitSSL(
+            sts->ctx, sts->meth);
       } else {
         for (int i = 0; i < sts->remoteClientsLength; i++) {
           sts->remoteClients[i].isActiveMutex.Lock();
@@ -839,8 +837,8 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
       FD_ZERO(&exceptionFD);
       FD_ZERO(&writeFD);
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
       largestDescriptor = 0;
       if (sts->listenSocket != (SOCKET)-1) {
@@ -866,12 +864,12 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
       }
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4244) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4244) // warning C4127: conditional expression is constant
 #endif
 
-      selectResult = (int)select__(largestDescriptor + 1, &readFD, &writeFD,
-                                   &exceptionFD, &tv);
+      selectResult = (int)select__(
+          largestDescriptor + 1, &readFD, &writeFD, &exceptionFD, &tv);
 
       if (selectResult <= 0)
         break;
@@ -879,13 +877,13 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
       if (sts->listenSocket != (SOCKET)-1 &&
           FD_ISSET(sts->listenSocket, &readFD)) {
         newSock = accept__(sts->listenSocket, (sockaddr *)&sockAddr,
-                           (socklen_t *)&sockAddrSize);
+            (socklen_t *)&sockAddrSize);
 
         if (newSock != (SOCKET)-1) {
           int newRemoteClientIndex = -1;
           for (newRemoteClientIndex = 0;
-               newRemoteClientIndex < sts->remoteClientsLength;
-               newRemoteClientIndex++) {
+              newRemoteClientIndex < sts->remoteClientsLength;
+              newRemoteClientIndex++) {
             sts->remoteClients[newRemoteClientIndex].isActiveMutex.Lock();
             if (sts->remoteClients[newRemoteClientIndex].isActive == false) {
               sts->remoteClients[newRemoteClientIndex].socket = newSock;
@@ -901,17 +899,17 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
 #else
               if (sockAddr.ss_family == AF_INET) {
                 memcpy(&sts->remoteClients[newRemoteClientIndex]
-                            .systemAddress.address.addr4,
-                       (sockaddr_in *)&sockAddr, sizeof(sockaddr_in));
+                           .systemAddress.address.addr4,
+                    (sockaddr_in *)&sockAddr, sizeof(sockaddr_in));
                 //	sts->remoteClients[newRemoteClientIndex].systemAddress.address.addr4.sin_port=ntohs(
-                //sts->remoteClients[newRemoteClientIndex].systemAddress.address.addr4.sin_port
+                // sts->remoteClients[newRemoteClientIndex].systemAddress.address.addr4.sin_port
                 //);
               } else {
                 memcpy(&sts->remoteClients[newRemoteClientIndex]
-                            .systemAddress.address.addr6,
-                       (sockaddr_in6 *)&sockAddr, sizeof(sockaddr_in6));
+                           .systemAddress.address.addr6,
+                    (sockaddr_in6 *)&sockAddr, sizeof(sockaddr_in6));
                 //	sts->remoteClients[newRemoteClientIndex].systemAddress.address.addr6.sin6_port=ntohs(
-                //sts->remoteClients[newRemoteClientIndex].systemAddress.address.addr6.sin6_port
+                // sts->remoteClients[newRemoteClientIndex].systemAddress.address.addr6.sin6_port
                 //);
               }
 
@@ -938,12 +936,12 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
 #endif
         }
       } else if (sts->listenSocket != (SOCKET)-1 &&
-                 FD_ISSET(sts->listenSocket, &exceptionFD)) {
+          FD_ISSET(sts->listenSocket, &exceptionFD)) {
 #ifdef _DO_PRINTF
         int err;
         int errlen = sizeof(err);
-        getsockopt__(sts->listenSocket, SOL_SOCKET, SO_ERROR, (char *)&err,
-                     &errlen);
+        getsockopt__(
+            sts->listenSocket, SOL_SOCKET, SO_ERROR, (char *)&err, &errlen);
         RAKNET_DEBUG_PRINTF("Socket error %s on listening socket\n", err);
 #endif
       }
@@ -963,9 +961,11 @@ RAK_THREAD_DECLARATION(RakNet::UpdateTCPInterfaceLoop) {
             // 						{
             // 							int err;
             // 							int errlen =
-            // sizeof(err); 							getsockopt__(sts->listenSocket, SOL_SOCKET,
-            // SO_ERROR,(char*)&err, &errlen); 							in_addr in; 							in.s_addr =
-            // sts->remoteClients[i].systemAddress.binaryAddress;
+            // sizeof(err);
+            // getsockopt__(sts->listenSocket, SOL_SOCKET, SO_ERROR,(char*)&err,
+            // &errlen);
+            // in_addr in;
+            // in.s_addr = sts->remoteClients[i].systemAddress.binaryAddress;
             // 							RAKNET_DEBUG_PRINTF("Socket
             // error %i on %s:%i\n", err,inet_ntoa( in ),
             // sts->remoteClients[i].systemAddress.GetPort() );
@@ -1077,8 +1077,8 @@ void RemoteClient::SetActive(bool a) {
     }
   }
 }
-void RemoteClient::SendOrBuffer(const char **data, const unsigned int *lengths,
-                                const int numParameters) {
+void RemoteClient::SendOrBuffer(
+    const char **data, const unsigned int *lengths, const int numParameters) {
   // True can save memory and buffer copies, but gives worse performance overall
   // Do not use true for the XBOX, as it just locks up
   const bool ALLOW_SEND_FROM_USER_THREAD = false;
@@ -1096,13 +1096,12 @@ void RemoteClient::SendOrBuffer(const char **data, const unsigned int *lengths,
         // Push remainder
         outgoingDataMutex.Lock();
         outgoingData.WriteBytes(data[parameterIndex] + bytesSent,
-                                lengths[parameterIndex] - bytesSent,
-                                _FILE_AND_LINE_);
+            lengths[parameterIndex] - bytesSent, _FILE_AND_LINE_);
         outgoingDataMutex.Unlock();
       }
     } else {
-      outgoingData.WriteBytes(data[parameterIndex], lengths[parameterIndex],
-                              _FILE_AND_LINE_);
+      outgoingData.WriteBytes(
+          data[parameterIndex], lengths[parameterIndex], _FILE_AND_LINE_);
       outgoingDataMutex.Unlock();
     }
   }

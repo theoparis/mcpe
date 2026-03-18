@@ -36,8 +36,8 @@ public:
   // Note: The arrays returned here are temporary in the meaning that their
   //       contents might change in the future. If you need to SAVE the
   //       values, do a shallow copy to an array of your own.
-  virtual float *getTemperatureBlock(/*float* temperatures, */ int x, int z,
-                                     int w, int h);
+  virtual float *getTemperatureBlock(
+      /*float* temperatures, */ int x, int z, int w, int h);
   // virtual float* getDownfallBlock(/*float* downfalls, */int x, int z, int w,
   // int h);
   virtual Biome **getBiomeBlock(int x, int z, int w, int h);

@@ -155,8 +155,8 @@ public:
     return this;
   }
 
-  bool intersects(float x02, float y02, float z02, float x12, float y12,
-                  float z12) const {
+  bool intersects(
+      float x02, float y02, float z02, float x12, float y12, float z12) const {
     if (x12 <= x0 || x02 >= x1)
       return false;
     if (y12 <= y0 || y02 >= y1)

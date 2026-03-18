@@ -21,8 +21,8 @@ public:
   virtual ~EntityRenderer() {}
   void init(EntityRenderDispatcher *entityRenderDispatcher);
 
-  virtual void render(Entity *entity, float x, float y, float z, float rot,
-                      float a) = 0;
+  virtual void render(
+      Entity *entity, float x, float y, float z, float rot, float a) = 0;
   static void render(const AABB &bb, float xo, float yo, float zo);
   static void renderFlat(const AABB &bb);
 

@@ -15,14 +15,14 @@
 class LargeCaveFeature : public LargeFeature {
 protected:
   void addRoom(int xOffs, int zOffs, unsigned char *blocks, float xRoom,
-               float yRoom, float zRoom) {
+      float yRoom, float zRoom) {
     addTunnel(xOffs, zOffs, blocks, xRoom, yRoom, zRoom,
-              1 + random.nextFloat() * 6, 0, 0, -1, -1, 0.5);
+        1 + random.nextFloat() * 6, 0, 0, -1, -1, 0.5);
   }
 
   void addTunnel(int xOffs, int zOffs, unsigned char *blocks, float xCave,
-                 float yCave, float zCave, float thickness, float yRot,
-                 float xRot, int step, int dist, float yScale) {
+      float yCave, float zCave, float thickness, float yRot, float xRot,
+      int step, int dist, float yScale) {
     float xMid = (float)(xOffs * 16 + 8);
     float zMid = (float)(zOffs * 16 + 8);
 
@@ -71,11 +71,11 @@ protected:
 
       if (!singleStep && step == splitPoint && thickness > 1) {
         addTunnel(xOffs, zOffs, blocks, xCave, yCave, zCave,
-                  random.nextFloat() * 0.5f + 0.5f, yRot - Mth::PI / 2,
-                  xRot / 3, step, dist, 1.0);
+            random.nextFloat() * 0.5f + 0.5f, yRot - Mth::PI / 2, xRot / 3,
+            step, dist, 1.0);
         addTunnel(xOffs, zOffs, blocks, xCave, yCave, zCave,
-                  random.nextFloat() * 0.5f + 0.5f, yRot + Mth::PI / 2,
-                  xRot / 3, step, dist, 1.0);
+            random.nextFloat() * 0.5f + 0.5f, yRot + Mth::PI / 2, xRot / 3,
+            step, dist, 1.0);
         return;
       }
       if (!singleStep && random.nextInt(4) == 0)
@@ -175,7 +175,7 @@ protected:
   }
 
   void addFeature(Level *level, int x, int z, int xOffs, int zOffs,
-                  unsigned char *blocks, int blocksSize) {
+      unsigned char *blocks, int blocksSize) {
     int caves = random.nextInt(random.nextInt(random.nextInt(40) + 1) + 1);
     if (random.nextInt(15) != 0)
       caves = 0;
@@ -198,7 +198,7 @@ protected:
         float thickness = random.nextFloat() * 2 + random.nextFloat();
 
         addTunnel(xOffs, zOffs, blocks, xCave, yCave, zCave, thickness, yRot,
-                  xRot, 0, 0, 1.0);
+            xRot, 0, 0, 1.0);
       }
     }
   }

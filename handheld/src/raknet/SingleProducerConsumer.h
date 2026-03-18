@@ -196,9 +196,8 @@ template <class SingleProducerConsumerType>
 void SingleProducerConsumer<SingleProducerConsumerType>::ReadUnlock(void) {
 #ifdef _DEBUG
   RakAssert(readAheadPointer !=
-            readPointer); // If hits, then called ReadUnlock before ReadLock
-  RakAssert(
-      readPointer !=
+      readPointer); // If hits, then called ReadUnlock before ReadLock
+  RakAssert(readPointer !=
       writePointer); // If hits, then called ReadUnlock when Read returns 0
 #endif
   readCount++;
@@ -246,7 +245,7 @@ template <class SingleProducerConsumerType>
 bool SingleProducerConsumer<SingleProducerConsumerType>::CheckReadUnlockOrder(
     const SingleProducerConsumerType *data) const {
   return const_cast<const SingleProducerConsumerType *>(&readPointer->object) ==
-         data;
+      data;
 }
 
 template <class SingleProducerConsumerType>

@@ -73,16 +73,16 @@ public:
   }
 
   /// Called for each directory, when that directory begins processing
-  virtual void OnDirectory(FileList *fileList, char *dir,
-                           unsigned int directoriesRemaining) {
+  virtual void OnDirectory(
+      FileList *fileList, char *dir, unsigned int directoriesRemaining) {
     (void)fileList;
     (void)dir;
     (void)directoriesRemaining;
   }
 
   /// Called for each file, when that file begins processing
-  virtual void OnFile(FileList *fileList, char *dir, char *fileName,
-                      unsigned int fileSize) {
+  virtual void OnFile(
+      FileList *fileList, char *dir, char *fileName, unsigned int fileSize) {
     (void)fileList;
     (void)dir;
     (void)fileName;
@@ -98,9 +98,8 @@ public:
   /// \param[in] done If this file is now done with this push
   /// \param[in] targetSystem Who we are sending to
   virtual void OnFilePush(const char *fileName, unsigned int fileLengthBytes,
-                          unsigned int offset, unsigned int bytesBeingSent,
-                          bool done, SystemAddress targetSystem,
-                          unsigned short setId) {
+      unsigned int offset, unsigned int bytesBeingSent, bool done,
+      SystemAddress targetSystem, unsigned short setId) {
     (void)fileName;
     (void)fileLengthBytes;
     (void)offset;
@@ -112,8 +111,8 @@ public:
 
   /// \brief This function is called when all files have been read and are being
   /// transferred to a remote system
-  virtual void OnFilePushesComplete(SystemAddress systemAddress,
-                                    unsigned short setId) {
+  virtual void OnFilePushesComplete(
+      SystemAddress systemAddress, unsigned short setId) {
     (void)systemAddress;
     (void)setId;
   }
@@ -138,13 +137,13 @@ public:
   virtual void OnAddFilesFromDirectoryStarted(FileList *fileList, char *dir);
 
   /// Called for each directory, when that directory begins processing
-  virtual void OnDirectory(FileList *fileList, char *dir,
-                           unsigned int directoriesRemaining);
+  virtual void OnDirectory(
+      FileList *fileList, char *dir, unsigned int directoriesRemaining);
 
   /// \brief This function is called when all files have been transferred to a
   /// particular remote system
-  virtual void OnFilePushesComplete(SystemAddress systemAddress,
-                                    unsigned short setID);
+  virtual void OnFilePushesComplete(
+      SystemAddress systemAddress, unsigned short setID);
 
   /// \brief This function is called when a send to a system was aborted
   /// (probably due to disconnection)
@@ -170,9 +169,8 @@ public:
   /// \param[in] context User defined byte to store with each file. Use for
   /// whatever you want.
   void AddFilesFromDirectory(const char *applicationDirectory,
-                             const char *subDirectory, bool writeHash,
-                             bool writeData, bool recursive,
-                             FileListNodeContext context);
+      const char *subDirectory, bool writeHash, bool writeData, bool recursive,
+      FileListNodeContext context);
 
   /// Deallocate all memory
   void Clear(void);
@@ -203,8 +201,8 @@ public:
   /// available. If false, will write the hash if the file lengths are the same
   /// and it was forced to do a comparison.
   void ListMissingOrChangedFiles(const char *applicationDirectory,
-                                 FileList *missingOrChangedFiles,
-                                 bool alwaysWriteHash, bool neverWriteHash);
+      FileList *missingOrChangedFiles, bool alwaysWriteHash,
+      bool neverWriteHash);
 
   /// \brief Return the files that need to be written to make \a input match
   /// this current FileList.
@@ -218,7 +216,7 @@ public:
   /// \param[in] remoteSubdir Remove this from the filenames of \a input when
   /// comparing to existing filenames.
   void GetDeltaToCurrent(FileList *input, FileList *output,
-                         const char *dirSubset, const char *remoteSubdir);
+      const char *dirSubset, const char *remoteSubdir);
 
   /// \brief Assuming FileList contains a list of filenames presumably without
   /// data, read the data for these filenames
@@ -232,8 +230,7 @@ public:
   /// \param[in] removeUnknownFiles If a file does not exist on disk but is in
   /// the file list, remove it from the file list?
   void PopulateDataFromDisk(const char *applicationDirectory,
-                            bool writeFileData, bool writeFileHash,
-                            bool removeUnknownFiles);
+      bool writeFileData, bool writeFileHash, bool removeUnknownFiles);
 
   /// By default, GetDeltaToCurrent tags files as non-references, meaning they
   /// are assumed to be populated later This tags all files as references,
@@ -260,9 +257,9 @@ public:
   /// \param[in] takeDataPointer If true, do not allocate dataLength. Just take
   /// the pointer passed to the \a data parameter
   void AddFile(const char *filename, const char *fullPathToFile,
-               const char *data, const unsigned dataLength,
-               const unsigned fileLength, FileListNodeContext context,
-               bool isAReference = false, bool takeDataPointer = false);
+      const char *data, const unsigned dataLength, const unsigned fileLength,
+      FileListNodeContext context, bool isAReference = false,
+      bool takeDataPointer = false);
 
   /// \brief Add a file, reading it from disk.
   /// \param[in] filepath Complete path to the file, including the filename
@@ -271,8 +268,8 @@ public:
   /// usually either the complete path or a subset of the complete path.
   /// \param[in] context User defined byte to store with each file. Use for
   /// whatever you want.
-  void AddFile(const char *filepath, const char *filename,
-               FileListNodeContext context);
+  void AddFile(
+      const char *filepath, const char *filename, FileListNodeContext context);
 
   /// \brief Delete all files stored in the file list.
   /// \param[in] applicationDirectory Prefixed to the path to each filename. Use

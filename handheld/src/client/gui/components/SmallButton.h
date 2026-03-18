@@ -12,10 +12,10 @@ class SmallButton : public Button {
 
 public:
   SmallButton(int id, int x, int y, const std::string &msg);
-  SmallButton(int id, int x, int y, int width, int height,
-              const std::string &msg);
-  SmallButton(int id, int x, int y, Options::Option *item,
-              const std::string &msg);
+  SmallButton(
+      int id, int x, int y, int width, int height, const std::string &msg);
+  SmallButton(
+      int id, int x, int y, Options::Option *item, const std::string &msg);
 
   Options::Option *getOption();
 

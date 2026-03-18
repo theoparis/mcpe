@@ -38,8 +38,8 @@ int defaultMapKeyComparison(const key_type &a, const key_type &b) {
 /// IMPLEMENT_DEFAULT_COMPARISON or you will get an unresolved external linker
 /// error.
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &) =
-              defaultMapKeyComparison<key_type>>
+    int (*key_comparison_func)(const key_type &, const key_type &) =
+        defaultMapKeyComparison<key_type>>
 class RAK_DLL_EXPORT Map {
 public:
   static void IMPLEMENT_DEFAULT_COMPARISON(void) {
@@ -67,8 +67,8 @@ public:
   // DataStructures::OrderedList is a C function
   static int NodeComparisonFunc(const key_type &a, const MapNode &b) {
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
     return key_comparison_func(a, b.mapNodeKey);
   }
@@ -108,19 +108,19 @@ protected:
 };
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 Map<key_type, data_type, key_comparison_func>::Map() {
   lastSearchIndexValid = false;
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 Map<key_type, data_type, key_comparison_func>::~Map() {
   Clear();
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 Map<key_type, data_type, key_comparison_func>::Map(const Map &original_copy) {
   mapNodeList = original_copy.mapNodeList;
   lastSearchIndex = original_copy.lastSearchIndex;
@@ -129,7 +129,7 @@ Map<key_type, data_type, key_comparison_func>::Map(const Map &original_copy) {
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 Map<key_type, data_type, key_comparison_func> &
 Map<key_type, data_type, key_comparison_func>::operator=(
     const Map &original_copy) {
@@ -141,9 +141,9 @@ Map<key_type, data_type, key_comparison_func>::operator=(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
-data_type &
-Map<key_type, data_type, key_comparison_func>::Get(const key_type &key) const {
+    int (*key_comparison_func)(const key_type &, const key_type &)>
+data_type &Map<key_type, data_type, key_comparison_func>::Get(
+    const key_type &key) const {
   if (HasSavedSearchResult(key))
     return mapNodeList[lastSearchIndex].mapNodeData;
 
@@ -156,7 +156,7 @@ Map<key_type, data_type, key_comparison_func>::Get(const key_type &key) const {
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 unsigned Map<key_type, data_type, key_comparison_func>::GetIndexAtKey(
     const key_type &key) {
   if (HasSavedSearchResult(key))
@@ -173,7 +173,7 @@ unsigned Map<key_type, data_type, key_comparison_func>::GetIndexAtKey(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 void Map<key_type, data_type, key_comparison_func>::RemoveAtIndex(
     const unsigned index) {
   mapNodeList.RemoveAtIndex(index);
@@ -181,9 +181,9 @@ void Map<key_type, data_type, key_comparison_func>::RemoveAtIndex(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
-data_type
-Map<key_type, data_type, key_comparison_func>::Pop(const key_type &key) {
+    int (*key_comparison_func)(const key_type &, const key_type &)>
+data_type Map<key_type, data_type, key_comparison_func>::Pop(
+    const key_type &key) {
   bool objectExists;
   unsigned index;
   if (HasSavedSearchResult(key))
@@ -199,9 +199,9 @@ Map<key_type, data_type, key_comparison_func>::Pop(const key_type &key) {
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
-void Map<key_type, data_type, key_comparison_func>::Set(const key_type &key,
-                                                        const data_type &data) {
+    int (*key_comparison_func)(const key_type &, const key_type &)>
+void Map<key_type, data_type, key_comparison_func>::Set(
+    const key_type &key, const data_type &data) {
   bool objectExists;
   unsigned index;
 
@@ -216,13 +216,13 @@ void Map<key_type, data_type, key_comparison_func>::Set(const key_type &key,
     SaveLastSearch(key, index);
     mapNodeList[index].mapNodeData = data;
   } else {
-    SaveLastSearch(key, mapNodeList.Insert(key, MapNode(key, data), true,
-                                           _FILE_AND_LINE_));
+    SaveLastSearch(key,
+        mapNodeList.Insert(key, MapNode(key, data), true, _FILE_AND_LINE_));
   }
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 void Map<key_type, data_type, key_comparison_func>::SetExisting(
     const key_type &key, const data_type &data) {
   bool objectExists;
@@ -240,7 +240,7 @@ void Map<key_type, data_type, key_comparison_func>::SetExisting(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 void Map<key_type, data_type, key_comparison_func>::SetNew(
     const key_type &key, const data_type &data) {
 #ifdef _DEBUG
@@ -253,7 +253,7 @@ void Map<key_type, data_type, key_comparison_func>::SetNew(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 bool Map<key_type, data_type, key_comparison_func>::Has(
     const key_type &key) const {
   if (HasSavedSearchResult(key))
@@ -268,7 +268,7 @@ bool Map<key_type, data_type, key_comparison_func>::Has(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 bool Map<key_type, data_type, key_comparison_func>::Delete(
     const key_type &key) {
   if (HasSavedSearchResult(key)) {
@@ -289,34 +289,34 @@ bool Map<key_type, data_type, key_comparison_func>::Delete(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 void Map<key_type, data_type, key_comparison_func>::Clear(void) {
   lastSearchIndexValid = false;
   mapNodeList.Clear(false, _FILE_AND_LINE_);
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 data_type &Map<key_type, data_type, key_comparison_func>::operator[](
     const unsigned int position) const {
   return mapNodeList[position].mapNodeData;
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 key_type Map<key_type, data_type, key_comparison_func>::GetKeyAtIndex(
     const unsigned int position) const {
   return mapNodeList[position].mapNodeKey;
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 unsigned Map<key_type, data_type, key_comparison_func>::Size(void) const {
   return mapNodeList.Size();
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 void Map<key_type, data_type, key_comparison_func>::SaveLastSearch(
     const key_type &key, const unsigned index) const {
   (void)key;
@@ -330,7 +330,7 @@ void Map<key_type, data_type, key_comparison_func>::SaveLastSearch(
 }
 
 template <class key_type, class data_type,
-          int (*key_comparison_func)(const key_type &, const key_type &)>
+    int (*key_comparison_func)(const key_type &, const key_type &)>
 bool Map<key_type, data_type, key_comparison_func>::HasSavedSearchResult(
     const key_type &key) const {
   (void)key;

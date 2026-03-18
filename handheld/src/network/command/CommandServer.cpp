@@ -27,8 +27,8 @@ static bool setSocketBlocking(int socket, bool blocking);
 
 // Return value < 0 means socket is shut down / broken
 static int Readline(ConnectedClient *client, std::string &out, int maxlen);
-static int Writeline(ConnectedClient *client, const std::string &in,
-                     int maxlen);
+static int Writeline(
+    ConnectedClient *client, const std::string &in, int maxlen);
 
 class CameraEntity : public Mob {
   typedef Mob super;
@@ -139,10 +139,10 @@ bool CommandServer::init(short port) {
 
   int enabled = 1;
   setsockopt(serverSocket, SOL_SOCKET, SO_REUSEADDR, (const char *)&enabled,
-             sizeof(enabled));
+      sizeof(enabled));
 
   if (bind(serverSocket, (struct sockaddr *)&serverAddress,
-           sizeof(serverAddress)) < 0) {
+          sizeof(serverAddress)) < 0) {
     printf("Failed binding socket - 2\n");
     return false;
   }
@@ -157,8 +157,8 @@ bool CommandServer::init(short port) {
   return true;
 }
 
-std::string CommandServer::parse(ConnectedClient &client,
-                                 const std::string &s) {
+std::string CommandServer::parse(
+    ConnectedClient &client, const std::string &s) {
   int b = s.find("(");
   if (b == std::string::npos) {
     return Fail;
@@ -213,7 +213,7 @@ std::string CommandServer::parse(ConnectedClient &client,
     bool hasData = true;
 
     int c = sscanf(rest.c_str(), "%d,%d,%d,%d,%d,%d,%d,%d", &x0, &y0, &z0, &x1,
-                   &y1, &z1, &id, &data);
+        &y1, &z1, &id, &data);
     if (!inRange(c, 7, 8))
       return Fail;
     if (c == 7)
@@ -490,7 +490,7 @@ std::string CommandServer::parse(ConnectedClient &client,
       int xx = 16 * (restorePos.x - 2);
       int zz = 16 * (restorePos.z - 2);
       mc->level->setTilesDirty(xx, restorePos.y, zz, xx + 5 * 16,
-                               restorePos.y + RestoreHeight, zz + 5 * 16);
+          restorePos.y + RestoreHeight, zz + 5 * 16);
     }
     return success ? NullString : Fail;
   }
@@ -613,8 +613,8 @@ void CommandServer::dispatchPacket(Packet &p) {
   // p.handle(guid, mc->netCallback);
 }
 
-std::string CommandServer::handleEventPollMessage(ConnectedClient &client,
-                                                  const std::string &cmd) {
+std::string CommandServer::handleEventPollMessage(
+    ConnectedClient &client, const std::string &cmd) {
   ICreator *c = mc->getCreator();
   if (!c) {
     return Fail;
@@ -640,17 +640,16 @@ std::string CommandServer::handleEventPollMessage(ConnectedClient &client,
   return Fail;
 }
 
-void updateAdventureSettingFlag(Minecraft *mc,
-                                AdventureSettingsPacket::Flags flag,
-                                bool status) {
+void updateAdventureSettingFlag(
+    Minecraft *mc, AdventureSettingsPacket::Flags flag, bool status) {
   AdventureSettingsPacket p(mc->level->adventureSettings);
   p.set(flag, status);
   p.fillIn(mc->level->adventureSettings);
   mc->raknetInstance->send(p);
 }
 
-std::string CommandServer::handleSetSetting(const std::string &setting,
-                                            int value) {
+std::string CommandServer::handleSetSetting(
+    const std::string &setting, int value) {
   bool status = value != 0;
 
   if (setting == "autojump")

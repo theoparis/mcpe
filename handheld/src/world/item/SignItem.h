@@ -16,7 +16,7 @@ public:
 
   /*@Override*/
   bool useOn(ItemInstance *instance, Player *player, Level *level, int x, int y,
-             int z, int face, float clickX, float clickY, float clickZ) {
+      int z, int face, float clickX, float clickY, float clickZ) {
     if (face == 0)
       return false;
     if (!level->getMaterial(x, y, z)->isSolid())

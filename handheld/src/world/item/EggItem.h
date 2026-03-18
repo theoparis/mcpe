@@ -19,8 +19,8 @@ public:
     if (!player->abilities.instabuild)
       instance->count--;
 
-    level->playSound(player, "random.bow", 0.5f,
-                     0.4f / (random.nextFloat() * 0.4f + 0.8f));
+    level->playSound(
+        player, "random.bow", 0.5f, 0.4f / (random.nextFloat() * 0.4f + 0.8f));
     if (!level->isClientSide)
       level->addEntity(new ThrownEgg(level, player));
     return instance;

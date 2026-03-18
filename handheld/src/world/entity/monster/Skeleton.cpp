@@ -21,16 +21,15 @@ void Skeleton::aiStep() {
 
         for (int i = 0; i < 5; ++i) {
           float xa = (2.0f * random.nextFloat() - 1.0f) *
-                     (2.0f * random.nextFloat() - 1.0f) * 0.02f;
+              (2.0f * random.nextFloat() - 1.0f) * 0.02f;
           float ya = (2.0f * random.nextFloat() - 1.0f) *
-                     (2.0f * random.nextFloat() - 1.0f) * 0.02f;
+              (2.0f * random.nextFloat() - 1.0f) * 0.02f;
           float za = (2.0f * random.nextFloat() - 1.0f) *
-                     (2.0f * random.nextFloat() - 1.0f) * 0.02f;
+              (2.0f * random.nextFloat() - 1.0f) * 0.02f;
           level->addParticle(PARTICLETYPE(explode),
-                             x + random.nextFloat() * bbWidth * 2 - bbWidth,
-                             y + random.nextFloat() * bbHeight,
-                             z + random.nextFloat() * bbWidth * 2 - bbWidth, xa,
-                             ya, za);
+              x + random.nextFloat() * bbWidth * 2 - bbWidth,
+              y + random.nextFloat() * bbHeight,
+              z + random.nextFloat() * bbWidth * 2 - bbWidth, xa, ya, za);
         }
         // setOnFire(8); //@todo
       }
@@ -65,8 +64,8 @@ void Skeleton::checkHurtTarget(Entity *target, float d) {
 
       float yo = Mth::sqrt(xd * xd + zd * zd) * 0.2f;
 
-      level->playSound(this, "random.bow", 1.0f,
-                       1 / (random.nextFloat() * 0.4f + 0.8f));
+      level->playSound(
+          this, "random.bow", 1.0f, 1 / (random.nextFloat() * 0.4f + 0.8f));
       level->addEntity(arrow);
 
       arrow->shoot(xd, yd + yo, zd, 1.60f, 32);

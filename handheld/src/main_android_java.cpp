@@ -64,22 +64,22 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 // Register/save a reference to the java main activity instance
 JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeRegisterThis(JNIEnv *env,
-                                                            jobject clazz) {
+Java_com_mojang_minecraftpe_MainActivity_nativeRegisterThis(
+    JNIEnv *env, jobject clazz) {
   LOGI("@RegisterThis\n");
   g_pActivity = (jobject)env->NewGlobalRef(clazz);
 }
 
 // Unregister/delete the reference to the java main activity instance
 JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeUnregisterThis(JNIEnv *env,
-                                                              jobject clazz) {
+Java_com_mojang_minecraftpe_MainActivity_nativeUnregisterThis(
+    JNIEnv *env, jobject clazz) {
   LOGI("@UnregisterThis\n");
   env->DeleteGlobalRef(g_pActivity);
 }
 
-JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeOnCreate(JNIEnv *env) {
+JNIEXPORT void JNICALL Java_com_mojang_minecraftpe_MainActivity_nativeOnCreate(
+    JNIEnv *env) {
   LOGI("@nativeOnCreate\n");
 
   appPlatform.instance = g_pActivity;
@@ -111,9 +111,8 @@ Java_com_mojang_minecraftpe_GLRenderer_nativeOnSurfaceCreated(JNIEnv *env) {
 }
 
 JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_GLRenderer_nativeOnSurfaceChanged(JNIEnv *env,
-                                                              jclass cls,
-                                                              jint w, jint h) {
+Java_com_mojang_minecraftpe_GLRenderer_nativeOnSurfaceChanged(
+    JNIEnv *env, jclass cls, jint w, jint h) {
   LOGI("@nativeOnSurfaceChanged: %p\n", pthread_self());
 
   if (gApp) {
@@ -127,8 +126,8 @@ Java_com_mojang_minecraftpe_GLRenderer_nativeOnSurfaceChanged(JNIEnv *env,
   }
 }
 
-JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeOnDestroy(JNIEnv *env) {
+JNIEXPORT void JNICALL Java_com_mojang_minecraftpe_MainActivity_nativeOnDestroy(
+    JNIEnv *env) {
   LOGI("@nativeOnDestroy\n");
 
   delete gApp;
@@ -136,8 +135,8 @@ Java_com_mojang_minecraftpe_MainActivity_nativeOnDestroy(JNIEnv *env) {
   // gApp->onGraphicsReset(gContext);
 }
 
-JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_GLRenderer_nativeUpdate(JNIEnv *env) {
+JNIEXPORT void JNICALL Java_com_mojang_minecraftpe_GLRenderer_nativeUpdate(
+    JNIEnv *env) {
   // LOGI("@nativeUpdate: %p\n", pthread_self());
   if (gApp) {
     if (!gApp->isInited())
@@ -165,9 +164,8 @@ JNIEXPORT void JNICALL Java_com_mojang_minecraftpe_MainActivity_nativeOnKeyUp(
 }
 
 JNIEXPORT jboolean JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeHandleBack(JNIEnv *env,
-                                                          jclass cls,
-                                                          jboolean isDown) {
+Java_com_mojang_minecraftpe_MainActivity_nativeHandleBack(
+    JNIEnv *env, jclass cls, jboolean isDown) {
   LOGI("@nativeHandleBack: %d\n", isDown);
   if (gApp)
     return gApp->handleBack(isDown) ? JNI_TRUE : JNI_FALSE;

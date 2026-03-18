@@ -33,8 +33,8 @@ public:
   // IInventoryPaneCallback
   bool addItem(const Touch::InventoryPane *pane, int itemId);
   bool isAllowed(int slot);
-  std::vector<const ItemInstance *>
-  getItems(const Touch::InventoryPane *forPane);
+  std::vector<const ItemInstance *> getItems(
+      const Touch::InventoryPane *forPane);
 
 private:
   void renderPlayer(float xo, float yo);
@@ -42,12 +42,12 @@ private:
   void setupInventoryPane();
   void updateItems();
 
-  void drawSlotItemAt(Tesselator &t, int slot, const ItemInstance *item, int x,
-                      int y);
+  void drawSlotItemAt(
+      Tesselator &t, int slot, const ItemInstance *item, int x, int y);
   ItemInstance moveOver(const ItemInstance *item, int maxCount);
   void takeAndClearSlot(int slot);
-  void handleRenderPane(Touch::InventoryPane *pane, Tesselator &t, int xm,
-                        int ym, float a);
+  void handleRenderPane(
+      Touch::InventoryPane *pane, Tesselator &t, int xm, int ym, float a);
   bool canMoveToSlot(int slot, const ItemInstance *item);
   ItemList _items;
 

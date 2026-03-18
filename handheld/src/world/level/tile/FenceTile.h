@@ -47,7 +47,7 @@ public:
     }
 
     tmpBB.set((float)x + west, (float)y, (float)z + north, (float)x + east,
-              (float)y + 1.5f, (float)z + south);
+        (float)y + 1.5f, (float)z + south);
     return &tmpBB;
   }
 

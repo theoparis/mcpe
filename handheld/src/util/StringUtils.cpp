@@ -13,7 +13,7 @@ bool startsWith(const std::string &s, const std::string &start) {
 // Naive (e.g. slow and stupid) implementation. @todo: fix
 /// @return A reference to s
 std::string &stringReplace(std::string &s, const std::string &src,
-                           const std::string &dst, int maxCount /*= -1*/) {
+    const std::string &dst, int maxCount /*= -1*/) {
   int srcLength = src.length();
 
   while (maxCount--) {
@@ -31,8 +31,8 @@ std::string stringTrim(const std::string &s) {
 }
 
 /// @return A string trimmed from given characters on any end
-std::string stringTrim(const std::string &s, const std::string &chars,
-                       bool left, bool right) {
+std::string stringTrim(
+    const std::string &s, const std::string &chars, bool left, bool right) {
   const int len = s.length();
   const int lenChars = chars.length();
 

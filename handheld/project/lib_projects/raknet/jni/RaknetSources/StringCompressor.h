@@ -54,8 +54,8 @@ public:
   /// \param[in] languageID An identifier for the language / string table to
   /// generate the tree for.  English is automatically created with ID 0 in the
   /// constructor.
-  void GenerateTreeFromStrings(unsigned char *input, unsigned inputLength,
-                               uint8_t languageId);
+  void GenerateTreeFromStrings(
+      unsigned char *input, unsigned inputLength, uint8_t languageId);
 
   /// Writes input to output, compressed.  Takes care of the null terminator for
   /// you.
@@ -65,7 +65,7 @@ public:
   /// \param[out] output The bitstream to write the compressed string to
   /// \param[in] languageID Which language to use
   void EncodeString(const char *input, int maxCharsToWrite,
-                    RakNet::BitStream *output, uint8_t languageId = 0);
+      RakNet::BitStream *output, uint8_t languageId = 0);
 
   /// Writes input to output, uncompressed.  Takes care of the null terminator
   /// for you.
@@ -76,26 +76,26 @@ public:
   /// \param[in] input The bitstream containing the compressed string
   /// \param[in] languageID Which language to use
   bool DecodeString(char *output, int maxCharsToWrite, RakNet::BitStream *input,
-                    uint8_t languageId = 0);
+      uint8_t languageId = 0);
 
 #ifdef _CSTRING_COMPRESSOR
   void EncodeString(const CString &input, int maxCharsToWrite,
-                    RakNet::BitStream *output, uint8_t languageId = 0);
+      RakNet::BitStream *output, uint8_t languageId = 0);
   bool DecodeString(CString &output, int maxCharsToWrite,
-                    RakNet::BitStream *input, uint8_t languageId = 0);
+      RakNet::BitStream *input, uint8_t languageId = 0);
 #endif
 
 #ifdef _STD_STRING_COMPRESSOR
   void EncodeString(const std::string &input, int maxCharsToWrite,
-                    RakNet::BitStream *output, uint8_t languageId = 0);
+      RakNet::BitStream *output, uint8_t languageId = 0);
   bool DecodeString(std::string *output, int maxCharsToWrite,
-                    RakNet::BitStream *input, uint8_t languageId = 0);
+      RakNet::BitStream *input, uint8_t languageId = 0);
 #endif
 
   void EncodeString(const RakNet::RakString *input, int maxCharsToWrite,
-                    RakNet::BitStream *output, uint8_t languageId = 0);
+      RakNet::BitStream *output, uint8_t languageId = 0);
   bool DecodeString(RakNet::RakString *output, int maxCharsToWrite,
-                    RakNet::BitStream *input, uint8_t languageId = 0);
+      RakNet::BitStream *input, uint8_t languageId = 0);
 
   /// Used so I can allocate and deallocate this singleton at runtime
   static void AddReference(void);

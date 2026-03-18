@@ -82,8 +82,8 @@ int CropTile::getTexture(int face, int data) {
 }
 
 int CropTile::getRenderShape() { return Tile::SHAPE_ROWS; }
-void CropTile::spawnResources(Level *level, int x, int y, int z, int data,
-                              float odds) {
+void CropTile::spawnResources(
+    Level *level, int x, int y, int z, int data, float odds) {
   super::spawnResources(level, x, y, z, data, odds);
 
   if (level->isClientSide) {
@@ -97,9 +97,8 @@ void CropTile::spawnResources(Level *level, int x, int y, int z, int data,
     float xo = level->random.nextFloat() * s + (1 - s) * 0.5f;
     float yo = level->random.nextFloat() * s + (1 - s) * 0.5f;
     float zo = level->random.nextFloat() * s + (1 - s) * 0.5f;
-    ItemEntity *item =
-        new ItemEntity(level, float(x) + xo, float(y) + yo, float(z) + zo,
-                       ItemInstance(Item::seeds_wheat));
+    ItemEntity *item = new ItemEntity(level, float(x) + xo, float(y) + yo,
+        float(z) + zo, ItemInstance(Item::seeds_wheat));
     item->throwTime = 10;
     level->addEntity(item);
   }

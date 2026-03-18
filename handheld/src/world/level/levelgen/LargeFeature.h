@@ -15,11 +15,11 @@ public:
   virtual ~LargeFeature();
 
   virtual void apply(ChunkSource *chunkSource, Level *level, int xOffs,
-                     int zOffs, unsigned char *blocks, int blocksSize);
+      int zOffs, unsigned char *blocks, int blocksSize);
 
 protected:
   virtual void addFeature(Level *level, int x, int z, int xOffs, int zOffs,
-                          unsigned char *blocks, int blocksSize) = 0;
+      unsigned char *blocks, int blocksSize) = 0;
 
   int radius;
   Random random;

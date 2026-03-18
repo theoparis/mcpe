@@ -21,14 +21,14 @@ OptionsScreen::~OptionsScreen() {
     delete bHeader, bHeader = NULL;
   }
   for (std::vector<Touch::TButton *>::iterator it = categoryButtons.begin();
-       it != categoryButtons.end(); ++it) {
+      it != categoryButtons.end(); ++it) {
     if (*it != NULL) {
       delete *it;
       *it = NULL;
     }
   }
   for (std::vector<OptionsPane *>::iterator it = optionPanes.begin();
-       it != optionPanes.end(); ++it) {
+      it != optionPanes.end(); ++it) {
     if (*it != NULL) {
       delete *it;
       *it = NULL;
@@ -55,7 +55,7 @@ void OptionsScreen::init() {
   buttons.push_back(bHeader);
   buttons.push_back(btnClose);
   for (std::vector<Touch::TButton *>::iterator it = categoryButtons.begin();
-       it != categoryButtons.end(); ++it) {
+      it != categoryButtons.end(); ++it) {
     buttons.push_back(*it);
     tabButtons.push_back(*it);
   }
@@ -67,7 +67,7 @@ void OptionsScreen::setupPositions() {
   btnClose->y = 0;
   int offsetNum = 1;
   for (std::vector<Touch::TButton *>::iterator it = categoryButtons.begin();
-       it != categoryButtons.end(); ++it) {
+      it != categoryButtons.end(); ++it) {
     (*it)->x = 0;
     (*it)->y = offsetNum * buttonHeight;
     (*it)->selected = false;
@@ -78,7 +78,7 @@ void OptionsScreen::setupPositions() {
   bHeader->width = width - btnClose->width;
   bHeader->height = btnClose->height;
   for (std::vector<OptionsPane *>::iterator it = optionPanes.begin();
-       it != optionPanes.end(); ++it) {
+      it != optionPanes.end(); ++it) {
     if (categoryButtons.size() > 0 && categoryButtons[0] != NULL) {
       (*it)->x = categoryButtons[0]->width;
       (*it)->y = bHeader->height;
@@ -117,7 +117,7 @@ void OptionsScreen::buttonClicked(Button *button) {
 void OptionsScreen::selectCategory(int index) {
   int currentIndex = 0;
   for (std::vector<Touch::TButton *>::iterator it = categoryButtons.begin();
-       it != categoryButtons.end(); ++it) {
+      it != categoryButtons.end(); ++it) {
     if (index == currentIndex) {
       (*it)->selected = true;
     } else {

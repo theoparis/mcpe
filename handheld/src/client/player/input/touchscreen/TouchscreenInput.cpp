@@ -51,7 +51,7 @@ static void Scale(int n, float *x, float *y, float xt, float yt) {
 }
 
 static void Transformed(int n, float *x, float *y, float *dx, float *dy,
-                        float xt, float yt, float sx = 1.0f, float sy = 1.0f) {
+    float xt, float yt, float sx = 1.0f, float sy = 1.0f) {
   Copy(n, x, y, dx, dy);
   Scale(n, dx, dy, sx, sy);
   Translate(n, dx, dy, xt, yt);
@@ -61,8 +61,8 @@ static void Transformed(int n, float *x, float *y, float *dx, float *dy,
   // }
 }
 
-TouchscreenInput_TestFps::TouchscreenInput_TestFps(Minecraft *mc,
-                                                   Options *options)
+TouchscreenInput_TestFps::TouchscreenInput_TestFps(
+    Minecraft *mc, Options *options)
     : _minecraft(mc), _options(options), _northJump(false), _forward(false),
       _boundingRectangle(0, 0, 1, 1), _pressedJump(false), _pauseIsDown(false),
       _sneakTapTime(-999), aLeft(0), aRight(0), aUp(0), aDown(0), aJump(0),
@@ -115,7 +115,7 @@ void TouchscreenInput_TestFps::onConfigChanged(const Config &c) {
 
   // Code for "D-pad with jump in center"
   float Bw = w * 0.11f; // 0.08f;
-  float Bh = Bw;        // 0.15f;
+  float Bh = Bw; // 0.15f;
 
   // If too large (like playing on Tablet)
   PixelCalc &pc = _minecraft->pixelCalc;
@@ -134,8 +134,8 @@ void TouchscreenInput_TestFps::onConfigChanged(const Config &c) {
 
   xx = BaseX + Bw;
   yy = BaseY;
-  _model.addArea(AREA_DPAD_N,
-                 aUp = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
+  _model.addArea(
+      AREA_DPAD_N, aUp = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
   xx = BaseX;
   aUpLeft = new RectangleArea(xx, yy, xx + Bw, yy + Bh);
   xx = BaseX + 2 * Bw;
@@ -143,29 +143,29 @@ void TouchscreenInput_TestFps::onConfigChanged(const Config &c) {
 
   xx = BaseX + Bw;
   yy = BaseY + Bh;
-  _model.addArea(AREA_DPAD_C,
-                 aJump = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
+  _model.addArea(
+      AREA_DPAD_C, aJump = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
 
   xx = BaseX + Bw;
   yy = BaseY + 2 * Bh;
-  _model.addArea(AREA_DPAD_S,
-                 aDown = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
+  _model.addArea(
+      AREA_DPAD_S, aDown = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
 
   xx = BaseX;
   yy = BaseY + Bh;
-  _model.addArea(AREA_DPAD_W,
-                 aLeft = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
+  _model.addArea(
+      AREA_DPAD_W, aLeft = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
 
   xx = BaseX + 2 * Bw;
   yy = BaseY + Bh;
-  _model.addArea(AREA_DPAD_E,
-                 aRight = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
+  _model.addArea(
+      AREA_DPAD_E, aRight = new RectangleArea(xx, yy, xx + Bw, yy + Bh));
 
 #ifdef __APPLE__
   float maxPixels = _minecraft->pixelCalc.millimetersToPixels(10);
   float btnSize = Mth::Min(18 * Gui::GuiScale, maxPixels);
-  _model.addArea(AREA_PAUSE, aPause = new RectangleArea(w - 4 - btnSize, 4,
-                                                        w - 4, 4 + btnSize));
+  _model.addArea(AREA_PAUSE,
+      aPause = new RectangleArea(w - 4 - btnSize, 4, w - 4, 4 + btnSize));
 #endif /* __APPLE__ */
 
   // rebuild();
@@ -228,8 +228,9 @@ void TouchscreenInput_TestFps::tick(Player *player) {
 
     if (_boundingRectangle.isInside((float)x, (float)y) && _forward &&
         !isChangingFlightHeight) {
-      float angle = Mth::PI + Mth::atan2(y - _boundingRectangle.centerY(),
-                                         x - _boundingRectangle.centerX());
+      float angle = Mth::PI +
+          Mth::atan2(y - _boundingRectangle.centerY(),
+              x - _boundingRectangle.centerX());
       ya = Mth::sin(angle);
       xa = Mth::cos(angle);
       tmpForward = true;
@@ -315,9 +316,9 @@ if (now - _sneakTapTime < 0.4f) {
 
   isChangingFlightHeight = false;
   wantUp = isButtonDown(AREA_DPAD_N) &&
-           (_allowHeightChange & (_pressedJump | wantUp));
+      (_allowHeightChange & (_pressedJump | wantUp));
   wantDown = isButtonDown(AREA_DPAD_S) &&
-             (_allowHeightChange & (_pressedJump | wantDown));
+      (_allowHeightChange & (_pressedJump | wantDown));
   if (player->abilities.flying &&
       (wantUp || wantDown || (heldJump && !_forward))) {
     isChangingFlightHeight = true;
@@ -337,8 +338,8 @@ if (now - _sneakTapTime < 0.4f) {
     jumping = true;
   // sneaking = _keys[KEY_SNEAK];
   if (_keys[KEY_CRAFT])
-    player->startCrafting((int)player->x, (int)player->y, (int)player->z,
-                          Recipe::SIZE_2X2);
+    player->startCrafting(
+        (int)player->x, (int)player->y, (int)player->z, Recipe::SIZE_2X2);
 
   if (sneaking) {
     xa *= 0.3f;
@@ -348,8 +349,8 @@ if (now - _sneakTapTime < 0.4f) {
   _pressedJump = heldJump;
 }
 
-static void drawRectangleArea(Tesselator &t, RectangleArea *a, int ux, int vy,
-                              float ssz = 64.0f) {
+static void drawRectangleArea(
+    Tesselator &t, RectangleArea *a, int ux, int vy, float ssz = 64.0f) {
   const float pm = 1.0f / 256.0f;
   const float sz = ssz * pm;
   const float uu = (float)(ux)*pm;
@@ -376,7 +377,7 @@ static void drawPolygonArea(Tesselator &t, PolygonArea *a, int x, int y) {
 
   for (int j = 0; j < a->_numPoints; ++j) {
     t.vertexUV(a->_x[j] * Gui::InvGuiScale, a->_y[j] * Gui::InvGuiScale, 0,
-               uvs[(o + j + j) & 7], uvs[(o + j + j + 1) & 7]);
+        uvs[(o + j + j) & 7], uvs[(o + j + j + 1) & 7]);
   }
 }
 
@@ -445,8 +446,8 @@ void TouchscreenInput_TestFps::rebuild() {
     t.colorABGR(cPressed);
   else
     t.colorABGR(cReleased);
-  drawRectangleArea(t, aRight, imageU + imageSize * 3, imageV,
-                    (float)imageSize);
+  drawRectangleArea(
+      t, aRight, imageU + imageSize * 3, imageV, (float)imageSize);
 
   // render forward button
   if (isButtonDown(AREA_DPAD_N))
@@ -454,8 +455,8 @@ void TouchscreenInput_TestFps::rebuild() {
   else
     t.colorABGR(cReleased);
   if (isChangingFlightHeight) {
-    drawRectangleArea(t, aUp, imageU + imageSize * 2, imageV + imageSize,
-                      (float)imageSize);
+    drawRectangleArea(
+        t, aUp, imageU + imageSize * 2, imageV + imageSize, (float)imageSize);
   } else {
     drawRectangleArea(t, aUp, imageU, imageV, (float)imageSize);
   }
@@ -464,8 +465,8 @@ void TouchscreenInput_TestFps::rebuild() {
   if (northDiagonals) {
     t.colorABGR(cReleased);
     drawRectangleArea(t, aUpLeft, imageU, imageV + imageSize, (float)imageSize);
-    drawRectangleArea(t, aUpRight, imageU + imageSize, imageV + imageSize,
-                      (float)imageSize);
+    drawRectangleArea(
+        t, aUpRight, imageU + imageSize, imageV + imageSize, (float)imageSize);
   }
 
   // render backwards button
@@ -476,11 +477,11 @@ void TouchscreenInput_TestFps::rebuild() {
   else
     t.colorABGR(cReleased);
   if (isChangingFlightHeight) {
-    drawRectangleArea(t, aDown, imageU + imageSize * 3, imageV + imageSize,
-                      (float)imageSize);
+    drawRectangleArea(
+        t, aDown, imageU + imageSize * 3, imageV + imageSize, (float)imageSize);
   } else {
-    drawRectangleArea(t, aDown, imageU + imageSize * 2, imageV,
-                      (float)imageSize);
+    drawRectangleArea(
+        t, aDown, imageU + imageSize * 2, imageV, (float)imageSize);
   }
 
   // render jump / flight button
@@ -491,11 +492,11 @@ void TouchscreenInput_TestFps::rebuild() {
   else
     t.colorABGR(cReleased);
   if (_renderFlightImage) {
-    drawRectangleArea(t, aJump, imageU + imageSize * 4, imageV + imageSize,
-                      (float)imageSize);
+    drawRectangleArea(
+        t, aJump, imageU + imageSize * 4, imageV + imageSize, (float)imageSize);
   } else {
-    drawRectangleArea(t, aJump, imageU + imageSize * 4, imageV,
-                      (float)imageSize);
+    drawRectangleArea(
+        t, aJump, imageU + imageSize * 4, imageV, (float)imageSize);
   }
 
 #ifdef __APPLE__
@@ -508,7 +509,7 @@ void TouchscreenInput_TestFps::rebuild() {
     drawRectangleArea(t, aPause, 200, 64, 18.0f);
   }
 #endif /*__APPLE__*/
-       // t.end(true, _bufferId);
+  // t.end(true, _bufferId);
   // return;
 
   t.draw();

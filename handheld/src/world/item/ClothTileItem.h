@@ -28,8 +28,8 @@ public:
   /*@Override*/
   std::string getDescriptionId(const ItemInstance *instance) const {
     return super::getDescriptionId() + "." +
-           DyePowderItem::COLOR_DESCS[ClothTile::getTileDataForItemAuxValue(
-               instance->getAuxValue())];
+        DyePowderItem::COLOR_DESCS[ClothTile::getTileDataForItemAuxValue(
+            instance->getAuxValue())];
   }
 };
 

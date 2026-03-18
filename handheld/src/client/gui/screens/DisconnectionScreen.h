@@ -34,8 +34,8 @@ public:
     super::render(xm, ym, a);
 
     int center = (width - minecraft->font->width(_msg)) / 2;
-    minecraft->font->drawShadow(_msg, (float)center, (float)(height / 2 - 32),
-                                0xffffffff);
+    minecraft->font->drawShadow(
+        _msg, (float)center, (float)(height / 2 - 32), 0xffffffff);
   }
 
   void buttonClicked(Button *button) {

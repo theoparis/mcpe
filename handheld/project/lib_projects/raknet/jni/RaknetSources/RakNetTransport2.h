@@ -99,12 +99,11 @@ public:
   /// \internal
   virtual PluginReceiveResult OnReceive(Packet *packet);
   /// \internal
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   /// \internal
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming);
+      RakNetGUID rakNetGUID, bool isIncoming);
 
 protected:
   DataStructures::Queue<SystemAddress> newConnections, lostConnections;

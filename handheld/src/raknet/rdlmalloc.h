@@ -37,7 +37,7 @@ extern "C" {
 
 #ifndef ONLY_MSPACES
 #define ONLY_MSPACES 0 /* define to a value */
-#endif                 /* ONLY_MSPACES */
+#endif /* ONLY_MSPACES */
 #ifndef NO_MALLINFO
 #define NO_MALLINFO 0
 #endif /* NO_MALLINFO */
@@ -70,13 +70,13 @@ extern "C" {
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
 struct mallinfo {
-  MALLINFO_FIELD_TYPE arena;    /* non-mmapped space allocated from system */
-  MALLINFO_FIELD_TYPE ordblks;  /* number of free chunks */
-  MALLINFO_FIELD_TYPE smblks;   /* always 0 */
-  MALLINFO_FIELD_TYPE hblks;    /* always 0 */
-  MALLINFO_FIELD_TYPE hblkhd;   /* space in mmapped regions */
-  MALLINFO_FIELD_TYPE usmblks;  /* maximum total allocated space */
-  MALLINFO_FIELD_TYPE fsmblks;  /* always 0 */
+  MALLINFO_FIELD_TYPE arena; /* non-mmapped space allocated from system */
+  MALLINFO_FIELD_TYPE ordblks; /* number of free chunks */
+  MALLINFO_FIELD_TYPE smblks; /* always 0 */
+  MALLINFO_FIELD_TYPE hblks; /* always 0 */
+  MALLINFO_FIELD_TYPE hblkhd; /* space in mmapped regions */
+  MALLINFO_FIELD_TYPE usmblks; /* maximum total allocated space */
+  MALLINFO_FIELD_TYPE fsmblks; /* always 0 */
   MALLINFO_FIELD_TYPE uordblks; /* total allocated space */
   MALLINFO_FIELD_TYPE fordblks; /* total free space */
   MALLINFO_FIELD_TYPE keepcost; /* releasable (via malloc_trim) space */
@@ -504,15 +504,15 @@ void *rak_mspace_memalign(mspace msp, size_t alignment, size_t bytes);
 rak_mspace_independent_calloc behaves as independent_calloc, but
 operates within the given space.
 */
-void **rak_mspace_independent_calloc(mspace msp, size_t n_elements,
-                                     size_t elem_size, void *chunks[]);
+void **rak_mspace_independent_calloc(
+    mspace msp, size_t n_elements, size_t elem_size, void *chunks[]);
 
 /*
 rak_mspace_independent_comalloc behaves as independent_comalloc, but
 operates within the given space.
 */
-void **rak_mspace_independent_comalloc(mspace msp, size_t n_elements,
-                                       size_t sizes[], void *chunks[]);
+void **rak_mspace_independent_comalloc(
+    mspace msp, size_t n_elements, size_t sizes[], void *chunks[]);
 
 /*
 rak_mspace_footprint() returns the number of bytes obtained from the
@@ -1098,7 +1098,7 @@ improvement at the expense of carrying around more memory.
 #define LACKS_ERRNO_H
 #ifndef MALLOC_FAILURE_ACTION
 #define MALLOC_FAILURE_ACTION
-#endif            /* MALLOC_FAILURE_ACTION */
+#endif /* MALLOC_FAILURE_ACTION */
 #ifdef _WIN32_WCE /* WINCE reportedly does not clear */
 #define MMAP_CLEARS 0
 #else
@@ -1120,7 +1120,7 @@ improvement at the expense of carrying around more memory.
 
 #ifndef LACKS_SYS_TYPES_H
 #include <sys/types.h> /* For size_t */
-#endif                 /* LACKS_SYS_TYPES_H */
+#endif /* LACKS_SYS_TYPES_H */
 
 #if (defined(__GNUC__) && ((defined(__i386__) || defined(__x86_64__)))) ||     \
     (defined(_MSC_VER) && _MSC_VER >= 1310)
@@ -1206,7 +1206,7 @@ improvement at the expense of carrying around more memory.
 #ifndef DEFAULT_GRANULARITY
 #if (MORECORE_CONTIGUOUS || defined(DL_PLATFORM_WIN32))
 #define DEFAULT_GRANULARITY (0) /* 0 means to compute in init_mparams */
-#else                           /* MORECORE_CONTIGUOUS */
+#else /* MORECORE_CONTIGUOUS */
 #define DEFAULT_GRANULARITY ((size_t)64U * (size_t)1024U)
 #endif /* MORECORE_CONTIGUOUS */
 #endif /* DEFAULT_GRANULARITY */
@@ -1291,13 +1291,13 @@ system version and #define HAVE_USR_INCLUDE_MALLOC_H.
 #ifndef STRUCT_MALLINFO_DECLARED
 #define STRUCT_MALLINFO_DECLARED 1
 struct mallinfo {
-  MALLINFO_FIELD_TYPE arena;    /* non-mmapped space allocated from system */
-  MALLINFO_FIELD_TYPE ordblks;  /* number of free chunks */
-  MALLINFO_FIELD_TYPE smblks;   /* always 0 */
-  MALLINFO_FIELD_TYPE hblks;    /* always 0 */
-  MALLINFO_FIELD_TYPE hblkhd;   /* space in mmapped regions */
-  MALLINFO_FIELD_TYPE usmblks;  /* maximum total allocated space */
-  MALLINFO_FIELD_TYPE fsmblks;  /* always 0 */
+  MALLINFO_FIELD_TYPE arena; /* non-mmapped space allocated from system */
+  MALLINFO_FIELD_TYPE ordblks; /* number of free chunks */
+  MALLINFO_FIELD_TYPE smblks; /* always 0 */
+  MALLINFO_FIELD_TYPE hblks; /* always 0 */
+  MALLINFO_FIELD_TYPE hblkhd; /* space in mmapped regions */
+  MALLINFO_FIELD_TYPE usmblks; /* maximum total allocated space */
+  MALLINFO_FIELD_TYPE fsmblks; /* always 0 */
   MALLINFO_FIELD_TYPE uordblks; /* total allocated space */
   MALLINFO_FIELD_TYPE fordblks; /* total free space */
   MALLINFO_FIELD_TYPE keepcost; /* releasable (via malloc_trim) space */
@@ -1793,15 +1793,15 @@ void *rak_mspace_memalign(mspace msp, size_t alignment, size_t bytes);
 rak_mspace_independent_calloc behaves as independent_calloc, but
 operates within the given space.
 */
-void **rak_mspace_independent_calloc(mspace msp, size_t n_elements,
-                                     size_t elem_size, void *chunks[]);
+void **rak_mspace_independent_calloc(
+    mspace msp, size_t n_elements, size_t elem_size, void *chunks[]);
 
 /*
 rak_mspace_independent_comalloc behaves as independent_comalloc, but
 operates within the given space.
 */
-void **rak_mspace_independent_comalloc(mspace msp, size_t n_elements,
-                                       size_t sizes[], void *chunks[]);
+void **rak_mspace_independent_comalloc(
+    mspace msp, size_t n_elements, size_t sizes[], void *chunks[]);
 
 /*
 rak_mspace_footprint() returns the number of bytes obtained from the
@@ -1865,21 +1865,21 @@ on the next line, as well as in programs that use this malloc.
 
 #ifdef DL_PLATFORM_WIN32
 #pragma warning(disable : 4146) /* no "unsigned" warnings */
-#endif                          /* DL_PLATFORM_WIN32 */
+#endif /* DL_PLATFORM_WIN32 */
 
 #include <stdio.h> /* for printing in malloc_stats */
 
 #ifndef LACKS_ERRNO_H
 #include <errno.h> /* for MALLOC_FAILURE_ACTION */
-#endif             /* LACKS_ERRNO_H */
+#endif /* LACKS_ERRNO_H */
 
 #if FOOTERS || DEBUG
 #include <time.h> /* for magic initialization */
-#endif            /* FOOTERS */
+#endif /* FOOTERS */
 
 #ifndef LACKS_STDLIB_H
 #include <stdlib.h> /* for abort() */
-#endif              /* LACKS_STDLIB_H */
+#endif /* LACKS_STDLIB_H */
 
 #ifdef DEBUG
 #if ABORT_ON_ASSERT_FAILURE
@@ -1890,7 +1890,7 @@ on the next line, as well as in programs that use this malloc.
 #else /* ABORT_ON_ASSERT_FAILURE */
 #include <assert.h>
 #endif /* ABORT_ON_ASSERT_FAILURE */
-#else  /* DEBUG */
+#else /* DEBUG */
 #ifndef assert
 #define assert(x)
 #endif
@@ -1899,13 +1899,13 @@ on the next line, as well as in programs that use this malloc.
 
 #ifndef LACKS_STRING_H
 #include <string.h> /* for memset etc */
-#endif              /* LACKS_STRING_H */
+#endif /* LACKS_STRING_H */
 
 #if USE_BUILTIN_FFS
 #ifndef LACKS_STRINGS_H
 #include <strings.h> /* for ffs */
-#endif               /* LACKS_STRINGS_H */
-#endif               /* USE_BUILTIN_FFS */
+#endif /* LACKS_STRINGS_H */
+#endif /* USE_BUILTIN_FFS */
 
 #if HAVE_MMAP
 #ifndef LACKS_SYS_MMAN_H
@@ -1916,8 +1916,8 @@ on the next line, as well as in programs that use this malloc.
 #undef __USE_GNU
 #else
 #include <sys/mman.h> /* for mmap */
-#endif                /* linux */
-#endif                /* LACKS_SYS_MMAN_H */
+#endif /* linux */
+#endif /* LACKS_SYS_MMAN_H */
 #ifndef LACKS_FCNTL_H
 #include <fcntl.h>
 #endif /* LACKS_FCNTL_H */
@@ -1925,7 +1925,7 @@ on the next line, as well as in programs that use this malloc.
 
 #ifndef LACKS_UNISTD_H
 #include <unistd.h> /* for sbrk, sysconf */
-#else               /* LACKS_UNISTD_H */
+#else /* LACKS_UNISTD_H */
 #if !defined(__FreeBSD__) && !defined(__OpenBSD__) && !defined(__NetBSD__)
 extern void *sbrk(ptrdiff_t);
 #endif /* FreeBSD etc */
@@ -1949,8 +1949,8 @@ extern void *sbrk(ptrdiff_t);
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
-LONG __cdecl _InterlockedCompareExchange(LONG volatile *Dest, LONG Exchange,
-                                         LONG Comp);
+LONG __cdecl _InterlockedCompareExchange(
+    LONG volatile *Dest, LONG Exchange, LONG Comp);
 LONG __cdecl _InterlockedExchange(LONG volatile *Target, LONG Value);
 #ifdef __cplusplus
 }
@@ -2055,9 +2055,9 @@ extern size_t getpagesize();
 /* the number of bytes to offset an address to align it */
 #define align_offset(A)                                                        \
   ((((size_t)(A) & CHUNK_ALIGN_MASK) == 0)                                     \
-       ? 0                                                                     \
-       : ((MALLOC_ALIGNMENT - ((size_t)(A) & CHUNK_ALIGN_MASK)) &              \
-          CHUNK_ALIGN_MASK))
+          ? 0                                                                  \
+          : ((MALLOC_ALIGNMENT - ((size_t)(A) & CHUNK_ALIGN_MASK)) &           \
+                CHUNK_ALIGN_MASK))
 
 /* -------------------------- MMAP preliminaries ------------------------- */
 
@@ -2082,8 +2082,8 @@ static void *win32mmap(size_t size) {
 
 /* For direct MMAP, use MEM_TOP_DOWN to minimize interference */
 static void *win32direct_mmap(size_t size) {
-  void *ptr = VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN,
-                           PAGE_READWRITE);
+  void *ptr = VirtualAlloc(
+      0, size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN, PAGE_READWRITE);
   return (ptr != 0) ? ptr : MFAIL;
 }
 
@@ -2136,9 +2136,10 @@ is unlikely to be needed, but is supplied just in case.
 #define MMAP_FLAGS (MAP_PRIVATE)
 static int dev_zero_fd = -1; /* Cached file descriptor for /dev/zero. */
 #define RAK_MMAP_DEFAULT(s)                                                    \
-  ((dev_zero_fd < 0) ? (dev_zero_fd = open("/dev/zero", O_RDWR),               \
-                        mmap(0, (s), MMAP_PROT, MMAP_FLAGS, dev_zero_fd, 0))   \
-                     : mmap(0, (s), MMAP_PROT, MMAP_FLAGS, dev_zero_fd, 0))
+  ((dev_zero_fd < 0)                                                           \
+          ? (dev_zero_fd = open("/dev/zero", O_RDWR),                          \
+                mmap(0, (s), MMAP_PROT, MMAP_FLAGS, dev_zero_fd, 0))           \
+          : mmap(0, (s), MMAP_PROT, MMAP_FLAGS, dev_zero_fd, 0))
 #endif /* MAP_ANONYMOUS */
 
 #define RAK_DIRECT_MMAP_DEFAULT(s) RAK_MMAP_DEFAULT(s)
@@ -2153,8 +2154,8 @@ static FORCEINLINE void *win32mmap(size_t size) {
 
 /* For direct MMAP, use MEM_TOP_DOWN to minimize interference */
 static FORCEINLINE void *win32direct_mmap(size_t size) {
-  void *ptr = VirtualAlloc(0, size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN,
-                           PAGE_READWRITE);
+  void *ptr = VirtualAlloc(
+      0, size, MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN, PAGE_READWRITE);
   return (ptr != 0) ? ptr : MFAIL;
 }
 
@@ -2197,7 +2198,7 @@ static FORCEINLINE int win32munmap(void *ptr, size_t size) {
 #else /* MORECORE */
 #define CALL_MORECORE(S) MORECORE_DEFAULT(S)
 #endif /* MORECORE */
-#else  /* HAVE_MORECORE */
+#else /* HAVE_MORECORE */
 #define CALL_MORECORE(S) MFAIL
 #endif /* HAVE_MORECORE */
 
@@ -2222,7 +2223,7 @@ static FORCEINLINE int win32munmap(void *ptr, size_t size) {
 #else /* DIRECT_MMAP */
 #define CALL_DIRECT_MMAP(s) RAK_DIRECT_MMAP_DEFAULT(s)
 #endif /* DIRECT_MMAP */
-#else  /* HAVE_MMAP */
+#else /* HAVE_MMAP */
 #define USE_MMAP_BIT (SIZE_T_ZERO)
 
 #define MMAP(s) MFAIL
@@ -2243,7 +2244,7 @@ static FORCEINLINE int win32munmap(void *ptr, size_t size) {
 #define CALL_MREMAP(addr, osz, nsz, mv)                                        \
   MREMAP_DEFAULT((addr), (osz), (nsz), (mv))
 #endif /* MREMAP */
-#else  /* HAVE_MMAP && HAVE_MREMAP */
+#else /* HAVE_MMAP && HAVE_MREMAP */
 #define CALL_MREMAP(addr, osz, nsz, mv) MFAIL
 #endif /* HAVE_MMAP && HAVE_MREMAP */
 

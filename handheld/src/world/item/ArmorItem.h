@@ -20,7 +20,7 @@ public:
   public:
     /// p0-p3 are slot protection values
     ArmorMaterial(int durabilityMultiplier, int p0, int p1, int p2,
-                  int p3); //, int enchantmentValue);
+        int p3); //, int enchantmentValue);
 
     int getHealthForSlot(int slot) const;
 

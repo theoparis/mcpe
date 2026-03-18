@@ -51,8 +51,8 @@ void PHPDirectoryServer2::Init(HTTPConnection *_http, const char *_path) {
   pathToPHP = _path;
 }
 
-void PHPDirectoryServer2::SetField(RakNet::RakString columnName,
-                                   RakNet::RakString value) {
+void PHPDirectoryServer2::SetField(
+    RakNet::RakString columnName, RakNet::RakString value) {
   if (columnName.IsEmpty())
     return;
 
@@ -70,8 +70,7 @@ unsigned int PHPDirectoryServer2::GetFieldCount(void) const {
   return fields.Size();
 }
 void PHPDirectoryServer2::GetField(unsigned int index,
-                                   RakNet::RakString &columnName,
-                                   RakNet::RakString &value) {
+    RakNet::RakString &columnName, RakNet::RakString &value) {
   RakAssert(index < fields.Size());
   columnName = fields.GetKeyAtIndex(index);
   value = fields[index];
@@ -85,9 +84,8 @@ void PHPDirectoryServer2::SetFields(DataStructures::Table *table) {
   for (rowIndex = 0; rowIndex < table->GetRowCount(); rowIndex++) {
     row = table->GetRowByIndex(rowIndex, 0);
     for (columnIndex = 0; columnIndex < table->GetColumnCount();
-         columnIndex++) {
-      SetField(
-          table->ColumnName(columnIndex),
+        columnIndex++) {
+      SetField(table->ColumnName(columnIndex),
           row->cells[columnIndex]->ToString(table->GetColumnType(columnIndex)));
     }
   }
@@ -99,9 +97,7 @@ void PHPDirectoryServer2::ClearFields(void) {
 }
 
 void PHPDirectoryServer2::UploadTable(RakNet::RakString uploadPassword,
-                                      RakNet::RakString gameName,
-                                      unsigned short gamePort,
-                                      bool autoRepost) {
+    RakNet::RakString gameName, unsigned short gamePort, bool autoRepost) {
   gameNameParam = gameName;
   gamePortParam = gamePort;
   currentOperation = "";
@@ -137,8 +133,8 @@ void PHPDirectoryServer2::UploadAndDownloadTable(
     nextRepost = 0;
 }
 
-HTTPReadResult
-PHPDirectoryServer2::ProcessHTTPRead(RakNet::RakString httpRead) {
+HTTPReadResult PHPDirectoryServer2::ProcessHTTPRead(
+    RakNet::RakString httpRead) {
   const char *c = (const char *)httpRead.C_String(); // current position
   HTTPReadResult resultCode = HTTP_RESULT_EMPTY;
 
@@ -215,8 +211,8 @@ void PHPDirectoryServer2::PushColumnsAndValues(
     if (columns[i].IsEmpty() == false) {
       unsigned col = lastDownloadedTable.ColumnIndex(columns[i]);
       if (col == (unsigned)-1) {
-        col = lastDownloadedTable.AddColumn(columns[i],
-                                            DataStructures::Table::STRING);
+        col = lastDownloadedTable.AddColumn(
+            columns[i], DataStructures::Table::STRING);
       }
 
       if (row == 0) {
@@ -227,8 +223,8 @@ void PHPDirectoryServer2::PushColumnsAndValues(
     }
   }
 }
-const DataStructures::Table *
-PHPDirectoryServer2::GetLastDownloadedTable(void) const {
+const DataStructures::Table *PHPDirectoryServer2::GetLastDownloadedTable(
+    void) const {
   return &lastDownloadedTable;
 }
 void PHPDirectoryServer2::SendOperation(void) {
@@ -254,7 +250,7 @@ void PHPDirectoryServer2::SendOperation(void) {
   postURL += pathToPHP;
   postURL += currentOperation;
   http->Post(postURL.C_String(), outgoingMessageBody,
-             "application/x-www-form-urlencoded");
+      "application/x-www-form-urlencoded");
 }
 void PHPDirectoryServer2::Update(void) {
   if (http->IsBusy())

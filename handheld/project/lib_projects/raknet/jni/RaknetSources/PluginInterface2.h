@@ -114,9 +114,8 @@ public:
   /// \param[in] rakNetGuid The guid of the specified system
   /// \param[in] lostConnectionReason How the connection was closed: manually,
   /// connection lost, or notification of disconnection
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason) {
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason) {
     (void)systemAddress;
     (void)rakNetGUID;
     (void)lostConnectionReason;
@@ -128,7 +127,7 @@ public:
   /// \param[in] isIncoming If true, this is ID_NEW_INCOMING_CONNECTION, or the
   /// equivalent
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming) {
+      RakNetGUID rakNetGUID, bool isIncoming) {
     (void)systemAddress;
     (void)rakNetGUID;
     (void)isIncoming;
@@ -137,8 +136,7 @@ public:
   /// Called when a connection attempt fails
   /// \param[in] packet Packet to be returned to the user
   /// \param[in] failedConnectionReason Why the connection failed
-  virtual void OnFailedConnectionAttempt(
-      Packet *packet,
+  virtual void OnFailedConnectionAttempt(Packet *packet,
       PI2_FailedConnectionAttemptReason failedConnectionAttemptReason) {
     (void)packet;
     (void)failedConnectionAttemptReason;
@@ -158,7 +156,7 @@ public:
   /// \param[in] bitsUsed How many bits long \a data is
   /// \param[in] remoteSystemAddress Which system this message is being sent to
   virtual void OnDirectSocketSend(const char *data, const BitSize_t bitsUsed,
-                                  SystemAddress remoteSystemAddress) {
+      SystemAddress remoteSystemAddress) {
     (void)data;
     (void)bitsUsed;
     (void)remoteSystemAddress;
@@ -171,7 +169,7 @@ public:
   /// \param[in] bitsUsed How many bits long \a data is
   /// \param[in] remoteSystemAddress Which system this message is being sent to
   virtual void OnDirectSocketReceive(const char *data, const BitSize_t bitsUsed,
-                                     SystemAddress remoteSystemAddress) {
+      SystemAddress remoteSystemAddress) {
     (void)data;
     (void)bitsUsed;
     (void)remoteSystemAddress;
@@ -181,10 +179,8 @@ public:
   /// \pre To be called, UsesReliabilityLayer() must return true
   /// \param[in] bitsUsed How many bits long \a data is
   /// \param[in] remoteSystemAddress Which system this message is being sent to
-  virtual void
-  OnReliabilityLayerPacketError(const char *errorMessage,
-                                const BitSize_t bitsUsed,
-                                SystemAddress remoteSystemAddress) {
+  virtual void OnReliabilityLayerPacketError(const char *errorMessage,
+      const BitSize_t bitsUsed, SystemAddress remoteSystemAddress) {
     (void)errorMessage;
     (void)bitsUsed;
     (void)remoteSystemAddress;
@@ -201,9 +197,8 @@ public:
   /// \param[in] isSend Is this callback representing a send event or receive
   /// event?
   virtual void OnInternalPacket(InternalPacket *internalPacket,
-                                unsigned frameNumber,
-                                SystemAddress remoteSystemAddress,
-                                RakNet::TimeMS time, int isSend) {
+      unsigned frameNumber, SystemAddress remoteSystemAddress,
+      RakNet::TimeMS time, int isSend) {
     (void)internalPacket;
     (void)frameNumber;
     (void)remoteSystemAddress;
@@ -218,7 +213,7 @@ public:
   /// \param[in] remoteSystemAddress The player we sent or got this packet from
   /// \param[in] time The current time as returned by RakNet::GetTimeMS()
   virtual void OnAck(unsigned int messageNumber,
-                     SystemAddress remoteSystemAddress, RakNet::TimeMS time) {
+      SystemAddress remoteSystemAddress, RakNet::TimeMS time) {
     (void)messageNumber;
     (void)remoteSystemAddress;
     (void)time;
@@ -229,7 +224,7 @@ public:
   /// \param[in] bitsUsed How many bits long \a data is
   /// \param[in] remoteSystemAddress The player we sent or got this packet from
   virtual void OnPushBackPacket(const char *data, const BitSize_t bitsUsed,
-                                SystemAddress remoteSystemAddress) {
+      SystemAddress remoteSystemAddress) {
     (void)data;
     (void)bitsUsed;
     (void)remoteSystemAddress;
@@ -248,12 +243,12 @@ protected:
   // Send through either rakPeerInterface or packetizedTCP, whichever is
   // available
   void SendUnified(const RakNet::BitStream *bitStream, PacketPriority priority,
-                   PacketReliability reliability, char orderingChannel,
-                   const AddressOrGUID systemIdentifier, bool broadcast);
+      PacketReliability reliability, char orderingChannel,
+      const AddressOrGUID systemIdentifier, bool broadcast);
   bool SendListUnified(const char **data, const int *lengths,
-                       const int numParameters, PacketPriority priority,
-                       PacketReliability reliability, char orderingChannel,
-                       const AddressOrGUID systemIdentifier, bool broadcast);
+      const int numParameters, PacketPriority priority,
+      PacketReliability reliability, char orderingChannel,
+      const AddressOrGUID systemIdentifier, bool broadcast);
 
   Packet *AllocatePacketUnified(unsigned dataSize);
   void PushBackPacketUnified(Packet *packet, bool pushAtHead);

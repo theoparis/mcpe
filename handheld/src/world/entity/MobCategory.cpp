@@ -13,8 +13,8 @@ const MobCategory MobCategory::creature(MobTypes::BaseCreature, 10, 15, true);
 
 //
 
-const MobCategory MobCategory::waterCreature(MobTypes::BaseWaterCreature, 5, 10,
-                                             true);
+const MobCategory MobCategory::waterCreature(
+    MobTypes::BaseWaterCreature, 5, 10, true);
 
 //
 // Init an array with all defined MobCategory'ies

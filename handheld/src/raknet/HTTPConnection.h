@@ -62,7 +62,7 @@ public:
   /// \param data A NULL terminated string to submit to the server
   /// \param contentType "Content-Type:" passed to post.
   void Post(const char *path, const char *data,
-            const char *_contentType = "application/x-www-form-urlencoded");
+      const char *_contentType = "application/x-www-form-urlencoded");
 
   /// Get a file from a webserver
   /// \param path the path on the remote server you want to GET from. For

@@ -34,8 +34,8 @@ bool TileRenderer::tesselateBlockInWorld(Tile *tt, int x, int y, int z) {
   }
 }
 
-bool TileRenderer::tesselateBlockInWorld(Tile *tt, int x, int y, int z, float r,
-                                         float g, float b) {
+bool TileRenderer::tesselateBlockInWorld(
+    Tile *tt, int x, int y, int z, float r, float g, float b) {
   applyAmbienceOcclusion = false;
   float xf = (float)x;
   float yf = (float)y;
@@ -52,10 +52,6 @@ bool TileRenderer::tesselateBlockInWorld(Tile *tt, int x, int y, int z, float r,
   float r11 = c11 * r;
   float g11 = c11 * g;
   float b11 = c11 * b;
-
-  if (tt == (Tile *)Tile::grass) {
-    r = g = b = 1.0f;
-  }
 
   float r10 = c10 * r;
   float r2 = c2 * r;
@@ -126,8 +122,8 @@ bool TileRenderer::tesselateBlockInWorld(Tile *tt, int x, int y, int z, float r,
   return changed;
 }
 
-void TileRenderer::tesselateInWorld(Tile *tile, int x, int y, int z,
-                                    int fixedTexture) {
+void TileRenderer::tesselateInWorld(
+    Tile *tile, int x, int y, int z, int fixedTexture) {
   this->fixedTexture = fixedTexture;
   tesselateInWorld(tile, x, y, z);
   this->fixedTexture = -1;
@@ -316,17 +312,17 @@ bool TileRenderer::tesselateStemInWorld(Tile *_tt, int x, int y, int z) {
   int dir = tt->getConnectDir(level, x, y, z);
   if (dir < 0) {
     tesselateStemTexture(tt, level->getData(x, y, z), tt->yy1, float(x),
-                         float(y - 1 / 16.0f), float(z));
+        float(y - 1 / 16.0f), float(z));
   } else {
     tesselateStemTexture(tt, level->getData(x, y, z), 0.5f, float(x),
-                         float(y - 1 / 16.0f), float(z));
+        float(y - 1 / 16.0f), float(z));
     tesselateStemDirTexture(tt, level->getData(x, y, z), dir, tt->yy1, float(x),
-                            float(y - 1 / 16.0f), float(z));
+        float(y - 1 / 16.0f), float(z));
   }
   return true;
 }
-void TileRenderer::tesselateTorch(Tile *tt, float x, float y, float z,
-                                  float xxa, float zza) {
+void TileRenderer::tesselateTorch(
+    Tile *tt, float x, float y, float z, float xxa, float zza) {
   Tesselator &t = Tesselator::instance;
   int tex = tt->getTexture(0);
 
@@ -379,8 +375,8 @@ void TileRenderer::tesselateTorch(Tile *tt, float x, float y, float z,
   t.vertexUV(x0, y + 1, z - r, u1, v0);
 }
 
-void TileRenderer::tesselateCrossTexture(Tile *tt, int data, float x, float y,
-                                         float z) {
+void TileRenderer::tesselateCrossTexture(
+    Tile *tt, int data, float x, float y, float z) {
   Tesselator &t = Tesselator::instance;
 
   int tex = tt->getTexture(0, data);
@@ -419,8 +415,8 @@ void TileRenderer::tesselateCrossTexture(Tile *tt, int data, float x, float y,
   t.vertexUV(x0, y + 0, z1, u1, v1);
   t.vertexUV(x0, y + 1, z1, u1, v0);
 }
-void TileRenderer::tesselateStemTexture(Tile *tt, int data, float h, float x,
-                                        float y, float z) {
+void TileRenderer::tesselateStemTexture(
+    Tile *tt, int data, float h, float x, float y, float z) {
   Tesselator &t = Tesselator::instance;
   int tex = tt->getTexture(0, data);
   if (fixedTexture >= 0)
@@ -457,8 +453,8 @@ void TileRenderer::tesselateStemTexture(Tile *tt, int data, float h, float x,
   t.vertexUV(x0, y + 0, z1, u1, v1);
   t.vertexUV(x0, y + h, z1, u1, v0);
 }
-void TileRenderer::tesselateStemDirTexture(Tile *tt, int data, int dir, float h,
-                                           float x, float y, float z) {
+void TileRenderer::tesselateStemDirTexture(
+    Tile *tt, int data, int dir, float h, float x, float y, float z) {
   Tesselator &t = Tesselator::instance;
 
   int tex = tt->getTexture(0, data) + 16;
@@ -564,18 +560,18 @@ bool TileRenderer::tesselateWaterInWorld(Tile *tt, int x, int y, int z) {
     float s =
         (Mth::sin(angle) * 8) / 256.5f; // @attn: to get rid of "jitter" (caused
     float c = (Mth::cos(angle) * 8) /
-              256.5f; //  of fp rounding errors) in big oceans)
+        256.5f; //  of fp rounding errors) in big oceans)
 
     float br = tt->getBrightness(level, x, y, z);
     t.color(c11 * br, c11 * br, c11 * br);
-    t.vertexUV((float)x + 0, (float)y + h0, (float)z + 0, uc - c - s,
-               vc - c + s);
-    t.vertexUV((float)x + 0, (float)y + h1, (float)z + 1, uc - c + s,
-               vc + c + s);
-    t.vertexUV((float)x + 1, (float)y + h2, (float)z + 1, uc + c + s,
-               vc + c - s);
-    t.vertexUV((float)x + 1, (float)y + h3, (float)z + 0, uc + c - s,
-               vc - c - s);
+    t.vertexUV(
+        (float)x + 0, (float)y + h0, (float)z + 0, uc - c - s, vc - c + s);
+    t.vertexUV(
+        (float)x + 0, (float)y + h1, (float)z + 1, uc - c + s, vc + c + s);
+    t.vertexUV(
+        (float)x + 1, (float)y + h2, (float)z + 1, uc + c + s, vc + c - s);
+    t.vertexUV(
+        (float)x + 1, (float)y + h3, (float)z + 0, uc + c - s, vc - c - s);
   }
 
   if (noCulling || down) {
@@ -695,8 +691,8 @@ float TileRenderer::getWaterHeight(int x, int y, int z, const Material *m) {
   return 1 - h / count;
 }
 
-void TileRenderer::renderBlock(Tile *tt, LevelSource *level, int x, int y,
-                               int z) {
+void TileRenderer::renderBlock(
+    Tile *tt, LevelSource *level, int x, int y, int z) {
   float c10 = 0.5f;
   float c11 = 1;
   float c2 = 0.8f;
@@ -746,10 +742,7 @@ void TileRenderer::renderBlock(Tile *tt, LevelSource *level, int x, int y,
 }
 
 bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
-                                                              int pY, int pZ,
-                                                              float pBaseRed,
-                                                              float pBaseGreen,
-                                                              float pBaseBlue) {
+    int pY, int pZ, float pBaseRed, float pBaseGreen, float pBaseBlue) {
   applyAmbienceOcclusion = true;
   bool i = false;
   float ll1 = ll000;
@@ -841,7 +834,7 @@ bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
     c4b *= ll4;
 
     renderFaceDown(tt, (float)pX, (float)pY, (float)pZ,
-                   tt->getTexture(level, pX, pY, pZ, 0));
+        tt->getTexture(level, pX, pY, pZ, 0));
     i = true;
   }
   if ((noCulling) || (tt->shouldRenderFace(level, pX, pY + 1, pZ, 1))) {
@@ -897,7 +890,7 @@ bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
     c4g *= ll4;
     c4b *= ll4;
     renderFaceUp(tt, (float)pX, (float)pY, (float)pZ,
-                 tt->getTexture(level, pX, pY, pZ, 1));
+        tt->getTexture(level, pX, pY, pZ, 1));
     i = true;
   }
   if ((noCulling) || (tt->shouldRenderFace(level, pX, pY, pZ - 1, 2))) {
@@ -951,7 +944,7 @@ bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
     c4g *= ll4;
     c4b *= ll4;
     renderNorth(tt, (float)pX, (float)pY, (float)pZ,
-                tt->getTexture(level, pX, pY, pZ, 2));
+        tt->getTexture(level, pX, pY, pZ, 2));
     i = true;
   }
   if ((noCulling) || (tt->shouldRenderFace(level, pX, pY, pZ + 1, 3))) {
@@ -1006,7 +999,7 @@ bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
     c4g *= ll4;
     c4b *= ll4;
     renderSouth(tt, (float)pX, (float)pY, (float)pZ,
-                tt->getTexture(level, pX, pY, pZ, 3));
+        tt->getTexture(level, pX, pY, pZ, 3));
     i = true;
   }
   if ((noCulling) || (tt->shouldRenderFace(level, pX - 1, pY, pZ, 4))) {
@@ -1060,7 +1053,7 @@ bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
     c4g *= ll4;
     c4b *= ll4;
     renderWest(tt, (float)pX, (float)pY, (float)pZ,
-               tt->getTexture(level, pX, pY, pZ, 4));
+        tt->getTexture(level, pX, pY, pZ, 4));
     i = true;
   }
   if ((noCulling) || (tt->shouldRenderFace(level, pX + 1, pY, pZ, 5))) {
@@ -1115,7 +1108,7 @@ bool TileRenderer::tesselateBlockInWorldWithAmbienceOcclusion(Tile *tt, int pX,
     c4b *= ll4;
 
     renderEast(tt, (float)pX, (float)pY, (float)pZ,
-               tt->getTexture(level, pX, pY, pZ, 5));
+        tt->getTexture(level, pX, pY, pZ, 5));
     i = true;
   }
   applyAmbienceOcclusion = false;
@@ -1130,8 +1123,8 @@ bool TileRenderer::tesselateCactusInWorld(Tile *tt, int x, int y, int z) {
   return tesselateCactusInWorld(tt, x, y, z, r, g, b);
 }
 
-bool TileRenderer::tesselateCactusInWorld(Tile *tt, int x, int y, int z,
-                                          float r, float g, float b) {
+bool TileRenderer::tesselateCactusInWorld(
+    Tile *tt, int x, int y, int z, float r, float g, float b) {
   Tesselator &t = Tesselator::instance;
 
   bool changed = false;
@@ -1295,8 +1288,8 @@ bool TileRenderer::tesselateFenceInWorld(FenceTile *tt, int x, int y, int z) {
   return changed;
 }
 
-bool TileRenderer::tesselateFenceGateInWorld(FenceGateTile *tt, int x, int y,
-                                             int z) {
+bool TileRenderer::tesselateFenceGateInWorld(
+    FenceGateTile *tt, int x, int y, int z) {
   bool changed = true;
 
   int data = level->getData(x, y, z);
@@ -1520,8 +1513,8 @@ bool TileRenderer::tesselateBedInWorld(Tile *tt, int x, int y, int z) {
   float centerBrightness = tt->getBrightness(level, x, y, z);
   // render wooden underside
   {
-    t.color(r10 * centerBrightness, g10 * centerBrightness,
-            b10 * centerBrightness);
+    t.color(
+        r10 * centerBrightness, g10 * centerBrightness, b10 * centerBrightness);
     int tex = tt->getTexture(level, x, y, z, Facing::DOWN);
 
     int xt = (tex & 0xf) << 4;
@@ -1634,8 +1627,8 @@ bool TileRenderer::tesselateBedInWorld(Tile *tt, int x, int y, int z) {
 
     t.color(r2 * br, g2 * br, b2 * br);
     xFlipTexture = flipEdge == Facing::NORTH;
-    renderNorth(tt, float(x), float(y), float(z),
-                tt->getTexture(level, x, y, z, 2));
+    renderNorth(
+        tt, float(x), float(y), float(z), tt->getTexture(level, x, y, z, 2));
   }
 
   if ((skipEdge != Facing::SOUTH) &&
@@ -1647,8 +1640,8 @@ bool TileRenderer::tesselateBedInWorld(Tile *tt, int x, int y, int z) {
     t.color(r2 * br, g2 * br, b2 * br);
 
     xFlipTexture = flipEdge == Facing::SOUTH;
-    renderSouth(tt, float(x), float(y), float(z),
-                tt->getTexture(level, x, y, z, 3));
+    renderSouth(
+        tt, float(x), float(y), float(z), tt->getTexture(level, x, y, z, 3));
   }
 
   if ((skipEdge != Facing::WEST) &&
@@ -1659,8 +1652,8 @@ bool TileRenderer::tesselateBedInWorld(Tile *tt, int x, int y, int z) {
 
     t.color(r3 * br, g3 * br, b3 * br);
     xFlipTexture = flipEdge == Facing::WEST;
-    renderWest(tt, float(x), float(y), float(z),
-               tt->getTexture(level, x, y, z, 4));
+    renderWest(
+        tt, float(x), float(y), float(z), tt->getTexture(level, x, y, z, 4));
   }
 
   if ((skipEdge != Facing::EAST) &&
@@ -1671,8 +1664,8 @@ bool TileRenderer::tesselateBedInWorld(Tile *tt, int x, int y, int z) {
 
     t.color(r3 * br, g3 * br, b3 * br);
     xFlipTexture = flipEdge == Facing::EAST;
-    renderEast(tt, float(x), float(y), float(z),
-               tt->getTexture(level, x, y, z, 5));
+    renderEast(
+        tt, float(x), float(y), float(z), tt->getTexture(level, x, y, z, 5));
   }
   xFlipTexture = false;
   return true;
@@ -1716,8 +1709,8 @@ bool TileRenderer::tesselateDoorInWorld(Tile *tt, int x, int y, int z) {
     if (Tile::lightEmission[tt->id] > 0)
       br = 1.0f;
     t.color(c10 * br, c10 * br, c10 * br);
-    renderFaceDown(tt, (float)x, (float)y, (float)z,
-                   tt->getTexture(level, x, y, z, 0));
+    renderFaceDown(
+        tt, (float)x, (float)y, (float)z, tt->getTexture(level, x, y, z, 0));
     changed = true;
   }
 
@@ -1728,8 +1721,8 @@ bool TileRenderer::tesselateDoorInWorld(Tile *tt, int x, int y, int z) {
     if (Tile::lightEmission[tt->id] > 0)
       br = 1.0f;
     t.color(c11 * br, c11 * br, c11 * br);
-    renderFaceUp(tt, (float)x, (float)y, (float)z,
-                 tt->getTexture(level, x, y, z, 1));
+    renderFaceUp(
+        tt, (float)x, (float)y, (float)z, tt->getTexture(level, x, y, z, 1));
     changed = true;
   }
 
@@ -1808,13 +1801,13 @@ bool TileRenderer::tesselateRowInWorld(Tile *tt, int x, int y, int z) {
   Tesselator &t = Tesselator::instance;
   float br = tt->getBrightness(level, x, y, z);
   t.color(br, br, br);
-  tesselateRowTexture(tt, level->getData(x, y, z), float(x), y - 1 / 16.0f,
-                      float(z));
+  tesselateRowTexture(
+      tt, level->getData(x, y, z), float(x), y - 1 / 16.0f, float(z));
   return true;
 }
 
-void TileRenderer::renderFaceDown(Tile *tt, float x, float y, float z,
-                                  int tex) {
+void TileRenderer::renderFaceDown(
+    Tile *tt, float x, float y, float z, int tex) {
   Tesselator &t = Tesselator::instance;
 
   if (fixedTexture >= 0)
@@ -2196,8 +2189,8 @@ void TileRenderer::renderTile(Tile *tile, int data) {
       if (i == 2)
         tile->setShape(0.5f - w, 1 - w * 3, -w * 2, 0.5f + w, 1 - w, 1 + w * 2);
       if (i == 3)
-        tile->setShape(0.5f - w, 0.5f - w * 3, -w * 2, 0.5f + w, 0.5f - w,
-                       1 + w * 2);
+        tile->setShape(
+            0.5f - w, 0.5f - w * 3, -w * 2, 0.5f + w, 0.5f - w, 1 + w * 2);
 
       renderFaceDown(tile, 0, 0, 0, tile->getTexture(0));
       renderFaceUp(tile, 0, 0, 0, tile->getTexture(1));
@@ -2255,6 +2248,12 @@ void TileRenderer::renderGuiTile(Tile *tile, int data) {
   Tesselator &t = Tesselator::instance;
 
   int shape = tile->getRenderShape();
+
+  if (shape != Tile::SHAPE_BLOCK && shape != Tile::SHAPE_CROSS_TEXTURE &&
+      shape != Tile::SHAPE_CACTUS && shape != Tile::SHAPE_STAIRS &&
+      shape != Tile::SHAPE_FENCE && shape != Tile::SHAPE_FENCE_GATE) {
+    return;
+  }
 
   if (shape == Tile::SHAPE_BLOCK) {
     tile->updateDefaultShape();
@@ -2340,8 +2339,8 @@ void TileRenderer::renderGuiTile(Tile *tile, int data) {
       if (i == 2)
         tile->setShape(0.5f - w, 1 - w * 3, -w * 2, 0.5f + w, 1 - w, 1 + w * 2);
       if (i == 3)
-        tile->setShape(0.5f - w, 0.5f - w * 3, -w * 2, 0.5f + w, 0.5f - w,
-                       1 + w * 2);
+        tile->setShape(
+            0.5f - w, 0.5f - w * 3, -w * 2, 0.5f + w, 0.5f - w, 1 + w * 2);
 
       t.color(0xff, 0xff, 0xff);
 
@@ -2390,8 +2389,8 @@ void TileRenderer::renderGuiTile(Tile *tile, int data) {
   }
 }
 
-bool TileRenderer::tesselateThinFenceInWorld(ThinFenceTile *tt, int x, int y,
-                                             int z) {
+bool TileRenderer::tesselateThinFenceInWorld(
+    ThinFenceTile *tt, int x, int y, int z) {
   const int depth = 128;
   Tesselator &t = Tesselator::instance;
 
@@ -2837,8 +2836,8 @@ bool TileRenderer::tesselateThinFenceInWorld(ThinFenceTile *tt, int x, int y,
   return true;
 }
 
-void TileRenderer::tesselateRowTexture(Tile *tt, int data, float x, float y,
-                                       float z) {
+void TileRenderer::tesselateRowTexture(
+    Tile *tt, int data, float x, float y, float z) {
   Tesselator &t = Tesselator::instance;
 
   int tex = tt->getTexture(0, data);

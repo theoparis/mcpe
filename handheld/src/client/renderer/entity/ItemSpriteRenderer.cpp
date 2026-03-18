@@ -5,8 +5,8 @@
 
 ItemSpriteRenderer::ItemSpriteRenderer(int icon) : icon(icon) {}
 
-void ItemSpriteRenderer::render(Entity *e, float x, float y, float z, float rot,
-                                float a) {
+void ItemSpriteRenderer::render(
+    Entity *e, float x, float y, float z, float rot, float a) {
   glPushMatrix2();
 
   glTranslatef2((float)x, (float)y, (float)z);

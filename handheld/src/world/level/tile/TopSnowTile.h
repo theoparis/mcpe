@@ -36,8 +36,8 @@ public:
     checkCanSurvive(level, x, y, z);
   }
 
-  void playerDestroy(Level *level, Player *player, int x, int y, int z,
-                     int data) {
+  void playerDestroy(
+      Level *level, Player *player, int x, int y, int z, int data) {
     if (level->isClientSide)
       return;
 

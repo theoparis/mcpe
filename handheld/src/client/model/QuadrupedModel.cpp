@@ -32,7 +32,7 @@ QuadrupedModel::QuadrupedModel(int legSize, float g)
 }
 
 void QuadrupedModel::render(Entity *entity, float time, float r, float bob,
-                            float yRot, float xRot, float scale) {
+    float yRot, float xRot, float scale) {
   setupAnim(time, r, bob, yRot, xRot, scale);
 
   if (young) {
@@ -100,8 +100,8 @@ void QuadrupedModel::render(QuadrupedModel *model, float scale) {
   }
 }
 
-void QuadrupedModel::setupAnim(float time, float r, float bob, float yRot,
-                               float xRot, float scale) {
+void QuadrupedModel::setupAnim(
+    float time, float r, float bob, float yRot, float xRot, float scale) {
   head.xRot = xRot / (180.f / Mth::PI);
   head.yRot = yRot / (180.f / Mth::PI);
   body.xRot = 90 / (180.f / Mth::PI);

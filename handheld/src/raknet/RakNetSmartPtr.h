@@ -26,7 +26,7 @@ public:
 
 template <typename T> class RAK_DLL_EXPORT RakNetSmartPtr {
 private:
-  T *ptr;                      // pointer
+  T *ptr; // pointer
   ReferenceCounter *reference; // Reference refCount
 
 public:
@@ -41,7 +41,7 @@ public:
 
     //		allocCount+=2;
     //		printf("allocCount=%i deallocCount=%i Line=%i\n",allocCount,
-    //deallocCount, __LINE__);
+    // deallocCount, __LINE__);
   }
 
   RakNetSmartPtr(const RakNetSmartPtr<T> &sp)
@@ -57,7 +57,7 @@ public:
 
       //			deallocCount+=2;
       //			printf("allocCount=%i deallocCount=%i
-      //Line=%i\n",allocCount, deallocCount, __LINE__);
+      // Line=%i\n",allocCount, deallocCount, __LINE__);
     }
   }
 
@@ -70,7 +70,7 @@ public:
 
       //			deallocCount+=2;
       //			printf("allocCount=%i deallocCount=%i
-      //Line=%i\n",allocCount, deallocCount, __LINE__);
+      // Line=%i\n",allocCount, deallocCount, __LINE__);
     }
     ptr = 0;
     reference = 0;
@@ -120,7 +120,7 @@ public:
 
         //				deallocCount+=2;
         //				printf("allocCount=%i deallocCount=%i
-        //Line=%i\n",allocCount, deallocCount, __LINE__);
+        // Line=%i\n",allocCount, deallocCount, __LINE__);
       }
 
       ptr = sp.ptr;

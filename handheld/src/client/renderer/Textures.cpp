@@ -1,5 +1,6 @@
 #include "Textures.h"
 
+#include "../../App.h"
 #include "../../AppPlatform.h"
 #include "../../platform/time.h"
 #include "../Options.h"
@@ -10,9 +11,10 @@
 /*static*/ bool Textures::MIPMAP = false;
 /*static*/ const TextureId Textures::InvalidId = -1;
 
-Textures::Textures(Options *options_, AppPlatform *platform_)
+Textures::Textures(
+    Options *options_, AppPlatform *platform_, GraphicsBackend *graphics_)
     : clamp(false), blur(false), options(options_), platform(platform_),
-      lastBoundTexture(Textures::InvalidId) {}
+      graphics(graphics_), lastBoundTexture(Textures::InvalidId), nextId(1) {}
 
 Textures::~Textures() {
   clear();
@@ -21,128 +23,106 @@ Textures::~Textures() {
     delete dynamicTextures[i];
 }
 
-void Textures::clear() {
-  for (TextureMap::iterator it = idMap.begin(); it != idMap.end(); ++it) {
-    if (it->second != Textures::InvalidId)
-      glDeleteTextures(1, &it->second);
+void Textures::bind(TextureId id) {
+  if (id == Textures::InvalidId) {
+    LOGI("invalidId!\n");
+    return;
   }
-  for (TextureImageMap::iterator it = loadedImages.begin();
-       it != loadedImages.end(); ++it) {
-    if (!(it->second).memoryHandledExternally)
-      delete[] (it->second).data;
+  if (lastBoundTexture == id) {
+    return;
+  }
+
+  TextureRecord *record = getRecord(id);
+  if (!record) {
+    LOGI("missing textureId: %d\n", id);
+    return;
+  }
+  if (!graphics || !graphics->bindTexture(record->graphicsId)) {
+    LOGI("failed to bind textureId: %d\n", id);
+    return;
+  }
+
+  lastBoundTexture = id;
+  ++textureChanges;
+}
+
+void Textures::clear() {
+  for (TextureRecordMap::iterator it = loadedImages.begin();
+      it != loadedImages.end(); ++it) {
+    if (graphics && it->second.graphicsId != 0) {
+      graphics->destroyTexture(it->second.graphicsId);
+    }
+    if (!(it->second.image).memoryHandledExternally) {
+      delete[] (it->second.image).data;
+    }
   }
   idMap.clear();
   loadedImages.clear();
 
   lastBoundTexture = Textures::InvalidId;
+  nextId = 1;
 }
 
 TextureId Textures::loadAndBindTexture(const std::string &resourceName) {
-  // static Stopwatch t;
-
-  // t.start();
   TextureId id = loadTexture(resourceName);
-  // t.stop();
   if (id != Textures::InvalidId)
     bind(id);
-
-  // t.printEvery(1000);
 
   return id;
 }
 
-TextureId Textures::loadTexture(const std::string &resourceName,
-                                bool inTextureFolder /* = true */) {
+TextureId Textures::loadTexture(
+    const std::string &resourceName, bool inTextureFolder /* = true */) {
   TextureMap::iterator it = idMap.find(resourceName);
   if (it != idMap.end())
     return it->second;
 
   TextureData texdata = platform->loadTexture(resourceName, inTextureFolder);
-  if (texdata.data)
-    return assignTexture(resourceName, texdata);
-  else if (texdata.identifier != InvalidId) {
-    // LOGI("Adding id: %d for %s\n", texdata.identifier, resourceName.c_str());
-    idMap.insert(std::make_pair(resourceName, texdata.identifier));
-  } else {
-    idMap.insert(std::make_pair(resourceName, Textures::InvalidId));
-    // loadedImages.insert(std::make_pair(InvalidId, texdata));
+  if (texdata.data) {
+    TextureId id = assignTexture(resourceName, texdata);
+    if (id != Textures::InvalidId) {
+      return id;
+    }
+    if (!texdata.memoryHandledExternally) {
+      delete[] texdata.data;
+    }
+  } else if (texdata.identifier != InvalidId) {
+    GraphicsTextureHandle graphicsId = 0;
+    if (graphics && graphics->importTexture(
+            (GraphicsTextureHandle)texdata.identifier, graphicsId)) {
+      return createTextureRecord(resourceName, graphicsId, texdata);
+    }
   }
+
+  idMap.insert(std::make_pair(resourceName, Textures::InvalidId));
   return Textures::InvalidId;
 }
 
-TextureId Textures::assignTexture(const std::string &resourceName,
-                                  const TextureData &img) {
-  TextureId id;
-  glGenTextures(1, &id);
-
-  bind(id);
-
-  if (MIPMAP) {
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-                     GL_LINEAR_MIPMAP_LINEAR);
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  } else {
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  }
-  if (blur) {
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+TextureId Textures::assignTexture(
+    const std::string &resourceName, const TextureData &img) {
+  if (!graphics) {
+    return Textures::InvalidId;
   }
 
-  if (clamp) {
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-  } else {
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri2(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  GraphicsTextureOptions textureOptions;
+  textureOptions.clamp = clamp;
+  textureOptions.blur = blur;
+  textureOptions.mipmap = MIPMAP;
+
+  GraphicsTextureHandle graphicsId = 0;
+  if (!graphics->createTexture(img, textureOptions, graphicsId)) {
+    return Textures::InvalidId;
   }
 
-  switch (img.format) {
-  case TEXF_COMPRESSED_PVRTC_4444:
-  case TEXF_COMPRESSED_PVRTC_565:
-  case TEXF_COMPRESSED_PVRTC_5551: {
-#if defined(__APPLE__)
-    int fmt = img.transparent ? GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG
-                              : GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG;
-    glCompressedTexImage2D(GL_TEXTURE_2D, 0, fmt, img.w, img.h, 0, img.numBytes,
-                           img.data);
-#endif
-    break;
-  }
-
-  default:
-    const GLint mode = img.transparent ? GL_RGBA : GL_RGB;
-
-    if (img.format == TEXF_UNCOMPRESSED_565) {
-      glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode,
-                    GL_UNSIGNED_SHORT_5_6_5, img.data);
-    } else if (img.format == TEXF_UNCOMPRESSED_4444) {
-      glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode,
-                    GL_UNSIGNED_SHORT_4_4_4_4, img.data);
-    } else if (img.format == TEXF_UNCOMPRESSED_5551) {
-      glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode,
-                    GL_UNSIGNED_SHORT_5_5_5_1, img.data);
-    } else {
-      glTexImage2D2(GL_TEXTURE_2D, 0, mode, img.w, img.h, 0, mode,
-                    GL_UNSIGNED_BYTE, img.data);
-    }
-    break;
-  }
-
-  // LOGI("Adding id: %d to map\n", id);
-  idMap.insert(std::make_pair(resourceName, id));
-  loadedImages.insert(std::make_pair(id, img));
-
-  return id;
+  return createTextureRecord(resourceName, graphicsId, img);
 }
 
 const TextureData *Textures::getTemporaryTextureData(TextureId id) {
-  TextureImageMap::iterator it = loadedImages.find(id);
+  TextureRecordMap::iterator it = loadedImages.find(id);
   if (it == loadedImages.end())
     return NULL;
 
-  return &it->second;
+  return &it->second.image;
 }
 
 void Textures::tick(bool uploadToGraphicsCard) {
@@ -152,11 +132,14 @@ void Textures::tick(bool uploadToGraphicsCard) {
 
     if (uploadToGraphicsCard) {
       tex->bindTexture(this);
+      if (lastBoundTexture == Textures::InvalidId) {
+        continue;
+      }
       for (int xx = 0; xx < tex->replicate; xx++)
         for (int yy = 0; yy < tex->replicate; yy++) {
-          glTexSubImage2D2(GL_TEXTURE_2D, 0, tex->tex % 16 * 16 + xx * 16,
-                           tex->tex / 16 * 16 + yy * 16, 16, 16, GL_RGBA,
-                           GL_UNSIGNED_BYTE, tex->pixels);
+          uploadTextureRegion(lastBoundTexture, tex->tex % 16 * 16 + xx * 16,
+              tex->tex / 16 * 16 + yy * 16, 16, 16, tex->pixels,
+              TEXF_UNCOMPRESSED_8888, true);
         }
     }
   }
@@ -208,7 +191,7 @@ int Textures::smoothBlend(int c0, int c1) {
   int a0 = (int)(((c0 & 0xff000000) >> 24)) & 0xff;
   int a1 = (int)(((c1 & 0xff000000) >> 24)) & 0xff;
   return ((a0 + a1) >> 1 << 24) +
-         (((c0 & 0x00fefefe) + (c1 & 0x00fefefe)) >> 1);
+      (((c0 & 0x00fefefe) + (c1 & 0x00fefefe)) >> 1);
 }
 
 int Textures::crispBlend(int c0, int c1) {
@@ -235,6 +218,53 @@ int Textures::crispBlend(int c0, int c1) {
   int b = (b0 + b1) / (a0 + a1);
 
   return (a << 24) | (r << 16) | (g << 8) | b;
+}
+
+TextureId Textures::createTextureRecord(const std::string &resourceName,
+    uint32_t graphicsId, const TextureData &img) {
+  const TextureId id = nextId++;
+  TextureRecord record;
+  record.graphicsId = graphicsId;
+  record.image = img;
+
+  idMap[resourceName] = id;
+  loadedImages[id] = record;
+  return id;
+}
+
+TextureRecord *Textures::getRecord(TextureId id) {
+  TextureRecordMap::iterator it = loadedImages.find(id);
+  if (it == loadedImages.end()) {
+    return NULL;
+  }
+  return &it->second;
+}
+
+const TextureRecord *Textures::getRecord(TextureId id) const {
+  TextureRecordMap::const_iterator it = loadedImages.find(id);
+  if (it == loadedImages.end()) {
+    return NULL;
+  }
+  return &it->second;
+}
+
+void Textures::uploadTextureRegion(TextureId id, int x, int y, int width,
+    int height, const unsigned char *data, TextureFormat format,
+    bool transparent) {
+  TextureRecord *record = getRecord(id);
+  if (!record || !graphics || !data) {
+    return;
+  }
+
+  GraphicsTextureUpdate update;
+  update.x = x;
+  update.y = y;
+  update.width = width;
+  update.height = height;
+  update.data = data;
+  update.format = format;
+  update.transparent = transparent;
+  graphics->updateTexture(record->graphicsId, update);
 }
 
 ///*public*/ int loadHttpTexture(std::string url, std::string backup) {
@@ -328,7 +358,7 @@ int Textures::crispBlend(int c0, int c1) {
 //			glBindTexture2(GL_TEXTURE_2D, dynamicTexture.copyTo);
 //			glTexSubImage2D2(GL_TEXTURE_2D, 0, 0, 0, 16, 16,
 // GL_RGBA, GL_UNSIGNED_BYTE, pixels); 			if (MIPMAP) {
-// for (int level = 1; level <= 4; level++) {
+//				for (int level = 1; level <= 4; level++) {
 // int os = 16 >> (level - 1); 					int s = 16 >>
 // level;
 //

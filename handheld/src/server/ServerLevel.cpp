@@ -4,11 +4,10 @@
 #include "../network/packet/SetTimePacket.h"
 #include "../world/level/tile/LevelEvent.h"
 ServerLevel::ServerLevel(LevelStorage *levelStorage,
-                         const std::string &levelName,
-                         const LevelSettings &settings, int generatorVersion,
-                         Dimension *fixedDimension /* = NULL */)
-    : super(levelStorage, levelName, settings, generatorVersion,
-            fixedDimension),
+    const std::string &levelName, const LevelSettings &settings,
+    int generatorVersion, Dimension *fixedDimension /* = NULL */)
+    : super(
+          levelStorage, levelName, settings, generatorVersion, fixedDimension),
       allPlayersAreSleeping(false) {}
 
 void ServerLevel::updateSleepingPlayerList() {

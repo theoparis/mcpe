@@ -1,5 +1,5 @@
 #if (defined(__GNUC__) || defined(__ARMCC_VERSION) || defined(__GCCXML__) ||   \
-     defined(__S3E__)) &&                                                      \
+    defined(__S3E__)) &&                                                       \
     !defined(_WIN32)
 #include <string.h>
 #ifndef _stricmp

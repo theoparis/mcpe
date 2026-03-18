@@ -17,7 +17,7 @@ void checkError() {
       return;
 
     LOGI("### SoundSystemAL error: %d ####: %s\n", err,
-         errIdString == 0 ? "(none)" : errIdString);
+        errIdString == 0 ? "(none)" : errIdString);
   }
 }
 
@@ -135,7 +135,7 @@ void SoundSystemAL::setListenerAngle(float deg) {
 }
 
 void SoundSystemAL::playAt(const SoundDesc &sound, float x, float y, float z,
-                           float volume, float pitch) {
+    float volume, float pitch) {
   if (pitch < 0.01f)
     pitch = 1;
 
@@ -226,10 +226,9 @@ bool SoundSystemAL::getBufferId(const SoundDesc &sound, ALuint *buf) {
   errIdString = "Gen buffer";
   checkError();
 
-  ALenum format =
-      (sound.byteWidth == 2)
-          ? (sound.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16)
-          : (sound.channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
+  ALenum format = (sound.byteWidth == 2)
+      ? (sound.channels == 2 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16)
+      : (sound.channels == 2 ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8);
 
   alBufferData(bufferID, format, sound.frames, sound.size, sound.frameRate);
   // LOGI("Creating %d (%p) from sound: '%s'\n", bufferID, sound.frames,

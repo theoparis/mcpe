@@ -22,12 +22,12 @@ public:
 
   bool isFood() const { return true; }
 
-  ItemInstance useTimeDepleted(ItemInstance *instance, Level *level,
-                               Player *player) {
+  ItemInstance useTimeDepleted(
+      ItemInstance *instance, Level *level, Player *player) {
     instance->count--;
     player->foodData.eat(this);
-    level->playSound(player, "random.burp", 0.5f,
-                     level->random.nextFloat() * 0.1f + 0.9f);
+    level->playSound(
+        player, "random.burp", 0.5f, level->random.nextFloat() * 0.1f + 0.9f);
     return *instance;
   }
 

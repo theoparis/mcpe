@@ -13,8 +13,8 @@ public:
 
   bool place(Level *level, Random *random, int x, int y, int z) {
     int t = 0;
-    while (((t = level->getTile(x, y, z)) == 0 || t == Tile::leaves->id) &&
-           y > 0)
+    while (
+        ((t = level->getTile(x, y, z)) == 0 || t == Tile::leaves->id) && y > 0)
       y--;
 
     for (int i = 0; i < 128; i++) {

@@ -33,7 +33,7 @@ public:
     std::vector<InternalGoal> toStart;
 
     for (std::vector<InternalGoal>::iterator it = goals.begin();
-         it != goals.end(); ++it) {
+        it != goals.end(); ++it) {
       InternalGoal &ig = *it;
       bool isUsing = ig.isUsing; // usingGoals.contains(ig);
 
@@ -58,7 +58,7 @@ public:
     // bool debug = false;
     // if (debug && toStart.size() > 0) printf("Starting: ");
     for (std::vector<InternalGoal>::iterator it = toStart.begin();
-         it != toStart.end(); ++it) {
+        it != toStart.end(); ++it) {
       InternalGoal &ig = *it;
       // if (debug) printf("  %s, ", ig.goal.toString() + ", ");
       ig.goal->start();
@@ -66,7 +66,7 @@ public:
 
     // if (debug && usingGoals.size() > 0) printf("Running: ");
     for (std::vector<InternalGoal>::iterator it = goals.begin();
-         it != goals.end(); ++it) {
+        it != goals.end(); ++it) {
       InternalGoal &ig = *it;
       if (ig.isUsing) {
         // if (debug) printf("  %s\n", ig.goal.toString());
@@ -81,7 +81,7 @@ public:
 private:
   bool canUseInSystem(InternalGoal &goal) {
     for (std::vector<InternalGoal>::iterator it = goals.begin();
-         it != goals.end(); ++it) {
+        it != goals.end(); ++it) {
       InternalGoal &ig = *it;
       if (ig.goal == goal.goal && ig.prio == goal.prio)
         continue;
@@ -97,7 +97,7 @@ private:
 
   bool canCoExist(InternalGoal &goalA, InternalGoal &goalB) {
     return (goalA.goal->getRequiredControlFlags() &
-            goalB.goal->getRequiredControlFlags()) == 0;
+               goalB.goal->getRequiredControlFlags()) == 0;
   }
 
   std::vector<InternalGoal> goals;

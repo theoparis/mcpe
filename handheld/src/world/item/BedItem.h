@@ -10,7 +10,7 @@ class BedItem : public Item {
 public:
   BedItem(int id) : super(id) {}
   bool useOn(ItemInstance *itemInstance, Player *player, Level *level, int x,
-             int y, int z, int face, float clickX, float clickY, float clickZ);
+      int y, int z, int face, float clickX, float clickY, float clickZ);
 };
 
 #endif /* NET_MINECRAFT_WORLD_ITEM__BedItem_H__ */

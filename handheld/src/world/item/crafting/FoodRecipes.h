@@ -12,8 +12,7 @@
 class FoodRecipes {
 public:
   static void addRecipes(Recipes *r) {
-    r->addShapelessRecipe(
-        ItemInstance(Item::mushroomStew), //
+    r->addShapelessRecipe(ItemInstance(Item::mushroomStew), //
         definition(0, Tile::mushroom1, 0, Tile::mushroom2, 0, Item::bowl));
 
     // r->addShapedRecipe(/*new*/ ItemInstance(Item::cookie, 8), //
@@ -23,16 +22,16 @@ public:
     //        DyePowderItem::BROWN), '#', Item::wheat));
 
     r->addShapedRecipe(/*new*/ ItemInstance(Tile::melon), //
-                       "MMM",                             //
-                       "MMM",                             //
-                       "MMM",                             //
+        "MMM", //
+        "MMM", //
+        "MMM", //
 
-                       definition('M', Item::melon));
+        definition('M', Item::melon));
 
     r->addShapedRecipe(/*new*/ ItemInstance(Item::seeds_melon), //
-                       "M",                                     //
+        "M", //
 
-                       definition('M', Item::melon));
+        definition('M', Item::melon));
 
     // r->addShapedRecipe(/*new*/ ItemInstance(Item::seeds_pumpkin, 4), //
     //         "M", //

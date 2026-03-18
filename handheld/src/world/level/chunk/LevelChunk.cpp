@@ -245,8 +245,8 @@ void LevelChunk::recalcHeight(int x, int yStart, int z) {
   while (y > 0 && Tile::lightBlock[getTile(x, y - 1, z)] == 0)
     y--;
   if (y != y0) {
-    level->updateLight(LightLayer::Sky, xOffs - 1, y, zOffs - 1, xOffs + 1, y0,
-                       zOffs + 1);
+    level->updateLight(
+        LightLayer::Sky, xOffs - 1, y, zOffs - 1, xOffs + 1, y0, zOffs + 1);
   }
 
   // this->unsaved = true;
@@ -293,10 +293,10 @@ void LevelChunk::setBlocks(unsigned char *newBlocks, int sub) { //@byte[]
     }
   }
 
-  level->updateLight(LightLayer::Sky, xt + sub * 4, 0, zt, xt + sub * 4 + 4,
-                     128, zt + 16);
-  level->updateLight(LightLayer::Block, xt + sub * 4, 0, zt, xt + sub * 4 + 4,
-                     128, zt + 16);
+  level->updateLight(
+      LightLayer::Sky, xt + sub * 4, 0, zt, xt + sub * 4 + 4, 128, zt + 16);
+  level->updateLight(
+      LightLayer::Block, xt + sub * 4, 0, zt, xt + sub * 4 + 4, 128, zt + 16);
 
   // for (int x = sub * 4; x < sub * 4 + 4; x++) {
   //     for (int z = 0; z < 16; z++) {
@@ -309,8 +309,8 @@ void LevelChunk::setBlocks(unsigned char *newBlocks, int sub) { //@byte[]
 /*public*/
 Random LevelChunk::getRandom(long l) {
   return /*new*/ Random((level->getSeed() + x * x * 4987142 + x * 5947611 +
-                         z * z * 4392871l + z * 389711) ^
-                        l);
+                            z * z * 4392871l + z * 389711) ^
+      l);
 }
 
 /*private*/
@@ -370,8 +370,8 @@ int LevelChunk::getBrightness(const LightLayer &layer, int x, int y, int z) {
     return 0;
 }
 
-void LevelChunk::setBrightness(const LightLayer &layer, int x, int y, int z,
-                               int brightness) {
+void LevelChunk::setBrightness(
+    const LightLayer &layer, int x, int y, int z, int brightness) {
   // this->unsaved = true;
   if (&layer == &LightLayer::Sky)
     skyLight.set(x, y, z, brightness);
@@ -451,8 +451,8 @@ void LevelChunk::unload() {
 
 void LevelChunk::markUnsaved() { this->unsaved = true; }
 
-void LevelChunk::getEntities(Entity *except, const AABB &bb,
-                             std::vector<Entity *> &es) {
+void LevelChunk::getEntities(
+    Entity *except, const AABB &bb, std::vector<Entity *> &es) {
   int yc0 = Mth::floor((bb.y0 - 2) / 16);
   int yc1 = Mth::floor((bb.y1 + 2) / 16);
   if (yc0 < 0)
@@ -470,8 +470,8 @@ void LevelChunk::getEntities(Entity *except, const AABB &bb,
   }
 }
 
-void LevelChunk::getEntitiesOfType(int entityType, const AABB &bb,
-                                   EntityList &list) {
+void LevelChunk::getEntitiesOfType(
+    int entityType, const AABB &bb, EntityList &list) {
   int yc0 = Mth::floor((bb.y0 - 2) / 16);
   int yc1 = Mth::floor((bb.y1 + 2) / 16);
   if (yc0 < 0) {
@@ -496,8 +496,8 @@ void LevelChunk::getEntitiesOfType(int entityType, const AABB &bb,
   }
 }
 
-void LevelChunk::getEntitiesOfClass(int type, const AABB &bb,
-                                    EntityList &list) {
+void LevelChunk::getEntitiesOfClass(
+    int type, const AABB &bb, EntityList &list) {
   int yc0 = Mth::floor((bb.y0 - 2) / 16);
   int yc1 = Mth::floor((bb.y1 + 2) / 16);
   if (yc0 < 0) {
@@ -567,7 +567,7 @@ bool LevelChunk::hasTileEntityAt(int x, int y, int z) {
 }
 bool LevelChunk::hasTileEntityAt(TileEntity *te) {
   return tileEntities.find(TilePos(te->x & 15, te->y, te->z & 15)) !=
-         tileEntities.end();
+      tileEntities.end();
 }
 
 void LevelChunk::addTileEntity(TileEntity *te) {
@@ -587,7 +587,7 @@ void LevelChunk::setTileEntity(int x, int y, int z, TileEntity *tileEntity) {
   if (t == 0 || !Tile::isEntityTile[t]) {
     LOGW("Attempted to place a tile entity where there was no entity tile! %d, "
          "%d, %d\n",
-         tileEntity->x, tileEntity->y, tileEntity->z);
+        tileEntity->x, tileEntity->y, tileEntity->z);
     return;
   }
 
@@ -613,13 +613,13 @@ void LevelChunk::removeTileEntity(int x, int y, int z) {
 }
 
 int LevelChunk::getBlocksAndData(unsigned char *data, int x0, int y0, int z0,
-                                 int x1, int y1, int z1, int p) {
+    int x1, int y1, int z1, int p) {
   int len = y1 - y0;
   for (int x = x0; x < x1; x++)
     for (int z = z0; z < z1; z++) {
       int slot = x << 11 | z << 7 | y0;
       memcpy(data + p, blocks + slot,
-             len); // System.arraycopy(blocks, slot, data, p, len);
+          len); // System.arraycopy(blocks, slot, data, p, len);
       p += len;
     }
 
@@ -628,7 +628,7 @@ int LevelChunk::getBlocksAndData(unsigned char *data, int x0, int y0, int z0,
     for (int z = z0; z < z1; z++) {
       int slot = (x << 11 | z << 7 | y0) >> 1;
       memcpy(data + p, this->data.data + slot,
-             len); // System.arraycopy(this->data.data, slot, data, p, len);
+          len); // System.arraycopy(this->data.data, slot, data, p, len);
       p += len;
     }
 
@@ -637,7 +637,7 @@ int LevelChunk::getBlocksAndData(unsigned char *data, int x0, int y0, int z0,
     for (int z = z0; z < z1; z++) {
       int slot = (x << 11 | z << 7 | y0) >> 1;
       memcpy(data + p, blockLight.data + slot,
-             len); // System.arraycopy(blockLight.data, slot, data, p, len);
+          len); // System.arraycopy(blockLight.data, slot, data, p, len);
       p += len;
     }
 
@@ -646,7 +646,7 @@ int LevelChunk::getBlocksAndData(unsigned char *data, int x0, int y0, int z0,
     for (int z = z0; z < z1; z++) {
       int slot = (x << 11 | z << 7 | y0) >> 1;
       memcpy(data + p, skyLight.data + slot,
-             len); // System.arraycopy(skyLight.data, slot, data, p, len);
+          len); // System.arraycopy(skyLight.data, slot, data, p, len);
       p += len;
     }
 
@@ -654,13 +654,13 @@ int LevelChunk::getBlocksAndData(unsigned char *data, int x0, int y0, int z0,
 }
 
 int LevelChunk::setBlocksAndData(unsigned char *data, int x0, int y0, int z0,
-                                 int x1, int y1, int z1, int p) {
+    int x1, int y1, int z1, int p) {
   int len = y1 - y0;
   for (int x = x0; x < x1; x++)
     for (int z = z0; z < z1; z++) {
       int slot = x << 11 | z << 7 | y0;
       memcpy(blocks + slot, data + p,
-             len); // System.arraycopy(data, p, blocks, slot, len);
+          len); // System.arraycopy(data, p, blocks, slot, len);
       p += len;
     }
 
@@ -671,7 +671,7 @@ int LevelChunk::setBlocksAndData(unsigned char *data, int x0, int y0, int z0,
     for (int z = z0; z < z1; z++) {
       int slot = (x << 11 | z << 7 | y0) >> 1;
       memcpy(this->data.data + slot, data + p,
-             len); // System.arraycopy(data, p, this->data.data, slot, len);
+          len); // System.arraycopy(data, p, this->data.data, slot, len);
       p += len;
     }
 
@@ -680,7 +680,7 @@ int LevelChunk::setBlocksAndData(unsigned char *data, int x0, int y0, int z0,
     for (int z = z0; z < z1; z++) {
       int slot = (x << 11 | z << 7 | y0) >> 1;
       memcpy(blockLight.data + slot, data + p,
-             len); // System.arraycopy(data, p, blockLight.data, slot, len);
+          len); // System.arraycopy(data, p, blockLight.data, slot, len);
       p += len;
     }
 
@@ -689,7 +689,7 @@ int LevelChunk::setBlocksAndData(unsigned char *data, int x0, int y0, int z0,
     for (int z = z0; z < z1; z++) {
       int slot = (x << 11 | z << 7 | y0) >> 1;
       memcpy(skyLight.data + slot, data + p,
-             len); // System.arraycopy(data, p, skyLight.data, slot, len);
+          len); // System.arraycopy(data, p, skyLight.data, slot, len);
       p += len;
     }
 

@@ -9,8 +9,8 @@ HangingEntityItem::HangingEntityItem(int id, int type)
     : super(id), entityType(type) {}
 
 bool HangingEntityItem::useOn(ItemInstance *itemInstance, Player *player,
-                              Level *level, int x, int y, int z, int face,
-                              float clickX, float clickY, float clickZ) {
+    Level *level, int x, int y, int z, int face, float clickX, float clickY,
+    float clickZ) {
   if (face == Facing::DOWN)
     return false;
   if (face == Facing::UP)
@@ -35,8 +35,8 @@ bool HangingEntityItem::useOn(ItemInstance *itemInstance, Player *player,
   return true;
 }
 
-HangingEntity *HangingEntityItem::createEntity(Level *level, int x, int y,
-                                               int z, int dir) {
+HangingEntity *HangingEntityItem::createEntity(
+    Level *level, int x, int y, int z, int dir) {
   switch (entityType) {
   case EntityTypes::IdPainting:
     return new Painting(level, x, y, z, dir);

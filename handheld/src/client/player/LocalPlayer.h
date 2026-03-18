@@ -18,7 +18,7 @@ class LocalPlayer : public Player {
 
 public:
   LocalPlayer(Minecraft *minecraft, Level *level, User *user, int dimension,
-              bool isCreative);
+      bool isCreative);
   ~LocalPlayer();
 
   void _init();
@@ -67,8 +67,8 @@ public:
   void causeFallDamage(float distance);
 
   virtual int startSleepInBed(int x, int y, int z);
-  virtual void stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
-                              bool saveRespawnPoint);
+  virtual void stopSleepInBed(
+      bool forcefulWakeUp, bool updateLevelList, bool saveRespawnPoint);
 
   void swing();
   virtual void openTextEdit(TileEntity *tileEntity);

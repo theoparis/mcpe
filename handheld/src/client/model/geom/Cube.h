@@ -12,7 +12,7 @@ class ModelPart;
 class Cube {
 public:
   Cube(ModelPart *modelPart, int xTexOffs, int yTexOffs, float x0, float y0,
-       float z0, int w, int h, int d, float g);
+      float z0, int w, int h, int d, float g);
 
   void compile(Tesselator &t, float scale);
   Cube *setId(const std::string &id);

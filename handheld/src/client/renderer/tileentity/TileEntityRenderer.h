@@ -16,8 +16,8 @@ public:
   virtual ~TileEntityRenderer() {}
 
   void init(TileEntityRenderDispatcher *tileEntityRenderDispatcher);
-  virtual void render(TileEntity *entity, float x, float y, float z,
-                      float a) = 0;
+  virtual void render(
+      TileEntity *entity, float x, float y, float z, float a) = 0;
 
   void bindTexture(const std::string &resourceName);
   //     /*protected*/ void bindTexture(const std::string& urlTexture, const

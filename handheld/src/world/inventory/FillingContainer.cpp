@@ -8,8 +8,8 @@
 #define MAGIX_VAL 255
 #define MAX_SLOTS 96
 
-FillingContainer::FillingContainer(int numTotalSlots, int numLinkedSlots,
-                                   int containerType, bool isCreative)
+FillingContainer::FillingContainer(
+    int numTotalSlots, int numLinkedSlots, int containerType, bool isCreative)
     : super(containerType), numTotalSlots(numTotalSlots),
       numLinkedSlots(numLinkedSlots), linkedSlots(NULL),
       _isCreative(isCreative) {
@@ -56,8 +56,8 @@ bool FillingContainer::removeResource(const ItemInstance &item) {
   return removeResource(item, false) == 0;
 }
 
-int FillingContainer::removeResource(const ItemInstance &item,
-                                     bool requireExactAux) {
+int FillingContainer::removeResource(
+    const ItemInstance &item, bool requireExactAux) {
   if (_isCreative)
     return 0;
 
@@ -65,8 +65,9 @@ int FillingContainer::removeResource(const ItemInstance &item,
   while (count > 0) {
     // If any AUX value, remove any with that id
     int slot = -1;
-    if (!requireExactAux && (Recipe::isAnyAuxValue(&item) ||
-                             item.getAuxValue() == Recipe::ANY_AUX_VALUE))
+    if (!requireExactAux &&
+        (Recipe::isAnyAuxValue(&item) ||
+            item.getAuxValue() == Recipe::ANY_AUX_VALUE))
       slot = getNonEmptySlot(item.id);
     else
       slot = getNonEmptySlot(item.id, item.getAuxValue());
@@ -250,7 +251,7 @@ void FillingContainer::load(ListTag *inventoryList) {
         } else { // Something's wrong, shouldnt go here
           LOGE("Error: Slot %d is selection slot (inventory size: %d) but "
                "id/count is %d/%d\n",
-               slot, (int)items.size(), item->id, item->count);
+              slot, (int)items.size(), item->id, item->count);
         }
         delete item;
         continue;
@@ -289,7 +290,7 @@ int FillingContainer::getContainerSize() const {
   int sz = items.size();
   if (sz != numTotalSlots) {
     LOGE("Error@getContainerSize: num items != InventorySize: %d != %d\n", sz,
-         numTotalSlots);
+        numTotalSlots);
   }
   return numTotalSlots;
 }
@@ -311,8 +312,8 @@ int FillingContainer::getMaxStackSize() const {
   return MAX_INVENTORY_STACK_SIZE;
 }
 
-void FillingContainer::dropSlot(int slot, bool onlyClearContainer,
-                                bool randomly /*=false*/) {
+void FillingContainer::dropSlot(
+    int slot, bool onlyClearContainer, bool randomly /*=false*/) {
   if (slot >= 0 && slot < numLinkedSlots)
     slot = linkedSlots[slot].inventorySlot;
   if (slot < 0 || slot >= (int)items.size())
@@ -397,7 +398,7 @@ int FillingContainer::getSlotWithRemainingSpace(const ItemInstance &item) {
         items[i]->count < items[i]->getMaxStackSize() &&
         items[i]->count < getMaxStackSize() &&
         (!items[i]->isStackedByData() ||
-         items[i]->getAuxValue() == item.getAuxValue())) {
+            items[i]->getAuxValue() == item.getAuxValue())) {
       return i;
     }
   }
@@ -499,7 +500,7 @@ int FillingContainer::addItem(ItemInstance *item) {
     return newSize - 1;
   }
   LOGE("Error@addItem: adding an item to an already full inventory: %s!\n",
-       item->getDescriptionId().c_str());
+      item->getDescriptionId().c_str());
   delete item;
   return 0;
 }
@@ -509,8 +510,8 @@ void FillingContainer::fixBackwardCompabilityItem(ItemInstance &item) {
     item.setAuxValue(item.getAuxValue() & StoneSlabTile::TYPE_MASK);
 }
 
-void FillingContainer::replace(std::vector<ItemInstance> newItems,
-                               int maxCount /* = -1 */) {
+void FillingContainer::replace(
+    std::vector<ItemInstance> newItems, int maxCount /* = -1 */) {
   clearInventory();
   maxCount =
       maxCount < 0 ? newItems.size() : Mth::Min(newItems.size(), maxCount);
@@ -543,8 +544,8 @@ FillingContainer::ItemList *FillingContainer::getSlotList(int &slot) {
 }
 
 // Special for this "selection based" inventory
-bool FillingContainer::linkSlot(int selectionSlot, int inventorySlot,
-                                bool propagate) {
+bool FillingContainer::linkSlot(
+    int selectionSlot, int inventorySlot, bool propagate) {
   if (selectionSlot < 0 || selectionSlot >= numLinkedSlots)
     return false;
   if (inventorySlot < numLinkedSlots || inventorySlot >= numTotalSlots)

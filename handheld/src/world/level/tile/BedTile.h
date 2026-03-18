@@ -34,8 +34,8 @@ public:
   static bool isHeadPiece(int data);
   static bool isOccupied(int data);
   static void setOccupied(Level *level, int x, int y, int z, bool occupied);
-  static bool findStandUpPosition(Level *level, int x, int y, int z,
-                                  int skipCount, Pos &position);
+  static bool findStandUpPosition(
+      Level *level, int x, int y, int z, int skipCount, Pos &position);
 };
 
 #endif /* NET_MINECRAFT_WORLD_LEVEL_TILE__BedTile_H__ */

@@ -17,8 +17,8 @@ FurnaceTile::FurnaceTile(int id, bool lit)
   tex = 13 + 16 * 2;
 }
 
-int FurnaceTile::getResource(int data,
-                             Random *random /*, int playerBonusLevel*/) {
+int FurnaceTile::getResource(
+    int data, Random *random /*, int playerBonusLevel*/) {
   return Tile::furnace->id;
 }
 
@@ -53,8 +53,8 @@ int FurnaceTile::getTexture(int face) {
   return tex;
 }
 
-void FurnaceTile::animateTick(Level *level, int xt, int yt, int zt,
-                              Random *random) {
+void FurnaceTile::animateTick(
+    Level *level, int xt, int yt, int zt, Random *random) {
   if (!lit)
     return;
 
@@ -149,9 +149,8 @@ void FurnaceTile::onRemove(Level *level, int x, int y, int z) {
               count = item->count;
             item->count -= count;
 
-            ItemEntity *itemEntity = new ItemEntity(
-                level, x + xo, y + yo, z + zo,
-                ItemInstance(item->id, count, item->getAuxValue()));
+            ItemEntity *itemEntity = new ItemEntity(level, x + xo, y + yo,
+                z + zo, ItemInstance(item->id, count, item->getAuxValue()));
             float pow = 0.05f;
             itemEntity->xd = random.nextGaussian() * pow;
             itemEntity->yd = random.nextGaussian() * pow + 0.2f;

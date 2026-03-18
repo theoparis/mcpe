@@ -1,4 +1,5 @@
 #include "RolledSelectionListH.h"
+#include "../../../App.h"
 #include "../../../platform/input/Mouse.h"
 #include "../../../platform/input/Multitouch.h"
 #include "../../../util/Mth.h"
@@ -7,9 +8,26 @@
 #include "../../renderer/Textures.h"
 #include "../../renderer/gles.h"
 
+namespace {
+GraphicsQuadColor quadColor(int rgb, int alpha = 255) {
+  GraphicsQuadColor out;
+  out.r = (float)((rgb >> 16) & 0xff) / 255.0f;
+  out.g = (float)((rgb >> 8) & 0xff) / 255.0f;
+  out.b = (float)(rgb & 0xff) / 255.0f;
+  out.a = (float)alpha / 255.0f;
+  return out;
+}
+
+void setUniformColor(GraphicsQuad &quad, const GraphicsQuadColor &color) {
+  quad.topLeft = color;
+  quad.topRight = color;
+  quad.bottomRight = color;
+  quad.bottomLeft = color;
+}
+} // namespace
+
 RolledSelectionListH::RolledSelectionListH(Minecraft *minecraft, int width,
-                                           int height, int x0, int x1, int y0,
-                                           int y1, int itemWidth)
+    int height, int x0, int x1, int y0, int y1, int itemWidth)
     : minecraft(minecraft), width(width), height(height), x0((float)x0),
       x1((float)x1), y0((float)y0), y1((float)y1), itemWidth(itemWidth),
       selectionX(-1), lastSelectionTime(0), lastSelection(-1),
@@ -29,8 +47,8 @@ void RolledSelectionListH::setComponentSelected(bool selected) {
   _componentSelected = selected;
 }
 
-void RolledSelectionListH::setRenderHeader(bool _renderHeader,
-                                           int _headerHeight) {
+void RolledSelectionListH::setRenderHeader(
+    bool _renderHeader, int _headerHeight) {
   doRenderHeader = _renderHeader;
   headerWidth = _headerHeight;
 
@@ -165,13 +183,25 @@ void RolledSelectionListH::render(int xm, int ym, float a) {
   minecraft->textures->loadAndBindTexture("gui/background.png");
   glColor4f2(1.0f, 1, 1, 1);
   float s = 32;
-  t.begin();
-  t.color(0x202020);
-  t.vertexUV(x0, by1, 0, (x0 + (int)xo) / s, by1 / s);
-  t.vertexUV(x1, by1, 0, (x1 + (int)xo) / s, by1 / s);
-  t.vertexUV(x1, by0, 0, (x1 + (int)xo) / s, by0 / s);
-  t.vertexUV(x0, by0, 0, (x0 + (int)xo) / s, by0 / s);
-  t.draw();
+  GraphicsQuad backgroundQuad;
+  backgroundQuad.x = x0;
+  backgroundQuad.y = by0;
+  backgroundQuad.width = x1 - x0;
+  backgroundQuad.height = by1 - by0;
+  backgroundQuad.u0 = (x0 + (int)xo) / s;
+  backgroundQuad.v0 = by0 / s;
+  backgroundQuad.u1 = (x1 + (int)xo) / s;
+  backgroundQuad.v1 = by1 / s;
+  setUniformColor(backgroundQuad, quadColor(0x202020));
+  if (!tryDrawQuad(backgroundQuad)) {
+    t.begin();
+    t.color(0x202020);
+    t.vertexUV(x0, by1, 0, (x0 + (int)xo) / s, by1 / s);
+    t.vertexUV(x1, by1, 0, (x1 + (int)xo) / s, by1 / s);
+    t.vertexUV(x1, by0, 0, (x1 + (int)xo) / s, by0 / s);
+    t.vertexUV(x0, by0, 0, (x0 + (int)xo) / s, by0 / s);
+    t.draw();
+  }
 
   const int HalfHeight = 48;
 
@@ -197,8 +227,6 @@ void RolledSelectionListH::render(int xm, int ym, float a) {
     if (renderSelection && isSelectedItem(i)) {
       float y0 = height / 2.0f - HalfHeight - 4; //@kindle-res:+2
       float y1 = height / 2.0f + HalfHeight - 4; //@kindle-res:-6
-      glColor4f2(1, 1, 1, 1);
-      glDisable2(GL_TEXTURE_2D);
 
       int ew = 0;
       int color = 0x808080;
@@ -206,21 +234,41 @@ void RolledSelectionListH::render(int xm, int ym, float a) {
         ew = 0;
         color = 0x7F89BF;
       }
-      t.begin();
-      t.color(color);
-      t.vertex(x - 1 - ew, y0 - ew, 0);
-      t.vertex(x - 1 - ew, y1 + ew, 0);
-      t.vertex(x + h + 1 + ew, y1 + ew, 0);
-      t.vertex(x + h + 1 + ew, y0 - ew, 0);
+      GraphicsQuad outerQuad;
+      outerQuad.x = x - 1 - ew;
+      outerQuad.y = y0 - ew;
+      outerQuad.width = h + 2 + ew * 2;
+      outerQuad.height = (y1 - y0) + ew * 2;
+      outerQuad.textured = false;
+      setUniformColor(outerQuad, quadColor(color));
 
-      t.color(0x000000);
-      t.vertex(x, y0 + 1, 0);
-      t.vertex(x, y1 - 1, 0);
-      t.vertex(x + h, y1 - 1, 0);
-      t.vertex(x + h, y0 + 1, 0);
+      GraphicsQuad innerQuad;
+      innerQuad.x = x;
+      innerQuad.y = y0 + 1;
+      innerQuad.width = h;
+      innerQuad.height = y1 - y0 - 2;
+      innerQuad.textured = false;
+      setUniformColor(innerQuad, quadColor(0x000000));
 
-      t.draw();
-      glEnable2(GL_TEXTURE_2D);
+      if (!tryDrawQuad(outerQuad) || !tryDrawQuad(innerQuad)) {
+        glColor4f2(1, 1, 1, 1);
+        glDisable2(GL_TEXTURE_2D);
+        t.begin();
+        t.color(color);
+        t.vertex(x - 1 - ew, y0 - ew, 0);
+        t.vertex(x - 1 - ew, y1 + ew, 0);
+        t.vertex(x + h + 1 + ew, y1 + ew, 0);
+        t.vertex(x + h + 1 + ew, y0 - ew, 0);
+
+        t.color(0x000000);
+        t.vertex(x, y0 + 1, 0);
+        t.vertex(x, y1 - 1, 0);
+        t.vertex(x + h, y1 - 1, 0);
+        t.vertex(x + h, y0 + 1, 0);
+
+        t.draw();
+        glEnable2(GL_TEXTURE_2D);
+      }
     }
     renderItem(i, (int)x, rowY, (int)h, t);
   }
@@ -274,14 +322,29 @@ void RolledSelectionListH::renderHoleBackground(
   minecraft->textures->loadAndBindTexture("gui/background.png");
   glColor4f2(1.0f, 1, 1, 1);
   float s = 32;
-  t.begin();
-  t.color(0x505050, a1);
-  t.vertexUV(0, y1, 0, 0, y1 / s);
-  t.vertexUV((float)width, y1, 0, width / s, y1 / s);
-  t.color(0x505050, a0);
-  t.vertexUV((float)width, y0, 0, width / s, y0 / s);
-  t.vertexUV(0, y0, 0, 0, y0 / s);
-  t.draw();
+  GraphicsQuad holeQuad;
+  holeQuad.x = 0.0f;
+  holeQuad.y = y0;
+  holeQuad.width = (float)width;
+  holeQuad.height = y1 - y0;
+  holeQuad.u0 = 0.0f;
+  holeQuad.v0 = y0 / s;
+  holeQuad.u1 = width / s;
+  holeQuad.v1 = y1 / s;
+  holeQuad.topLeft = quadColor(0x505050, a0);
+  holeQuad.topRight = quadColor(0x505050, a0);
+  holeQuad.bottomRight = quadColor(0x505050, a1);
+  holeQuad.bottomLeft = quadColor(0x505050, a1);
+  if (!tryDrawQuad(holeQuad)) {
+    t.begin();
+    t.color(0x505050, a1);
+    t.vertexUV(0, y1, 0, 0, y1 / s);
+    t.vertexUV((float)width, y1, 0, width / s, y1 / s);
+    t.color(0x505050, a0);
+    t.vertexUV((float)width, y0, 0, width / s, y0 / s);
+    t.vertexUV(0, y0, 0, 0, y0 / s);
+    t.draw();
+  }
   // printf("x, y, x1, y1: %d, %d, %d, %d\n", 0, (int)y0, width, (int)y1);
 }
 

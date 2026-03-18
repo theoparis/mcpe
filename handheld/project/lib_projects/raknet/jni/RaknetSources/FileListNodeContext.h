@@ -26,14 +26,14 @@ struct FileListNodeContext {
   unsigned int dataLength;
 };
 
-inline RakNet::BitStream &operator<<(RakNet::BitStream &out,
-                                     FileListNodeContext &in) {
+inline RakNet::BitStream &operator<<(
+    RakNet::BitStream &out, FileListNodeContext &in) {
   out.Write(in.op);
   out.Write(in.fileId);
   return out;
 }
-inline RakNet::BitStream &operator>>(RakNet::BitStream &in,
-                                     FileListNodeContext &out) {
+inline RakNet::BitStream &operator>>(
+    RakNet::BitStream &in, FileListNodeContext &out) {
   in.Read(out.op);
   bool success = in.Read(out.fileId);
   (void)success;

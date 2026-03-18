@@ -85,8 +85,8 @@ void MemoryPool<MemoryBlockType>::SetPageSize(int size) {
 }
 
 template <class MemoryBlockType>
-MemoryBlockType *MemoryPool<MemoryBlockType>::Allocate(const char *file,
-                                                       unsigned int line) {
+MemoryBlockType *MemoryPool<MemoryBlockType>::Allocate(
+    const char *file, unsigned int line) {
 #ifdef _DISABLE_MEMORY_POOL
   return (MemoryBlockType *)rakMalloc_Ex(sizeof(MemoryBlockType), file, line);
 #else
@@ -100,8 +100,8 @@ MemoryBlockType *MemoryPool<MemoryBlockType>::Allocate(const char *file,
     if (curPage->availableStackSize == 0) {
       --availablePagesSize;
       availablePages = curPage->next;
-      RakAssert(availablePagesSize == 0 ||
-                availablePages->availableStackSize > 0);
+      RakAssert(
+          availablePagesSize == 0 || availablePages->availableStackSize > 0);
       curPage->next->prev = curPage->prev;
       curPage->prev->next = curPage->next;
 
@@ -117,8 +117,8 @@ MemoryBlockType *MemoryPool<MemoryBlockType>::Allocate(const char *file,
       }
     }
 
-    RakAssert(availablePagesSize == 0 ||
-              availablePages->availableStackSize > 0);
+    RakAssert(
+        availablePagesSize == 0 || availablePages->availableStackSize > 0);
     return retVal;
   }
 
@@ -137,8 +137,8 @@ MemoryBlockType *MemoryPool<MemoryBlockType>::Allocate(const char *file,
 #endif
 }
 template <class MemoryBlockType>
-void MemoryPool<MemoryBlockType>::Release(MemoryBlockType *m, const char *file,
-                                          unsigned int line) {
+void MemoryPool<MemoryBlockType>::Release(
+    MemoryBlockType *m, const char *file, unsigned int line) {
 #ifdef _DISABLE_MEMORY_POOL
   rakFree_Ex(m, file, line);
   return;
@@ -245,9 +245,8 @@ int MemoryPool<MemoryBlockType>::BlocksPerPage(void) const {
   return memoryPoolPageSize / sizeof(MemoryWithPage);
 }
 template <class MemoryBlockType>
-bool MemoryPool<MemoryBlockType>::InitPage(Page *page, Page *prev,
-                                           const char *file,
-                                           unsigned int line) {
+bool MemoryPool<MemoryBlockType>::InitPage(
+    Page *page, Page *prev, const char *file, unsigned int line) {
   int i = 0;
   const int bpp = BlocksPerPage();
   page->block = (MemoryWithPage *)rakMalloc_Ex(memoryPoolPageSize, file, line);

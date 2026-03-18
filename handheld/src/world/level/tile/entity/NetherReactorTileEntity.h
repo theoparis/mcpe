@@ -37,18 +37,18 @@ public:
   void turnGlowingObsidianLayerToObsidian(int layer);
   Vec3 getSpawnPosition(float minDistance, float varibleDistance, float offset);
   void buildHollowedVolume(int x, int y, int z, int expandWidth, int height,
-                           const int wallTileId, const int clearTileId);
-  void buildFloorVolume(int x, int y, int z, int expandWidth, int heightm,
-                        const int tileId);
+      const int wallTileId, const int clearTileId);
+  void buildFloorVolume(
+      int x, int y, int z, int expandWidth, int heightm, const int tileId);
   void buildCrockedRoofVolume(bool inverted, int x, int y, int z,
-                              int expandWidth, int height, const int tileId);
+      int expandWidth, int height, const int tileId);
 
   bool isEdge(int curX, int expandWidth, int curZ);
   void deterioateDome(int x, int y, int z);
   void deterioateCrockedRoofVolume(bool inverted, int x, int y, int z,
-                                   int expandWidth, int height, int tileId);
-  void deterioateHollowedVolume(int x, int y, int z, int expandWidth,
-                                int height, int tileId);
+      int expandWidth, int height, int tileId);
+  void deterioateHollowedVolume(
+      int x, int y, int z, int expandWidth, int height, int tileId);
   bool playersAreCloseBy();
   void killPigZombies();
 

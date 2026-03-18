@@ -95,7 +95,6 @@ private:
 };
 
 int partitionTileEntities(const std::vector<TileEntity *> &in,
-                          std::vector<TileEntity *> &keep,
-                          std::vector<TileEntity *> &dontKeep);
+    std::vector<TileEntity *> &keep, std::vector<TileEntity *> &dontKeep);
 
 #endif /*NET_MINECRAFT_WORLD_LEVEL_TILE_ENTITY__TileEntity_H__*/

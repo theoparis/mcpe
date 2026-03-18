@@ -46,8 +46,8 @@ public:
   unsigned char *getBlockData() { return blocks; }
 
   virtual int getBrightness(const LightLayer &layer, int x, int y, int z);
-  virtual void setBrightness(const LightLayer &layer, int x, int y, int z,
-                             int brightness);
+  virtual void setBrightness(
+      const LightLayer &layer, int x, int y, int z, int brightness);
   virtual int getRawBrightness(int x, int y, int z, int skyDampen);
 
   virtual void addEntity(Entity *e);
@@ -55,8 +55,8 @@ public:
   virtual void removeEntity(Entity *e, int yc);
 
   virtual void getEntitiesOfClass(int type, const AABB &bb, EntityList &list);
-  virtual void getEntitiesOfType(int entityType, const AABB &bb,
-                                 EntityList &list);
+  virtual void getEntitiesOfType(
+      int entityType, const AABB &bb, EntityList &list);
 
   //
   // TileEntity
@@ -81,8 +81,8 @@ public:
   virtual void markUnsaved();
 
   virtual int countEntities();
-  virtual void getEntities(Entity *except, const AABB &bb,
-                           std::vector<Entity *> &es);
+  virtual void getEntities(
+      Entity *except, const AABB &bb, std::vector<Entity *> &es);
 
   virtual int getTile(int x, int y, int z);
   virtual bool setTile(int x, int y, int z, int tile_);
@@ -95,9 +95,9 @@ public:
   virtual void setBlocks(unsigned char *newBlocks, int sub);
 
   virtual int getBlocksAndData(unsigned char *data, int x0, int y0, int z0,
-                               int x1, int y1, int z1, int p);
+      int x1, int y1, int z1, int p);
   virtual int setBlocksAndData(unsigned char *data, int x0, int y0, int z0,
-                               int x1, int y1, int z1, int p);
+      int x1, int y1, int z1, int p);
 
   virtual Random getRandom(long l);
 

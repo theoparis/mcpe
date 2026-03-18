@@ -1,0 +1,45 @@
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "rules_cc", version = "0.2.17")
+bazel_dep(name = "rules_go", version = "0.60.0")
+bazel_dep(name = "rules_kotlin", version = "2.3.10")
+bazel_dep(name = "rules_vulkan", version = "0.8.0")
+bazel_dep(name = "tcmalloc", version = "0.0.0")
+
+git_override(
+    module_name = "tcmalloc",
+    remote = "https://github.com/google/tcmalloc",
+    commit = "c0a9568814cd3e2b5de57070bbd8d154dc8c57f0",
+)
+git_override(
+    module_name = "protobuf",
+    remote = "https://github.com/protocolbuffers/protobuf",
+    commit = "1a8828b6437019329102ed288857af18c464a59a",
+    patches = [],
+)
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+VULKAN_HEADERS_VER = "1.4.346"
+VULKAN_SDK_VER = "1.4.341.1"
+
+vulkan_sdk = use_extension("@rules_vulkan//vulkan:extensions.bzl", "vulkan_sdk")
+vulkan_sdk.toolchain(
+    name = "vk_sdk",
+    version = VULKAN_SDK_VER,
+)
+use_repo(vulkan_sdk, "vk_sdk")
+
+register_toolchains("@vk_sdk//:all")
+
+http_archive(
+    name = "vulkan_headers",
+    build_file = "@//third_party/vulkan-headers:BUILD",
+    strip_prefix = "Vulkan-Headers-{}".format(VULKAN_HEADERS_VER),
+    url = "https://github.com/KhronosGroup/Vulkan-Headers/archive/refs/tags/v{}.tar.gz".format(VULKAN_HEADERS_VER),
+)
+
+http_archive(
+    name = "sdl",
+    build_file = "@//third_party/sdl:BUILD",
+    strip_prefix = "SDL3-3.4.2",
+    url = "https://github.com/libsdl-org/SDL/releases/download/release-3.4.2/SDL3-3.4.2.tar.gz",
+)

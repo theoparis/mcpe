@@ -27,13 +27,13 @@ public:
   bool operator=(const Queue &original_copy);
   void Push(const queue_type &input, const char *file, unsigned int line);
   void PushAtHead(const queue_type &input, unsigned index, const char *file,
-                  unsigned int line);
+      unsigned int line);
   queue_type &operator[](
       unsigned int position) const; // Not a normal thing you do with a queue
                                     // but can be used for efficiency
-  void
-  RemoveAtIndex(unsigned int position); // Not a normal thing you do with a
-                                        // queue but can be used for efficiency
+  void RemoveAtIndex(
+      unsigned int position); // Not a normal thing you do with a
+                              // queue but can be used for efficiency
   inline queue_type Peek(void) const;
   inline queue_type PeekTail(void) const;
   inline queue_type Pop(void);
@@ -45,8 +45,7 @@ public:
   inline void Clear(const char *file, unsigned int line);
   void Compress(const char *file, unsigned int line);
   bool Find(queue_type q);
-  void ClearAndForceAllocation(
-      int size, const char *file,
+  void ClearAndForceAllocation(int size, const char *file,
       unsigned int line); // Force a memory allocation to a certain larger size
 
 private:
@@ -122,7 +121,7 @@ inline queue_type Queue<queue_type>::PopDeref(void) {
 
 template <class queue_type>
 void Queue<queue_type>::PushAtHead(const queue_type &input, unsigned index,
-                                   const char *file, unsigned int line) {
+    const char *file, unsigned int line) {
   RakAssert(index <= Size());
 
   // Just force a reallocation, will be overwritten
@@ -182,8 +181,8 @@ inline queue_type Queue<queue_type>::PeekTail(void) const {
 }
 
 template <class queue_type>
-void Queue<queue_type>::Push(const queue_type &input, const char *file,
-                             unsigned int line) {
+void Queue<queue_type>::Push(
+    const queue_type &input, const char *file, unsigned int line) {
   if (allocation_size == 0) {
     array = RakNet::OP_NEW_ARRAY<queue_type>(16, file, line);
     head = 0;
@@ -235,12 +234,12 @@ template <class queue_type> Queue<queue_type>::Queue(Queue &original_copy) {
   }
 
   else {
-    array = RakNet::OP_NEW_ARRAY<queue_type>(original_copy.Size() + 1,
-                                             _FILE_AND_LINE_);
+    array = RakNet::OP_NEW_ARRAY<queue_type>(
+        original_copy.Size() + 1, _FILE_AND_LINE_);
 
     for (unsigned int counter = 0; counter < original_copy.Size(); ++counter)
       array[counter] = original_copy.array[(original_copy.head + counter) %
-                                           (original_copy.allocation_size)];
+          (original_copy.allocation_size)];
 
     head = 0;
 
@@ -263,12 +262,12 @@ bool Queue<queue_type>::operator=(const Queue &original_copy) {
   }
 
   else {
-    array = RakNet::OP_NEW_ARRAY<queue_type>(original_copy.Size() + 1,
-                                             _FILE_AND_LINE_);
+    array = RakNet::OP_NEW_ARRAY<queue_type>(
+        original_copy.Size() + 1, _FILE_AND_LINE_);
 
     for (unsigned int counter = 0; counter < original_copy.Size(); ++counter)
       array[counter] = original_copy.array[(original_copy.head + counter) %
-                                           (original_copy.allocation_size)];
+          (original_copy.allocation_size)];
 
     head = 0;
 
@@ -337,8 +336,8 @@ template <class queue_type> bool Queue<queue_type>::Find(queue_type q) {
 }
 
 template <class queue_type>
-void Queue<queue_type>::ClearAndForceAllocation(int size, const char *file,
-                                                unsigned int line) {
+void Queue<queue_type>::ClearAndForceAllocation(
+    int size, const char *file, unsigned int line) {
   RakNet::OP_DELETE_ARRAY(array, file, line);
   if (size > 0)
     array = RakNet::OP_NEW_ARRAY<queue_type>(size, file, line);

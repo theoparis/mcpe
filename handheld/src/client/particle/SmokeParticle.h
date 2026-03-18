@@ -12,7 +12,7 @@ public:
   float oSize;
 
   SmokeParticle(Level *level, float x, float y, float z, float xa, float ya,
-                float za, float scale = 1.0f)
+      float za, float scale = 1.0f)
       : super(level, x, y, z, 0, 0, 0) {
     xd *= 0.1f;
     yd *= 0.1f;
@@ -31,7 +31,7 @@ public:
   }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     float l = ((age + a) / lifetime) * 32;
     if (l < 0)
       l = 0;

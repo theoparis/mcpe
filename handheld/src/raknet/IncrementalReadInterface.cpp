@@ -3,10 +3,9 @@
 
 using namespace RakNet;
 
-unsigned int IncrementalReadInterface::GetFilePart(
-    const char *filename, unsigned int startReadBytes,
-    unsigned int numBytesToRead, void *preallocatedDestination,
-    FileListNodeContext context) {
+unsigned int IncrementalReadInterface::GetFilePart(const char *filename,
+    unsigned int startReadBytes, unsigned int numBytesToRead,
+    void *preallocatedDestination, FileListNodeContext context) {
   FILE *fp = fopen(filename, "rb");
   if (fp == 0)
     return 0;

@@ -5,8 +5,8 @@
 
 TntRenderer::TntRenderer() { this->shadowRadius = 0.5f; }
 
-void TntRenderer::render(Entity *tnt_, float x, float y, float z, float rot,
-                         float a) {
+void TntRenderer::render(
+    Entity *tnt_, float x, float y, float z, float rot, float a) {
   PrimedTnt *tnt = (PrimedTnt *)tnt_;
   glPushMatrix2();
   glTranslatef2((float)x, (float)y, (float)z);

@@ -43,8 +43,8 @@ public:
 
   void renderToolBar(float a, int ySlot, const int screenWidth);
 
-  void renderChatMessages(const int screenHeight, unsigned int max,
-                          bool isChatting, Font *font);
+  void renderChatMessages(
+      const int screenHeight, unsigned int max, bool isChatting, Font *font);
 
   void renderOnSelectItemNameText(const int screenWidth, Font *font, int ySlot);
 
@@ -55,8 +55,7 @@ public:
   void renderDebugInfo();
 
   void renderProgressIndicator(const bool isTouchInterface,
-                               const int screenWidth, const int screenHeight,
-                               float a);
+      const int screenWidth, const int screenHeight, float a);
 
   void addMessage(const std::string &string);
   void postError(int errCode);
@@ -66,8 +65,8 @@ public:
 
   void setNowPlaying(const std::string &string);
   void displayClientMessage(const std::string &messageId);
-  void renderSlotText(const ItemInstance *item, float x, float y,
-                      bool hasFinite, bool shadow);
+  void renderSlotText(
+      const ItemInstance *item, float x, float y, bool hasFinite, bool shadow);
   void texturesLoaded(Textures *textures);
 
   void onConfigChanged(const Config &config);

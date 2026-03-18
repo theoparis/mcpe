@@ -31,21 +31,21 @@ Player *NetEventCallback::findPlayer(Level *level, int entityId) {
     if (e->isPlayer())
       return (Player *)e;
     LOGE("Entity: %p is supposed to be a player but is not (type %d)!\n", e,
-         e->getEntityTypeId());
+        e->getEntityTypeId());
   }
   return NULL;
 }
 
-Player *NetEventCallback::findPlayer(Level *level,
-                                     const RakNet::RakNetGUID *source) {
+Player *NetEventCallback::findPlayer(
+    Level *level, const RakNet::RakNetGUID *source) {
   for (unsigned int i = 0; i < level->players.size(); ++i)
     if (level->players[i]->owner == *source)
       return level->players[i];
   return NULL;
 }
 
-Player *NetEventCallback::findPlayer(Level *level, int entityId,
-                                     const RakNet::RakNetGUID *source) {
+Player *NetEventCallback::findPlayer(
+    Level *level, int entityId, const RakNet::RakNetGUID *source) {
   if (entityId != -1)
     if (Player *p = findPlayer(level, entityId))
       return p;
@@ -55,8 +55,8 @@ Player *NetEventCallback::findPlayer(Level *level, int entityId,
   return NULL;
 }
 
-void NetEventCallback::handle(Level *level, const RakNet::RakNetGUID &source,
-                              RespawnPacket *packet) {
+void NetEventCallback::handle(
+    Level *level, const RakNet::RakNetGUID &source, RespawnPacket *packet) {
   if (Player *p = findPlayer(level, packet->entityId, NULL)) {
     p->moveTo(packet->x, packet->y, packet->z, p->yRot, p->xRot);
     p->reset();

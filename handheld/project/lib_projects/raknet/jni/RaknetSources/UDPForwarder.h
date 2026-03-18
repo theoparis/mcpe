@@ -88,11 +88,10 @@ public:
   /// \param[out] forwardingPort New opened port for forwarding
   /// \param[out] forwardingSocket New opened socket for forwarding
   /// \return UDPForwarderResult
-  UDPForwarderResult
-  StartForwarding(SystemAddress source, SystemAddress destination,
-                  RakNet::TimeMS timeoutOnNoDataMS,
-                  const char *forceHostAddress, unsigned short socketFamily,
-                  unsigned short *forwardingPort, SOCKET *forwardingSocket);
+  UDPForwarderResult StartForwarding(SystemAddress source,
+      SystemAddress destination, RakNet::TimeMS timeoutOnNoDataMS,
+      const char *forceHostAddress, unsigned short socketFamily,
+      unsigned short *forwardingPort, SOCKET *forwardingSocket);
 
   /// No longer forward datagrams from source to destination
   /// \param[in] source The source IP and port
@@ -126,8 +125,8 @@ public:
   };
 
 protected:
-  static int SrcAndDestForwardEntryComp(const SrcAndDest &inputKey,
-                                        ForwardEntry *const &cls);
+  static int SrcAndDestForwardEntryComp(
+      const SrcAndDest &inputKey, ForwardEntry *const &cls);
 
   friend RAK_THREAD_DECLARATION(UpdateUDPForwarder);
   struct ThreadOperation {
@@ -155,24 +154,19 @@ protected:
 #endif
   void UpdateThreaded_Old(void);
   UDPForwarderResult StartForwardingThreaded(SystemAddress source,
-                                             SystemAddress destination,
-                                             RakNet::TimeMS timeoutOnNoDataMS,
-                                             const char *forceHostAddress,
-                                             unsigned short socketFamily,
-                                             unsigned short *forwardingPort,
-                                             SOCKET *forwardingSocket);
+      SystemAddress destination, RakNet::TimeMS timeoutOnNoDataMS,
+      const char *forceHostAddress, unsigned short socketFamily,
+      unsigned short *forwardingPort, SOCKET *forwardingSocket);
   void StopForwardingThreaded(SystemAddress source, SystemAddress destination);
 
   DataStructures::OrderedList<SrcAndDest, ForwardEntry *,
-                              SrcAndDestForwardEntryComp>
+      SrcAndDestForwardEntryComp>
       forwardList;
   unsigned short maxForwardEntries;
 
   UDPForwarderResult AddForwardingEntry(SrcAndDest srcAndDest,
-                                        RakNet::TimeMS timeoutOnNoDataMS,
-                                        unsigned short *port,
-                                        const char *forceHostAddress,
-                                        short socketFamily);
+      RakNet::TimeMS timeoutOnNoDataMS, unsigned short *port,
+      const char *forceHostAddress, short socketFamily);
 
   bool isRunning, threadRunning;
 };

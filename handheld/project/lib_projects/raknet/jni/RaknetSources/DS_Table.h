@@ -55,8 +55,8 @@ public:
     Cell();
     ~Cell();
     Cell(double numericValue, char *charValue, void *ptr, ColumnType type);
-    void SetByType(double numericValue, char *charValue, void *ptr,
-                   ColumnType type);
+    void SetByType(
+        double numericValue, char *charValue, void *ptr, ColumnType type);
     void Clear(void);
 
     /// Numeric
@@ -104,8 +104,8 @@ public:
   struct RAK_DLL_EXPORT ColumnDescriptor {
     ColumnDescriptor();
     ~ColumnDescriptor();
-    ColumnDescriptor(const char cn[_TABLE_MAX_COLUMN_NAME_LENGTH],
-                     ColumnType ct);
+    ColumnDescriptor(
+        const char cn[_TABLE_MAX_COLUMN_NAME_LENGTH], ColumnType ct);
 
     char columnName[_TABLE_MAX_COLUMN_NAME_LENGTH];
     ColumnType columnType;
@@ -184,7 +184,7 @@ public:
   /// \param[in] columnType What type of data this column will hold
   /// \return The index of the new column
   unsigned AddColumn(const char columnName[_TABLE_MAX_COLUMN_NAME_LENGTH],
-                     ColumnType columnType);
+      ColumnType columnType);
 
   /// \brief Removes a column by index
   /// \param[in] columnIndex The index of the column to remove
@@ -228,11 +228,10 @@ public:
   /// \param[in] initialCellValues Initial values to give the row (optional)
   /// \return The newly added row
   Table::Row *AddRow(unsigned rowId);
+  Table::Row *AddRow(
+      unsigned rowId, DataStructures::List<Cell> &initialCellValues);
   Table::Row *AddRow(unsigned rowId,
-                     DataStructures::List<Cell> &initialCellValues);
-  Table::Row *AddRow(unsigned rowId,
-                     DataStructures::List<Cell *> &initialCellValues,
-                     bool copyCells = false);
+      DataStructures::List<Cell *> &initialCellValues, bool copyCells = false);
 
   /// \brief Removes a row specified by rowId.
   /// \param[in] rowId The ID of the row
@@ -254,21 +253,21 @@ public:
   /// \param[in] value The data to set
   bool UpdateCell(unsigned rowId, unsigned columnIndex, int value);
   bool UpdateCell(unsigned rowId, unsigned columnIndex, char *str);
-  bool UpdateCell(unsigned rowId, unsigned columnIndex, int byteLength,
-                  char *data);
+  bool UpdateCell(
+      unsigned rowId, unsigned columnIndex, int byteLength, char *data);
   bool UpdateCellByIndex(unsigned rowIndex, unsigned columnIndex, int value);
   bool UpdateCellByIndex(unsigned rowIndex, unsigned columnIndex, char *str);
-  bool UpdateCellByIndex(unsigned rowIndex, unsigned columnIndex,
-                         int byteLength, char *data);
+  bool UpdateCellByIndex(
+      unsigned rowIndex, unsigned columnIndex, int byteLength, char *data);
 
   /// \brief Note this is much less efficient to call than GetRow, then working
   /// with the cells directly. Numeric, string, binary
-  void GetCellValueByIndex(unsigned rowIndex, unsigned columnIndex,
-                           int *output);
-  void GetCellValueByIndex(unsigned rowIndex, unsigned columnIndex,
-                           char *output);
-  void GetCellValueByIndex(unsigned rowIndex, unsigned columnIndex,
-                           char *output, int *outputLength);
+  void GetCellValueByIndex(
+      unsigned rowIndex, unsigned columnIndex, int *output);
+  void GetCellValueByIndex(
+      unsigned rowIndex, unsigned columnIndex, char *output);
+  void GetCellValueByIndex(
+      unsigned rowIndex, unsigned columnIndex, char *output, int *outputLength);
 
   /// \brief Gets a row.  More efficient to do this and access Row::cells than
   /// to repeatedly call GetCell. You can also update cells in rows from this
@@ -299,8 +298,8 @@ public:
   /// \param[out] result The result of the query.  If no rows are returned, the
   /// table will only have columns.
   void QueryTable(unsigned *columnIndicesSubset, unsigned numColumnSubset,
-                  FilterQuery *inclusionFilters, unsigned numInclusionFilters,
-                  unsigned *rowIds, unsigned numRowIDs, Table *result);
+      FilterQuery *inclusionFilters, unsigned numInclusionFilters,
+      unsigned *rowIds, unsigned numRowIDs, Table *result);
 
   /// \brief Sorts the table by rows
   /// \details You can sort the table in ascending or descending order on one or
@@ -313,8 +312,8 @@ public:
   /// \param[out] out The address of an array of Rows, which will receive the
   /// sorted output.  The array must be long enough to contain all returned
   /// rows, up to GetRowCount()
-  void SortTable(Table::SortQuery *sortQueries, unsigned numSortQueries,
-                 Table::Row **out);
+  void SortTable(
+      Table::SortQuery *sortQueries, unsigned numSortQueries, Table::Row **out);
 
   /// \brief Frees all memory in the table.
   void Clear(void);
@@ -323,8 +322,8 @@ public:
   /// \param[out] out A pointer to an array of bytes which will hold the output.
   /// \param[in] outLength The size of the \a out array
   /// \param[in] columnDelineator What character to print to delineate columns
-  void PrintColumnHeaders(char *out, int outLength,
-                          char columnDelineator) const;
+  void PrintColumnHeaders(
+      char *out, int outLength, char columnDelineator) const;
 
   /// \brief Writes a text representation of the row to \a out.
   /// \param[out] out A pointer to an array of bytes which will hold the output.
@@ -334,7 +333,7 @@ public:
   /// still print the delineator.
   /// \param[in] inputRow The row to print
   void PrintRow(char *out, int outLength, char columnDelineator,
-                bool printDelineatorForBinary, Table::Row *inputRow) const;
+      bool printDelineatorForBinary, Table::Row *inputRow) const;
 
   /// \brief Direct access to make things easier.
   const DataStructures::List<ColumnDescriptor> &GetColumns(void) const;
@@ -344,8 +343,8 @@ public:
   GetRows(void) const;
 
   /// \brief Get the head of a linked list containing all the row data.
-  DataStructures::Page<unsigned, Row *, _TABLE_BPLUS_TREE_ORDER> *
-  GetListHead(void);
+  DataStructures::Page<unsigned, Row *, _TABLE_BPLUS_TREE_ORDER> *GetListHead(
+      void);
 
   /// \brief Get the first free row id.
   /// This could be made more efficient.
@@ -354,15 +353,14 @@ public:
   Table &operator=(const Table &input);
 
 protected:
-  Table::Row *AddRowColumns(unsigned rowId, Row *row,
-                            DataStructures::List<unsigned> columnIndices);
+  Table::Row *AddRowColumns(
+      unsigned rowId, Row *row, DataStructures::List<unsigned> columnIndices);
 
   void DeleteRow(Row *row);
 
   void QueryRow(DataStructures::List<unsigned> &inclusionFilterColumnIndices,
-                DataStructures::List<unsigned> &columnIndicesToReturn,
-                unsigned key, Table::Row *row, FilterQuery *inclusionFilters,
-                Table *result);
+      DataStructures::List<unsigned> &columnIndicesToReturn, unsigned key,
+      Table::Row *row, FilterQuery *inclusionFilters, Table *result);
 
   // 16 is arbitrary and is the order of the BPlus tree.  Higher orders are
   // better for searching while lower orders are better for Insertions and

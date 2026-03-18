@@ -93,7 +93,7 @@ int Spider::getDeathLoot() { return Item::string->id; }
 //     super::dropDeathLoot(/*wasKilledByPlayer, playerBonusLevel*/);
 
 ////    if (wasKilledByPlayer && (random.nextInt(3) == 0 || random.nextInt(1 +
-///playerBonusLevel) > 0)) { /        spawnAtLocation(Item::spiderEye->id, 1);
+/// playerBonusLevel) > 0)) { /        spawnAtLocation(Item::spiderEye->id, 1);
 ////    }
 //}
 

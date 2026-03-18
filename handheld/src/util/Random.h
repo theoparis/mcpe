@@ -75,7 +75,7 @@ private:
       0x7fffffffUL; /* least significant r bits */
 
   unsigned long _mt[N]; /* the array for the state vector  */
-  int _mti;             /* _mti==N+1 means _mt[N] is not initialized */
+  int _mti; /* _mti==N+1 means _mt[N] is not initialized */
 
   bool haveNextNextGaussian;
   float nextNextGaussian;
@@ -107,8 +107,8 @@ private:
     k = (N > key_length ? N : key_length);
     for (; k; k--) {
       _mt[i] = (_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1664525UL)) +
-               init_key[j] + j; /* non linear */
-      _mt[i] &= 0xffffffffUL;   /* for WORDSIZE > 32 machines */
+          init_key[j] + j; /* non linear */
+      _mt[i] &= 0xffffffffUL; /* for WORDSIZE > 32 machines */
       i++;
       j++;
       if (i >= N) {
@@ -120,7 +120,7 @@ private:
     }
     for (k = N - 1; k; k--) {
       _mt[i] = (_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1566083941UL)) -
-               i;             /* non linear */
+          i; /* non linear */
       _mt[i] &= 0xffffffffUL; /* for WORDSIZE > 32 machines */
       i++;
       if (i >= N) {
@@ -143,7 +143,7 @@ private:
       // sw.start();
       int kk;
 
-      if (_mti == N + 1)      /* if init_genrand() has not been called, */
+      if (_mti == N + 1) /* if init_genrand() has not been called, */
         init_genrand(5489UL); /* a default initial seed is used */
 
       for (kk = 0; kk < N - M; kk++) {

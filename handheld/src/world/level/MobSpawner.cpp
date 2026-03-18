@@ -16,11 +16,10 @@
 std::map<ChunkPos, bool> MobSpawner::chunksToPoll;
 
 static int _bedEnemies[] = {MobTypes::Spider, MobTypes::Zombie,
-                            MobTypes::Skeleton, MobTypes::PigZombie};
+    MobTypes::Skeleton, MobTypes::PigZombie};
 
-static const std::vector<int>
-    bedEnemies(_bedEnemies,
-               _bedEnemies + sizeof(_bedEnemies) / sizeof(_bedEnemies[0]));
+static const std::vector<int> bedEnemies(
+    _bedEnemies, _bedEnemies + sizeof(_bedEnemies) / sizeof(_bedEnemies[0]));
 
 /*static*/
 int MobSpawner::tick(Level *level, bool spawnEnemies, bool spawnFriendlies) {
@@ -81,7 +80,7 @@ int MobSpawner::tick(Level *level, bool spawnEnemies, bool spawnFriendlies) {
     // mobCategory.getBaseClassId());
   chunkLoop:
     for (std::map<ChunkPos, bool>::iterator it = chunksToPoll.begin();
-         it != chunksToPoll.end(); ++it) {
+        it != chunksToPoll.end(); ++it) {
       const ChunkPos &cp = it->first;
       TilePos start = getRandomPosWithin(level, cp.x * 16, cp.z * 16);
       int xStart = start.x;
@@ -120,8 +119,8 @@ int MobSpawner::tick(Level *level, bool spawnEnemies, bool spawnFriendlies) {
             float xx = (float)x + 0.5f;
             float yy = (float)y;
             float zz = (float)z + 0.5f;
-            if (level->getNearestPlayer(xx, yy, zz,
-                                        (float)MIN_SPAWN_DISTANCE) != NULL) {
+            if (level->getNearestPlayer(
+                    xx, yy, zz, (float)MIN_SPAWN_DISTANCE) != NULL) {
               continue;
             } else {
               float xd = xx - spawnPos.x;
@@ -147,18 +146,17 @@ int MobSpawner::tick(Level *level, bool spawnEnemies, bool spawnFriendlies) {
                 int typeCount =
                     level->countInstanceOfType(currentMobType.mobClassId);
                 int typeMax = (int)(1.5f * currentMobType.randomWeight *
-                                    mobCategory.getMaxInstancesPerLevel()) /
-                              Biome::defaultTotalEnemyWeight;
+                                  mobCategory.getMaxInstancesPerLevel()) /
+                    Biome::defaultTotalEnemyWeight;
                 // LOGI("Has %d (max %d) of type: %d\n", typeCount, typeMax,
                 // currentMobType.mobClassId);
                 if (typeCount >= typeMax)
                   break;
               }
 
-              maxCreatureCount =
-                  currentMobType.minCount +
-                  level->random.nextInt(1 + currentMobType.maxCount -
-                                        currentMobType.minCount);
+              maxCreatureCount = currentMobType.minCount +
+                  level->random.nextInt(
+                      1 + currentMobType.maxCount - currentMobType.minCount);
             }
 
             Mob *tmp =
@@ -175,7 +173,7 @@ int MobSpawner::tick(Level *level, bool spawnEnemies, bool spawnFriendlies) {
               continue;
 
             if (addMob(level, mob, xx, yy, zz, level->random.nextFloat() * 360,
-                       0, false)) {
+                    0, false)) {
               ++currentCreatureCount;
               if (++clusterSize >= mob->getMaxSpawnClusterSize())
                 goto chunkLoop;
@@ -193,8 +191,7 @@ int MobSpawner::tick(Level *level, bool spawnEnemies, bool spawnFriendlies) {
 
 /*static*/
 void MobSpawner::postProcessSpawnMobs(Level *level, Biome *biome, int xo,
-                                      int zo, int cellWidth, int cellHeight,
-                                      Random *random) {
+    int zo, int cellWidth, int cellHeight, Random *random) {
 
   // return;
 
@@ -206,8 +203,8 @@ void MobSpawner::postProcessSpawnMobs(Level *level, Biome *biome, int xo,
   while (random->nextFloat() < biome->getCreatureProbability()) {
 
     Biome::MobSpawnerData *type =
-        (Biome::MobSpawnerData *)WeighedRandom::getRandomItem(&level->random,
-                                                              mobs);
+        (Biome::MobSpawnerData *)WeighedRandom::getRandomItem(
+            &level->random, mobs);
     int count =
         type->minCount + random->nextInt(1 + type->maxCount - type->minCount);
 
@@ -241,7 +238,7 @@ void MobSpawner::postProcessSpawnMobs(Level *level, Biome *biome, int xo,
         x += random->nextInt(5) - random->nextInt(5);
         z += random->nextInt(5) - random->nextInt(5);
         while (x < xo || x >= (xo + cellWidth) || z < zo ||
-               z >= (zo + cellWidth)) {
+            z >= (zo + cellWidth)) {
           x = startX + random->nextInt(5) - random->nextInt(5);
           z = startZ + random->nextInt(5) - random->nextInt(5);
         }
@@ -260,22 +257,22 @@ TilePos MobSpawner::getRandomPosWithin(Level *level, int xo, int zo) {
 }
 
 /*static*/
-bool MobSpawner::isSpawnPositionOk(const MobCategory &category, Level *level,
-                                   int x, int y, int z) {
+bool MobSpawner::isSpawnPositionOk(
+    const MobCategory &category, Level *level, int x, int y, int z) {
   if (category.getSpawnPositionMaterial() == Material::water) {
     return level->getMaterial(x, y, z)->isLiquid() &&
-           !level->isSolidBlockingTile(x, y + 1, z);
+        !level->isSolidBlockingTile(x, y + 1, z);
   } else {
     return level->isSolidBlockingTile(x, y - 1, z) &&
-           !level->isSolidBlockingTile(x, y, z) &&
-           !level->getMaterial(x, y, z)->isLiquid() &&
-           !level->isSolidBlockingTile(x, y + 1, z);
+        !level->isSolidBlockingTile(x, y, z) &&
+        !level->getMaterial(x, y, z)->isLiquid() &&
+        !level->isSolidBlockingTile(x, y + 1, z);
   }
 }
 
 /*static*/
-void MobSpawner::finalizeMobSettings(Mob *mob, Level *level, float xx, float yy,
-                                     float zz) {
+void MobSpawner::finalizeMobSettings(
+    Mob *mob, Level *level, float xx, float yy, float zz) {
   // @todo
   //         if (mob instanceof Spider && level->random->nextInt(100) == 0) {
   //             Skeleton skeleton = /*new*/ Skeleton(level);
@@ -295,7 +292,7 @@ void MobSpawner::finalizeMobSettings(Mob *mob, Level *level, float xx, float yy,
 
 /*static*/
 bool MobSpawner::addMob(Level *level, Mob *mob, float xx, float yy, float zz,
-                        float yRot, float xRot, bool force) {
+    float yRot, float xRot, bool force) {
   mob->moveTo(xx, yy, zz, yRot, xRot);
 
   if (force || mob->canSpawn()) {

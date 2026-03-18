@@ -12,7 +12,7 @@ class ScrolledSelectionList : public GuiComponent {
   static const int DRAG_SKIP = 1; // special case to fix android jump bug
 public:
   ScrolledSelectionList(Minecraft *_minecraft, int _width, int _height, int _y0,
-                        int _y1, int _itemHeight);
+      int _y1, int _itemHeight);
 
   virtual void setRenderSelection(bool _renderSelection);
 

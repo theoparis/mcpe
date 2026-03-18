@@ -23,7 +23,7 @@ public:
   virtual void stop(const std::string &name) {}
 
   virtual void playAt(const SoundDesc &desc, float x, float y, float z,
-                      float volume, float pitch) {}
+      float volume, float pitch) {}
 };
 
 #endif /*SoundSystem_H__ */

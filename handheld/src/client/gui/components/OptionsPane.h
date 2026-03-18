@@ -21,14 +21,14 @@ class OptionsPane : public GuiElementContainer {
 public:
   OptionsPane();
   OptionsGroup &createOptionsGroup(std::string label);
-  void createToggle(unsigned int group, std::string label,
-                    const Options::Option *option);
+  void createToggle(
+      unsigned int group, std::string label, const Options::Option *option);
   void createProgressSlider(Minecraft *minecraft, unsigned int group,
-                            std::string label, const Options::Option *option,
-                            float progressMin = 1.0f, float progressMax = 1.0f);
+      std::string label, const Options::Option *option,
+      float progressMin = 1.0f, float progressMax = 1.0f);
   void createStepSlider(Minecraft *minecraft, unsigned int group,
-                        std::string label, const Options::Option *option,
-                        const std::vector<int> &stepVec);
+      std::string label, const Options::Option *option,
+      const std::vector<int> &stepVec);
   void setupPositions();
 
 private:

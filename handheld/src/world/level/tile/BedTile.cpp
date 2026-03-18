@@ -58,7 +58,7 @@ bool BedTile::use(Level *level, int x, int y, int z, Player *player) {
   if (isOccupied(data)) {
     Player *sleepingPlayer = NULL;
     for (PlayerList::iterator i = level->players.begin();
-         i != level->players.end(); ++i) {
+        i != level->players.end(); ++i) {
       if ((*i)->isSleeping()) {
         Pos pos = (*i)->bedPosition;
         if (pos.x == x && pos.y == y && pos.z == z) {
@@ -136,12 +136,12 @@ void BedTile::neighborChanged(Level *level, int x, int y, int z, int type) {
   int direction = getDirection(data);
   if (isHeadPiece(data)) {
     if (level->getTile(x - HEAD_DIRECTION_OFFSETS[direction][0], y,
-                       z - HEAD_DIRECTION_OFFSETS[direction][1]) != id) {
+            z - HEAD_DIRECTION_OFFSETS[direction][1]) != id) {
       level->setTile(x, y, z, 0);
     }
   } else {
     if (level->getTile(x + HEAD_DIRECTION_OFFSETS[direction][0], y,
-                       z + HEAD_DIRECTION_OFFSETS[direction][1]) != id) {
+            z + HEAD_DIRECTION_OFFSETS[direction][1]) != id) {
       level->setTile(x, y, z, 0);
       if (!level->isClientSide) {
         // spawnResources(level, x, y, z, data, 1);
@@ -158,8 +158,8 @@ int BedTile::getResource(int data, Random *random) {
   return Item::bed->id;
 }
 
-bool BedTile::findStandUpPosition(Level *level, int x, int y, int z,
-                                  int skipCount, Pos &position) {
+bool BedTile::findStandUpPosition(
+    Level *level, int x, int y, int z, int skipCount, Pos &position) {
   int data = level->getData(x, y, z);
   int direction = DirectionalTile::getDirection(data);
   for (int step = 0; step <= 1; ++step) {
@@ -185,8 +185,8 @@ bool BedTile::findStandUpPosition(Level *level, int x, int y, int z,
   return false;
 }
 
-void BedTile::spawnResources(Level *level, int x, int y, int z, int data,
-                             float odds) {
+void BedTile::spawnResources(
+    Level *level, int x, int y, int z, int data, float odds) {
   if (!isHeadPiece(data)) {
     // super::spawnResources(level, x, y, z, data, odds);
     popResource(level, x, y, z, ItemInstance(Item::bed));

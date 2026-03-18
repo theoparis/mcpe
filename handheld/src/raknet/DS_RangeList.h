@@ -43,19 +43,18 @@ public:
   void Clear(void);
   unsigned Size(void) const;
   unsigned RangeSum(void) const;
-  RakNet::BitSize_t Serialize(RakNet::BitStream *in, RakNet::BitSize_t maxBits,
-                              bool clearSerialized);
+  RakNet::BitSize_t Serialize(
+      RakNet::BitStream *in, RakNet::BitSize_t maxBits, bool clearSerialized);
   bool Deserialize(RakNet::BitStream *out);
 
   DataStructures::OrderedList<range_type, RangeNode<range_type>,
-                              RangeNodeComp<range_type>>
+      RangeNodeComp<range_type>>
       ranges;
 };
 
 template <class range_type>
-RakNet::BitSize_t RangeList<range_type>::Serialize(RakNet::BitStream *in,
-                                                   RakNet::BitSize_t maxBits,
-                                                   bool clearSerialized) {
+RakNet::BitSize_t RangeList<range_type>::Serialize(
+    RakNet::BitStream *in, RakNet::BitSize_t maxBits, bool clearSerialized) {
   RakAssert(ranges.Size() < (unsigned short)-1);
   RakNet::BitStream tempBS;
   RakNet::BitSize_t bitsWritten;
@@ -91,7 +90,7 @@ RakNet::BitSize_t RangeList<range_type>::Serialize(RakNet::BitStream *in,
   //	RAKNET_DEBUG_PRINTF("%i ", in->GetNumberOfBitsUsed());
   in->Write(&tempBS, tempBS.GetNumberOfBitsUsed());
   //	RAKNET_DEBUG_PRINTF("%i %i \n",
-  //tempBS.GetNumberOfBitsUsed(),in->GetNumberOfBitsUsed());
+  // tempBS.GetNumberOfBitsUsed(),in->GetNumberOfBitsUsed());
 
   if (clearSerialized && countWritten) {
     unsigned rangeSize = ranges.Size();
@@ -139,8 +138,8 @@ template <class range_type> RangeList<range_type>::~RangeList() { Clear(); }
 template <class range_type>
 void RangeList<range_type>::Insert(range_type index) {
   if (ranges.Size() == 0) {
-    ranges.Insert(index, RangeNode<range_type>(index, index), true,
-                  _FILE_AND_LINE_);
+    ranges.Insert(
+        index, RangeNode<range_type>(index, index), true, _FILE_AND_LINE_);
     return;
   }
 
@@ -151,8 +150,8 @@ void RangeList<range_type>::Insert(range_type index) {
       ranges[insertionIndex - 1].maxIndex++;
     else if (index > ranges[insertionIndex - 1].maxIndex + (range_type)1) {
       // Insert at end
-      ranges.Insert(index, RangeNode<range_type>(index, index), true,
-                    _FILE_AND_LINE_);
+      ranges.Insert(
+          index, RangeNode<range_type>(index, index), true, _FILE_AND_LINE_);
     }
 
     return;
@@ -160,8 +159,8 @@ void RangeList<range_type>::Insert(range_type index) {
 
   if (index < ranges[insertionIndex].minIndex - (range_type)1) {
     // Insert here
-    ranges.InsertAtIndex(RangeNode<range_type>(index, index), insertionIndex,
-                         _FILE_AND_LINE_);
+    ranges.InsertAtIndex(
+        RangeNode<range_type>(index, index), insertionIndex, _FILE_AND_LINE_);
 
     return;
   } else if (index == ranges[insertionIndex].minIndex - (range_type)1) {
@@ -176,7 +175,7 @@ void RangeList<range_type>::Insert(range_type index) {
 
     return;
   } else if (index >= ranges[insertionIndex].minIndex &&
-             index <= ranges[insertionIndex].maxIndex) {
+      index <= ranges[insertionIndex].maxIndex) {
     // Already exists
     return;
   } else if (index == ranges[insertionIndex].maxIndex + (range_type)1) {

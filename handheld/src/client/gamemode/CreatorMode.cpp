@@ -66,7 +66,7 @@ void CreatorMode::continueDestroyBlock(int x, int y, int z, int face) {
 }
 
 bool CreatorMode::useItemOn(Player *player, Level *level, ItemInstance *item,
-                            int x, int y, int z, int face, const Vec3 &hit) {
+    int x, int y, int z, int face, const Vec3 &hit) {
   if (item && item->id == ((Item *)Item::sword_iron)->id)
     _creator->addevent_blockUse(player->entityId, x, y, z, face);
   return super::useItemOn(player, level, item, x, y, z, face, hit);
@@ -76,6 +76,7 @@ void CreatorMode::stopDestroyBlock() {}
 
 void CreatorMode::initAbilities(Abilities &abilities) {
   abilities.mayfly = true;
+  abilities.flying = true;
   abilities.instabuild = true;
   abilities.invulnerable = true;
 }

@@ -1,19 +1,20 @@
 #include "NinePatch.h"
 
+#include "../../../App.h"
+#include "../../renderer/gles.h"
+
 NinePatchDescription::NinePatchDescription(float x, float y, float x1, float x2,
-                                           float x3, float y1, float y2,
-                                           float y3, float w, float e, float n,
-                                           float s)
+    float x3, float y1, float y2, float y3, float w, float e, float n, float s)
     : u0(x), u1(x + x1), u2(x + x2), u3(x + x3), v0(y), v1(y + y1), v2(y + y2),
       v3(y + y3), w(w), e(e), n(n), s(s), imgW(-1), imgH(-1) {}
 
-NinePatchDescription &
-NinePatchDescription::transformUVForImage(const TextureData &d) {
+NinePatchDescription &NinePatchDescription::transformUVForImage(
+    const TextureData &d) {
   return transformUVForImageSize(d.w, d.h);
 }
 
-NinePatchDescription &NinePatchDescription::transformUVForImageSize(int w,
-                                                                    int h) {
+NinePatchDescription &NinePatchDescription::transformUVForImageSize(
+    int w, int h) {
   if (imgW < 0)
     imgW = imgH = 1;
 
@@ -35,12 +36,10 @@ NinePatchDescription &NinePatchDescription::transformUVForImageSize(int w,
   return *this;
 }
 
-NinePatchDescription
-NinePatchDescription::createSymmetrical(int texWidth, int texHeight,
-                                        const IntRectangle &src, int xCutAt,
-                                        int yCutAt) {
-  NinePatchDescription patch(
-      (float)src.x, (float)src.y, // width and height of src
+NinePatchDescription NinePatchDescription::createSymmetrical(int texWidth,
+    int texHeight, const IntRectangle &src, int xCutAt, int yCutAt) {
+  NinePatchDescription patch((float)src.x,
+      (float)src.y, // width and height of src
       (float)xCutAt, (float)(src.w - xCutAt), (float)src.w, // u tex coordinates
       (float)yCutAt, (float)(src.h - yCutAt), (float)src.h, // v tex coordinates
       (float)xCutAt, (float)xCutAt, (float)yCutAt,
@@ -51,8 +50,7 @@ NinePatchDescription::createSymmetrical(int texWidth, int texHeight,
 }
 
 NinePatchLayer::NinePatchLayer(const NinePatchDescription &desc,
-                               const std::string &imageName, Textures *textures,
-                               float w, float h)
+    const std::string &imageName, Textures *textures, float w, float h)
     : desc(desc), imageName(imageName), textures(textures), w(-1), h(-1),
       excluded(0) {
   setSize(w, h);
@@ -71,6 +69,41 @@ void NinePatchLayer::setSize(float w, float h) {
 
 void NinePatchLayer::draw(Tesselator &t, float x, float y) {
   textures->loadAndBindTexture(imageName);
+  float r = 1.0f;
+  float g = 1.0f;
+  float b = 1.0f;
+  float a = 1.0f;
+  glesGetTrackedColor4f(r, g, b, a);
+
+  bool queuedAll = true;
+  for (int i = 0, mask = 1; i < 9; ++i, mask += mask) {
+    if ((mask & excluded) != 0) {
+      continue;
+    }
+
+    const CachedQuad &q = quads[i];
+    GraphicsQuad quad;
+    quad.x = x + q.x0;
+    quad.y = y + q.y0;
+    quad.width = q.x1 - q.x0;
+    quad.height = q.y1 - q.y0;
+    quad.u0 = q.u0;
+    quad.v0 = q.v0;
+    quad.u1 = q.u1;
+    quad.v1 = q.v1;
+    quad.topLeft = {r, g, b, a};
+    quad.topRight = quad.topLeft;
+    quad.bottomRight = quad.topLeft;
+    quad.bottomLeft = quad.topLeft;
+    if (!tryDrawQuad(quad)) {
+      queuedAll = false;
+      break;
+    }
+  }
+  if (queuedAll) {
+    return;
+  }
+
   t.begin();
   t.addOffset(x, y, 0);
   for (int i = 0, b = 1; i < 9; ++i, b += b)
@@ -107,8 +140,8 @@ void NinePatchLayer::buildQuad(int qid) {
   */
 }
 
-void NinePatchLayer::getPatchInfo(int xc, int yc, float &x0, float &x1,
-                                  float &y0, float &y1) {
+void NinePatchLayer::getPatchInfo(
+    int xc, int yc, float &x0, float &x1, float &y0, float &y1) {
   if (xc == 0) {
     x0 = 0;
     x1 = desc.w;
@@ -145,8 +178,8 @@ void NinePatchLayer::d(Tesselator &t, const CachedQuad &q) {
   t.vertexUV(q.x0, q.y0, q.z, q.u0, q.v0);
 }
 
-NinePatchFactory::NinePatchFactory(Textures *textures,
-                                   const std::string &imageName)
+NinePatchFactory::NinePatchFactory(
+    Textures *textures, const std::string &imageName)
     : textures(textures), imageName(imageName), width(1), height(1) {
   TextureId id = textures->loadTexture(imageName);
   if (id != Textures::InvalidId) {
@@ -157,15 +190,13 @@ NinePatchFactory::NinePatchFactory(Textures *textures,
     }
   } else {
     LOGE("Error @ NinePatchFactory::ctor - Couldn't find texture: %s\n",
-         imageName.c_str());
+        imageName.c_str());
   }
 }
 
 NinePatchLayer *NinePatchFactory::createSymmetrical(const IntRectangle &src,
-                                                    int xCutAt, int yCutAt,
-                                                    float w /*= 32.0f*/,
-                                                    float h /*= 32.0f*/) {
+    int xCutAt, int yCutAt, float w /*= 32.0f*/, float h /*= 32.0f*/) {
   return new NinePatchLayer(NinePatchDescription::createSymmetrical(
                                 width, height, src, xCutAt, yCutAt),
-                            imageName, textures, w, h);
+      imageName, textures, w, h);
 }

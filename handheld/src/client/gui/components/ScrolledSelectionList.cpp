@@ -1,4 +1,5 @@
 #include "ScrolledSelectionList.h"
+#include "../../../App.h"
 #include "../../../platform/input/Mouse.h"
 #include "../../Minecraft.h"
 #include "../../renderer/Tesselator.h"
@@ -7,9 +8,34 @@
 
 static int Abs(int d) { return d >= 0 ? d : -d; }
 
+namespace {
+
+auto opaqueQuadColor(int rgb) -> GraphicsQuadColor {
+  GraphicsQuadColor color;
+  color.r = (float)((rgb >> 16) & 0xff) / 255.0f;
+  color.g = (float)((rgb >> 8) & 0xff) / 255.0f;
+  color.b = (float)(rgb & 0xff) / 255.0f;
+  color.a = 1.0f;
+  return color;
+}
+
+auto alphaQuadColor(int rgb, int alpha) -> GraphicsQuadColor {
+  GraphicsQuadColor color = opaqueQuadColor(rgb);
+  color.a = (float)(alpha & 0xff) / 255.0f;
+  return color;
+}
+
+void setUniformQuadColor(GraphicsQuad &quad, const GraphicsQuadColor &color) {
+  quad.topLeft = color;
+  quad.topRight = color;
+  quad.bottomRight = color;
+  quad.bottomLeft = color;
+}
+
+} // namespace
+
 ScrolledSelectionList::ScrolledSelectionList(Minecraft *_minecraft, int _width,
-                                             int _height, int _y0, int _y1,
-                                             int _itemHeight)
+    int _height, int _y0, int _y1, int _itemHeight)
     : minecraft(_minecraft), width(_width), height(_height), y0((float)_y0),
       y1((float)_y1), itemHeight(_itemHeight), x0(0.0f), x1((float)_width),
       selectionY(-1), lastSelectionTime(0), renderSelection(true),
@@ -20,8 +46,8 @@ void ScrolledSelectionList::setRenderSelection(bool _renderSelection) {
   renderSelection = _renderSelection;
 }
 
-void ScrolledSelectionList::setRenderHeader(bool _renderHeader,
-                                            int _headerHeight) {
+void ScrolledSelectionList::setRenderHeader(
+    bool _renderHeader, int _headerHeight) {
   doRenderHeader = _renderHeader;
   headerHeight = _headerHeight;
 
@@ -134,25 +160,11 @@ void ScrolledSelectionList::render(int xm, int ym, float a) {
     }
 
     if (renderSelection && isSelectedItem(i)) {
-      float x0 = width / 2.0f - (92 + 16 + 2);
-      float x1 = width / 2.0f + (92 + 16 + 2);
-      glColor4f2(1, 1, 1, 1);
-      glDisable2(GL_TEXTURE_2D);
-      t.begin();
-      t.color(0x808080);
-      t.vertexUV(x0, y + h + 2, 0, 0, 1);
-      t.vertexUV(x1, y + h + 2, 0, 1, 1);
-      t.vertexUV(x1, y - 2, 0, 1, 0);
-      t.vertexUV(x0, y - 2, 0, 0, 0);
-
-      t.color(0x000000);
-      t.vertexUV(x0 + 1, y + h + 1, 0, 0, 1);
-      t.vertexUV(x1 - 1, y + h + 1, 0, 1, 1);
-      t.vertexUV(x1 - 1, y - 1, 0, 1, 0);
-      t.vertexUV(x0 + 1, y - 1, 0, 0, 0);
-
-      t.draw();
-      glEnable2(GL_TEXTURE_2D);
+      const float selectionX0 = width / 2.0f - (92 + 16 + 2);
+      const float selectionX1 = width / 2.0f + (92 + 16 + 2);
+      fill(selectionX0, y - 2.0f, selectionX1, y + h + 2.0f, 0xff808080);
+      fill(selectionX0 + 1.0f, y - 1.0f, selectionX1 - 1.0f, y + h + 1.0f,
+          0xff000000);
     }
 
     renderItem(i, rowX, (int)y, (int)h, t);
@@ -164,37 +176,15 @@ void ScrolledSelectionList::render(int xm, int ym, float a) {
 
   renderHoleBackground(0, y0, 255, 255);
   renderHoleBackground(y1, (float)height, 255, 255);
-
-  glEnable2(GL_BLEND);
-  glBlendFunc2(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glDisable2(GL_ALPHA_TEST);
-  glShadeModel2(GL_SMOOTH);
-
-  glDisable2(GL_TEXTURE_2D);
-
-  t.begin();
-  t.color(0x000000, 0);
-  t.vertexUV(x0, y0 + d, 0, 0, 1);
-  t.vertexUV(x1, y0 + d, 0, 1, 1);
-  t.color(0x000000, 255);
-  t.vertexUV(x1, y0, 0, 1, 0);
-  t.vertexUV(x0, y0, 0, 0, 0);
-  t.draw();
-
-  t.begin();
-  t.color(0x000000, 255);
-  t.vertexUV(x0, y1, 0, 0, 1);
-  t.vertexUV(x1, y1, 0, 1, 1);
-  t.color(0x000000, 0);
-  t.vertexUV(x1, y1 - d, 0, 1, 0);
-  t.vertexUV(x0, y1 - d, 0, 0, 0);
-  t.draw();
+  fillGradient(x0, y0, x1, y0 + (float)d, 0xff000000, 0x00000000);
+  fillGradient(x0, y1 - (float)d, x1, y1, 0x00000000, 0xff000000);
 
   // 		{
   // 			float max = getMaxPosition() - (y1 - y0 - 4);
   // 			if (max > 0) {
   // 				float barHeight = (y1 - y0) * (y1 - y0) /
-  // (getMaxPosition()); 				if (barHeight < 32) barHeight = 32; 				if (barHeight > (y1
+  // (getMaxPosition()); 				if (barHeight < 32)
+  // barHeight = 32; 				if (barHeight > (y1
   // - y0 - 8)) barHeight = (y1 - y0 - 8);
   //
   // 				float yp = (int) yo * (y1 - y0 - barHeight) /
@@ -220,8 +210,8 @@ void ScrolledSelectionList::render(int xm, int ym, float a) {
   // 				t.color(0xc0c0c0, 255);
   // 				t.vertexUV(xx0, yp + barHeight - 1, 0, 0, 1);
   // 				t.vertexUV(xx1 - 1, yp + barHeight - 1, 0, 1,
-  // 1); 				t.vertexUV(xx1 - 1, yp, 0, 1, 0); 				t.vertexUV(xx0, yp, 0, 0, 0);
-  // 				t.draw();
+  // 1); 				t.vertexUV(xx1 - 1, yp, 0, 1, 0);
+  // t.vertexUV(xx0, yp, 0, 0, 0); 				t.draw();
   // 			}
   // 		}
 
@@ -235,12 +225,31 @@ void ScrolledSelectionList::render(int xm, int ym, float a) {
   glDisable2(GL_BLEND);
 }
 
-void ScrolledSelectionList::renderHoleBackground(float y0, float y1, int a0,
-                                                 int a1) {
-  Tesselator &t = Tesselator::instance;
+void ScrolledSelectionList::renderHoleBackground(
+    float y0, float y1, int a0, int a1) {
   minecraft->textures->loadAndBindTexture("gui/background.png");
-  glColor4f2(1.0f, 1, 1, 1);
   float s = 32;
+  GraphicsQuad quad;
+  quad.x = 0.0f;
+  quad.y = y0;
+  quad.width = (float)width;
+  quad.height = y1 - y0;
+  quad.canvasWidth = (float)width;
+  quad.canvasHeight = (float)height;
+  quad.u0 = 0.0f;
+  quad.v0 = y0 / s;
+  quad.u1 = (float)width / s;
+  quad.v1 = y1 / s;
+  quad.topLeft = alphaQuadColor(0x505050, a0);
+  quad.topRight = quad.topLeft;
+  quad.bottomRight = alphaQuadColor(0x505050, a1);
+  quad.bottomLeft = quad.bottomRight;
+  if (tryDrawQuad(quad)) {
+    return;
+  }
+
+  Tesselator &t = Tesselator::instance;
+  glColor4f2(1.0f, 1, 1, 1);
   t.begin();
   t.color(0x505050, a1);
   t.vertexUV(0, y1, 0, 0, y1 / s);
@@ -252,10 +261,26 @@ void ScrolledSelectionList::renderHoleBackground(float y0, float y1, int a0,
 }
 
 void ScrolledSelectionList::renderDirtBackground() {
-  Tesselator &t = Tesselator::instance;
   minecraft->textures->loadAndBindTexture("gui/background.png");
-  glColor4f2(1.0f, 1, 1, 1);
   float s = 32;
+  GraphicsQuad quad;
+  quad.x = x0;
+  quad.y = y0;
+  quad.width = x1 - x0;
+  quad.height = y1 - y0;
+  quad.canvasWidth = (float)width;
+  quad.canvasHeight = (float)height;
+  quad.u0 = x0 / s;
+  quad.v0 = (y0 + (int)yo) / s;
+  quad.u1 = x1 / s;
+  quad.v1 = (y1 + (int)yo) / s;
+  setUniformQuadColor(quad, opaqueQuadColor(0x202020));
+  if (tryDrawQuad(quad)) {
+    return;
+  }
+
+  Tesselator &t = Tesselator::instance;
+  glColor4f2(1.0f, 1, 1, 1);
   t.begin();
   t.color(0x202020);
   t.vertexUV(x0, y1, 0, x0 / s, (y1 + (int)yo) / s);

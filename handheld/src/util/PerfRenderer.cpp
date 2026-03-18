@@ -103,7 +103,7 @@ void PerfRenderer::renderFpsMeter(float tickTime) {
   t.begin(GL_LINES);
   for (unsigned int i = 0; i < frameTimes.size(); i++) {
     int col = ((i - frameTimePos) & (frameTimes.size() - 1)) * 255 /
-              frameTimes.size();
+        frameTimes.size();
     int cc = col * col / 255;
     cc = cc * cc / 255;
     int cc2 = cc * cc / 255;
@@ -157,7 +157,7 @@ void PerfRenderer::renderFpsMeter(float tickTime) {
     t.vertex((float)x, (float)y, 0);
     for (int j = steps; j >= 0; j--) {
       float dir = (float)((totalPercentage + (result.percentage * j / steps)) *
-                          Mth::PI * 2 / 100);
+          Mth::PI * 2 / 100);
       float xx = Mth::sin(dir) * r;
       float yy = Mth::cos(dir) * r * 0.5f;
       t.vertex(x + xx, y - yy, 0);
@@ -168,7 +168,7 @@ void PerfRenderer::renderFpsMeter(float tickTime) {
     t.color((result.getColor() & 0xfefefe) >> 1);
     for (int j = steps; j >= 0; j--) {
       float dir = (float)((totalPercentage + (result.percentage * j / steps)) *
-                          Mth::PI * 2 / 100);
+          Mth::PI * 2 / 100);
       float xx = Mth::sin(dir) * r;
       float yy = Mth::cos(dir) * r * 0.5f;
       t.vertex(x + xx, y - yy, 0);
@@ -195,7 +195,7 @@ void PerfRenderer::renderFpsMeter(float tickTime) {
     _font->drawShadow(msg.str(), (float)(x - r), (float)(y - r / 2 - 16), col);
     std::string msg2 = toPercentString(node.globalPercentage);
     _font->drawShadow(msg2, (float)(x + r - _font->width(msg2)),
-                      (float)(y - r / 2 - 16), col);
+        (float)(y - r / 2 - 16), col);
   }
 
   for (unsigned int i = 0; i < list.size(); i++) {
@@ -214,8 +214,8 @@ void PerfRenderer::renderFpsMeter(float tickTime) {
     std::string msg2 = toPercentString(result.percentage);
     // LOGI("name: %s: perc: %f == %s @ %d, %d\n", msg.str().c_str(),
     // result.percentage, msg2.c_str(), xx, yy);
-    _font->drawShadow(msg2, xx - 50 - _font->width(msg2), yy,
-                      result.getColor());
+    _font->drawShadow(
+        msg2, xx - 50 - _font->width(msg2), yy, result.getColor());
     msg2 = toPercentString(result.globalPercentage);
     _font->drawShadow(msg2, xx - _font->width(msg2), yy, result.getColor());
   }

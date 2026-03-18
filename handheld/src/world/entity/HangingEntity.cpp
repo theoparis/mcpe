@@ -4,8 +4,8 @@
 #include "../level/material/Material.h"
 HangingEntity::HangingEntity(Level *level) : super(level) { init(); }
 
-HangingEntity::HangingEntity(Level *level, int xTile, int yTile, int zTile,
-                             int dir)
+HangingEntity::HangingEntity(
+    Level *level, int xTile, int yTile, int zTile, int dir)
     : super(level), xTile(xTile), yTile(yTile), zTile(zTile) {
   init();
 }
@@ -69,8 +69,8 @@ void HangingEntity::setDir(int dir) {
   setPos(x, y, z);
 
   float ss = -(0.5f / 16.0f);
-  bb.set(x - w - ss, y - h - ss, z - d - ss, x + w + ss, y + h + ss,
-         z + d + ss);
+  bb.set(
+      x - w - ss, y - h - ss, z - d - ss, x + w + ss, y + h + ss, z + d + ss);
 }
 float HangingEntity::offs(int w) {
   if (w == 32)
@@ -123,7 +123,7 @@ bool HangingEntity::survives() {
       }
       EntityList entities = level->getEntities(this, bb);
       for (EntityList::iterator ei = entities.begin(); ei != entities.end();
-           ++ei) {
+          ++ei) {
         Entity *entity = *(ei);
         if (entity->isHangingEntity())
           return false;

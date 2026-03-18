@@ -6,6 +6,7 @@
 #include "../../../world/item/ItemInstance.h"
 #include "../../../world/level/tile/Tile.h"
 #include "../../gui/Font.h"
+#include "../../gui/GuiComponent.h"
 #include "../../gui/Gui.h"
 #include "../ItemInHandRenderer.h"
 #include "../Tesselator.h"
@@ -29,8 +30,8 @@ void ItemRenderer::teardown_static() {
   }
 }
 
-void ItemRenderer::render(Entity *itemEntity_, float x, float y, float z,
-                          float rot, float a) {
+void ItemRenderer::render(
+    Entity *itemEntity_, float x, float y, float z, float rot, float a) {
   ItemEntity *itemEntity = (ItemEntity *)itemEntity_;
   random.setSeed(187);
   ItemInstance *item = &itemEntity->item;
@@ -133,56 +134,51 @@ void ItemRenderer::render(Entity *itemEntity_, float x, float y, float z,
 }
 
 // @note: _18 -> a,b,c,-1,   a,b,c-1, ...
-static const signed short _6[] = {139, 140, 141, -1, -1, -1, -1, -1,
-                                  -1,  -1,  -1,  -1, -1, -1, -1, -1};
-static const signed short _17[] = {16, 17, 18, -1, -1, -1, -1, -1,
-                                   -1, -1, -1, -1, -1, -1, -1, -1};
-static const signed short _18[] = {79, 80, 81, -1, 79, 80, 81, -1,
-                                   79, 80, 81, -1, 79, 80, 81, -1};
-static const signed short _24[] = {11, 12, 13, -1, -1, -1, -1, -1,
-                                   -1, -1, -1, -1, -1, -1, -1, -1};
-static const signed short _35[] = {52, 59, 58, 57, 56, 55, 54, 53,
-                                   67, 66, 65, 64, 63, 62, 61, 60};
-static const signed short _44[] = {28, 32, 30, 29, 31, 33, -1, -1,
-                                   -1, -1, -1, -1, -1, -1, -1, -1};
-static const signed short _98[] = {1,  2,  3,  -1, -1, -1, -1, -1,
-                                   -1, -1, -1, -1, -1, -1, -1, -1};
-static const signed short _155[] = {34, 36, 35, -1, -1, -1, -1, -1,
-                                    -1, -1, -1, -1, -1, -1, -1, -1};
-static const signed short _263[] = {230, 151, -1, -1, -1, -1, -1, -1,
-                                    -1,  -1,  -1, -1, -1, -1, -1, -1};
-static const signed short _351[] = {-1, 152, 154, -1,  193, 215, 216, -1,
-                                    -1, 217, 218, 219, 220, 221, 222, 144};
+static const signed short _6[] = {
+    139, 140, 141, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _17[] = {
+    16, 17, 18, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _18[] = {
+    79, 80, 81, -1, 79, 80, 81, -1, 79, 80, 81, -1, 79, 80, 81, -1};
+static const signed short _24[] = {
+    11, 12, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _35[] = {
+    52, 59, 58, 57, 56, 55, 54, 53, 67, 66, 65, 64, 63, 62, 61, 60};
+static const signed short _44[] = {
+    28, 32, 30, 29, 31, 33, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _98[] = {
+    1, 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _155[] = {
+    34, 36, 35, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _263[] = {
+    230, 151, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+static const signed short _351[] = {
+    -1, 152, 154, -1, 193, 215, 216, -1, -1, 217, 218, 219, 220, 221, 222, 144};
 
-static const signed short _mapper[] = {
-    -1,  7,   9,   8,   0,   5,   -2,  -1,  -1,  -1,  -1,  -1,  14,  15,  39,
-    38,  37,  -2,  -2,  -1,  49,  41,  46,  -1,  -2,  -1,  -1,  -1,  -1,  -1,
-    235, -1,  -1,  -1,  -1,  -2,  -1,  134, 135, 136, 137, 43,  44,  -1,  -2,
-    6,   76,  71,  4,   47,  129, -1,  -1,  22,  74,  -1,  40,  45,  72,  -1,
-    -1,  75,  -1,  -1,  -1,  128, -1,  21,  -1,  -1,  -1,  -1,  -1,  42,  -1,
-    -1,  -1,  -1,  -1,  -1,  48,  77,  10,  236, -1,  69,  -1,  20,  -1,  50,
-    -1,  -1,  -1,  -1,  -1,  -1,  68,  -1,  -2,  -1,  -1,  -1,  130, 78,  -1,
-    -1,  -1,  70,  23,  25,  -1,  -1,  19,  -1,  26,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  24,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -2,  27,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  73,  -1,  51,  -1,  -1,  -1,  -1,  -1,  82,  -1,
-    -1,  174, 173, 175, 231, 234, 147, 190, -2,  153, 150, 149, 146, 185, 166,
-    164, 167, 186, 170, 169, 171, 187, 177, 176, 178, 165, 195, 194, 188, 181,
-    180, 182, 189, 191, 228, 168, 172, 145, 179, 183, 142, 233, 232, 198, 200,
-    201, 202, -1,  -1,  -1,  -1,  203, 204, 205, 206, 207, 208, 209, 210, 211,
-    212, 213, 214, 192, 156, 157, 133, -1,  148, 131, -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  226, -1,  199, -1,  159, 158, 138, 224, 225, -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  227, -1,  -1,  -2,  223, 229, -1,  132, -1,  -1,  -1,  184,
-    196, -1,  143, 160, 161, 162, 163, -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,  -1,
-    155, 197};
+static const signed short _mapper[] = {-1, 7, 9, 8, 0, 5, -2, -1, -1, -1, -1,
+    -1, 14, 15, 39, 38, 37, -2, -2, -1, 49, 41, 46, -1, -2, -1, -1, -1, -1, -1,
+    235, -1, -1, -1, -1, -2, -1, 134, 135, 136, 137, 43, 44, -1, -2, 6, 76, 71,
+    4, 47, 129, -1, -1, 22, 74, -1, 40, 45, 72, -1, -1, 75, -1, -1, -1, 128, -1,
+    21, -1, -1, -1, -1, -1, 42, -1, -1, -1, -1, -1, -1, 48, 77, 10, 236, -1, 69,
+    -1, 20, -1, 50, -1, -1, -1, -1, -1, -1, 68, -1, -2, -1, -1, -1, 130, 78, -1,
+    -1, -1, 70, 23, 25, -1, -1, 19, -1, 26, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, 24, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 27, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, 73, -1, 51, -1, -1, -1, -1, -1, 82, -1, -1, 174,
+    173, 175, 231, 234, 147, 190, -2, 153, 150, 149, 146, 185, 166, 164, 167,
+    186, 170, 169, 171, 187, 177, 176, 178, 165, 195, 194, 188, 181, 180, 182,
+    189, 191, 228, 168, 172, 145, 179, 183, 142, 233, 232, 198, 200, 201, 202,
+    -1, -1, -1, -1, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214,
+    192, 156, 157, 133, -1, 148, 131, -1, -1, -1, -1, -1, -1, -1, 226, -1, 199,
+    -1, 159, 158, 138, 224, 225, -1, -1, -1, -1, -1, -1, -1, 227, -1, -1, -2,
+    223, 229, -1, 132, -1, -1, -1, 184, 196, -1, 143, 160, 161, 162, 163, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 155,
+    197};
 
 #define IRMAPCASE(x)                                                           \
   case x:                                                                      \
@@ -216,13 +212,11 @@ int ItemRenderer::getAtlasPos(const ItemInstance *item) {
 
 /*static*/
 void ItemRenderer::renderGuiItem(Font *font, Textures *textures,
-                                 const ItemInstance *item, float x, float y,
-                                 bool fancy) {
+    const ItemInstance *item, float x, float y, bool fancy) {
   renderGuiItem(font, textures, item, x, y, 16, 16, fancy);
 }
 void ItemRenderer::renderGuiItem(Font *font, Textures *textures,
-                                 const ItemInstance *item, float x, float y,
-                                 float w, float h, bool fancy) {
+    const ItemInstance *item, float x, float y, float w, float h, bool fancy) {
   if (item == NULL) {
     // LOGW("item is NULL @ ItemRenderer::renderGuiItem\n");
     return;
@@ -240,7 +234,8 @@ void ItemRenderer::renderGuiItem(Font *font, Textures *textures,
     else {
       // @huge @attn @todo @fix:	This is just guess-works..
       //							it we're
-      //batching for saving the 							buffer, this will fail miserably
+      // batching for saving the
+      // buffer, this will fail miserably
       t.endOverrideAndDraw();
       glDisable2(GL_TEXTURE_2D);
       fillRect(t, x, y, w, h, 0xff0000);
@@ -253,25 +248,31 @@ void ItemRenderer::renderGuiItem(Font *font, Textures *textures,
 
   textures->loadAndBindTexture("gui/gui_blocks.png");
   float u0, u1, v0, v1;
+  const float texel = 0.5f / 512.0f;
   if (i < 128) {
     const float P = 48.0f / 512.0f;
-    u0 = (float)(i % 10) * P;
-    v0 = (float)(i / 10) * P;
-    u1 = u0 + P;
-    v1 = v0 + P;
+    u0 = (float)(i % 10) * P + texel;
+    v0 = (float)(i / 10) * P + texel;
+    u1 = (float)(i % 10 + 1) * P - texel;
+    v1 = (float)(i / 10 + 1) * P - texel;
   } else {
     i -= 128;
     const float P = 16.0f / 512.0f;
-    u0 = float(i & 31) * P;
-    v0 = 27 * P + float(i >> 5) * P; // 27 "icon" rows down
-    u1 = u0 + P;
-    v1 = v0 + P;
+    u0 = float(i & 31) * P + texel;
+    v0 = 27 * P + float(i >> 5) * P + texel; // 27 "icon" rows down
+    u1 = float((i & 31) + 1) * P - texel;
+    v1 = 27 * P + float((i >> 5) + 1) * P - texel;
+  }
+
+  const int color = item->count > 0 ? 0xffffffff : 0x60ffffff;
+  if (GuiComponent::drawTexturedQuad(x, y, w, h, u0, v0, u1, v1, color)) {
+    return;
   }
 
   const float blitOffset = 0;
   Tesselator &t = Tesselator::instance;
   t.begin();
-  t.colorABGR(item->count > 0 ? 0xffffffff : 0x60ffffff);
+  t.colorABGR(color);
   t.vertexUV(x, y + h, blitOffset, u0, v1);
   t.vertexUV(x + w, y + h, blitOffset, u1, v1);
   t.vertexUV(x + w, y, blitOffset, u1, v0);
@@ -279,36 +280,36 @@ void ItemRenderer::renderGuiItem(Font *font, Textures *textures,
   t.draw();
 }
 
-void ItemRenderer::renderGuiItemDecorations(const ItemInstance *item, float x,
-                                            float y) {
+void ItemRenderer::renderGuiItemDecorations(
+    const ItemInstance *item, float x, float y) {
   if (!item)
     return;
   if (item->count > 0 && item->isDamaged()) {
-    float p = std::floor(13.5f - (float)item->getDamageValue() * 13.0f /
-                                     (float)item->getMaxDamage());
-    int cc = (int)std::floor(255.5f - (float)item->getDamageValue() * 255.0f /
-                                          (float)item->getMaxDamage());
-    // glDisable(GL_LIGHTING);
-    // glDisable(GL_DEPTH_TEST);
-    // glDisable(GL_TEXTURE_2D);
-
-    Tesselator &t = Tesselator::instance;
+    float p = std::floor(13.5f -
+        (float)item->getDamageValue() * 13.0f / (float)item->getMaxDamage());
+    int cc = (int)std::floor(255.5f -
+        (float)item->getDamageValue() * 255.0f / (float)item->getMaxDamage());
 
     int ca = (255 - cc) << 16 | (cc) << 8;
     int cb = ((255 - cc) / 4) << 16 | (255 / 4) << 8;
+    if (GuiComponent::drawQuad(x + 2, y + 13, 13, 1, 0xff000000) &&
+        GuiComponent::drawQuad(x + 2, y + 13, 12, 1, 0xff000000 | cb) &&
+        GuiComponent::drawQuad(x + 2, y + 13, p, 1, 0xff000000 | ca)) {
+      glColor4f2(1, 1, 1, 1);
+      return;
+    }
+
+    Tesselator &t = Tesselator::instance;
     fillRect(t, x + 2, y + 13, 13, 1, 0x000000);
     fillRect(t, x + 2, y + 13, 12, 1, cb);
     fillRect(t, x + 2, y + 13, p, 1, ca);
 
-    // glEnable(GL_TEXTURE_2D);
-    // glEnable(GL_LIGHTING);
-    // glEnable(GL_DEPTH_TEST);
     glColor4f2(1, 1, 1, 1);
   }
 }
 
-void ItemRenderer::fillRect(Tesselator &t, float x, float y, float w, float h,
-                            int c) {
+void ItemRenderer::fillRect(
+    Tesselator &t, float x, float y, float w, float h, int c) {
   t.begin();
   t.color(c);
   t.vertex(x + 0, y + 0, 0);
@@ -318,9 +319,8 @@ void ItemRenderer::fillRect(Tesselator &t, float x, float y, float w, float h,
   t.draw();
 }
 
-void ItemRenderer::renderGuiItemCorrect(Font *font, Textures *textures,
-                                        const ItemInstance *item, int x,
-                                        int y) {
+void ItemRenderer::renderGuiItemCorrect(
+    Font *font, Textures *textures, const ItemInstance *item, int x, int y) {
   if (item == NULL)
     return;
 
@@ -357,18 +357,22 @@ void ItemRenderer::renderGuiItemCorrect(Font *font, Textures *textures,
     // Tesselator& t = Tesselator::instance;
     // t.scale2d(Gui::InvGuiScale, Gui::InvGuiScale);
     blit((float)x, (float)y, (float)(item->getIcon() % 16 * 16),
-         (float)(item->getIcon() / 16 * 16), 16, 16);
+        (float)(item->getIcon() / 16 * 16), 16, 16);
     // t.resetScale();
   }
   // glEnable(GL_CULL_FACE);
 }
 
 /*static*/
-void ItemRenderer::blit(float x, float y, float sx, float sy, float w,
-                        float h) {
+void ItemRenderer::blit(
+    float x, float y, float sx, float sy, float w, float h) {
   float blitOffset = 0;
   const float us = 1 / 256.0f;
   const float vs = 1 / 256.0f;
+  if (GuiComponent::drawTexturedQuad(
+          x, y, w, h, sx * us, sy * vs, (sx + w) * us, (sy + h) * vs)) {
+    return;
+  }
   Tesselator &t = Tesselator::instance;
   t.begin();
   t.vertexUV(x, y + h, blitOffset, sx * us, (sy + h) * vs);

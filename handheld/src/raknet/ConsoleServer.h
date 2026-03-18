@@ -44,8 +44,8 @@ public:
   /// \param[in] transportInterface Your interface to use.
   /// \param[in] port The port to host on.  Telnet uses port 23 by default.
   /// RakNet can use whatever you want.
-  void SetTransportProvider(TransportInterface *transportInterface,
-                            unsigned short port);
+  void SetTransportProvider(
+      TransportInterface *transportInterface, unsigned short port);
 
   /// \brief Add an implementation of CommandParserInterface to the list of
   /// command parsers.

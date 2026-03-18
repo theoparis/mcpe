@@ -23,8 +23,8 @@ public:
       : containerId(containerId), slot(slot), item(item), setType(SETTYPE_SET)
   // item(item? *item : ItemInstance())
   {}
-  ContainerSetSlotPacket(char setType, int containerId, int slot,
-                         const ItemInstance &item)
+  ContainerSetSlotPacket(
+      char setType, int containerId, int slot, const ItemInstance &item)
       : setType(setType), containerId(containerId), slot(slot), item(item)
   // item(item? *item : ItemInstance())
   {}

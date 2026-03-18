@@ -49,24 +49,21 @@ float Controller::getY(int stickIndex) {
 }
 
 float Controller::getTransformedX(int stickIndex, float deadZone,
-                                  float scale /*=1.0f*/,
-                                  bool limit1 /*=false*/) {
+    float scale /*=1.0f*/, bool limit1 /*=false*/) {
   if (!isValidStick(stickIndex))
     return 0;
   return linearTransform(stickValuesX[stickIndex - 1], deadZone, scale, limit1);
 }
 
 float Controller::getTransformedY(int stickIndex, float deadZone,
-                                  float scale /*=1.0f*/,
-                                  bool limit1 /*=false*/) {
+    float scale /*=1.0f*/, bool limit1 /*=false*/) {
   if (!isValidStick(stickIndex))
     return 0;
   return linearTransform(stickValuesY[stickIndex - 1], deadZone, scale, limit1);
 }
 
 float Controller::linearTransform(float value, float deadZone,
-                                  float scale /*=1.0f*/,
-                                  bool limit1 /*=false*/) {
+    float scale /*=1.0f*/, bool limit1 /*=false*/) {
   float deadSigned = value >= 0 ? deadZone : -deadZone;
   if (_abs(deadSigned) >= _abs(value))
     return 0;

@@ -67,8 +67,8 @@ public:
   /// \param[in] input Pointer to an ASCII string
   /// \param[in] maxCharsToWrite The size of \a input
   /// \param[out] output The bitstream to write the compressed string to
-  void EncodeString(const char *input, int maxCharsToWrite,
-                    RakNet::BitStream *output);
+  void EncodeString(
+      const char *input, int maxCharsToWrite, RakNet::BitStream *output);
 
   /// Writes input to output, uncompressed.  Takes care of the null terminator
   /// for you. Relies on the StringCompressor class, which is automatically
@@ -79,8 +79,8 @@ public:
   /// terminator will always be appended to the output string.  If the
   /// maxCharsToWrite is not large enough, the string will be truncated.
   /// \param[in] input The bitstream containing the compressed string
-  bool DecodeString(char *output, int maxCharsToWrite,
-                    RakNet::BitStream *input);
+  bool DecodeString(
+      char *output, int maxCharsToWrite, RakNet::BitStream *input);
 
   /// Used so I can allocate and deallocate this singleton at runtime
   static void AddReference(void);

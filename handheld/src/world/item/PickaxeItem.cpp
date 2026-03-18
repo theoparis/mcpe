@@ -51,8 +51,9 @@ bool PickaxeItem::canDestroySpecial(const Tile *tile) const {
 }
 
 float PickaxeItem::getDestroySpeed(ItemInstance *itemInstance, Tile *tile) {
-  if (tile != NULL && (tile->material == Material::metal ||
-                       tile->material == Material::stone)) {
+  if (tile != NULL &&
+      (tile->material == Material::metal ||
+          tile->material == Material::stone)) {
     return speed;
   }
   return super::getDestroySpeed(itemInstance, tile);

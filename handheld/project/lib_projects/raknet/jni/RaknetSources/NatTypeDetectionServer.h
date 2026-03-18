@@ -64,7 +64,7 @@ public:
   /// \param[in] nonRakNetIP3 Second unused external IP
   /// \param[in] nonRakNetIP4 Third unused external IP
   void Startup(const char *nonRakNetIP2, const char *nonRakNetIP3,
-               const char *nonRakNetIP4);
+      const char *nonRakNetIP4);
 
   // Releases the sockets created in Startup();
   void Shutdown(void);
@@ -74,9 +74,8 @@ public:
 
   /// \internal For plugin handling
   virtual PluginReceiveResult OnReceive(Packet *packet);
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
 
   enum NATDetectionState {
     STATE_NONE,

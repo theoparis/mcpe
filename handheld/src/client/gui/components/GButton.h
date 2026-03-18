@@ -20,7 +20,7 @@ public:
   void addElement(int layerId, GuiElement *e) {
     if (!e || layerId < 0 || layerId >= LayerMax) {
       LOGE("Error @ GButton::element : Trying to add element %p at layer: %d\n",
-           e, layerId);
+          e, layerId);
       return;
     }
     layers.push_back(std::make_pair(e, layerId));
@@ -31,9 +31,9 @@ public:
       return;
 
     bool isHovered = minecraft->isTouchscreen()
-                         ? (_currentlyDown && xm >= x && ym >= y &&
-                            xm < x + width && ym < y + height)
-                         : false;
+        ? (_currentlyDown && xm >= x && ym >= y && xm < x + width &&
+              ym < y + height)
+        : false;
 
     int layer = isHovered ? LayerSelected : LayerDefault;
     if (layer < 0)

@@ -56,8 +56,8 @@ protected:
 
   TCPInterface *tcpInterface;
   void AutoAllocate(void);
-  bool ReassembleLine(TelnetTransport::TelnetClient *telnetClient,
-                      unsigned char c);
+  bool ReassembleLine(
+      TelnetTransport::TelnetClient *telnetClient, unsigned char c);
 
   // Crap this sucks but because windows telnet won't send line at a time, I
   // have to reconstruct the lines at the server per player

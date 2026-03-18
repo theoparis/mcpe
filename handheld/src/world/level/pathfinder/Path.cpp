@@ -79,7 +79,7 @@ bool Path::endsIn(const Vec3 &pos) const {
   if (end == NULL)
     return false;
   return end->x == Mth::floor(pos.x) && end->y == Mth::floor(pos.y) &&
-         end->z == Mth::floor(pos.z);
+      end->z == Mth::floor(pos.z);
 }
 
 bool Path::endsInXZ(const Vec3 &pos) const {

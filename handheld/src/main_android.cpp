@@ -57,8 +57,8 @@ JNIEXPORT jint JNICALL JNI_OnLoad(JavaVM *vm, void *reserved) {
 
 // Register/save a reference to the java main activity instance
 JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeRegisterThis(JNIEnv *env,
-                                                            jobject clazz) {
+Java_com_mojang_minecraftpe_MainActivity_nativeRegisterThis(
+    JNIEnv *env, jobject clazz) {
   LOGI("@RegisterThis %d\n", pthread_self());
   g_pActivity = (jobject)env->NewGlobalRef(clazz);
 
@@ -67,8 +67,8 @@ Java_com_mojang_minecraftpe_MainActivity_nativeRegisterThis(JNIEnv *env,
 
 // Unregister/delete the reference to the java main activity instance
 JNIEXPORT void JNICALL
-Java_com_mojang_minecraftpe_MainActivity_nativeUnregisterThis(JNIEnv *env,
-                                                              jobject clazz) {
+Java_com_mojang_minecraftpe_MainActivity_nativeUnregisterThis(
+    JNIEnv *env, jobject clazz) {
   LOGI("@UnregisterThis %d\n", pthread_self());
   env->DeleteGlobalRef(g_pActivity);
   g_pActivity = 0;
@@ -82,13 +82,12 @@ JNIEXPORT void JNICALL Java_com_mojang_minecraftpe_MainActivity_nativeStopThis(
 }
 }
 
-static void internal_process_input(struct android_app *app,
-                                   struct android_poll_source *source) {
+static void internal_process_input(
+    struct android_app *app, struct android_poll_source *source) {
   AInputEvent *event = NULL;
   if (AInputQueue_getEvent(app->inputQueue, &event) >= 0) {
     LOGV("New input event: type=%d\n", AInputEvent_getType(event));
-    bool isBackButtonDown =
-        AKeyEvent_getKeyCode(event) == AKEYCODE_BACK &&
+    bool isBackButtonDown = AKeyEvent_getKeyCode(event) == AKEYCODE_BACK &&
         AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN;
     if (!(appPlatform.isKeyboardVisible() && isBackButtonDown)) {
       if (AInputQueue_preDispatchEvent(app->inputQueue, event)) {

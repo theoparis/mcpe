@@ -48,8 +48,8 @@ int TallGrass::getResource(int data, Random *random) {
   return -1;
 }
 
-void TallGrass::playerDestroy(Level *level, Player *player, int x, int y, int z,
-                              int data) {
+void TallGrass::playerDestroy(
+    Level *level, Player *player, int x, int y, int z, int data) {
   if (!level->isClientSide && player->getSelectedItem() != NULL &&
       player->getSelectedItem()->id == Item::shears->id) {
     // player->awardStat(Stats.blockMined[id], 1);

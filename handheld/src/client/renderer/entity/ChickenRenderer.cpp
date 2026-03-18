@@ -5,8 +5,8 @@
 ChickenRenderer::ChickenRenderer(Model *model, float shadow)
     : super(model, shadow) {}
 
-void ChickenRenderer::render(Entity *mob, float x, float y, float z, float rot,
-                             float a) {
+void ChickenRenderer::render(
+    Entity *mob, float x, float y, float z, float rot, float a) {
   super::render(mob, x, y, z, rot, a);
 }
 

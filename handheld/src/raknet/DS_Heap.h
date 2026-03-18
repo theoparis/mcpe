@@ -36,19 +36,19 @@ public:
   Heap();
   ~Heap();
   void Push(const weight_type &weight, const data_type &data, const char *file,
-            unsigned int line);
+      unsigned int line);
   /// Call before calling PushSeries, for a new series of items
   void StartSeries(void) { optimizeNextSeriesPush = false; }
   /// If you are going to push a list of items, where the weights of the items
   /// on the list are in order and follow the heap order, PushSeries is faster
   /// than Push()
   void PushSeries(const weight_type &weight, const data_type &data,
-                  const char *file, unsigned int line);
+      const char *file, unsigned int line);
   data_type Pop(const unsigned startingIndex);
   data_type Peek(const unsigned startingIndex = 0) const;
   weight_type PeekWeight(const unsigned startingIndex = 0) const;
-  void Clear(bool doNotDeallocateSmallBlocks, const char *file,
-             unsigned int line);
+  void Clear(
+      bool doNotDeallocateSmallBlocks, const char *file, unsigned int line);
   data_type &operator[](const unsigned int position) const;
   unsigned Size(void) const;
 
@@ -83,7 +83,7 @@ void Heap<weight_type, data_type, isMaxHeap>::PushSeries(
     unsigned parentIndex;
     if (currentIndex > 0) {
       for (parentIndex = Parent(currentIndex); parentIndex < currentIndex;
-           parentIndex++) {
+          parentIndex++) {
 #ifdef _MSC_VER
 #pragma warning(disable : 4127) // conditional expression is constant
 #endif
@@ -117,17 +117,15 @@ void Heap<weight_type, data_type, isMaxHeap>::PushSeries(
 
 template <class weight_type, class data_type, bool isMaxHeap>
 void Heap<weight_type, data_type, isMaxHeap>::Push(const weight_type &weight,
-                                                   const data_type &data,
-                                                   const char *file,
-                                                   unsigned int line) {
+    const data_type &data, const char *file, unsigned int line) {
   unsigned currentIndex = heap.Size();
   unsigned parentIndex;
   heap.Insert(HeapNode(weight, data), file, line);
   while (currentIndex != 0) {
     parentIndex = Parent(currentIndex);
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
     if (isMaxHeap) {
       if (heap[parentIndex].weight < weight) {
@@ -146,8 +144,8 @@ void Heap<weight_type, data_type, isMaxHeap>::Push(const weight_type &weight,
 }
 
 template <class weight_type, class data_type, bool isMaxHeap>
-data_type
-Heap<weight_type, data_type, isMaxHeap>::Pop(const unsigned startingIndex) {
+data_type Heap<weight_type, data_type, isMaxHeap>::Pop(
+    const unsigned startingIndex) {
   // While we have children, swap out with the larger of the two children.
 
   // This line will assert on an empty heap
@@ -163,8 +161,8 @@ Heap<weight_type, data_type, isMaxHeap>::Pop(const unsigned startingIndex) {
   heap.RemoveFromEnd();
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (1) {
     leftChild = LeftChild(currentIndex);
@@ -240,20 +238,20 @@ unsigned Heap<weight_type, data_type, isMaxHeap>::Size(void) const {
 }
 
 template <class weight_type, class data_type, bool isMaxHeap>
-inline unsigned
-Heap<weight_type, data_type, isMaxHeap>::LeftChild(const unsigned i) const {
+inline unsigned Heap<weight_type, data_type, isMaxHeap>::LeftChild(
+    const unsigned i) const {
   return i * 2 + 1;
 }
 
 template <class weight_type, class data_type, bool isMaxHeap>
-inline unsigned
-Heap<weight_type, data_type, isMaxHeap>::RightChild(const unsigned i) const {
+inline unsigned Heap<weight_type, data_type, isMaxHeap>::RightChild(
+    const unsigned i) const {
   return i * 2 + 2;
 }
 
 template <class weight_type, class data_type, bool isMaxHeap>
-inline unsigned
-Heap<weight_type, data_type, isMaxHeap>::Parent(const unsigned i) const {
+inline unsigned Heap<weight_type, data_type, isMaxHeap>::Parent(
+    const unsigned i) const {
 #ifdef _DEBUG
   RakAssert(i != 0);
 #endif
@@ -261,8 +259,8 @@ Heap<weight_type, data_type, isMaxHeap>::Parent(const unsigned i) const {
 }
 
 template <class weight_type, class data_type, bool isMaxHeap>
-void Heap<weight_type, data_type, isMaxHeap>::Swap(const unsigned i,
-                                                   const unsigned j) {
+void Heap<weight_type, data_type, isMaxHeap>::Swap(
+    const unsigned i, const unsigned j) {
   HeapNode temp;
   temp = heap[i];
   heap[i] = heap[j];

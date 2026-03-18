@@ -44,7 +44,7 @@ static const float BlockPixels = 24;
 static const int ItemSize = (int)(BlockPixels + 2 * BorderPixels);
 
 static const int Bx = 10; // Border Frame width
-static const int By = 6;  // Border Frame height
+static const int By = 6; // Border Frame height
 
 //
 // Block selection screen
@@ -69,16 +69,15 @@ void IngameBlockSelectionScreen::init() {
 
   IntRectangle rect(realBx,
 #ifdef __APPLE__
-                    24 + By - ((width == 240) ? 1 : 0), realWidth,
-                    ((width == 240) ? 1 : 0) + height - By - By - 20 - 24);
+      24 + By - ((width == 240) ? 1 : 0), realWidth,
+      ((width == 240) ? 1 : 0) + height - By - By - 20 - 24);
 #else
-                    24 + By, realWidth, height - By - By - 20 - 24);
+      24 + By, realWidth, height - By - By - 20 - 24);
 #endif
 
   _blockList = new InventoryPane(this, minecraft, rect, width, BorderPixels,
-                                 inventory->getContainerSize() -
-                                     Inventory::MAX_SELECTION_SIZE,
-                                 ItemSize, (int)BorderPixels);
+      inventory->getContainerSize() - Inventory::MAX_SELECTION_SIZE, ItemSize,
+      (int)BorderPixels);
   _blockList->fillMarginX = realBx;
 
   // for (int i = 0; i < inventory->getContainerSize(); ++i)
@@ -119,7 +118,7 @@ void IngameBlockSelectionScreen::setupPositions() {
 
   if (minecraft->isCreativeMode()) {
     bHeader.x = 0;
-    bHeader.width = width;     // -  bDone.w;
+    bHeader.width = width; // -  bDone.w;
     bHeader.xText = width / 2; // Center of the screen
   } else {
     bHeader.x = bCraft.width + bArmor.width;
@@ -159,8 +158,8 @@ void IngameBlockSelectionScreen::mouseReleased(int x, int y, int buttonNum) {
     super::mouseReleased(x, y, buttonNum);
 }
 
-bool IngameBlockSelectionScreen::addItem(const InventoryPane *pane,
-                                         int itemId) {
+bool IngameBlockSelectionScreen::addItem(
+    const InventoryPane *pane, int itemId) {
   Inventory *inventory = minecraft->player->inventory;
   itemId += Inventory::MAX_SELECTION_SIZE;
 
@@ -203,7 +202,7 @@ void IngameBlockSelectionScreen::render(int xm, int ym, float a) {
   glColor4f2(1, 1, 1, 1);
   glBlendFunc2(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   blit(0, bbox.y - By, 0, 0, width, bbox.h + By + By, 215,
-       256); // why bbox.h + 1*B?
+      256); // why bbox.h + 1*B?
   glDisable2(GL_BLEND);
 
   glEnable2(GL_DEPTH_TEST);
@@ -212,12 +211,12 @@ void IngameBlockSelectionScreen::render(int xm, int ym, float a) {
 void IngameBlockSelectionScreen::renderDemoOverlay() {
 #ifdef DEMO_MODE
   fill(getSlotPosX(0) - 3, getSlotPosY(1) - 3, getSlotPosX(9) - 3,
-       getSlotPosY(-1) - 3, 0xa0 << 24);
+      getSlotPosY(-1) - 3, 0xa0 << 24);
 
   const int centerX = (getSlotPosX(4) + getSlotPosX(5)) / 2;
   const int centerY = (getSlotPosY(0) + getSlotPosY(1)) / 2 + 5;
-  drawCenteredString(minecraft->font, demoVersionString, centerX, centerY,
-                     0xffffffff);
+  drawCenteredString(
+      minecraft->font, demoVersionString, centerX, centerY, 0xffffffff);
 #endif /*DEMO_MODE*/
 }
 
@@ -251,11 +250,11 @@ bool IngameBlockSelectionScreen::hasClippingArea(IntRectangle &out) {
   return true;
 }
 
-std::vector<const ItemInstance *>
-IngameBlockSelectionScreen::getItems(const InventoryPane *forPane) {
+std::vector<const ItemInstance *> IngameBlockSelectionScreen::getItems(
+    const InventoryPane *forPane) {
   std::vector<const ItemInstance *> out;
   for (int i = Inventory::MAX_SELECTION_SIZE;
-       i < minecraft->player->inventory->getContainerSize(); ++i)
+      i < minecraft->player->inventory->getContainerSize(); ++i)
     out.push_back(minecraft->player->inventory->getItem(i));
   return out;
 }

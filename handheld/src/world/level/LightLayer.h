@@ -5,7 +5,7 @@
 
 class LightLayer {
 public:
-  static const LightLayer Sky;   // (15)
+  static const LightLayer Sky; // (15)
   static const LightLayer Block; // (0)
 
   const int surrounding;

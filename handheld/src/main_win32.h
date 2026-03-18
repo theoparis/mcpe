@@ -25,8 +25,8 @@
 static App *g_app = 0;
 static volatile bool g_running = true;
 
-static int getBits(int bits, int startBitInclusive, int endBitExclusive,
-                   int shiftTruncate) {
+static int getBits(
+    int bits, int startBitInclusive, int endBitExclusive, int shiftTruncate) {
   int sum = 0;
   for (int i = startBitInclusive; i < endBitExclusive; ++i)
     sum += (bits & (2 << i));
@@ -41,13 +41,13 @@ void resizeWindow(HWND hWnd, int nWidth, int nHeight) {
   ptDiff.x = (rcWindow.right - rcWindow.left) - rcClient.right;
   ptDiff.y = (rcWindow.bottom - rcWindow.top) - rcClient.bottom;
   MoveWindow(hWnd, rcWindow.left, rcWindow.top, nWidth + ptDiff.x,
-             nHeight + ptDiff.y, TRUE);
+      nHeight + ptDiff.y, TRUE);
 }
 
 void toggleResolutions(HWND hwnd, int direction) {
   static int n = 0;
-  static int sizes[][3] = {{854, 480, 1},  {800, 480, 1},  {480, 320, 1},
-                           {1024, 768, 1}, {1280, 800, 1}, {1024, 580, 1}};
+  static int sizes[][3] = {{854, 480, 1}, {800, 480, 1}, {480, 320, 1},
+      {1024, 768, 1}, {1280, 800, 1}, {1024, 580, 1}};
   static int count = sizeof(sizes) / sizeof(sizes[0]);
   n = (count + n + direction) % count;
 
@@ -69,7 +69,7 @@ LRESULT WINAPI windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     // if (wParam == 'Q') ((Minecraft*)g_app)->leaveGame();
     Keyboard::feed((unsigned char)wParam,
-                   1); //(unsigned char) getBits(lParam, 16, 23, 1)
+        1); //(unsigned char) getBits(lParam, 16, 23, 1)
 
     // char* lParamConv = (char*) &lParam;
     // int convertResult =  ToUnicode(wParam, lParamConv[1], )
@@ -78,7 +78,7 @@ LRESULT WINAPI windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
   }
   case WM_KEYUP: {
     Keyboard::feed((unsigned char)wParam,
-                   0); //(unsigned char) getBits(lParam, 16, 23, 1)
+        0); //(unsigned char) getBits(lParam, 16, 23, 1)
     return 0;
   }
   case WM_CHAR: {
@@ -89,29 +89,29 @@ LRESULT WINAPI windowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
   }
   case WM_LBUTTONDOWN: {
     Mouse::feed(MouseAction::ACTION_LEFT, 1, GET_X_LPARAM(lParam),
-                GET_Y_LPARAM(lParam));
+        GET_Y_LPARAM(lParam));
     Multitouch::feed(1, 1, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), 0);
     break;
   }
   case WM_LBUTTONUP: {
     Mouse::feed(MouseAction::ACTION_LEFT, 0, GET_X_LPARAM(lParam),
-                GET_Y_LPARAM(lParam));
+        GET_Y_LPARAM(lParam));
     Multitouch::feed(1, 0, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), 0);
     break;
   }
   case WM_RBUTTONDOWN: {
     Mouse::feed(MouseAction::ACTION_RIGHT, 1, GET_X_LPARAM(lParam),
-                GET_Y_LPARAM(lParam));
+        GET_Y_LPARAM(lParam));
     break;
   }
   case WM_RBUTTONUP: {
     Mouse::feed(MouseAction::ACTION_RIGHT, 0, GET_X_LPARAM(lParam),
-                GET_Y_LPARAM(lParam));
+        GET_Y_LPARAM(lParam));
     break;
   }
   case WM_MOUSEMOVE: {
     Mouse::feed(MouseAction::ACTION_MOVE, 0, GET_X_LPARAM(lParam),
-                GET_Y_LPARAM(lParam));
+        GET_Y_LPARAM(lParam));
     Multitouch::feed(0, 0, GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), 0);
     break;
   }
@@ -156,13 +156,13 @@ void platform(HWND *result, int width, int height) {
 
   RegisterClass(&wc);
 
-  AdjustWindowRectEx(&wRect, WS_OVERLAPPEDWINDOW, FALSE,
-                     WS_EX_APPWINDOW | WS_EX_WINDOWEDGE);
+  AdjustWindowRectEx(
+      &wRect, WS_OVERLAPPEDWINDOW, FALSE, WS_EX_APPWINDOW | WS_EX_WINDOWEDGE);
 
   hwnd = CreateWindowEx(WS_EX_APPWINDOW | WS_EX_WINDOWEDGE, "OGLES", "main",
-                        WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-                        0, 0, wRect.right - wRect.left,
-                        wRect.bottom - wRect.top, NULL, NULL, hInstance, NULL);
+      WS_OVERLAPPEDWINDOW | WS_CLIPSIBLINGS | WS_CLIPCHILDREN, 0, 0,
+      wRect.right - wRect.left, wRect.bottom - wRect.top, NULL, NULL, hInstance,
+      NULL);
   *result = hwnd;
 }
 
@@ -225,11 +225,9 @@ int main(void) {
 
 #ifndef STANDALONE_SERVER
 
-  EGLint aEGLAttributes[] = {
-      EGL_RED_SIZE,   8,  EGL_GREEN_SIZE,      8,
-      EGL_BLUE_SIZE,  8,  EGL_ALPHA_SIZE,      8,
-      EGL_DEPTH_SIZE, 16, EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT,
-      EGL_NONE};
+  EGLint aEGLAttributes[] = {EGL_RED_SIZE, 8, EGL_GREEN_SIZE, 8, EGL_BLUE_SIZE,
+      8, EGL_ALPHA_SIZE, 8, EGL_DEPTH_SIZE, 16, EGL_RENDERABLE_TYPE,
+      EGL_OPENGL_ES_BIT, EGL_NONE};
   EGLint aEGLContextAttributes[] = {EGL_CONTEXT_CLIENT_VERSION, 1, EGL_NONE};
 
   EGLConfig m_eglConfig[1];
@@ -241,7 +239,7 @@ int main(void) {
   // Platform init.
   appContext.platform = new AppPlatform_win32();
   platform(&hwnd, appContext.platform->getScreenWidth(),
-           appContext.platform->getScreenHeight());
+      appContext.platform->getScreenHeight());
   ShowWindow(hwnd, SW_SHOW);
   SetForegroundWindow(hwnd);
   SetFocus(hwnd);
@@ -252,8 +250,8 @@ int main(void) {
 
   eglInitialize(appContext.display, NULL, NULL);
 
-  eglChooseConfig(appContext.display, aEGLAttributes, m_eglConfig, 1,
-                  &nConfigs);
+  eglChooseConfig(
+      appContext.display, aEGLAttributes, m_eglConfig, 1, &nConfigs);
   printf("EGLConfig = %p\n", m_eglConfig[0]);
 
   appContext.surface = eglCreateWindowSurface(
@@ -262,14 +260,14 @@ int main(void) {
 
   appContext.context =
       eglCreateContext(appContext.display, m_eglConfig[0], EGL_NO_CONTEXT,
-                       NULL); // aEGLContextAttributes);
+          NULL); // aEGLContextAttributes);
   printf("EGLContext = %p\n", appContext.context);
   if (!appContext.context) {
     printf("EGL error: %d\n", eglGetError());
   }
 
   eglMakeCurrent(appContext.display, appContext.surface, appContext.surface,
-                 appContext.context);
+      appContext.context);
 
   glInit();
 
@@ -281,7 +279,7 @@ int main(void) {
   ((MAIN_CLASS *)g_app)->externalCacheStoragePath = ".";
   g_app->init(appContext);
   g_app->setSize(appContext.platform->getScreenWidth(),
-                 appContext.platform->getScreenHeight());
+      appContext.platform->getScreenHeight());
 
   //_beginthread(inputNetworkThread, 0, 0);
 
@@ -313,8 +311,8 @@ int main(void) {
 
 #ifndef STANDALONE_SERVER
   // Exit.
-  eglMakeCurrent(appContext.display, EGL_NO_SURFACE, EGL_NO_SURFACE,
-                 EGL_NO_CONTEXT);
+  eglMakeCurrent(
+      appContext.display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
   eglDestroyContext(appContext.display, appContext.context);
   eglDestroySurface(appContext.display, appContext.surface);
   eglTerminate(appContext.display);

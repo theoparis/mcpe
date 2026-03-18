@@ -2,21 +2,44 @@
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <vector>
 
-Tesselator Tesselator::instance(sizeof(GLfloat) *
-                                MAX_FLOATS); // max size in bytes
+Tesselator Tesselator::instance(
+    sizeof(GLfloat) * MAX_FLOATS); // max size in bytes
 
 const int VertexSizeBytes = sizeof(VERTEX);
+
+namespace {
+
+constexpr float kAtlasTileScale = 1.0f / 16.0f;
+constexpr float kTileUvEpsilon = 1.0f / 4096.0f;
+
+void convertAtlasUv(float u, float v, float &localU, float &localV,
+    float &tileOriginU, float &tileOriginV) {
+  const float scaledU = std::clamp(u / kAtlasTileScale, 0.0f, 15.999f);
+  const float scaledV = std::clamp(v / kAtlasTileScale, 0.0f, 15.999f);
+  const float tileU = std::floor(scaledU);
+  const float tileV = std::floor(scaledV);
+  tileOriginU = tileU * kAtlasTileScale;
+  tileOriginV = tileV * kAtlasTileScale;
+  localU = (u - tileOriginU) / kAtlasTileScale;
+  localV = (v - tileOriginV) / kAtlasTileScale;
+  localU = std::clamp(localU, 0.0f, 1.0f - kTileUvEpsilon);
+  localV = std::clamp(localV, 0.0f, 1.0f - kTileUvEpsilon);
+}
+
+} // namespace
 
 Tesselator::Tesselator(int size)
     : size(size), vertices(0), u(0), v(0), _color(0), hasColor(false),
       hasTexture(false), hasNormal(false), p(0), count(0), _noColor(false),
       mode(0), xo(0), yo(0), zo(0), _normal(0), _sx(1), _sy(1),
 
-      tesselating(false), vboId(-1), vboCounts(128), totalSize(0),
+      tesselating(false), vboId(-1), vboCounts(512), totalSize(0),
       accessMode(ACCESS_STATIC), maxVertices(size / sizeof(VERTEX)),
-      _voidBeginEnd(false) {
+      _voidBeginEnd(false), _graphicsBackend(nullptr) {
   vboIds = new GLuint[vboCounts];
+  std::fill(vboIds, vboIds + vboCounts, 0);
 
   _varray = new VERTEX[maxVertices];
 
@@ -32,9 +55,19 @@ Tesselator::~Tesselator() {
 
 void Tesselator::init() {
 #ifndef STANDALONE_SERVER
+  for (int i = 0; i < vboCounts; ++i) {
+    std::map<GLuint, RetainedMeshBuffer>::const_iterator existing =
+        _bufferMeshes.find(vboIds[i]);
+    if (existing != _bufferMeshes.end()) {
+      destroyMesh(existing->second.mesh);
+    }
+  }
   glGenBuffers2(vboCounts, vboIds);
 #endif
+  vboId = -1;
 }
+
+void Tesselator::beginFrame() { vboId = -1; }
 
 void Tesselator::clear() {
   accessMode = ACCESS_STATIC;
@@ -44,9 +77,150 @@ void Tesselator::clear() {
   _voidBeginEnd = false;
 }
 
+void Tesselator::setGraphicsBackend(GraphicsBackend *graphicsBackend) {
+  _graphicsBackend = graphicsBackend;
+}
+
+auto Tesselator::usingGraphicsBackend() const -> bool {
+  return _graphicsBackend &&
+      _graphicsBackend->kind() == GraphicsBackendKind::Vulkan;
+}
+
+auto Tesselator::resolveWorldPass() const -> GraphicsWorldPass {
+  if (glesIsTrackedEnabled(GL_BLEND)) {
+    return GraphicsWorldPass::Blend;
+  }
+  if (glesIsTrackedEnabled(GL_ALPHA_TEST)) {
+    return GraphicsWorldPass::AlphaTest;
+  }
+  return GraphicsWorldPass::Opaque;
+}
+
+auto Tesselator::resolveBlendMode() const -> GraphicsBlendMode {
+  GLenum src = GL_SRC_ALPHA;
+  GLenum dst = GL_ONE_MINUS_SRC_ALPHA;
+  glesGetTrackedBlendFunc(src, dst);
+
+  if (src == GL_DST_COLOR && dst == GL_SRC_COLOR) {
+    return GraphicsBlendMode::DstColorSrcColor;
+  }
+  if (src == GL_ZERO && dst == GL_ONE_MINUS_SRC_COLOR) {
+    return GraphicsBlendMode::ZeroOneMinusSrcColor;
+  }
+  if (src == GL_ONE_MINUS_DST_COLOR && dst == GL_ONE_MINUS_SRC_COLOR) {
+    return GraphicsBlendMode::OneMinusDstColorOneMinusSrcColor;
+  }
+  return GraphicsBlendMode::Alpha;
+}
+
+auto Tesselator::resolvePrimitive(int drawMode) const -> GraphicsMeshPrimitive {
+  switch (drawMode) {
+  case GL_LINES:
+    return GraphicsMeshPrimitive::LineList;
+  case GL_LINE_STRIP:
+    return GraphicsMeshPrimitive::LineStrip;
+  default:
+    return GraphicsMeshPrimitive::TriangleList;
+  }
+}
+
+auto Tesselator::buildGraphicsVertices(const VERTEX *source, int sourceCount,
+    int drawMode, GraphicsMeshPrimitive &primitive, bool &usesTrackedColor,
+    std::vector<GraphicsMeshVertex> &out) const -> bool {
+  out.clear();
+  usesTrackedColor = false;
+  if (source == nullptr || sourceCount <= 0) {
+    return false;
+  }
+
+  primitive = resolvePrimitive(drawMode);
+  usesTrackedColor = !hasColor;
+
+  auto appendVertex = [&](const VERTEX &src) {
+    GraphicsMeshVertex dst;
+    dst.position[0] = src.x;
+    dst.position[1] = src.y;
+    dst.position[2] = src.z;
+    convertAtlasUv(src.u, src.v, dst.texCoord[0], dst.texCoord[1],
+        dst.tileOrigin[0], dst.tileOrigin[1]);
+    dst.color = hasColor ? src.color : 0xffffffffu;
+    out.push_back(dst);
+  };
+
+  switch (drawMode) {
+  case GL_TRIANGLES:
+  case GL_QUADS:
+  case GL_LINES:
+  case GL_LINE_STRIP:
+    out.reserve((size_t)sourceCount);
+    for (int i = 0; i < sourceCount; ++i) {
+      appendVertex(source[i]);
+    }
+    return out.size() >=
+        (primitive == GraphicsMeshPrimitive::TriangleList ? 3u : 2u);
+  case GL_TRIANGLE_FAN:
+    if (sourceCount < 3) {
+      return false;
+    }
+    primitive = GraphicsMeshPrimitive::TriangleList;
+    out.reserve((size_t)(sourceCount - 2) * 3);
+    for (int i = 1; i + 1 < sourceCount; ++i) {
+      appendVertex(source[0]);
+      appendVertex(source[i]);
+      appendVertex(source[i + 1]);
+    }
+    return true;
+  case GL_TRIANGLE_STRIP:
+    if (sourceCount < 3) {
+      return false;
+    }
+    primitive = GraphicsMeshPrimitive::TriangleList;
+    out.reserve((size_t)(sourceCount - 2) * 3);
+    for (int i = 0; i + 2 < sourceCount; ++i) {
+      if ((i & 1) == 0) {
+        appendVertex(source[i]);
+        appendVertex(source[i + 1]);
+      } else {
+        appendVertex(source[i + 1]);
+        appendVertex(source[i]);
+      }
+      appendVertex(source[i + 2]);
+    }
+    return true;
+  default:
+    return false;
+  }
+}
+
+auto Tesselator::queueMeshDraw(
+    GraphicsMeshHandle meshHandle, GraphicsMeshPrimitive primitive,
+    bool usesTrackedColor) -> bool {
+  if (!usingGraphicsBackend() || meshHandle == 0) {
+    return false;
+  }
+
+  GraphicsWorldMeshDraw draw;
+  draw.mesh = meshHandle;
+  draw.texture = glesIsTrackedEnabled(GL_TEXTURE_2D)
+      ? _graphicsBackend->currentTexture()
+      : 0;
+  draw.pass = resolveWorldPass();
+  draw.primitive = primitive;
+  draw.blendMode = resolveBlendMode();
+  draw.depthTest = glesIsTrackedEnabled(GL_DEPTH_TEST);
+  if (usesTrackedColor) {
+    glesGetTrackedColor4f(draw.colorMultiplier[0], draw.colorMultiplier[1],
+        draw.colorMultiplier[2], draw.colorMultiplier[3]);
+  }
+  glesGetTrackedMatrix(GL_MODELVIEW_MATRIX, draw.modelView);
+  glesGetTrackedMatrix(GL_PROJECTION_MATRIX, draw.projection);
+  return _graphicsBackend->drawWorldMesh(draw);
+}
+
 int Tesselator::getVboCount() { return vboCounts; }
 
-RenderChunk Tesselator::end(bool useMine, int bufferId) {
+RenderChunk Tesselator::end(bool useMine, int bufferId, bool uploadMesh,
+    GraphicsMeshHandle existingMeshHandle) {
 #ifndef STANDALONE_SERVER
   // if (!tesselating) throw /*new*/ IllegalStateException("Not tesselating!");
   if (!tesselating)
@@ -57,6 +231,10 @@ RenderChunk Tesselator::end(bool useMine, int bufferId) {
 
   tesselating = false;
   const int o_vertices = vertices;
+  GraphicsMeshHandle meshHandle = existingMeshHandle;
+  const bool shouldUploadMesh = uploadMesh || usingGraphicsBackend();
+  GraphicsMeshPrimitive primitive = GraphicsMeshPrimitive::TriangleList;
+  bool usesTrackedColor = false;
 
   if (vertices > 0) {
     if (++vboId >= vboCounts)
@@ -72,7 +250,7 @@ RenderChunk Tesselator::end(bool useMine, int bufferId) {
     bufferId = vboIds[vboId];
 #endif
     int access = GL_STATIC_DRAW; //(accessMode==ACCESS_DYNAMIC) ?
-                                 //GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+                                 // GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
     int bytes = p * sizeof(VERTEX);
     glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
     glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access); // GL_STREAM_DRAW
@@ -113,11 +291,86 @@ RenderChunk Tesselator::end(bool useMine, int bufferId) {
 #endif /*!USE_VBO*/
   }
 
+  if (shouldUploadMesh && _graphicsBackend && o_vertices > 0) {
+    if (meshHandle == 0 && bufferId >= 0) {
+      std::map<GLuint, RetainedMeshBuffer>::const_iterator existing =
+          _bufferMeshes.find((GLuint)bufferId);
+      if (existing != _bufferMeshes.end()) {
+        meshHandle = existing->second.mesh;
+      }
+    }
+
+    std::vector<GraphicsMeshVertex> meshVertices;
+    GraphicsMeshHandle uploadedMesh = meshHandle;
+    if (buildGraphicsVertices(
+            _varray, o_vertices, mode, primitive, usesTrackedColor,
+            meshVertices) &&
+        _graphicsBackend->uploadMesh(meshVertices.data(),
+            (uint32_t)meshVertices.size(), meshHandle, uploadedMesh)) {
+      meshHandle = uploadedMesh;
+      if (bufferId >= 0) {
+        _bufferMeshes[(GLuint)bufferId] = {
+            uploadedMesh, primitive, usesTrackedColor};
+      }
+    } else if (meshHandle == 0) {
+      meshHandle = 0;
+      LOGI("failed to upload retained mesh with %d vertices\n", o_vertices);
+    }
+  }
+  if (bufferId >= 0 && o_vertices == 0) {
+    std::map<GLuint, RetainedMeshBuffer>::iterator existing =
+        _bufferMeshes.find((GLuint)bufferId);
+    if (existing != _bufferMeshes.end()) {
+      destroyMesh(existing->second.mesh);
+    }
+  }
+
   clear();
-  RenderChunk out(bufferId, o_vertices);
+  RenderChunk out(bufferId, o_vertices, meshHandle);
   // map.insert( std::make_pair(bufferId, out.id) );
   return out;
 #else
+  return RenderChunk();
+#endif
+}
+
+bool Tesselator::drawBuffer(GLuint bufferId) {
+#ifndef STANDALONE_SERVER
+  if (!usingGraphicsBackend()) {
+    return false;
+  }
+
+  std::map<GLuint, RetainedMeshBuffer>::const_iterator it =
+      _bufferMeshes.find(bufferId);
+  if (it == _bufferMeshes.end()) {
+    return false;
+  }
+  return queueMeshDraw(
+      it->second.mesh, it->second.primitive, it->second.usesTrackedColor);
+#else
+  (void)bufferId;
+  return false;
+#endif
+}
+
+RenderChunk Tesselator::uploadRetainedMesh(
+    const std::vector<GraphicsMeshVertex> &vertices,
+    GraphicsMeshHandle existingMeshHandle) {
+#ifndef STANDALONE_SERVER
+  if (!usingGraphicsBackend() || !_graphicsBackend || vertices.empty()) {
+    return RenderChunk();
+  }
+
+  GraphicsMeshHandle meshHandle = existingMeshHandle;
+  if (!_graphicsBackend->uploadMesh(vertices.data(), (uint32_t)vertices.size(),
+          existingMeshHandle, meshHandle)) {
+    return RenderChunk();
+  }
+
+  return RenderChunk(-1, (int)vertices.size(), meshHandle);
+#else
+  (void)vertices;
+  (void)existingMeshHandle;
   return RenderChunk();
 #endif
 }
@@ -229,6 +482,11 @@ void Tesselator::scale2d(float sx, float sy) {
 
 void Tesselator::resetScale() { _sx = _sy = 1; }
 
+void Tesselator::getScale2d(float &sx, float &sy) const {
+  sx = _sx;
+  sy = _sy;
+}
+
 void Tesselator::vertex(float x, float y, float z) {
 #ifndef STANDALONE_SERVER
   count++;
@@ -276,6 +534,30 @@ void Tesselator::vertex(float x, float y, float z) {
   vertex.x = _sx * (x + xo);
   vertex.y = _sy * (y + yo);
   vertex.z = z + zo;
+
+  if (mode == GL_QUADS && (count & 3) == 0) {
+    const VERTEX &v0 = _varray[p - 5];
+    const VERTEX &v1 = _varray[p - 4];
+    const VERTEX &v2 = _varray[p - 3];
+    const VERTEX &v3 = vertex;
+
+    float dx1 = v1.x - v0.x;
+    float dy1 = v1.y - v0.y;
+    float dz1 = v1.z - v0.z;
+    float dx2 = v2.x - v0.x;
+    float dy2 = v2.y - v0.y;
+    float dz2 = v2.z - v0.z;
+
+    float area = (dy1 * dz2 - dz1 * dy2) * (dy1 * dz2 - dz1 * dy2) +
+        (dz1 * dx2 - dx1 * dz2) * (dz1 * dx2 - dx1 * dz2) +
+        (dx1 * dy2 - dy1 * dx2) * (dx1 * dy2 - dy1 * dx2);
+
+    if (area < 0.0001f) {
+      p -= 5;
+      vertices -= 5;
+      return;
+    }
+  }
 
   ++p;
   ++vertices;
@@ -349,8 +631,34 @@ void Tesselator::draw() {
 
     int bufferId = vboIds[vboId];
 
+    if (usingGraphicsBackend()) {
+      GraphicsMeshHandle meshHandle = 0;
+      std::map<GLuint, RetainedMeshBuffer>::const_iterator existing =
+          _bufferMeshes.find((GLuint)bufferId);
+      if (existing != _bufferMeshes.end()) {
+        meshHandle = existing->second.mesh;
+      }
+
+      GraphicsMeshPrimitive primitive = GraphicsMeshPrimitive::TriangleList;
+      bool usesTrackedColor = false;
+      std::vector<GraphicsMeshVertex> meshVertices;
+      GraphicsMeshHandle uploadedMesh = meshHandle;
+      if (buildGraphicsVertices(
+              _varray, vertices, mode, primitive, usesTrackedColor,
+              meshVertices) &&
+          _graphicsBackend->uploadMesh(meshVertices.data(),
+              (uint32_t)meshVertices.size(), meshHandle, uploadedMesh)) {
+        _bufferMeshes[(GLuint)bufferId] = {
+            uploadedMesh, primitive, usesTrackedColor};
+        queueMeshDraw(uploadedMesh, primitive, usesTrackedColor);
+      }
+
+      clear();
+      return;
+    }
+
     int access = GL_DYNAMIC_DRAW; //(accessMode==ACCESS_DYNAMIC) ?
-                                  //GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+                                  // GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
     int bytes = p * sizeof(VERTEX);
     glBindBuffer2(GL_ARRAY_BUFFER, bufferId);
     glBufferData2(GL_ARRAY_BUFFER, bytes, _varray, access); // GL_STREAM_DRAW
@@ -396,3 +704,22 @@ void Tesselator::draw() {
 void Tesselator::voidBeginAndEndCalls(bool doVoid) { _voidBeginEnd = doVoid; }
 
 void Tesselator::enableColor() { _noColor = false; }
+
+void Tesselator::destroyMesh(GraphicsMeshHandle meshHandle) {
+  if (meshHandle == 0) {
+    return;
+  }
+
+  for (std::map<GLuint, RetainedMeshBuffer>::iterator it = _bufferMeshes.begin();
+      it != _bufferMeshes.end();) {
+    if (it->second.mesh == meshHandle) {
+      it = _bufferMeshes.erase(it);
+    } else {
+      ++it;
+    }
+  }
+
+  if (_graphicsBackend) {
+    _graphicsBackend->destroyMesh(meshHandle);
+  }
+}

@@ -48,8 +48,8 @@ public:
 
     T &operator[](int i) { return _events[_getIndex(i)].item; }
 
-    void write(std::stringstream &ss, IPosTranslator &t,
-               int minTimetamp) const {
+    void write(
+        std::stringstream &ss, IPosTranslator &t, int minTimetamp) const {
       int i = _getFirstNewerIndex(minTimetamp);
       if (i < 0)
         return;
@@ -109,7 +109,7 @@ public:
   void stopDestroyBlock();
 
   bool useItemOn(Player *player, Level *level, ItemInstance *item, int x, int y,
-                 int z, int face, const Vec3 &hit);
+      int z, int face, const Vec3 &hit);
 
   void tick();
   ICreator *getCreator();

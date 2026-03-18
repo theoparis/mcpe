@@ -17,7 +17,7 @@ class LevelData {
 public:
   LevelData();
   LevelData(const LevelSettings &settings, const std::string &levelName,
-            int generatorVersion = -1);
+      int generatorVersion = -1);
   LevelData(CompoundTag *tag);
   LevelData(const LevelData &rhs);
   LevelData &operator=(const LevelData &rhs);

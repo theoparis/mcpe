@@ -15,7 +15,7 @@ public:
 
   static int hashCode(int x, int z) {
     return (x < 0 ? 0x80000000 : 0) | ((x & 0x7fff) << 16) |
-           (z < 0 ? 0x00008000 : 0) | (z & 0x7fff);
+        (z < 0 ? 0x00008000 : 0) | (z & 0x7fff);
   }
 
   int hashCode() const { return hashCode(x, z); }

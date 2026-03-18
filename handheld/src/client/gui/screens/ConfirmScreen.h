@@ -12,10 +12,10 @@ class ConfirmScreen : public Screen {
 
 public:
   ConfirmScreen(Screen *parent_, const std::string &title1_,
-                const std::string &title2_, int id_);
+      const std::string &title2_, int id_);
   ConfirmScreen(Screen *parent_, const std::string &title1_,
-                const std::string &title2_, const std::string &yesButton,
-                const std::string &noButton, int id_);
+      const std::string &title2_, const std::string &yesButton,
+      const std::string &noButton, int id_);
   ~ConfirmScreen();
 
   void init();
@@ -40,7 +40,7 @@ private:
   std::string noButtonText;
 
   Button *yesButton; // 0
-  Button *noButton;  // 1
+  Button *noButton; // 1
 };
 
 #endif /*NET_MINECRAFT_CLIENT_GUI_SCREENS__ConfirmScreen_H__*/

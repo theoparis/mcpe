@@ -29,8 +29,8 @@ public:
 
   static void destroy();
 
-  void prepare(Level *level, Font *font, Mob *player, Options *options,
-               float a);
+  void prepare(
+      Level *level, Font *font, Mob *player, Options *options, float a);
 
   void render(Entity *entity, float a);
   void render(Entity *entity, float x, float y, float z, float rot, float a);

@@ -55,8 +55,8 @@ public:
     }
   }
 
-  void fallOn(Level *level, int x, int y, int z, Entity *entity,
-              float fallDistance) {
+  void fallOn(
+      Level *level, int x, int y, int z, Entity *entity, float fallDistance) {
     if (!level->isClientSide &&
         level->random.nextFloat() < (fallDistance - .5f)) {
       level->setTile(x, y, z, Tile::dirt->id);

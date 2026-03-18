@@ -39,8 +39,7 @@ template <class InputType, class OutputType> struct RAK_DLL_EXPORT ThreadPool {
   /// thread, created by _perThreadInit.  Pass 0 if not needed.
   /// \return True on success, false on failure.
   bool StartThreads(int numThreads, int stackSize,
-                    void *(*_perThreadInit)() = 0,
-                    void (*_perThreadDeinit)(void *) = 0);
+      void *(*_perThreadInit)() = 0, void (*_perThreadDeinit)(void *) = 0);
 
   // Alternate form of _perThreadDataFactory, _perThreadDataDestructor
   void SetThreadDataInterface(ThreadDataInterface *tdi, void *context);
@@ -59,10 +58,9 @@ template <class InputType, class OutputType> struct RAK_DLL_EXPORT ThreadPool {
   /// iterate through outputQueue and deallocate it there.
   /// \param[in] workerThreadCallback The function to call from the thread
   /// \param[in] inputData The parameter to pass to \a userCallback
-  void AddInput(OutputType (*workerThreadCallback)(InputType,
-                                                   bool *returnOutput,
-                                                   void *perThreadData),
-                InputType inputData);
+  void AddInput(OutputType (*workerThreadCallback)(
+                    InputType, bool *returnOutput, void *perThreadData),
+      InputType inputData);
 
   /// Adds to the output queue
   /// Use it if you want to inject output into the same queue that the system
@@ -214,8 +212,7 @@ protected:
 
 #ifdef _MSC_VER
 #pragma warning(disable : 4127)
-#pragma warning(                                                               \
-    disable                                                                    \
+#pragma warning(disable                                                        \
     : 4701) // potentially uninitialized local variable 'inputData' used
 #endif
 
@@ -322,8 +319,8 @@ ThreadPool<InputType, OutputType>::~ThreadPool() {
   Clear();
 }
 template <class InputType, class OutputType>
-bool ThreadPool<InputType, OutputType>::StartThreads(
-    int numThreads, int stackSize, void *(*_perThreadDataFactory)(),
+bool ThreadPool<InputType, OutputType>::StartThreads(int numThreads,
+    int stackSize, void *(*_perThreadDataFactory)(),
     void (*_perThreadDataDestructor)(void *)) {
   (void)stackSize;
 
@@ -413,8 +410,8 @@ void ThreadPool<InputType, OutputType>::StopThreads(void) {
 }
 template <class InputType, class OutputType>
 void ThreadPool<InputType, OutputType>::AddInput(
-    OutputType (*workerThreadCallback)(InputType, bool *returnOutput,
-                                       void *perThreadData),
+    OutputType (*workerThreadCallback)(
+        InputType, bool *returnOutput, void *perThreadData),
     InputType inputData) {
   inputQueueMutex.Lock();
   inputQueue.Push(inputData, _FILE_AND_LINE_);

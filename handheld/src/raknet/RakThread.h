@@ -40,16 +40,16 @@ public:
   +15 to +19 	THREAD_PRIORITY_LOWEST
   */
 #if defined(_WIN32_WCE)
-  static int Create(LPTHREAD_START_ROUTINE start_address, void *arglist,
-                    int priority = 0);
+  static int Create(
+      LPTHREAD_START_ROUTINE start_address, void *arglist, int priority = 0);
 
 #elif defined(_WIN32)
   static int Create(unsigned __stdcall start_address(void *), void *arglist,
-                    int priority = 0);
+      int priority = 0);
 
 #else
-  static int Create(void *start_address(void *), void *arglist,
-                    int priority = 0);
+  static int Create(
+      void *start_address(void *), void *arglist, int priority = 0);
 #endif
 };
 

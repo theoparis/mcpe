@@ -56,22 +56,22 @@ public:
     for (int xx = 0; xx < 16; xx++) {
       for (int zz = 0; zz < 16; zz++) {
         for (int yy = 0; yy < 8; yy++) {
-          bool check =
-              !grid[((xx) * 16 + (zz)) * 8 + (yy)] &&
-              (false                                                   //
-               || (xx < 15 && grid[((xx + 1) * 16 + (zz)) * 8 + (yy)]) //
-               || (xx > 0 && grid[((xx - 1) * 16 + (zz)) * 8 + (yy)])  //
-               || (zz < 15 && grid[((xx) * 16 + (zz + 1)) * 8 + (yy)]) //
-               || (zz > 0 && grid[((xx) * 16 + (zz - 1)) * 8 + (yy)])  //
-               || (yy < 7 && grid[((xx) * 16 + (zz)) * 8 + (yy + 1)])  //
-               || (yy > 0 && grid[((xx) * 16 + (zz)) * 8 + (yy - 1)]));
+          bool check = !grid[((xx) * 16 + (zz)) * 8 + (yy)] &&
+              (false //
+                  || (xx < 15 && grid[((xx + 1) * 16 + (zz)) * 8 + (yy)]) //
+                  || (xx > 0 && grid[((xx - 1) * 16 + (zz)) * 8 + (yy)]) //
+                  || (zz < 15 && grid[((xx) * 16 + (zz + 1)) * 8 + (yy)]) //
+                  || (zz > 0 && grid[((xx) * 16 + (zz - 1)) * 8 + (yy)]) //
+                  || (yy < 7 && grid[((xx) * 16 + (zz)) * 8 + (yy + 1)]) //
+                  || (yy > 0 && grid[((xx) * 16 + (zz)) * 8 + (yy - 1)]));
 
           if (check) {
             const Material *m = level->getMaterial(x + xx, y + yy, z + zz);
             if (yy >= 4 && m->isLiquid())
               return false;
-            if (yy < 4 && (!m->isSolid() &&
-                           level->getTile(x + xx, y + yy, z + zz) != tile))
+            if (yy < 4 &&
+                (!m->isSolid() &&
+                    level->getTile(x + xx, y + yy, z + zz) != tile))
               return false;
           }
         }
@@ -95,8 +95,8 @@ public:
             if (level->getTile(x + xx, y + yy - 1, z + zz) == Tile::dirt->id &&
                 level->getBrightness(LightLayer::Sky, x + xx, y + yy, z + zz) >
                     0) {
-              level->setTileNoUpdate(x + xx, y + yy - 1, z + zz,
-                                     Tile::grass->id);
+              level->setTileNoUpdate(
+                  x + xx, y + yy - 1, z + zz, Tile::grass->id);
             }
           }
         }
@@ -107,15 +107,14 @@ public:
       for (int xx = 0; xx < 16; xx++) {
         for (int zz = 0; zz < 16; zz++) {
           for (int yy = 0; yy < 8; yy++) {
-            bool check =
-                !grid[((xx) * 16 + (zz)) * 8 + (yy)] &&
-                (false                                                   //
-                 || (xx < 15 && grid[((xx + 1) * 16 + (zz)) * 8 + (yy)]) //
-                 || (xx > 0 && grid[((xx - 1) * 16 + (zz)) * 8 + (yy)])  //
-                 || (zz < 15 && grid[((xx) * 16 + (zz + 1)) * 8 + (yy)]) //
-                 || (zz > 0 && grid[((xx) * 16 + (zz - 1)) * 8 + (yy)])  //
-                 || (yy < 7 && grid[((xx) * 16 + (zz)) * 8 + (yy + 1)])  //
-                 || (yy > 0 && grid[((xx) * 16 + (zz)) * 8 + (yy - 1)]));
+            bool check = !grid[((xx) * 16 + (zz)) * 8 + (yy)] &&
+                (false //
+                    || (xx < 15 && grid[((xx + 1) * 16 + (zz)) * 8 + (yy)]) //
+                    || (xx > 0 && grid[((xx - 1) * 16 + (zz)) * 8 + (yy)]) //
+                    || (zz < 15 && grid[((xx) * 16 + (zz + 1)) * 8 + (yy)]) //
+                    || (zz > 0 && grid[((xx) * 16 + (zz - 1)) * 8 + (yy)]) //
+                    || (yy < 7 && grid[((xx) * 16 + (zz)) * 8 + (yy + 1)]) //
+                    || (yy > 0 && grid[((xx) * 16 + (zz)) * 8 + (yy - 1)]));
 
             if (check) {
               if ((yy < 4 || random->nextInt(2) != 0) &&

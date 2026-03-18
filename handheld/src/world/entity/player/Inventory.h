@@ -32,8 +32,8 @@ public:
 
   static int getSelectionSize();
   // Special for this "selection based" inventory
-  bool moveToSelectionSlot(int selectionSlot, int inventorySlot,
-                           bool propagate);
+  bool moveToSelectionSlot(
+      int selectionSlot, int inventorySlot, bool propagate);
   bool moveToSelectedSlot(int inventorySlot, bool propagate);
   bool moveToEmptySelectionSlot(int inventorySlot);
 

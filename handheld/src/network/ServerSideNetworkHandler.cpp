@@ -41,12 +41,12 @@ void ServerSideNetworkHandler::tileChanged(int x, int y, int z) {
   // LOGI("tileChanged(%d, %d, %d)\n", x, y, z);
 
   // broadcast change event
-  UpdateBlockPacket packet(x, y, z, level->getTile(x, y, z),
-                           level->getData(x, y, z));
+  UpdateBlockPacket packet(
+      x, y, z, level->getTile(x, y, z), level->getData(x, y, z));
   RakNet::BitStream bitStream;
   packet.write(&bitStream);
   rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+      RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
 }
 
 Packet *ServerSideNetworkHandler::getAddPacketFromEntity(Entity *entity) {
@@ -117,8 +117,8 @@ void ServerSideNetworkHandler::redistributePacket(
   // broadcast the new player to all other players
   RakNet::BitStream bitStream;
   packet->write(&bitStream);
-  rakPeer->Send(&bitStream, packet->priority, packet->reliability, 0,
-                fromPlayer, true);
+  rakPeer->Send(
+      &bitStream, packet->priority, packet->reliability, 0, fromPlayer, true);
 }
 
 void ServerSideNetworkHandler::displayGameMessage(const std::string &message) {
@@ -163,8 +163,8 @@ void ServerSideNetworkHandler::onDisconnect(const RakNet::RakNetGUID &guid) {
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      LoginPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, LoginPacket *packet) {
   if (!level)
     return;
   if (!_allowIncoming)
@@ -177,9 +177,9 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   // Bad/incompatible client version
   //
   bool oldClient = packet->clientNetworkVersion <
-                   SharedConstants::NetworkProtocolLowestSupportedVersion;
+      SharedConstants::NetworkProtocolLowestSupportedVersion;
   bool oldServer = packet->clientNetworkLowestSupportedVersion >
-                   SharedConstants::NetworkProtocolVersion;
+      SharedConstants::NetworkProtocolVersion;
   if (oldClient || oldServer)
     loginStatus = oldClient ? LoginStatus::Failed_ClientOld
                             : LoginStatus::Failed_ServerOld;
@@ -209,7 +209,7 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     newPlayer->y += 1;
   }
   newPlayer->moveTo(newPlayer->x, newPlayer->y - newPlayer->heightOffset,
-                    newPlayer->z, newPlayer->yRot, newPlayer->xRot);
+      newPlayer->z, newPlayer->yRot, newPlayer->xRot);
 
   // send world seed
   {
@@ -220,18 +220,18 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
         minecraft->isCreativeMode() ? GameType::Creative : GameType::Survival;
 
     StartGamePacket(level->getSeed(),
-                    level->getLevelData()->getGeneratorVersion(), gameType,
-                    newPlayer->entityId, newPlayer->x,
-                    newPlayer->y - newPlayer->heightOffset, newPlayer->z)
+        level->getLevelData()->getGeneratorVersion(), gameType,
+        newPlayer->entityId, newPlayer->x,
+        newPlayer->y - newPlayer->heightOffset, newPlayer->z)
         .write(&bitStream);
 
-    rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                  false);
+    rakPeer->Send(
+        &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ReadyPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ReadyPacket *packet) {
   if (!level)
     return;
 
@@ -266,14 +266,14 @@ void ServerSideNetworkHandler::onReady_ClientGeneration(
 
     bitStream.Reset();
     AddPlayerPacket(player).write(&bitStream);
-    rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                  false);
+    rakPeer->Send(
+        &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
 
     if (player->getArmorTypeHash()) {
       bitStream.Reset();
       PlayerArmorEquipmentPacket(player).write(&bitStream);
-      rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                    false);
+      rakPeer->Send(
+          &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
     }
   }
 
@@ -295,8 +295,8 @@ void ServerSideNetworkHandler::onReady_ClientGeneration(
     if (packet != NULL) {
       bitStream.Reset();
       packet->write(&bitStream);
-      rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                    false);
+      rakPeer->Send(
+          &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
       delete packet;
     }
   }
@@ -329,8 +329,8 @@ void ServerSideNetworkHandler::onReady_RequestedChunks(
     if (packet != NULL) {
       bitStream.Reset();
       packet->write(&bitStream);
-      rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                    false);
+      rakPeer->Send(
+          &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
       delete packet;
     }
   }
@@ -344,38 +344,38 @@ void ServerSideNetworkHandler::onReady_RequestedChunks(
 
     bitStream.Reset();
     AddPlayerPacket(player).write(&bitStream);
-    rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                  false);
+    rakPeer->Send(
+        &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
 
     if (player->getArmorTypeHash()) {
       bitStream.Reset();
       PlayerArmorEquipmentPacket(player).write(&bitStream);
-      rakPeer->Send(&bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source,
-                    false);
+      rakPeer->Send(
+          &bitStream, HIGH_PRIORITY, RELIABLE_ORDERED, 0, source, false);
     }
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      MovePlayerPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, MovePlayerPacket *packet) {
   if (!level)
     return;
 
   LOGI("MovePlayerPacket id=%d src=%s pos=%f,%f,%f rot=%f,%f\n",
-       packet->entityId, source.ToString(), packet->x, packet->y, packet->z,
-       packet->yRot, packet->xRot);
+      packet->entityId, source.ToString(), packet->x, packet->y, packet->z,
+      packet->yRot, packet->xRot);
   if (Entity *entity = level->getEntity(packet->entityId)) {
     entity->xd = entity->yd = entity->zd = 0;
-    entity->lerpTo(packet->x, packet->y, packet->z, packet->yRot, packet->xRot,
-                   3);
+    entity->lerpTo(
+        packet->x, packet->y, packet->z, packet->yRot, packet->xRot, 3);
 
     // broadcast this packet to other clients
     redistributePacket(packet, source);
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      RemoveBlockPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, RemoveBlockPacket *packet) {
   if (!level)
     return;
 
@@ -394,9 +394,9 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   bool changed = level->setTile(x, y, z, 0);
   if (oldTile != NULL && changed) {
     level->playSound(x + 0.5f, y + 0.5f, z + 0.5f,
-                     oldTile->soundType->getBreakSound(),
-                     (oldTile->soundType->getVolume() + 1) / 2,
-                     oldTile->soundType->getPitch() * 0.8f);
+        oldTile->soundType->getBreakSound(),
+        (oldTile->soundType->getVolume() + 1) / 2,
+        oldTile->soundType->getPitch() * 0.8f);
 
     if (minecraft->gameMode->isSurvivalType() && player->canDestroy(oldTile))
       // oldTile->spawnResources(level, x, y, z, data, 1); //@todo
@@ -406,8 +406,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      RequestChunkPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, RequestChunkPacket *packet) {
   if (!level)
     return;
 
@@ -427,7 +427,7 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
 
   const LevelChunk::TEMap &teMap = chunk->getTileEntityMap();
   for (LevelChunk::TEMapCIterator cit = teMap.begin(); cit != teMap.end();
-       ++cit) {
+      ++cit) {
     TileEntity *te = cit->second;
     if (Packet *p = te->getUpdatePacket()) {
       bitStream.Reset();
@@ -452,8 +452,8 @@ void ServerSideNetworkHandler::levelGenerated(Level *level) {
 #endif
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      PlayerEquipmentPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, PlayerEquipmentPacket *packet) {
   if (!level)
     return;
 
@@ -483,8 +483,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      PlayerArmorEquipmentPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, PlayerArmorEquipmentPacket *packet) {
   if (!level)
     return;
 
@@ -498,8 +498,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   redistributePacket(packet, source);
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      InteractPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, InteractPacket *packet) {
   if (!level)
     return;
 
@@ -520,8 +520,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      AnimatePacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, AnimatePacket *packet) {
   if (!level)
     return;
 
@@ -547,8 +547,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   redistributePacket(packet, source);
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      UseItemPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, UseItemPacket *packet) {
   if (!level)
     return;
 
@@ -570,14 +570,14 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
 
     if (packet->face == 255) {
       // Special case: x,y,z means direction-of-action
-      player->aimDirection.set(packet->x / 32768.0f, packet->y / 32768.0f,
-                               packet->z / 32768.0f);
+      player->aimDirection.set(
+          packet->x / 32768.0f, packet->y / 32768.0f, packet->z / 32768.0f);
       minecraft->gameMode->useItem(player, level, item);
     } else {
-      minecraft->gameMode->useItemOn(
-          player, level, item, packet->x, packet->y, packet->z, packet->face,
+      minecraft->gameMode->useItemOn(player, level, item, packet->x, packet->y,
+          packet->z, packet->face,
           Vec3(packet->clickX + packet->x, packet->clickY + packet->y,
-               packet->clickZ + packet->z));
+              packet->clickZ + packet->z));
     }
 
     // LOGW("Use Item not working! Out of synch?\n");
@@ -588,8 +588,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      EntityEventPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, EntityEventPacket *packet) {
   if (!level)
     return;
 
@@ -597,8 +597,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     e->handleEntityEvent(packet->eventId);
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      PlayerActionPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, PlayerActionPacket *packet) {
   if (!level)
     return;
   LOGI("PlayerActionPacket\n");
@@ -614,8 +614,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      RespawnPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, RespawnPacket *packet) {
   if (!level)
     return;
 
@@ -623,8 +623,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   redistributePacket(packet, source);
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SendInventoryPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SendInventoryPacket *packet) {
   if (!level)
     return;
 
@@ -639,8 +639,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      DropItemPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, DropItemPacket *packet) {
   if (!level)
     return;
 
@@ -651,8 +651,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerClosePacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerClosePacket *packet) {
   if (!level)
     return;
 
@@ -664,8 +664,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
     static_cast<ServerPlayer *>(p)->doCloseContainer();
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      ContainerSetSlotPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, ContainerSetSlotPacket *packet) {
   if (!level)
     return;
 
@@ -679,7 +679,7 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
   if (p->containerMenu->containerId != packet->containerId) {
     LOGW("Wrong container id: %d vs %d\n", p->containerMenu->containerId,
-         packet->containerId);
+        packet->containerId);
     return;
   }
 
@@ -699,8 +699,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SetHealthPacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SetHealthPacket *packet) {
   for (unsigned int i = 0; i < level->players.size(); ++i) {
     Player *p = level->players[i];
     if (p->owner == source) {
@@ -716,8 +716,8 @@ void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
   }
 }
 
-void ServerSideNetworkHandler::handle(const RakNet::RakNetGUID &source,
-                                      SignUpdatePacket *packet) {
+void ServerSideNetworkHandler::handle(
+    const RakNet::RakNetGUID &source, SignUpdatePacket *packet) {
   redistributePacket(packet, source);
   if (!level)
     return;
@@ -743,8 +743,8 @@ void ServerSideNetworkHandler::allowIncomingConnections(bool doAllow) {
   _allowIncoming = doAllow;
 }
 
-Player *
-ServerSideNetworkHandler::popPendingPlayer(const RakNet::RakNetGUID &source) {
+Player *ServerSideNetworkHandler::popPendingPlayer(
+    const RakNet::RakNetGUID &source) {
   if (!level) {
     LOGE("Could not add player since Level is NULL!\n");
     return NULL;
@@ -760,8 +760,8 @@ ServerSideNetworkHandler::popPendingPlayer(const RakNet::RakNetGUID &source) {
   return NULL;
 }
 
-void ServerSideNetworkHandler::levelEvent(Player *source, int type, int x,
-                                          int y, int z, int data) {
+void ServerSideNetworkHandler::levelEvent(
+    Player *source, int type, int x, int y, int z, int data) {
   LevelEventPacket packet(type, x, y, z, data);
   redistributePacket(&packet, source ? source->owner : rakPeer->GetMyGUID());
 }

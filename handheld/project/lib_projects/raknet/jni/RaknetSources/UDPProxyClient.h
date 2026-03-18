@@ -55,12 +55,10 @@ struct UDPProxyClientResultHandler {
   /// \param[out] targetGuid \a targetGuid parameter originally passed to
   /// UDPProxyClient::RequestForwarding
   /// \param[out] proxyClient The plugin that is calling this callback
-  virtual void
-  OnForwardingSuccess(const char *proxyIPAddress, unsigned short proxyPort,
-                      SystemAddress proxyCoordinator,
-                      SystemAddress sourceAddress, SystemAddress targetAddress,
-                      RakNetGUID targetGuid,
-                      RakNet::UDPProxyClient *proxyClientPlugin) = 0;
+  virtual void OnForwardingSuccess(const char *proxyIPAddress,
+      unsigned short proxyPort, SystemAddress proxyCoordinator,
+      SystemAddress sourceAddress, SystemAddress targetAddress,
+      RakNetGUID targetGuid, RakNet::UDPProxyClient *proxyClientPlugin) = 0;
 
   /// Called when another system has setup forwarding, with our system as the
   /// target address. Plugin automatically sends a datagram to proxyIPAddress
@@ -79,12 +77,10 @@ struct UDPProxyClientResultHandler {
   /// \param[out] targetGuid \a targetGuid parameter originally passed to
   /// UDPProxyClient::RequestForwarding
   /// \param[out] proxyClient The plugin that is calling this callback
-  virtual void
-  OnForwardingNotification(const char *proxyIPAddress, unsigned short proxyPort,
-                           SystemAddress proxyCoordinator,
-                           SystemAddress sourceAddress,
-                           SystemAddress targetAddress, RakNetGUID targetGuid,
-                           RakNet::UDPProxyClient *proxyClientPlugin) = 0;
+  virtual void OnForwardingNotification(const char *proxyIPAddress,
+      unsigned short proxyPort, SystemAddress proxyCoordinator,
+      SystemAddress sourceAddress, SystemAddress targetAddress,
+      RakNetGUID targetGuid, RakNet::UDPProxyClient *proxyClientPlugin) = 0;
 
   /// Called when our forwarding request failed, because no UDPProxyServers are
   /// connected to UDPProxyCoordinator
@@ -99,10 +95,8 @@ struct UDPProxyClientResultHandler {
   /// UDPProxyClient::RequestForwarding
   /// \param[out] proxyClient The plugin that is calling this callback
   virtual void OnNoServersOnline(SystemAddress proxyCoordinator,
-                                 SystemAddress sourceAddress,
-                                 SystemAddress targetAddress,
-                                 RakNetGUID targetGuid,
-                                 RakNet::UDPProxyClient *proxyClientPlugin) = 0;
+      SystemAddress sourceAddress, SystemAddress targetAddress,
+      RakNetGUID targetGuid, RakNet::UDPProxyClient *proxyClientPlugin) = 0;
 
   /// Called when our forwarding request failed, because no UDPProxyServers are
   /// connected to UDPProxyCoordinator
@@ -116,11 +110,9 @@ struct UDPProxyClientResultHandler {
   /// \param[out] targetGuid \a targetGuid parameter originally passed to
   /// UDPProxyClient::RequestForwarding
   /// \param[out] proxyClient The plugin that is calling this callback
-  virtual void
-  OnRecipientNotConnected(SystemAddress proxyCoordinator,
-                          SystemAddress sourceAddress,
-                          SystemAddress targetAddress, RakNetGUID targetGuid,
-                          RakNet::UDPProxyClient *proxyClientPlugin) = 0;
+  virtual void OnRecipientNotConnected(SystemAddress proxyCoordinator,
+      SystemAddress sourceAddress, SystemAddress targetAddress,
+      RakNetGUID targetGuid, RakNet::UDPProxyClient *proxyClientPlugin) = 0;
 
   /// Called when our forwarding request failed, because all UDPProxyServers
   /// that are connected to UDPProxyCoordinator are at their capacity Either add
@@ -137,10 +129,8 @@ struct UDPProxyClientResultHandler {
   /// UDPProxyClient::RequestForwarding
   /// \param[out] proxyClient The plugin that is calling this callback
   virtual void OnAllServersBusy(SystemAddress proxyCoordinator,
-                                SystemAddress sourceAddress,
-                                SystemAddress targetAddress,
-                                RakNetGUID targetGuid,
-                                RakNet::UDPProxyClient *proxyClientPlugin) = 0;
+      SystemAddress sourceAddress, SystemAddress targetAddress,
+      RakNetGUID targetGuid, RakNet::UDPProxyClient *proxyClientPlugin) = 0;
 
   /// Called when our forwarding request is already in progress on the \a
   /// proxyCoordinator. This can be ignored, but indicates an unneeded second
@@ -155,11 +145,9 @@ struct UDPProxyClientResultHandler {
   /// \param[out] targetGuid \a targetGuid parameter originally passed to
   /// UDPProxyClient::RequestForwarding
   /// \param[out] proxyClient The plugin that is calling this callback
-  virtual void
-  OnForwardingInProgress(SystemAddress proxyCoordinator,
-                         SystemAddress sourceAddress,
-                         SystemAddress targetAddress, RakNetGUID targetGuid,
-                         RakNet::UDPProxyClient *proxyClientPlugin) = 0;
+  virtual void OnForwardingInProgress(SystemAddress proxyCoordinator,
+      SystemAddress sourceAddress, SystemAddress targetAddress,
+      RakNetGUID targetGuid, RakNet::UDPProxyClient *proxyClientPlugin) = 0;
 };
 
 /// \brief Communicates with UDPProxyCoordinator, in order to find a
@@ -222,19 +210,19 @@ public:
   /// \return true if the request was sent, false if we are not connected to
   /// proxyCoordinator
   bool RequestForwarding(SystemAddress proxyCoordinator,
-                         SystemAddress sourceAddress,
-                         SystemAddress targetAddressAsSeenFromCoordinator,
-                         RakNet::TimeMS timeoutOnNoDataMS,
-                         RakNet::BitStream *serverSelectionBitstream = 0);
+      SystemAddress sourceAddress,
+      SystemAddress targetAddressAsSeenFromCoordinator,
+      RakNet::TimeMS timeoutOnNoDataMS,
+      RakNet::BitStream *serverSelectionBitstream = 0);
 
   /// Same as above, but specify the target with a GUID, in case you don't know
   /// what its address is to the coordinator If requesting forwarding to a
   /// RakNet enabled system, then it is easier to use targetGuid instead of
   /// targetAddressAsSeenFromCoordinator
   bool RequestForwarding(SystemAddress proxyCoordinator,
-                         SystemAddress sourceAddress, RakNetGUID targetGuid,
-                         RakNet::TimeMS timeoutOnNoDataMS,
-                         RakNet::BitStream *serverSelectionBitstream = 0);
+      SystemAddress sourceAddress, RakNetGUID targetGuid,
+      RakNet::TimeMS timeoutOnNoDataMS,
+      RakNet::BitStream *serverSelectionBitstream = 0);
 
   /// \internal
   virtual void Update(void);

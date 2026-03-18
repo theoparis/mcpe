@@ -51,27 +51,27 @@
 
 // typedef unsigned int uint32;
 
-#define N (624)                              // length of state vector
-#define M (397)                              // a period parameter
-#define K (0x9908B0DFU)                      // a magic constant
-#define hiBit(u) ((u) & 0x80000000U)         // mask all but highest   bit of u
-#define loBit(u) ((u) & 0x00000001U)         // mask all but lowest    bit of u
-#define loBits(u) ((u) & 0x7FFFFFFFU)        // mask  the highest   bit of u
+#define N (624) // length of state vector
+#define M (397) // a period parameter
+#define K (0x9908B0DFU) // a magic constant
+#define hiBit(u) ((u) & 0x80000000U) // mask all but highest   bit of u
+#define loBit(u) ((u) & 0x00000001U) // mask all but lowest    bit of u
+#define loBits(u) ((u) & 0x7FFFFFFFU) // mask  the highest   bit of u
 #define mixBits(u, v) (hiBit(u) | loBits(v)) // move hi bit of u to hi bit of v
 
 static unsigned int
-    _state[N + 1];          // state vector + 1 extra to not violate ANSI C
+    _state[N + 1]; // state vector + 1 extra to not violate ANSI C
 static unsigned int *_next; // next random value is computed from here
-static int _left = -1;      // can *next++ this many times before reloading
+static int _left = -1; // can *next++ this many times before reloading
 
 using namespace RakNet;
 
-void seedMT(unsigned int seed, unsigned int *state, unsigned int *&next,
-            int &left);
+void seedMT(
+    unsigned int seed, unsigned int *state, unsigned int *&next, int &left);
 unsigned int reloadMT(unsigned int *state, unsigned int *&next, int &left);
 unsigned int randomMT(unsigned int *state, unsigned int *&next, int &left);
 void fillBufferMT(void *buffer, unsigned int bytes, unsigned int *state,
-                  unsigned int *&next, int &left);
+    unsigned int *&next, int &left);
 float frandomMT(unsigned int *state, unsigned int *&next, int &left);
 
 // Uses global vars
@@ -84,7 +84,7 @@ void fillBufferMT(void *buffer, unsigned int bytes) {
 }
 
 void seedMT(unsigned int seed, unsigned int *state, unsigned int *&next,
-            int &left) // Defined in cokus_c.c
+    int &left) // Defined in cokus_c.c
 {
   (void)next;
 
@@ -189,7 +189,7 @@ unsigned int randomMT(unsigned int *state, unsigned int *&next, int &left) {
 }
 
 void fillBufferMT(void *buffer, unsigned int bytes, unsigned int *state,
-                  unsigned int *&next, int &left) {
+    unsigned int *&next, int &left) {
   unsigned int offset = 0;
   unsigned int r;
   while (bytes - offset >= sizeof(r)) {

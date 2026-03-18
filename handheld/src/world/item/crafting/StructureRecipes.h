@@ -13,57 +13,57 @@ class StructureRecipes {
 public:
   static void addRecipes(Recipes *r) {
     r->addShapedRecipe(ItemInstance(Tile::chest), //
-                       "###",                     //
-                       "# #",                     //
-                       "###",                     //
+        "###", //
+        "# #", //
+        "###", //
 
-                       definition('#', Tile::wood));
+        definition('#', Tile::wood));
 
     r->addShapedRecipe(ItemInstance(Tile::furnace), //
-                       "###",                       //
-                       "# #",                       //
-                       "###",                       //
+        "###", //
+        "# #", //
+        "###", //
 
-                       definition('#', Tile::stoneBrick));
+        definition('#', Tile::stoneBrick));
 
     r->addShapedRecipe(ItemInstance(Tile::workBench), //
-                       "##",                          //
-                       "##",                          //
+        "##", //
+        "##", //
 
-                       definition('#', Tile::wood));
+        definition('#', Tile::wood));
 
     r->addShapedRecipe(ItemInstance(Tile::stonecutterBench), //
-                       "##",                                 //
-                       "##",                                 //
+        "##", //
+        "##", //
 
-                       definition('#', Tile::stoneBrick));
+        definition('#', Tile::stoneBrick));
 
     r->addShapedRecipe(ItemInstance(Tile::sandStone), //
-                       "##",                          //
-                       "##",                          //
+        "##", //
+        "##", //
 
-                       definition('#', Tile::sand));
+        definition('#', Tile::sand));
 
     r->addShapedRecipe(
         ItemInstance(Tile::sandStone, 4, SandStoneTile::TYPE_SMOOTHSIDE), //
-        "##",                                                             //
-        "##",                                                             //
+        "##", //
+        "##", //
 
         definition('#', Tile::sandStone));
 
     r->addShapedRecipe(
         ItemInstance(Tile::sandStone, 1, SandStoneTile::TYPE_HEIROGLYPHS), //
-        "#",                                                               //
-        "#",                                                               //
+        "#", //
+        "#", //
 
-        definition('#', ItemInstance(Tile::stoneSlabHalf, 1,
-                                     StoneSlabTile::SAND_SLAB)));
+        definition('#',
+            ItemInstance(Tile::stoneSlabHalf, 1, StoneSlabTile::SAND_SLAB)));
 
     r->addShapedRecipe(ItemInstance(Tile::stoneBrickSmooth, 4), //
-                       "##",                                    //
-                       "##",                                    //
+        "##", //
+        "##", //
 
-                       definition('#', Tile::rock));
+        definition('#', Tile::rock));
 
     // r->addShapedRecipe(ItemInstance(Tile::ironFence, 16), //
     //     "###", //
@@ -72,22 +72,22 @@ public:
     //    definition('#', Item::ironIngot));
 
     r->addShapedRecipe(ItemInstance(Tile::thinGlass, 16), //
-                       "###",                             //
-                       "###",                             //
+        "###", //
+        "###", //
 
-                       definition('#', Tile::glass));
+        definition('#', Tile::glass));
 
     r->addShapedRecipe(ItemInstance(Tile::netherBrick, 1), //
-                       "NN",                               //
-                       "NN",                               //
+        "NN", //
+        "NN", //
 
-                       definition('N', Item::netherbrick));
+        definition('N', Item::netherbrick));
 
     r->addShapedRecipe(ItemInstance(Tile::quartzBlock, 1), //
-                       "NN",                               //
-                       "NN",                               //
+        "NN", //
+        "NN", //
 
-                       definition('N', Item::netherQuartz));
+        definition('N', Item::netherQuartz));
 
     // r->addShapedRecipe(ItemInstance(Tile::redstoneLight, 1), //
     //     " R ", //

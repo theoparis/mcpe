@@ -141,8 +141,8 @@ public:
   virtual void write(RakNet::BitStream *bitStream) = 0;
   virtual void read(RakNet::BitStream *bitStream) = 0;
 
-  virtual void handle(const RakNet::RakNetGUID &source,
-                      NetEventCallback *callback) = 0;
+  virtual void handle(
+      const RakNet::RakNetGUID &source, NetEventCallback *callback) = 0;
 
   PacketPriority priority;
   PacketReliability reliability;

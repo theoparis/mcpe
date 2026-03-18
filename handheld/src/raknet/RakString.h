@@ -198,7 +198,7 @@ public:
   /// https://servers.api.rackspacecloud.com/v1.0 to https://,
   /// servers.api.rackspacecloud.com, /v1.0
   void SplitURI(RakNet::RakString &header, RakNet::RakString &domain,
-                RakNet::RakString &path);
+      RakNet::RakString &path);
 
   /// Scan for quote, double quote, and backslash and prepend with backslash
   RakNet::RakString &SQLEscape(void);
@@ -228,12 +228,11 @@ public:
   /// \pre StringCompressor::AddReference must have been called to instantiate
   /// the class (Happens automatically from RakPeer::Startup())
   void SerializeCompressed(BitStream *bs, uint8_t languageId = 0,
-                           bool writeLanguageId = false) const;
+      bool writeLanguageId = false) const;
 
   /// Static version of the SerializeCompressed function
   static void SerializeCompressed(const char *str, BitStream *bs,
-                                  uint8_t languageId = 0,
-                                  bool writeLanguageId = false);
+      uint8_t languageId = 0, bool writeLanguageId = false);
 
   /// Deserialize what was written by Serialize
   /// \param[in] bs Bitstream to serialize from
@@ -253,8 +252,8 @@ public:
   bool DeserializeCompressed(BitStream *bs, bool readLanguageId = false);
 
   /// Static version of the DeserializeCompressed() function
-  static bool DeserializeCompressed(char *str, BitStream *bs,
-                                    bool readLanguageId = false);
+  static bool DeserializeCompressed(
+      char *str, BitStream *bs, bool readLanguageId = false);
 
   static const char *ToString(int64_t i);
   static const char *ToString(uint64_t i);
@@ -277,7 +276,7 @@ public:
     char *bigString;
     char *c_str;
     char smallString[128 - sizeof(unsigned int) - sizeof(size_t) -
-                     sizeof(char *) * 2];
+        sizeof(char *) * 2];
   };
 
   /// \internal
@@ -316,7 +315,7 @@ protected:
 
 } // namespace RakNet
 
-const RakNet::RakString RAK_DLL_EXPORT operator+(const RakNet::RakString &lhs,
-                                                 const RakNet::RakString &rhs);
+const RakNet::RakString RAK_DLL_EXPORT operator+(
+    const RakNet::RakString &lhs, const RakNet::RakString &rhs);
 
 #endif

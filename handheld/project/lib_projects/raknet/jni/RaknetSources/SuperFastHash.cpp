@@ -14,7 +14,7 @@
 #else
 #define get16bits(d)                                                           \
   ((((uint32_t)(((const uint8_t *)(d))[1])) << 8) +                            \
-   (uint32_t)(((const uint8_t *)(d))[0]))
+      (uint32_t)(((const uint8_t *)(d))[0]))
 #endif
 
 static const int INCREMENTAL_READ_BLOCK = 65536;
@@ -25,8 +25,8 @@ uint32_t SuperFastHash(const char *data, int length) {
   unsigned int lastHash = length;
   int offset = 0;
   while (bytesRemaining >= INCREMENTAL_READ_BLOCK) {
-    lastHash = SuperFastHashIncremental(data + offset, INCREMENTAL_READ_BLOCK,
-                                        lastHash);
+    lastHash = SuperFastHashIncremental(
+        data + offset, INCREMENTAL_READ_BLOCK, lastHash);
     bytesRemaining -= INCREMENTAL_READ_BLOCK;
     offset += INCREMENTAL_READ_BLOCK;
   }
@@ -38,8 +38,8 @@ uint32_t SuperFastHash(const char *data, int length) {
 
   //	return SuperFastHashIncremental(data,len,len);
 }
-uint32_t SuperFastHashIncremental(const char *data, int len,
-                                  unsigned int lastHash) {
+uint32_t SuperFastHashIncremental(
+    const char *data, int len, unsigned int lastHash) {
   uint32_t hash = (uint32_t)lastHash;
   uint32_t tmp;
   int rem;

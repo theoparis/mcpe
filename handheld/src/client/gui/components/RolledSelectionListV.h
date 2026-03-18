@@ -12,7 +12,7 @@ class RolledSelectionListV : public GuiComponent {
 
 public:
   RolledSelectionListV(Minecraft *minecraft, int width, int height, int x0,
-                       int x1, int y0, int y1, int itemHeight);
+      int x1, int y0, int y1, int itemHeight);
 
   virtual int getItemAtPosition(int x, int y);
 
@@ -20,8 +20,8 @@ public:
 
   virtual void tick();
   virtual void render(int xm, int ym, float a);
-  virtual void renderHoleBackground(/*float x0, float x1,*/ float y0, float y1,
-                                    int a0, int a1);
+  virtual void renderHoleBackground(
+      /*float x0, float x1,*/ float y0, float y1, int a0, int a1);
   virtual void setRenderSelection(bool _renderSelection);
   virtual void setComponentSelected(bool selected);
 

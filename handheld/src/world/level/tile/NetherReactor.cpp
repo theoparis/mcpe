@@ -56,8 +56,8 @@ int NetherReactor::getTexture(int face, int data) {
   }
 }
 
-bool NetherReactor::canSpawnStartNetherReactor(Level *level, int x, int y,
-                                               int z, Player *player) {
+bool NetherReactor::canSpawnStartNetherReactor(
+    Level *level, int x, int y, int z, Player *player) {
   if (!allPlayersCloseToReactor(level, x, y, z)) {
     player->displayClientMessage(
         "All players need to be close to the reactor.");
@@ -74,15 +74,15 @@ bool NetherReactor::canSpawnStartNetherReactor(Level *level, int x, int y,
   return true;
 }
 
-bool NetherReactor::allPlayersCloseToReactor(Level *level, int x, int y,
-                                             int z) {
+bool NetherReactor::allPlayersCloseToReactor(
+    Level *level, int x, int y, int z) {
   for (PlayerList::const_iterator i = level->players.begin();
-       i != level->players.end(); ++i) {
+      i != level->players.end(); ++i) {
     Player *currentPlayer = (*i);
     if (!(currentPlayer->x >= x - 5 && currentPlayer->x <= x + 5))
       return false;
     if (!(currentPlayer->y - currentPlayer->heightOffset >= y - 1 &&
-          currentPlayer->y - currentPlayer->heightOffset <= y + 1))
+            currentPlayer->y - currentPlayer->heightOffset <= y + 1))
       return false;
     if (!(currentPlayer->z >= z - 5 && currentPlayer->z <= z + 5))
       return false;

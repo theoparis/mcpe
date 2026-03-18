@@ -70,8 +70,8 @@ public:
   void render(int xm, int ym, float a) {
     renderDirtBackground(0);
     drawCenteredString(minecraft->font, desc1, width / 2, _baseY, 0xffffff);
-    drawCenteredString(minecraft->font, desc2, width / 2, _baseY + 24,
-                       0xffffff);
+    drawCenteredString(
+        minecraft->font, desc2, width / 2, _baseY + 24, 0xffffff);
 
     drawCenteredString(minecraft->font, hint, width / 2, _baseY + 60, 0xffffff);
 

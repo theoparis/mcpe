@@ -6,8 +6,8 @@
 #include "../Textures.h"
 #include "../gles.h"
 
-void ArrowRenderer::render(Entity *entity, float x, float y, float z, float rot,
-                           float a) {
+void ArrowRenderer::render(
+    Entity *entity, float x, float y, float z, float rot, float a) {
   bindTexture("item/arrows.png");
   Arrow *arrow = (Arrow *)entity;
   glPushMatrix2();

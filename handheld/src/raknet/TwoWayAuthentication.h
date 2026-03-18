@@ -104,9 +104,8 @@ public:
   /// \internal
   virtual void OnRakPeerShutdown(void);
   /// \internal
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
 
   /// \internal
   struct PendingChallenge {
@@ -130,12 +129,11 @@ public:
     NonceGenerator();
     ~NonceGenerator();
     void GetNonce(char nonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH],
-                  unsigned short *requestId,
-                  RakNet::AddressOrGUID remoteSystem);
+        unsigned short *requestId, RakNet::AddressOrGUID remoteSystem);
     void GenerateNonce(char nonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH]);
     bool GetNonceById(char nonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH],
-                      unsigned short requestId,
-                      RakNet::AddressOrGUID remoteSystem, bool popIfFound);
+        unsigned short requestId, RakNet::AddressOrGUID remoteSystem,
+        bool popIfFound);
     void Clear(void);
     void ClearByAddress(RakNet::AddressOrGUID remoteSystem);
     void Update(RakNet::Time curTime);
@@ -147,10 +145,10 @@ public:
 
 protected:
   void PushToUser(MessageID messageId, RakNet::RakString password,
-                  RakNet::AddressOrGUID remoteSystem);
+      RakNet::AddressOrGUID remoteSystem);
   // Key is identifier, data is password
   DataStructures::Hash<RakNet::RakString, RakNet::RakString, 16,
-                       RakNet::RakString::ToInteger>
+      RakNet::RakString::ToInteger>
       passwords;
 
   RakNet::Time whenLastTimeoutCheck;
@@ -162,7 +160,7 @@ protected:
   PluginReceiveResult OnHashedNonceAndPassword(Packet *packet);
   void OnPasswordResult(Packet *packet);
   void Hash(char thierNonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH],
-            RakNet::RakString password, char out[HASHED_NONCE_AND_PW_LENGTH]);
+      RakNet::RakString password, char out[HASHED_NONCE_AND_PW_LENGTH]);
 };
 
 } // namespace RakNet

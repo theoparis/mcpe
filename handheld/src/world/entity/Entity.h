@@ -43,8 +43,8 @@ public:
   virtual void moveTo(float x, float y, float z, float yRot, float xRot);
   virtual void moveRelative(float xa, float za, float speed);
 
-  virtual void lerpTo(float x, float y, float z, float yRot, float xRot,
-                      int steps);
+  virtual void lerpTo(
+      float x, float y, float z, float yRot, float xRot, int steps);
   virtual void lerpMotion(float xd, float yd, float zd);
 
   virtual void turn(float xo, float yo);
@@ -53,8 +53,8 @@ public:
   virtual void tick();
   virtual void baseTick();
 
-  virtual bool intersects(float x0, float y0, float z0, float x1, float y1,
-                          float z1);
+  virtual bool intersects(
+      float x0, float y0, float z0, float x1, float y1, float z1);
   virtual bool isFree(float xa, float ya, float za, float grow);
   virtual bool isFree(float xa, float ya, float za);
   virtual bool isInWall();

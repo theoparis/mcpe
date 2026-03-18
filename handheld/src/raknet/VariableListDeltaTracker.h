@@ -41,32 +41,32 @@ public:
         variableList[nextWriteIndex].byteLength) {
       variableList[nextWriteIndex].lastData =
           (char *)rakRealloc_Ex(variableList[nextWriteIndex].lastData,
-                                temp.GetNumberOfBytesUsed(), _FILE_AND_LINE_);
+              temp.GetNumberOfBytesUsed(), _FILE_AND_LINE_);
       variableList[nextWriteIndex].byteLength = temp.GetNumberOfBytesUsed();
       memcpy(variableList[nextWriteIndex].lastData, temp.GetData(),
-             temp.GetNumberOfBytesUsed());
+          temp.GetNumberOfBytesUsed());
       nextWriteIndex++;
       variableList[nextWriteIndex].isDirty = false;
       return true; // Different because the serialized size is different
     }
     if (variableList[nextWriteIndex].isDirty == false &&
         memcmp(temp.GetData(), variableList[nextWriteIndex].lastData,
-               variableList[nextWriteIndex].byteLength) == 0) {
+            variableList[nextWriteIndex].byteLength) == 0) {
       nextWriteIndex++;
       return false; // Same because not dirty and memcmp is the same
     }
 
     variableList[nextWriteIndex].isDirty = false;
     memcpy(variableList[nextWriteIndex].lastData, temp.GetData(),
-           temp.GetNumberOfBytesUsed());
+        temp.GetNumberOfBytesUsed());
     nextWriteIndex++;
     return true; // Different because dirty or memcmp was different
   }
   /// Calls WriteVar. If the variable has changed, writes true, and writes the
   /// variable. Otherwise writes false.
   template <class VarType>
-  bool WriteVarToBitstream(const VarType &varData,
-                           RakNet::BitStream *bitStream) {
+  bool WriteVarToBitstream(
+      const VarType &varData, RakNet::BitStream *bitStream) {
     bool wasDifferent = WriteVar(varData);
     bitStream->Write(wasDifferent);
     if (wasDifferent) {
@@ -79,7 +79,7 @@ public:
   /// WriteVar() to boolean bit array
   template <class VarType>
   bool WriteVarToBitstream(const VarType &varData, RakNet::BitStream *bitStream,
-                           unsigned char *bArray, unsigned short writeOffset) {
+      unsigned char *bArray, unsigned short writeOffset) {
     if (WriteVarToBitstream(varData, bitStream) == true) {
       BitSize_t numberOfBitsMod8 = writeOffset & 7;
 
@@ -101,8 +101,8 @@ public:
   /// Paired with a call to WriteVarToBitstream(), will read a variable if it
   /// had changed. Otherwise the values remains the same.
   template <class VarType>
-  static bool ReadVarFromBitstream(const VarType &varData,
-                                   RakNet::BitStream *bitStream) {
+  static bool ReadVarFromBitstream(
+      const VarType &varData, RakNet::BitStream *bitStream) {
     bool wasWritten;
     if (bitStream->Read(wasWritten) == false)
       return false;

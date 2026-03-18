@@ -35,8 +35,8 @@ public:
 
     MobSpawnerData() {}
 
-    MobSpawnerData(int mobClassId, int probabilityWeight, int minCount,
-                   int maxCount)
+    MobSpawnerData(
+        int mobClassId, int probabilityWeight, int minCount, int maxCount)
         : super(probabilityWeight), mobClassId(mobClassId), minCount(minCount),
           maxCount(maxCount) {}
   };
@@ -49,8 +49,8 @@ protected:
   Biome *setLeafColor(int leafColor);
   Biome *setColor(int color);
   Biome *setSnowCovered();
-  Biome *clearMobs(bool friendlies = true, bool waterFriendlies = true,
-                   bool enemies = true);
+  Biome *clearMobs(
+      bool friendlies = true, bool waterFriendlies = true, bool enemies = true);
 
   MobList _enemies;
   MobList _friendlies;

@@ -74,8 +74,8 @@ RakNet::TimeUS GetTimeUS_Windows(void) {
 
     // Get the current Affinity
 #if _MSC_VER >= 1400 && defined(_M_X64)
-    GetProcessAffinityMask(mProc, (PDWORD_PTR)&mProcMask,
-                           (PDWORD_PTR)&mSysMask);
+    GetProcessAffinityMask(
+        mProc, (PDWORD_PTR)&mProcMask, (PDWORD_PTR)&mSysMask);
 #else
     GetProcessAffinityMask(mProc, &mProcMask, &mSysMask);
 #endif
@@ -97,7 +97,7 @@ RakNet::TimeUS GetTimeUS_Windows(void) {
   quotient = ((PerfVal.QuadPart) / yo1.QuadPart);
   remainder = ((PerfVal.QuadPart) % yo1.QuadPart);
   curTime = (RakNet::TimeUS)quotient * (RakNet::TimeUS)1000000 +
-            (remainder * (RakNet::TimeUS)1000000 / yo1.QuadPart);
+      (remainder * (RakNet::TimeUS)1000000 / yo1.QuadPart);
 
 #if defined(GET_TIME_SPIKE_LIMIT) && GET_TIME_SPIKE_LIMIT > 0
   return NormalizeTime(curTime);

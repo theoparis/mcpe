@@ -20,8 +20,8 @@ void BytePool::SetPageSize(int size) {
   pool2048.SetPageSize(size);
   pool8192.SetPageSize(size);
 }
-unsigned char *BytePool::Allocate(int bytesWanted, const char *file,
-                                  unsigned int line) {
+unsigned char *BytePool::Allocate(
+    int bytesWanted, const char *file, unsigned int line) {
 #ifdef _DISABLE_BYTE_POOL
   return rakMalloc_Ex(bytesWanted, _FILE_AND_LINE_);
 #endif
@@ -75,8 +75,8 @@ unsigned char *BytePool::Allocate(int bytesWanted, const char *file,
   out[0] = (unsigned char)255;
   return out + 1;
 }
-void BytePool::Release(unsigned char *data, const char *file,
-                       unsigned int line) {
+void BytePool::Release(
+    unsigned char *data, const char *file, unsigned int line) {
 #ifdef _DISABLE_BYTE_POOL
   _rakFree_Ex(data, _FILE_AND_LINE_);
 #endif

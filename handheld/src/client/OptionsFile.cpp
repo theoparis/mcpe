@@ -35,7 +35,7 @@ void OptionsFile::save(const StringVector &settings) {
   FILE *pFile = fopen(settingsPath.c_str(), "w");
   if (pFile != NULL) {
     for (StringVector::const_iterator it = settings.begin();
-         it != settings.end(); ++it) {
+        it != settings.end(); ++it) {
       fprintf(pFile, "%s\n", it->c_str());
     }
     fclose(pFile);
@@ -49,8 +49,8 @@ StringVector OptionsFile::getOptionStrings() {
     char lineBuff[256];
     while (fgets(lineBuff, sizeof lineBuff, pFile)) {
       size_t len = strlen(lineBuff);
-      while (len > 0 &&
-             (lineBuff[len - 1] == '\n' || lineBuff[len - 1] == '\r')) {
+      while (
+          len > 0 && (lineBuff[len - 1] == '\n' || lineBuff[len - 1] == '\r')) {
         lineBuff[--len] = '\0';
       }
       if (len == 0)

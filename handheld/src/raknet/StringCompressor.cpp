@@ -36,33 +36,23 @@ void StringCompressor::RemoveReference(void) {
 
 StringCompressor *StringCompressor::Instance(void) { return instance; }
 
-unsigned int englishCharacterFrequencies[256] = {
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    722, 0,
-    0,    2,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    11084, 58,   63,  1,
-    0,    31,   0,    317,  64,   64,   44,   0,    695,   62,   980, 266,
-    69,   67,   56,   7,    73,   3,    14,   2,    69,    1,    167, 9,
-    1,    2,    25,   94,   0,    195,  139,  34,   96,    48,   103, 56,
-    125,  653,  21,   5,    23,   64,   85,   44,   34,    7,    92,  76,
-    147,  12,   14,   57,   15,   39,   15,   1,    1,     1,    2,   3,
-    0,    3611, 845,  1077, 1884, 5870, 841,  1057, 2501,  3212, 164, 531,
-    2019, 1330, 3056, 4037, 848,  47,   2586, 2919, 4771,  1707, 535, 1106,
-    152,  1243, 100,  0,    2,    0,    10,   0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0,    0,    0,    0,    0,    0,     0,    0,   0,
-    0,    0,    0,    0};
+unsigned int englishCharacterFrequencies[256] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    722, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11084,
+    58, 63, 1, 0, 31, 0, 317, 64, 64, 44, 0, 695, 62, 980, 266, 69, 67, 56, 7,
+    73, 3, 14, 2, 69, 1, 167, 9, 1, 2, 25, 94, 0, 195, 139, 34, 96, 48, 103, 56,
+    125, 653, 21, 5, 23, 64, 85, 44, 34, 7, 92, 76, 147, 12, 14, 57, 15, 39, 15,
+    1, 1, 1, 2, 3, 0, 3611, 845, 1077, 1884, 5870, 841, 1057, 2501, 3212, 164,
+    531, 2019, 1330, 3056, 4037, 848, 47, 2586, 2919, 4771, 1707, 535, 1106,
+    152, 1243, 100, 0, 2, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 StringCompressor::StringCompressor() {
   DataStructures::Map<int,
-                      HuffmanEncodingTree *>::IMPLEMENT_DEFAULT_COMPARISON();
+      HuffmanEncodingTree *>::IMPLEMENT_DEFAULT_COMPARISON();
 
   // Make a default tree immediately, since this is used for RPC possibly from
   // multiple threads at the same time
@@ -72,9 +62,8 @@ StringCompressor::StringCompressor() {
 
   huffmanEncodingTrees.Set(0, huffmanEncodingTree);
 }
-void StringCompressor::GenerateTreeFromStrings(unsigned char *input,
-                                               unsigned inputLength,
-                                               uint8_t languageId) {
+void StringCompressor::GenerateTreeFromStrings(
+    unsigned char *input, unsigned inputLength, uint8_t languageId) {
   HuffmanEncodingTree *huffmanEncodingTree;
   if (huffmanEncodingTrees.Has(languageId)) {
     huffmanEncodingTree = huffmanEncodingTrees.Get(languageId);
@@ -106,8 +95,7 @@ StringCompressor::~StringCompressor() {
 }
 
 void StringCompressor::EncodeString(const char *input, int maxCharsToWrite,
-                                    RakNet::BitStream *output,
-                                    uint8_t languageId) {
+    RakNet::BitStream *output, uint8_t languageId) {
   HuffmanEncodingTree *huffmanEncodingTree;
   if (huffmanEncodingTrees.Has(languageId) == false)
     return;
@@ -129,8 +117,8 @@ void StringCompressor::EncodeString(const char *input, int maxCharsToWrite,
   else
     charsToWrite = maxCharsToWrite - 1;
 
-  huffmanEncodingTree->EncodeArray((unsigned char *)input, charsToWrite,
-                                   &encodedBitStream);
+  huffmanEncodingTree->EncodeArray(
+      (unsigned char *)input, charsToWrite, &encodedBitStream);
 
   stringBitLength = (uint32_t)encodedBitStream.GetNumberOfBitsUsed();
 
@@ -140,8 +128,7 @@ void StringCompressor::EncodeString(const char *input, int maxCharsToWrite,
 }
 
 bool StringCompressor::DecodeString(char *output, int maxCharsToWrite,
-                                    RakNet::BitStream *input,
-                                    uint8_t languageId) {
+    RakNet::BitStream *input, uint8_t languageId) {
   HuffmanEncodingTree *huffmanEncodingTree;
   if (huffmanEncodingTrees.Has(languageId) == false)
     return false;
@@ -171,14 +158,13 @@ bool StringCompressor::DecodeString(char *output, int maxCharsToWrite,
   return true;
 }
 #ifdef _CSTRING_COMPRESSOR
-void StringCompressor::EncodeString(const CString &input, int maxCharsToWrite,
-                                    RakNet::BitStream *output) {
+void StringCompressor::EncodeString(
+    const CString &input, int maxCharsToWrite, RakNet::BitStream *output) {
   LPTSTR p = input;
   EncodeString(p, maxCharsToWrite * sizeof(TCHAR), output, languageID);
 }
 bool StringCompressor::DecodeString(CString &output, int maxCharsToWrite,
-                                    RakNet::BitStream *input,
-                                    uint8_t languageId) {
+    RakNet::BitStream *input, uint8_t languageId) {
   LPSTR p = output.GetBuffer(maxCharsToWrite * sizeof(TCHAR));
   DecodeString(p, maxCharsToWrite * sizeof(TCHAR), input, languageID);
   output.ReleaseBuffer(0)
@@ -186,14 +172,11 @@ bool StringCompressor::DecodeString(CString &output, int maxCharsToWrite,
 #endif
 #ifdef _STD_STRING_COMPRESSOR
 void StringCompressor::EncodeString(const std::string &input,
-                                    int maxCharsToWrite,
-                                    RakNet::BitStream *output,
-                                    uint8_t languageId) {
+    int maxCharsToWrite, RakNet::BitStream *output, uint8_t languageId) {
   EncodeString(input.c_str(), maxCharsToWrite, output, languageID);
 }
 bool StringCompressor::DecodeString(std::string *output, int maxCharsToWrite,
-                                    RakNet::BitStream *input,
-                                    uint8_t languageId) {
+    RakNet::BitStream *input, uint8_t languageId) {
   if (maxCharsToWrite <= 0) {
     output->clear();
     return true;
@@ -219,13 +202,11 @@ bool StringCompressor::DecodeString(std::string *output, int maxCharsToWrite,
 }
 #endif
 void StringCompressor::EncodeString(const RakString *input, int maxCharsToWrite,
-                                    RakNet::BitStream *output,
-                                    uint8_t languageId) {
+    RakNet::BitStream *output, uint8_t languageId) {
   EncodeString(input->C_String(), maxCharsToWrite, output, languageId);
 }
 bool StringCompressor::DecodeString(RakString *output, int maxCharsToWrite,
-                                    RakNet::BitStream *input,
-                                    uint8_t languageId) {
+    RakNet::BitStream *input, uint8_t languageId) {
   if (maxCharsToWrite <= 0) {
     output->Clear();
     return true;

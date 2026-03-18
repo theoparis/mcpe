@@ -56,9 +56,8 @@ public:
   /// \internal
   virtual void Update(void);
   virtual PluginReceiveResult OnReceive(Packet *packet);
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
 
   struct SenderAndTargetAddress {
     SystemAddress senderClientAddress;
@@ -89,11 +88,10 @@ public:
   };
 
 protected:
-  static int
-  ServerWithPingComp(const unsigned short &key,
-                     const UDPProxyCoordinator::ServerWithPing &data);
-  static int ForwardingRequestComp(const SenderAndTargetAddress &key,
-                                   ForwardingRequest *const &data);
+  static int ServerWithPingComp(const unsigned short &key,
+      const UDPProxyCoordinator::ServerWithPing &data);
+  static int ForwardingRequestComp(
+      const SenderAndTargetAddress &key, ForwardingRequest *const &data);
 
   void OnForwardingRequestFromClientToCoordinator(Packet *packet);
   void OnLoginRequestFromServerToCoordinator(Packet *packet);
@@ -101,15 +99,13 @@ protected:
   void OnPingServersReplyFromClientToCoordinator(Packet *packet);
   void TryNextServer(SenderAndTargetAddress sata, ForwardingRequest *fw);
   void SendAllBusy(SystemAddress senderClientAddress,
-                   SystemAddress targetClientAddress,
-                   RakNetGUID targetClientGuid,
-                   SystemAddress requestingAddress);
+      SystemAddress targetClientAddress, RakNetGUID targetClientGuid,
+      SystemAddress requestingAddress);
   void Clear(void);
 
   void SendForwardingRequest(SystemAddress sourceAddress,
-                             SystemAddress targetAddress,
-                             SystemAddress serverAddress,
-                             RakNet::TimeMS timeoutOnNoDataMS);
+      SystemAddress targetAddress, SystemAddress serverAddress,
+      RakNet::TimeMS timeoutOnNoDataMS);
 
   // Logged in servers
   // DataStructures::Multilist<ML_UNORDERED_LIST, SystemAddress> serverList;
@@ -119,7 +115,7 @@ protected:
   // DataStructures::Multilist<ML_ORDERED_LIST, ForwardingRequest*,
   // SenderAndTargetAddress> forwardingRequestList;
   DataStructures::OrderedList<SenderAndTargetAddress, ForwardingRequest *,
-                              ForwardingRequestComp>
+      ForwardingRequestComp>
       forwardingRequestList;
 
   RakNet::RakString remoteLoginPassword;

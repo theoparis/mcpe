@@ -66,8 +66,8 @@ public:
             int t = level->getTile(x + xo, y + yo, z + zo);
             if (t == Tile::leaves->id) {
               int currentData = level->getData(x + xo, y + yo, z + zo);
-              level->setDataNoUpdate(x + xo, y + yo, z + zo,
-                                     currentData | UPDATE_LEAF_BIT);
+              level->setDataNoUpdate(
+                  x + xo, y + yo, z + zo, currentData | UPDATE_LEAF_BIT);
             }
           }
     }
@@ -112,34 +112,34 @@ public:
                 if (checkBuffer[(xo + WO) * WW + (yo + WO) * W + (zo + WO)] ==
                     i - 1) {
                   if (checkBuffer[(xo + WO - 1) * WW + (yo + WO) * W +
-                                  (zo + WO)] == -2) {
+                          (zo + WO)] == -2) {
                     checkBuffer[(xo + WO - 1) * WW + (yo + WO) * W +
-                                (zo + WO)] = i;
+                        (zo + WO)] = i;
                   }
                   if (checkBuffer[(xo + WO + 1) * WW + (yo + WO) * W +
-                                  (zo + WO)] == -2) {
+                          (zo + WO)] == -2) {
                     checkBuffer[(xo + WO + 1) * WW + (yo + WO) * W +
-                                (zo + WO)] = i;
+                        (zo + WO)] = i;
                   }
                   if (checkBuffer[(xo + WO) * WW + (yo + WO - 1) * W +
-                                  (zo + WO)] == -2) {
+                          (zo + WO)] == -2) {
                     checkBuffer[(xo + WO) * WW + (yo + WO - 1) * W +
-                                (zo + WO)] = i;
+                        (zo + WO)] = i;
                   }
                   if (checkBuffer[(xo + WO) * WW + (yo + WO + 1) * W +
-                                  (zo + WO)] == -2) {
+                          (zo + WO)] == -2) {
                     checkBuffer[(xo + WO) * WW + (yo + WO + 1) * W +
-                                (zo + WO)] = i;
+                        (zo + WO)] = i;
                   }
                   if (checkBuffer[(xo + WO) * WW + (yo + WO) * W +
-                                  (zo + WO - 1)] == -2) {
+                          (zo + WO - 1)] == -2) {
                     checkBuffer[(xo + WO) * WW + (yo + WO) * W +
-                                (zo + WO - 1)] = i;
+                        (zo + WO - 1)] = i;
                   }
                   if (checkBuffer[(xo + WO) * WW + (yo + WO) * W +
-                                  (zo + WO + 1)] == -2) {
+                          (zo + WO + 1)] == -2) {
                     checkBuffer[(xo + WO) * WW + (yo + WO) * W +
-                                (zo + WO + 1)] = i;
+                        (zo + WO + 1)] = i;
                   }
                 }
               }
@@ -155,14 +155,14 @@ public:
     }
   }
 
-  void playerDestroy(Level *level, Player *player, int x, int y, int z,
-                     int data) {
+  void playerDestroy(
+      Level *level, Player *player, int x, int y, int z, int data) {
     if (!level->isClientSide) {
       ItemInstance *item = player->inventory->getSelected();
       if (item && item->id == ((Item *)Item::shears)->id) {
         // drop leaf block instead of sapling
         popResource(level, x, y, z,
-                    ItemInstance(Tile::leaves->id, 1, data & LEAF_TYPE_MASK));
+            ItemInstance(Tile::leaves->id, 1, data & LEAF_TYPE_MASK));
         return;
       }
     }
@@ -181,7 +181,7 @@ public:
       if (level->random.nextInt(chance) == 0) {
         int type = getResource(data, &level->random);
         popResource(level, x, y, z,
-                    ItemInstance(type, 1, getSpawnResourcesAuxValue(data)));
+            ItemInstance(type, 1, getSpawnResourcesAuxValue(data)));
       }
 
       if ((data & LEAF_TYPE_MASK) == NORMAL_LEAF &&

@@ -40,7 +40,7 @@ ChickenModel::ChickenModel()
 }
 
 void ChickenModel::render(Entity *entity, float time, float r, float bob,
-                          float yRot, float xRot, float scale) {
+    float yRot, float xRot, float scale) {
   setupAnim(time, r, bob, yRot, xRot, scale);
 
   if (young) {
@@ -72,8 +72,8 @@ void ChickenModel::render(Entity *entity, float time, float r, float bob,
   }
 }
 
-void ChickenModel::setupAnim(float time, float r, float bob, float yRot,
-                             float xRot, float scale) {
+void ChickenModel::setupAnim(
+    float time, float r, float bob, float yRot, float xRot, float scale) {
   head.xRot = -((xRot / (float)(180 / Mth::PI)));
   head.yRot = yRot / (float)(180 / Mth::PI);
 

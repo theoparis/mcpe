@@ -35,14 +35,14 @@
 //@note: doesn't work completely, since it doesn't care about stairs rotation
 static bool isJumpable(int tileId) {
   return tileId != Tile::fence->id && tileId != Tile::fenceGate->id &&
-         tileId != Tile::stoneSlabHalf->id && tileId != Tile::trapdoor->id &&
-         tileId != Tile::sign->id && tileId != Tile::wallSign->id &&
-         (Tile::tiles[tileId] != NULL &&
+      tileId != Tile::stoneSlabHalf->id && tileId != Tile::trapdoor->id &&
+      tileId != Tile::sign->id && tileId != Tile::wallSign->id &&
+      (Tile::tiles[tileId] != NULL &&
           Tile::tiles[tileId]->getRenderShape() != Tile::SHAPE_STAIRS);
 }
 
 LocalPlayer::LocalPlayer(Minecraft *minecraft, Level *level, User *user,
-                         int dimension, bool isCreative)
+    int dimension, bool isCreative)
     : Player(level, isCreative), minecraft(minecraft), input(NULL),
       sentInventoryItemId(-1), sentInventoryItemData(-1), autoJumpEnabled(true),
       armorTypeHash(0) {
@@ -84,11 +84,11 @@ void LocalPlayer::calculateFlight(float xa, float ya, float za) {
 #endif
 
   flyX = 10 *
-         smoothFlyX.getNewDeltaValue(xa, .35f * minecraft->options.sensitivity);
+      smoothFlyX.getNewDeltaValue(xa, .35f * minecraft->options.sensitivity);
   flyY = 10 *
-         smoothFlyY.getNewDeltaValue(ya, .35f * minecraft->options.sensitivity);
+      smoothFlyY.getNewDeltaValue(ya, .35f * minecraft->options.sensitivity);
   flyZ = 10 *
-         smoothFlyZ.getNewDeltaValue(za, .35f * minecraft->options.sensitivity);
+      smoothFlyZ.getNewDeltaValue(za, .35f * minecraft->options.sensitivity);
 }
 
 bool LocalPlayer::isSolidTile(int x, int y, int z) {
@@ -185,14 +185,14 @@ void LocalPlayer::aiStep() {
         jumpTriggerTime = 0;
       }
     }
-    if (abilities.flying) {
-      if (input->wantUp) {
-        yd += 0.15f;
-        // xd = zd = 0;
-      }
-      if (input->wantDown) {
-        yd -= 0.15f;
-      }
+  }
+
+  if (abilities.flying) {
+    if (input->jumping) {
+      yd += 0.15f;
+    }
+    if (input->sneaking) {
+      yd -= 0.15f;
     }
   }
 
@@ -256,9 +256,9 @@ void LocalPlayer::move(float xa, float ya, float za) {
         const int zz = Mth::floor(z + za / dist);
         const int tileId = level->getTile(xx, (int)(y - 1), zz);
         jump = (isSolidTile(xx, (int)(y - 1), zz) // Solid block to jump up on
-                && !isSolidTile(xx, (int)y, zz) &&
-                !isSolidTile(xx, (int)(y + 1), zz)) // Enough space
-               && isJumpable(tileId);
+                   && !isSolidTile(xx, (int)y, zz) &&
+                   !isSolidTile(xx, (int)(y + 1), zz)) // Enough space
+            && isJumpable(tileId);
       }
       if (jump) {
         autoJumpTime = 1;
@@ -470,11 +470,11 @@ int LocalPlayer::startSleepInBed(int x, int y, int z) {
   return startSleepInBedReturnValue;
 }
 
-void LocalPlayer::stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
-                                 bool saveRespawnPoint) {
+void LocalPlayer::stopSleepInBed(
+    bool forcefulWakeUp, bool updateLevelList, bool saveRespawnPoint) {
   if (level->isClientSide) {
-    PlayerActionPacket packet(PlayerActionPacket::STOP_SLEEPING, 0, 0, 0, 0,
-                              entityId);
+    PlayerActionPacket packet(
+        PlayerActionPacket::STOP_SLEEPING, 0, 0, 0, 0, entityId);
     minecraft->raknetInstance->send(packet);
   }
 #ifndef STANDALONE_SERVER

@@ -37,8 +37,8 @@ public:
 
   bool canSurvive(Level *level, int x, int y, int z) {
     return (level->getRawBrightness(x, y, z) >= 8 ||
-            level->canSeeSky(x, y, z)) &&
-           mayPlaceOn(level->getTile(x, y - 1, z));
+               level->canSeeSky(x, y, z)) &&
+        mayPlaceOn(level->getTile(x, y - 1, z));
   }
 
   AABB *getAABB(Level *level, int x, int y, int z) { return NULL; }
@@ -55,7 +55,7 @@ public:
 protected:
   virtual bool mayPlaceOn(int tile) {
     return tile == ((Tile *)Tile::grass)->id || tile == Tile::dirt->id ||
-           tile == Tile::farmland->id;
+        tile == Tile::farmland->id;
   }
 
   const void checkAlive(Level *level, int x, int y, int z) {

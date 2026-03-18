@@ -1,10 +1,13 @@
 #include "RenderList.h"
 
+#include "../../App.h"
 #include "RenderChunk.h"
 #include "Tesselator.h"
 #include "gles.h"
+#include <cstring>
 
-RenderList::RenderList() : inited(false), rendered(false) {
+RenderList::RenderList()
+    : inited(false), rendered(false), graphicsBackend(nullptr) {
   lists = new int[MAX_NUM_OBJECTS];
   rlists = new RenderChunk[MAX_NUM_OBJECTS];
 
@@ -17,13 +20,15 @@ RenderList::~RenderList() {
   delete[] rlists;
 }
 
-void RenderList::init(float xOff, float yOff, float zOff) {
+void RenderList::init(
+    float xOff, float yOff, float zOff, GraphicsBackend *graphicsBackend_) {
   inited = true;
   listIndex = 0;
 
   this->xOff = (float)xOff;
   this->yOff = (float)yOff;
   this->zOff = (float)zOff;
+  graphicsBackend = graphicsBackend_;
 }
 
 void RenderList::add(int list) {
@@ -58,6 +63,41 @@ void RenderList::render() {
 }
 
 void RenderList::renderChunks() {
+  if (graphicsBackend &&
+      graphicsBackend->kind() == GraphicsBackendKind::Vulkan) {
+    const GraphicsTextureHandle texture = graphicsBackend->currentTexture();
+    if (texture == 0) {
+      return;
+    }
+
+    GLfloat projection[16];
+    glesGetTrackedMatrix(GL_PROJECTION_MATRIX, projection);
+
+    for (int i = 0; i < bufferLimit; ++i) {
+      RenderChunk &rc = rlists[i];
+      if (rc.meshHandle == 0) {
+        continue;
+      }
+
+      glPushMatrix2();
+      glTranslatef2(rc.pos.x, rc.pos.y, rc.pos.z);
+
+      GLfloat modelView[16];
+      glesGetTrackedMatrix(GL_MODELVIEW_MATRIX, modelView);
+
+      GraphicsWorldMeshDraw draw;
+      draw.mesh = rc.meshHandle;
+      draw.texture = texture;
+      draw.pass = rc.pass;
+      std::memcpy(draw.modelView, modelView, sizeof(draw.modelView));
+      std::memcpy(draw.projection, projection, sizeof(draw.projection));
+      graphicsBackend->drawWorldMesh(draw);
+
+      glPopMatrix2();
+    }
+    return;
+  }
+
   // glDisableClientState2(GL_NORMAL_ARRAY);
   glEnableClientState2(GL_VERTEX_ARRAY);
   glEnableClientState2(GL_COLOR_ARRAY);
@@ -89,4 +129,5 @@ void RenderList::renderChunks() {
 void RenderList::clear() {
   inited = false;
   rendered = false;
+  graphicsBackend = nullptr;
 }

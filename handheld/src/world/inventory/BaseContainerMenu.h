@@ -11,10 +11,10 @@ class BaseContainerMenu;
 class IContainerListener {
 public:
   virtual ~IContainerListener() {}
-  virtual void refreshContainer(BaseContainerMenu *menu,
-                                const std::vector<ItemInstance> &items) {}
+  virtual void refreshContainer(
+      BaseContainerMenu *menu, const std::vector<ItemInstance> &items) {}
   virtual void slotChanged(BaseContainerMenu *menu, int slot,
-                           const ItemInstance &item, bool isResultSlot) {}
+      const ItemInstance &item, bool isResultSlot) {}
   virtual void setContainerData(BaseContainerMenu *menu, int id, int value) {}
 };
 

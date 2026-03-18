@@ -5,8 +5,8 @@
 #include "../Textures.h"
 #include "../gles.h"
 
-void PaintingRenderer::render(Entity *entity, float x, float y, float z,
-                              float rot, float a) {
+void PaintingRenderer::render(
+    Entity *entity, float x, float y, float z, float rot, float a) {
   glPushMatrix();
   glTranslatef(float(x), float(y), float(z));
   glRotatef(rot, 0, 1.0f, 0);
@@ -22,8 +22,8 @@ void PaintingRenderer::render(Entity *entity, float x, float y, float z,
   glPopMatrix();
 }
 
-void PaintingRenderer::renderPainting(Painting *painting, int w, int h, int uo,
-                                      int vo, float a) {
+void PaintingRenderer::renderPainting(
+    Painting *painting, int w, int h, int uo, int vo, float a) {
   float xx0 = -w / 2.0f;
   float yy0 = -h / 2.0f;
 

@@ -35,7 +35,7 @@ public:
               int currentData = level->getData(x + xo, y + yo, z + zo);
               if ((currentData & LeafTile::UPDATE_LEAF_BIT) == 0) {
                 level->setDataNoUpdate(x + xo, y + yo, z + zo,
-                                       currentData | LeafTile::UPDATE_LEAF_BIT);
+                    currentData | LeafTile::UPDATE_LEAF_BIT);
               }
             }
           }

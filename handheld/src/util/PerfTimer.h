@@ -26,8 +26,8 @@ public:
     float globalPercentage;
     std::string name;
 
-    ResultField(const std::string &name, float percentage,
-                float globalPercentage)
+    ResultField(
+        const std::string &name, float percentage, float globalPercentage)
         : name(name), percentage(percentage),
           globalPercentage(globalPercentage) {}
 

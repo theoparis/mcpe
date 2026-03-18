@@ -58,7 +58,7 @@ public:
     // must stand on ground
     int belowTile = level->getTile(x, y - 1, z);
     if ((belowTile != ((Tile *)Tile::grass)->id &&
-         belowTile != Tile::dirt->id) ||
+            belowTile != Tile::dirt->id) ||
         y >= Level::DEPTH - treeHeight - 1)
       return false;
 
@@ -76,8 +76,8 @@ public:
               currentRadius > 0)
             continue;
           if (!Tile::solid[level->getTile(xx, yy, zz)])
-            placeBlock(level, xx, yy, zz, Tile::leaves->id,
-                       LeafTile::EVERGREEN_LEAF);
+            placeBlock(
+                level, xx, yy, zz, Tile::leaves->id, LeafTile::EVERGREEN_LEAF);
         }
       }
 
@@ -90,8 +90,8 @@ public:
     for (int hh = 0; hh < treeHeight - 1; hh++) {
       int t = level->getTile(x, y + hh, z);
       if (t == 0 || t == Tile::leaves->id)
-        placeBlock(level, x, y + hh, z, Tile::treeTrunk->id,
-                   TreeTile::DARK_TRUNK);
+        placeBlock(
+            level, x, y + hh, z, Tile::treeTrunk->id, TreeTile::DARK_TRUNK);
     }
     return true;
   }

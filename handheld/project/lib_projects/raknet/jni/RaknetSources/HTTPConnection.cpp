@@ -33,15 +33,15 @@ STATIC_FACTORY_DEFINITIONS(HTTPConnection, HTTPConnection);
 
 HTTPConnection::HTTPConnection() : connectionState(CS_NONE) { tcp = 0; }
 
-void HTTPConnection::Init(TCPInterface *_tcp, const char *_host,
-                          unsigned short _port) {
+void HTTPConnection::Init(
+    TCPInterface *_tcp, const char *_host, unsigned short _port) {
   tcp = _tcp;
   host = _host;
   port = _port;
 }
 
-void HTTPConnection::Post(const char *remote_path, const char *data,
-                          const char *_contentType) {
+void HTTPConnection::Post(
+    const char *remote_path, const char *data, const char *_contentType) {
   OutgoingCommand op;
   op.contentType = _contentType;
   op.data = data;
@@ -136,25 +136,24 @@ void HTTPConnection::Update(void) {
                   "Content-Length: %u\r\n"
                   "\r\n"
                   "%s",
-                  currentProcessingCommand.remotePath.C_String(),
-                  host.C_String(), port,
-                  currentProcessingCommand.contentType.C_String(),
-                  (unsigned)currentProcessingCommand.data.GetLength(),
-                  currentProcessingCommand.data.C_String());
+          currentProcessingCommand.remotePath.C_String(), host.C_String(), port,
+          currentProcessingCommand.contentType.C_String(),
+          (unsigned)currentProcessingCommand.data.GetLength(),
+          currentProcessingCommand.data.C_String());
     } else {
       // request.Set("GET %s\r\n", host.C_String());
       // http://www.jenkinssoftware.com/forum/index.php?topic=4601.0;topicseen
       request.Set("GET %s HTTP/1.0\r\n"
                   "Host: %s:%i\r\n"
                   "\r\n",
-                  currentProcessingCommand.remotePath.C_String(),
-                  host.C_String(), port);
+          currentProcessingCommand.remotePath.C_String(), host.C_String(),
+          port);
     }
 
     //	printf(request.C_String());
     //		request.URLEncode();
-    tcp->Send(request.C_String(), (unsigned int)request.GetLength(), server,
-              false);
+    tcp->Send(
+        request.C_String(), (unsigned int)request.GetLength(), server, false);
     connectionState = CS_PROCESSING;
   } break;
   case CS_PROCESSING: {
@@ -162,7 +161,7 @@ void HTTPConnection::Update(void) {
   }
 
   //	if (connectionState==CS_PROCESSING &&
-  //currentProcessingCommand.data.IsEmpty()==false)
+  // currentProcessingCommand.data.IsEmpty()==false)
   //		outgoingCommand.PushAtHead(currentProcessingCommand);
 }
 bool HTTPConnection::HasRead(void) const { return results.IsEmpty() == false; }
@@ -189,8 +188,8 @@ void HTTPConnection::ProcessTCPPacket(Packet *packet) {
       int response_code = atoi((char *)packet->data + strlen("HTTP/1.0 "));
 
       if (response_code > 299) {
-        badResponses.Push(BadResponse(packet->data, response_code),
-                          _FILE_AND_LINE_);
+        badResponses.Push(
+            BadResponse(packet->data, response_code), _FILE_AND_LINE_);
         // printf("Closed connection (Bad response 2)\n");
         CloseConnection();
         return;
@@ -206,7 +205,7 @@ void HTTPConnection::ProcessTCPPacket(Packet *packet) {
     //	printf("\n");
 
     RakAssert(strlen((char *)packet->data) ==
-              packet->length); // otherwise it contains Null bytes
+        packet->length); // otherwise it contains Null bytes
 
     const char *start_of_body = strstr(incomingData, "\r\n\r\n");
 

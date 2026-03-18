@@ -5,9 +5,15 @@
 #include "EntityRenderDispatcher.h"
 
 static const std::string armorFilenames[10] = {
-    "armor/cloth_1.png",   "armor/cloth_2.png",   "armor/chain_1.png",
-    "armor/chain_2.png",   "armor/iron_1.png",    "armor/iron_2.png",
-    "armor/diamond_1.png", "armor/diamond_2.png", "armor/gold_1.png",
+    "armor/cloth_1.png",
+    "armor/cloth_2.png",
+    "armor/chain_1.png",
+    "armor/chain_2.png",
+    "armor/iron_1.png",
+    "armor/iron_2.png",
+    "armor/diamond_1.png",
+    "armor/diamond_2.png",
+    "armor/gold_1.png",
     "armor/gold_2.png",
 };
 
@@ -24,13 +30,13 @@ void PlayerRenderer::setupPosition(Entity *mob, float x, float y, float z) {
   Player *player = (Player *)mob;
   if (player->isAlive() && player->isSleeping()) {
     return super::setupPosition(mob, x + player->bedOffsetX,
-                                y + player->bedOffsetY, z + player->bedOffsetZ);
+        y + player->bedOffsetY, z + player->bedOffsetZ);
   }
   return super::setupPosition(mob, x, y, z);
 }
 
-void PlayerRenderer::setupRotations(Entity *mob, float bob, float bodyRot,
-                                    float a) {
+void PlayerRenderer::setupRotations(
+    Entity *mob, float bob, float bodyRot, float a) {
   Player *player = (Player *)mob;
   if (player->isAlive() && player->isSleeping()) {
     glRotatef(player->getSleepRotation(), 0, 1, 0);

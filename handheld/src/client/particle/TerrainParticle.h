@@ -13,7 +13,7 @@ class TerrainParticle : public Particle {
 
 public:
   TerrainParticle(Level *level, float x, float y, float z, float xa, float ya,
-                  float za, Tile *tile, int data)
+      float za, Tile *tile, int data)
       : super(level, x, y, z, xa, ya, za), tile(tile) {
     tex = tile->getTexture(2, data);
     gravity = tile->gravity;
@@ -35,7 +35,7 @@ public:
   int getParticleTexture() { return ParticleEngine::TERRAIN_TEXTURE; }
 
   void render(Tesselator &t, float a, float xa, float ya, float za, float xa2,
-              float za2) {
+      float za2) {
     float u0 = ((tex & 15) + uo / 4.0f) / 16.0f;
     float u1 = u0 + 0.999f / 16.0f / 4;
     float v0 = ((tex >> 4) + vo / 4.0f) / 16.0f;

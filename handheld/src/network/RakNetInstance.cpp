@@ -27,8 +27,8 @@ RakNetInstance::~RakNetInstance() {
   }
 }
 
-bool RakNetInstance::host(const std::string &localName, int port,
-                          int maxConnections /* = 4 */) {
+bool RakNetInstance::host(
+    const std::string &localName, int port, int maxConnections /* = 4 */) {
   if (rakPeer->IsActive()) {
     rakPeer->Shutdown(500);
   }
@@ -58,8 +58,8 @@ void RakNetInstance::announceServer(const std::string &localName) {
 
     RakNet::BitStream bitStream;
     bitStream.Write(connectionData);
-    rakPeer->SetOfflinePingResponse((const char *)bitStream.GetData(),
-                                    bitStream.GetNumberOfBytesUsed());
+    rakPeer->SetOfflinePingResponse(
+        (const char *)bitStream.GetData(), bitStream.GetNumberOfBytesUsed());
   }
 }
 
@@ -139,8 +139,8 @@ void RakNetInstance::runEvents(NetEventCallback *callback) {
     int packetId = currentEvent->data[0];
     int length = currentEvent->length;
 
-    RakNet::BitStream activeBitStream(currentEvent->data + 1, length - 1,
-                                      false);
+    RakNet::BitStream activeBitStream(
+        currentEvent->data + 1, length - 1, false);
 
     if (callback) {
       if (packetId < ID_USER_PACKET_ENUM) {
@@ -170,8 +170,8 @@ void RakNetInstance::runEvents(NetEventCallback *callback) {
               handleUnconnectedPong(data, currentEvent, APP_IDENTIFIER, false);
           if (index < 0) {
             // Check if it's an official Mojang MineCon server
-            index = handleUnconnectedPong(data, currentEvent,
-                                          APP_IDENTIFIER_MINECON, true);
+            index = handleUnconnectedPong(
+                data, currentEvent, APP_IDENTIFIER_MINECON, true);
             if (index >= 0)
               availableServers[index].isSpecial = true;
           }
@@ -219,19 +219,19 @@ void RakNetInstance::send(Packet &packet) {
   if (_isServer) {
     // broadcast to all connected clients
     rakPeer->Send(&bitStream, packet.priority, packet.reliability, 0,
-                  RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
+        RakNet::UNASSIGNED_SYSTEM_ADDRESS, true);
   } else {
     // send to server
-    rakPeer->Send(&bitStream, packet.priority, packet.reliability, 0,
-                  serverGuid, false);
+    rakPeer->Send(
+        &bitStream, packet.priority, packet.reliability, 0, serverGuid, false);
   }
 }
 
 void RakNetInstance::send(const RakNet::RakNetGUID &guid, Packet &packet) {
   RakNet::BitStream bitStream;
   packet.write(&bitStream);
-  rakPeer->Send(&bitStream, packet.priority, packet.reliability, 0, guid,
-                false);
+  rakPeer->Send(
+      &bitStream, packet.priority, packet.reliability, 0, guid, false);
 }
 
 void RakNetInstance::send(Packet *packet) {
@@ -643,9 +643,7 @@ const char *RakNetInstance::getPacketName(int packetId) {
 #endif
 
 int RakNetInstance::handleUnconnectedPong(const RakNet::RakString &data,
-                                          const RakNet::Packet *p,
-                                          const char *appid,
-                                          bool insertAtBeginning) {
+    const RakNet::Packet *p, const char *appid, bool insertAtBeginning) {
   RakNet::RakString appIdentifier(appid);
   // This weird code is a result of RakString.Find being pretty useless
   bool emptyNameOrLonger = data.GetLength() >= appIdentifier.GetLength();
@@ -663,9 +661,8 @@ int RakNetInstance::handleUnconnectedPong(const RakNet::RakString &data,
       if (emptyName)
         availableServers[i].name = "";
       else {
-        availableServers[i].name =
-            data.SubStr(appIdentifier.GetLength(),
-                        data.GetLength() - appIdentifier.GetLength());
+        availableServers[i].name = data.SubStr(appIdentifier.GetLength(),
+            data.GetLength() - appIdentifier.GetLength());
       }
       // LOGI("Swapping name: %s\n", availableServers[i].name.C_String());
       return i;
@@ -675,8 +672,8 @@ int RakNetInstance::handleUnconnectedPong(const RakNet::RakString &data,
   server.address = p->systemAddress;
   server.pingTime = RakNet::GetTimeMS();
   server.isSpecial = false;
-  server.name = data.SubStr(appIdentifier.GetLength(),
-                            data.GetLength() - appIdentifier.GetLength());
+  server.name = data.SubStr(
+      appIdentifier.GetLength(), data.GetLength() - appIdentifier.GetLength());
 
   if (insertAtBeginning) {
     availableServers.insert(availableServers.begin(), server);

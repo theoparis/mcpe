@@ -20,11 +20,10 @@ public:
           i == DyePowderItem::WHITE)
         continue;
 
-      r->addShapelessRecipe(
-          ItemInstance(Tile::cloth, 1,
-                       ClothTile::getTileDataForItemAuxValue(i)),
+      r->addShapelessRecipe(ItemInstance(Tile::cloth, 1,
+                                ClothTile::getTileDataForItemAuxValue(i)),
           definition(0, ItemInstance(Item::dye_powder, 1, i), 0,
-                     ItemInstance(Item::items[Tile::cloth->id], 1, 0)));
+              ItemInstance(Item::items[Tile::cloth->id], 1, 0)));
     }
     // White cloth/wool-block from any cloth block (including white...)
     /*
@@ -44,15 +43,15 @@ public:
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 2, DyePowderItem::PINK), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::RED), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 2, DyePowderItem::ORANGE), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::RED), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::YELLOW)));
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::YELLOW)));
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 2, DyePowderItem::LIME), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::GREEN),
-                   0, ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
+            0, ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
     //     r->addShapelessRecipe(ItemInstance(Item::dye_powder, 2,
     //     DyePowderItem::GRAY), //
     //         definition(0, ItemInstance(Item::dye_powder, 1,
@@ -83,15 +82,15 @@ public:
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 2, DyePowderItem::LIGHT_BLUE), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::BLUE), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 2, DyePowderItem::CYAN), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::BLUE), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::GREEN)));
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::GREEN)));
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 2, DyePowderItem::PURPLE), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::BLUE), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::RED)));
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::RED)));
     // r->addShapelessRecipe(ItemInstance(Item::dye_powder, 2,
     // DyePowderItem::MAGENTA), //
     //     definition(0, ItemInstance(Item::dye_powder, 1,
@@ -105,9 +104,9 @@ public:
     r->addShapelessRecipe(
         ItemInstance(Item::dye_powder, 4, DyePowderItem::MAGENTA), //
         definition(0, ItemInstance(Item::dye_powder, 1, DyePowderItem::BLUE), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::RED), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::RED), 0,
-                   ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::RED), 0,
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::RED), 0,
+            ItemInstance(Item::dye_powder, 1, DyePowderItem::WHITE)));
   }
 };
 

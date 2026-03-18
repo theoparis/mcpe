@@ -30,7 +30,7 @@ public:
   int getTileId() { return tileId; }
 
   bool useOn(ItemInstance *instance, Player *player, Level *level, int x, int y,
-             int z, int face, float clickX, float clickY, float clickZ) {
+      int z, int face, float clickX, float clickY, float clickZ) {
     if (level->adventureSettings.immutableWorld) {
       const Tile *tile = Tile::tiles[tileId];
       if (tileId != ((Tile *)Tile::leaves)->id &&
@@ -69,15 +69,14 @@ public:
 
     if (level->mayPlace(tileId, x, y, z, false, face)) {
       Tile *tile = Tile::tiles[tileId];
-      int data = tile->getPlacedOnFaceDataValue(
-          level, x, y, z, face, clickX, clickY, clickZ,
-          getLevelDataForAuxValue(instance->getAuxValue()));
+      int data = tile->getPlacedOnFaceDataValue(level, x, y, z, face, clickX,
+          clickY, clickZ, getLevelDataForAuxValue(instance->getAuxValue()));
       if (level->setTileAndData(x, y, z, tileId, data)) {
         Tile::tiles[tileId]->setPlacedBy(level, x, y, z, player);
         level->playSound(x + 0.5f, y + 0.5f, z + 0.5f,
-                         tile->soundType->getStepSound(),
-                         (tile->soundType->getVolume() + 1) / 2,
-                         tile->soundType->getPitch() * 0.8f);
+            tile->soundType->getStepSound(),
+            (tile->soundType->getVolume() + 1) / 2,
+            tile->soundType->getPitch() * 0.8f);
 
         /*
                                         PlaceBlockPacket

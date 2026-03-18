@@ -111,10 +111,10 @@ public:
   unsigned int Size(void);
   void Clear(const char *file, unsigned int line);
   unsigned int Height(node *starting_node = 0);
-  node *Add(const BinarySearchTreeType &input, const char *file,
-            unsigned int line);
-  node *Del(const BinarySearchTreeType &input, const char *file,
-            unsigned int line);
+  node *Add(
+      const BinarySearchTreeType &input, const char *file, unsigned int line);
+  node *Del(
+      const BinarySearchTreeType &input, const char *file, unsigned int line);
   bool IsIn(const BinarySearchTreeType &input);
   void DisplayInorder(BinarySearchTreeType *return_array);
   void DisplayPreorder(BinarySearchTreeType *return_array);
@@ -130,9 +130,8 @@ protected:
   unsigned int BinarySearchTree_size;
   node *&Find(const BinarySearchTreeType &element, node **parent);
   node *&FindParent(const BinarySearchTreeType &element);
-  void DisplayPostorderRecursive(node *current,
-                                 BinarySearchTreeType *return_array,
-                                 unsigned int &index);
+  void DisplayPostorderRecursive(
+      node *current, BinarySearchTreeType *return_array, unsigned int &index);
   void FixTree(node *current);
 };
 
@@ -146,21 +145,21 @@ public:
   virtual ~AVLBalancedBinarySearchTree();
   void Add(const BinarySearchTreeType &input);
   void Del(const BinarySearchTreeType &input);
-  BinarySearchTree<BinarySearchTreeType> &
-  operator=(BinarySearchTree<BinarySearchTreeType> &original_copy) {
+  BinarySearchTree<BinarySearchTreeType> &operator=(
+      BinarySearchTree<BinarySearchTreeType> &original_copy) {
     return BinarySearchTree<BinarySearchTreeType>::operator=(original_copy);
   }
 
 private:
-  void
-  BalanceTree(typename BinarySearchTree<BinarySearchTreeType>::node *current,
-              bool rotateOnce);
+  void BalanceTree(
+      typename BinarySearchTree<BinarySearchTreeType>::node *current,
+      bool rotateOnce);
   void RotateRight(typename BinarySearchTree<BinarySearchTreeType>::node *C);
   void RotateLeft(typename BinarySearchTree<BinarySearchTreeType>::node *C);
-  void
-  DoubleRotateRight(typename BinarySearchTree<BinarySearchTreeType>::node *A);
-  void
-  DoubleRotateLeft(typename BinarySearchTree<BinarySearchTreeType>::node *A);
+  void DoubleRotateRight(
+      typename BinarySearchTree<BinarySearchTreeType>::node *A);
+  void DoubleRotateLeft(
+      typename BinarySearchTree<BinarySearchTreeType>::node *A);
   bool RightHigher(typename BinarySearchTree<BinarySearchTreeType>::node *A);
   bool LeftHigher(typename BinarySearchTree<BinarySearchTreeType>::node *A);
 };
@@ -466,8 +465,8 @@ BinarySearchTree<BinarySearchTreeType>::Find(
   }
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (true) {
     // Move pointer
@@ -523,7 +522,7 @@ void BinarySearchTree<BinarySearchTreeType>::FixTree(
     }
 
     else if (((current->right) != 0) &&
-             (*(current->item) > *(current->right->item))) {
+        (*(current->item) > *(current->right->item))) {
       // Swap the current value with the one to the right
       temp = *(current->right->item);
       *(current->right->item) = *(current->item);
@@ -538,9 +537,8 @@ void BinarySearchTree<BinarySearchTreeType>::FixTree(
 
 template <class BinarySearchTreeType>
 typename BinarySearchTree<BinarySearchTreeType>::node *
-BinarySearchTree<BinarySearchTreeType>::Del(const BinarySearchTreeType &input,
-                                            const char *file,
-                                            unsigned int line) {
+BinarySearchTree<BinarySearchTreeType>::Del(
+    const BinarySearchTreeType &input, const char *file, unsigned int line) {
   typename BinarySearchTree::node *node_to_delete, *current, *parent;
 
   if (BinarySearchTree_size == 0)
@@ -575,8 +573,8 @@ BinarySearchTree<BinarySearchTreeType>::Del(const BinarySearchTreeType &input,
     BinarySearchTree_size--;
     return parent;
   } else if ((current->right) != 0 &&
-             (current->left) == 0) // Node has only one child, delete it and
-                                   // cause the parent to point to that child
+      (current->left) == 0) // Node has only one child, delete it and
+                            // cause the parent to point to that child
   {
 
     if (parent) {
@@ -597,8 +595,8 @@ BinarySearchTree<BinarySearchTreeType>::Del(const BinarySearchTreeType &input,
 
     return parent;
   } else if ((current->right) == 0 &&
-             (current->left) != 0) // Node has only one child, delete it and
-                                   // cause the parent to point to that child
+      (current->left) != 0) // Node has only one child, delete it and
+                            // cause the parent to point to that child
   {
 
     if (parent) {
@@ -674,9 +672,8 @@ BinarySearchTree<BinarySearchTreeType>::Del(const BinarySearchTreeType &input,
 
 template <class BinarySearchTreeType>
 typename BinarySearchTree<BinarySearchTreeType>::node *
-BinarySearchTree<BinarySearchTreeType>::Add(const BinarySearchTreeType &input,
-                                            const char *file,
-                                            unsigned int line) {
+BinarySearchTree<BinarySearchTreeType>::Add(
+    const BinarySearchTreeType &input, const char *file, unsigned int line) {
   typename BinarySearchTree::node *current;
 
   // Add the new element to the tree according to the following alogrithm:
@@ -702,8 +699,8 @@ BinarySearchTree<BinarySearchTreeType>::Add(const BinarySearchTreeType &input,
     current = root;
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
     while (true) // This loop traverses the tree to find a spot for insertion
     {
@@ -1046,8 +1043,8 @@ BinarySearchTree<BinarySearchTreeType>::operator=(
 }
 
 template <class BinarySearchTreeType>
-inline void BinarySearchTree<BinarySearchTreeType>::Clear(const char *file,
-                                                          unsigned int line) {
+inline void BinarySearchTree<BinarySearchTreeType>::Clear(
+    const char *file, unsigned int line) {
   typename BinarySearchTree::node *current, *parent;
 
   current = root;

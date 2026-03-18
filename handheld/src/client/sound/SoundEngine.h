@@ -53,7 +53,7 @@ public:
   void update(Mob *player, float a);
 
   void play(const std::string &name, float x, float y, float z, float volume,
-            float pitch);
+      float pitch);
   void playUI(const std::string &name, float volume, float pitch);
 
   float _getVolumeMult(float x, float y, float z);

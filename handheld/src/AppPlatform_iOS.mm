@@ -1,6 +1,7 @@
 #include "AppPlatform_iOS.h"
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
+#import <OpenGLES/ES1/gl.h>
 
 #import "../project/iosproj/minecraftpe/minecraftpeViewController.h"
 #import "../project/iosproj/minecraftpe/dialogs/BaseDialogController.h"

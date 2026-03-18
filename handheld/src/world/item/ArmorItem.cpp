@@ -3,8 +3,8 @@
 //
 // ArmorMaterial
 //
-ArmorItem::ArmorMaterial::ArmorMaterial(int durabilityMultiplier, int p0,
-                                        int p1, int p2, int p3)
+ArmorItem::ArmorMaterial::ArmorMaterial(
+    int durabilityMultiplier, int p0, int p1, int p2, int p3)
     : durabilityMultiplier(durabilityMultiplier) {
   slotProtections[0] = p0;
   slotProtections[1] = p1;
@@ -39,24 +39,23 @@ bool ArmorItem::isArmor() const { return true; }
 // Singleton ArmorMaterials
 //
 
-const ArmorItem::ArmorMaterial
-    ArmorItem::CLOTH(5,         // durability
-                     1, 3, 2, 1 // protection values
-                                // 15,			// enchantment
-    );
+const ArmorItem::ArmorMaterial ArmorItem::CLOTH(5, // durability
+    1, 3, 2, 1 // protection values
+               // 15,			// enchantment
+);
 
 const ArmorItem::ArmorMaterial ArmorItem::CHAIN(15, 2, 5, 4, 1
-                                                // 12,
+    // 12,
 );
 
 const ArmorItem::ArmorMaterial ArmorItem::IRON(15, 2, 6, 5, 2
-                                               // 9
+    // 9
 );
 
 const ArmorItem::ArmorMaterial ArmorItem::GOLD(7, 2, 5, 3, 1
-                                               // 25
+    // 25
 );
 
 const ArmorItem::ArmorMaterial ArmorItem::DIAMOND(33, 3, 8, 6, 3
-                                                  // 10
+    // 10
 );

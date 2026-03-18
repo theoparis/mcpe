@@ -10,8 +10,8 @@
 const int ItemEntity::LIFETIME =
     5 * 60 * SharedConstants::TicksPerSecond; // Five minutes, changed in 0.3.3!
 
-ItemEntity::ItemEntity(Level *level, float x, float y, float z,
-                       const ItemInstance &item)
+ItemEntity::ItemEntity(
+    Level *level, float x, float y, float z, const ItemInstance &item)
     : super(level), item(item), health(5), age(0), tickCount(0), throwTime(0),
       lifeTime(LIFETIME), bobOffs((float)(Mth::random() * Mth::PI * 2)) {
   entityRendererId = ER_ITEM_RENDERER;
@@ -53,8 +53,8 @@ void ItemEntity::tick() {
     yd = 0.2f;
     xd = (sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 0.2f;
     zd = (sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 0.2f;
-    level->playSound(this, "random.fizz", 0.4f,
-                     2.0f + sharedRandom.nextFloat() * 0.4f);
+    level->playSound(
+        this, "random.fizz", 0.4f, 2.0f + sharedRandom.nextFloat() * 0.4f);
   }
   checkInTile(x, y, z);
   move(xd, yd, zd);
@@ -102,8 +102,7 @@ void ItemEntity::playerTouch(Player *player) {
 
   int orgCount = item.count;
   if (throwTime == 0 && player->isAlive() && player->inventory->add(&item)) {
-    level->playSound(
-        this, "random.pop", 0.3f,
+    level->playSound(this, "random.pop", 0.3f,
         ((sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 0.7f + 1.0f) *
             2.f);
     player->take(this, orgCount);

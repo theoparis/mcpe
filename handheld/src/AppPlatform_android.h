@@ -2,7 +2,8 @@
 #define APPPLATFORM_ANDROID_H__
 
 #include "AppPlatform.h"
-#include "client/renderer/gles.h"
+#include <GLES/gl.h>
+
 #include "platform/log.h"
 #include "platform/time.h"
 #include <android/native_activity.h>
@@ -85,7 +86,7 @@ public:
 
     if (!env) {
       LOGI("%s - Failed to get the environment using JVMAttacher::getEnv()",
-           __FUNCTION__);
+          __FUNCTION__);
       return -2;
     }
 
@@ -100,16 +101,15 @@ public:
     // Save all the method IDs
     _methodSaveScreenshot = env->GetStaticMethodID(
         _activityClass, "saveScreenshot", "(Ljava/lang/String;II[I)V");
-    _postScreenshotToFacebook =
-        env->GetMethodID(_activityClass, "postScreenshotToFacebook",
-                         "(Ljava/lang/String;II[I)V");
-    _getImageData = env->GetMethodID(_activityClass, "getImageData",
-                                     "(Ljava/lang/String;)[I");
-    _readAssetFile = env->GetMethodID(_activityClass, "getFileDataBytes",
-                                      "(Ljava/lang/String;)[B");
+    _postScreenshotToFacebook = env->GetMethodID(_activityClass,
+        "postScreenshotToFacebook", "(Ljava/lang/String;II[I)V");
+    _getImageData = env->GetMethodID(
+        _activityClass, "getImageData", "(Ljava/lang/String;)[I");
+    _readAssetFile = env->GetMethodID(
+        _activityClass, "getFileDataBytes", "(Ljava/lang/String;)[B");
 #if defined(PRE_ANDROID23)
-    _methodPlaySound = env->GetMethodID(_activityClass, "playSound",
-                                        "(Ljava/lang/String;FF)V");
+    _methodPlaySound = env->GetMethodID(
+        _activityClass, "playSound", "(Ljava/lang/String;FF)V");
 #endif
     _showDialog = env->GetMethodID(_activityClass, "displayDialog", "(I)V");
     _methodTick = env->GetMethodID(_activityClass, "tick", "()V");
@@ -122,8 +122,8 @@ public:
     _methodUserInputString = env->GetMethodID(
         _activityClass, "getUserInputString", "()[Ljava/lang/String;");
 
-    _methodGetDateString = env->GetMethodID(_activityClass, "getDateString",
-                                            "(I)Ljava/lang/String;");
+    _methodGetDateString = env->GetMethodID(
+        _activityClass, "getDateString", "(I)Ljava/lang/String;");
 
     _methodCheckLicense =
         env->GetMethodID(_activityClass, "checkLicense", "()I");
@@ -154,20 +154,18 @@ public:
 
     _fieldINPUT_METHOD_SERVICE = env->GetStaticFieldID(
         _classContext, "INPUT_METHOD_SERVICE", "Ljava/lang/String;");
-    _methodGetSystemService =
-        env->GetMethodID(_activityClass, "getSystemService",
-                         "(Ljava/lang/String;)Ljava/lang/Object;");
-    _methodGetWindow = env->GetMethodID(_activityClass, "getWindow",
-                                        "()Landroid/view/Window;");
+    _methodGetSystemService = env->GetMethodID(_activityClass,
+        "getSystemService", "(Ljava/lang/String;)Ljava/lang/Object;");
+    _methodGetWindow = env->GetMethodID(
+        _activityClass, "getWindow", "()Landroid/view/Window;");
     _methodGetDecorView =
         env->GetMethodID(_classWindow, "getDecorView", "()Landroid/view/View;");
-    _methodShowSoftInput = env->GetMethodID(_classInputManager, "showSoftInput",
-                                            "(Landroid/view/View;I)Z");
-    _methodGetWindowToken = env->GetMethodID(_classView, "getWindowToken",
-                                             "()Landroid/os/IBinder;");
-    _methodHideSoftInput =
-        env->GetMethodID(_classInputManager, "hideSoftInputFromWindow",
-                         "(Landroid/os/IBinder;I)Z");
+    _methodShowSoftInput = env->GetMethodID(
+        _classInputManager, "showSoftInput", "(Landroid/view/View;I)Z");
+    _methodGetWindowToken = env->GetMethodID(
+        _classView, "getWindowToken", "()Landroid/os/IBinder;");
+    _methodHideSoftInput = env->GetMethodID(_classInputManager,
+        "hideSoftInputFromWindow", "(Landroid/os/IBinder;I)Z");
 
     _methodGetKeyFromKeyCode =
         env->GetMethodID(_activityClass, "getKeyFromKeyCode", "(III)I");
@@ -324,8 +322,7 @@ public:
       //                                        env->NewStringUTF(filename.c_str()),
       //                                        glWidth, glHeight, jPixels);
       env->CallStaticVoidMethod(_activityClass, _methodSaveScreenshot,
-                                env->NewStringUTF(filename.c_str()), glWidth,
-                                glHeight, jPixels);
+          env->NewStringUTF(filename.c_str()), glWidth, glHeight, jPixels);
       // Teardown
       env->DeleteGlobalRef(gpixRef);
       delete[] pixels;
@@ -358,8 +355,8 @@ public:
     }
   }
 
-  virtual void playSound(const std::string &filename, float volume,
-                         float pitch) {
+  virtual void playSound(
+      const std::string &filename, float volume, float pitch) {
     if (!_isInited || !_methodPlaySound)
       return;
 
@@ -369,7 +366,7 @@ public:
     JNIEnv *env = ta.getEnv();
 
     env->CallVoidMethod(instance, _methodPlaySound,
-                        env->NewStringUTF(filename.c_str()), volume, pitch);
+        env->NewStringUTF(filename.c_str()), volume, pitch);
     // w.stop();
     // w.printEvery(1, "playSound-java");
   }
@@ -593,8 +590,8 @@ public:
     JVMAttacher ta(_vm);
     JNIEnv *env = ta.getEnv();
 
-    return env->CallBooleanMethod(instance, _methodIsNetworkEnabled,
-                                  onlyWifiAllowed);
+    return env->CallBooleanMethod(
+        instance, _methodIsNetworkEnabled, onlyWifiAllowed);
   }
 
   static __inline bool isSquare(int n) {
@@ -650,8 +647,8 @@ public:
     JVMAttacher ta(_vm);
     JNIEnv *env = ta.getEnv();
 
-    return (int)env->CallIntMethod(instance, _methodGetKeyFromKeyCode, keyCode,
-                                   metaState, deviceId);
+    return (int)env->CallIntMethod(
+        instance, _methodGetKeyFromKeyCode, keyCode, metaState, deviceId);
   }
 
 public:

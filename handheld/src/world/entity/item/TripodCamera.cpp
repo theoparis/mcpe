@@ -2,8 +2,8 @@
 #include "../../level/Level.h"
 #include "../player/Player.h"
 
-TripodCamera::TripodCamera(Level *level, Player *owner, float x, float y,
-                           float z)
+TripodCamera::TripodCamera(
+    Level *level, Player *owner, float x, float y, float z)
     : super(level), owner(owner), life(80), activated(false) {
   entityRendererId = ER_TRIPODCAMERA_RENDERER;
 

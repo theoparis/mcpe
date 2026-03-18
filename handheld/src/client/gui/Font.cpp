@@ -1,16 +1,40 @@
 #include "Font.h"
 
 // #include "SharedConstants.h"
+#include "../../App.h"
 #include "../../util/Mth.h"
 #include "../Options.h"
 #include "../renderer/Tesselator.h"
 #include "../renderer/Textures.h"
 #include <cstring>
 
+namespace {
+GraphicsBackend *g_fontGraphicsBackend = nullptr;
+float g_fontGraphicsWidth = 0.0f;
+float g_fontGraphicsHeight = 0.0f;
+
+auto fontBackendEnabled() -> bool {
+  return g_fontGraphicsBackend &&
+      g_fontGraphicsBackend->kind() == GraphicsBackendKind::Vulkan &&
+      g_fontGraphicsWidth > 0.0f && g_fontGraphicsHeight > 0.0f;
+}
+
+void transformGuiPoint(
+    const GLfloat *modelView, float x, float y, float &outX, float &outY) {
+  outX = modelView[0] * x + modelView[4] * y + modelView[12];
+  outY = modelView[1] * x + modelView[5] * y + modelView[13];
+}
+
+auto snapToPixel(float value) -> float {
+  return value >= 0.0f ? (float)((int)(value + 0.5f))
+                       : (float)((int)(value - 0.5f));
+}
+} // namespace
+
 Font::Font(Options *options, const std::string &name, Textures *textures)
     : options(options), fontTexture(0), fontName(name), index(0), count(0),
       _textures(textures), _x(0), _y(0), _cols(16), _rows(16), _charOffset(0),
-      lineHeight(DefaultLineHeight) {
+      _textureWidth(128), _textureHeight(128), lineHeight(DefaultLineHeight) {
   init(options);
 }
 
@@ -32,13 +56,22 @@ Font::Font(Options *options, const std::string &name, Textures *textures)
 
 void Font::onGraphicsReset() { init(options); }
 
+void Font::setGraphicsBackend(
+    GraphicsBackend *graphicsBackend, float width, float height) {
+  g_fontGraphicsBackend = graphicsBackend;
+  g_fontGraphicsWidth = width;
+  g_fontGraphicsHeight = height;
+}
+
 void Font::init(Options *options) {
-  TextureId fontTexture = _textures->loadTexture(fontName);
+  fontTexture = _textures->loadTexture(fontName);
   const TextureData *tex = _textures->getTemporaryTextureData(fontTexture);
 
   if (!tex)
     return;
 
+  _textureWidth = tex->w > 0 ? tex->w : 128;
+  _textureHeight = tex->h > 0 ? tex->h : 128;
   unsigned char *rawPixels = tex->data;
 
   const int numChars = _rows * _cols;
@@ -144,8 +177,8 @@ void Font::draw(const char *str, float x, float y, int color, bool darken) {
 #endif
 }
 
-void Font::draw(const std::string &str, float x, float y, int color,
-                bool darken) {
+void Font::draw(
+    const std::string &str, float x, float y, int color, bool darken) {
 #ifdef USE_VBO
   drawSlow(str, x, y, color, darken);
   return;
@@ -267,7 +300,7 @@ std::string Font::sanitize(const std::string &str) {
     if (str[i] == '§') {
       i++;
       //} else if (SharedConstants.acceptableLetters.indexOf(str.charAt(i)) >=
-      //0) {
+      // 0) {
     } else {
       sanitized[j++] = str[i];
     }
@@ -275,8 +308,8 @@ std::string Font::sanitize(const std::string &str) {
   return sanitized.erase(j);
 }
 
-void Font::drawWordWrap(const std::string &str, float x, float y, float w,
-                        int col) {
+void Font::drawWordWrap(
+    const std::string &str, float x, float y, float w, int col) {
   char *cstr = new char[str.length() + 1];
   strncpy(cstr, str.c_str(), str.length());
   cstr[str.length()] = 0;
@@ -304,11 +337,11 @@ void Font::drawWordWrap(const std::string &str, float x, float y, float w,
 }
 
 void Font::drawSlow(const std::string &str, float x, float y, int color,
-                    bool darken /*= false*/) {
+    bool darken /*= false*/) {
   drawSlow(str.c_str(), x, y, color, darken);
 }
-void Font::drawSlow(const char *str, float x, float y, int color,
-                    bool darken /*= false*/) {
+void Font::drawSlow(
+    const char *str, float x, float y, int color, bool darken /*= false*/) {
   if (!str)
     return;
 
@@ -318,13 +351,93 @@ void Font::drawSlow(const char *str, float x, float y, int color,
     color += oldAlpha;
   }
 
-  _textures->loadAndBindTexture(fontName);
+  if (!Textures::isTextureIdValid(fontTexture)) {
+    fontTexture = _textures->loadTexture(fontName);
+  }
+  if (!Textures::isTextureIdValid(fontTexture)) {
+    return;
+  }
+  _textures->bind(fontTexture);
 
-  Tesselator &t = Tesselator::instance;
-  t.begin();
   int alpha = (0xff000000 & color) >> 24;
   if (!alpha)
     alpha = 0xff;
+
+  if (fontBackendEnabled()) {
+    const float r = (float)((color >> 16) & 0xff) / 255.0f;
+    const float g = (float)((color >> 8) & 0xff) / 255.0f;
+    const float b = (float)(color & 0xff) / 255.0f;
+    const float a = (float)alpha / 255.0f;
+    const float glyphWidth = 7.99f;
+    const float glyphHeight = 7.99f;
+    const float textureWidth = (float)(_textureWidth > 0 ? _textureWidth : 128);
+    const float textureHeight =
+        (float)(_textureHeight > 0 ? _textureHeight : 128);
+    float tessScaleX = 1.0f;
+    float tessScaleY = 1.0f;
+    Tesselator::instance.getScale2d(tessScaleX, tessScaleY);
+    GLfloat modelView[16];
+    glesGetTrackedMatrix(GL_MODELVIEW_MATRIX, modelView);
+
+    float xOffset = 0.0f;
+    float yOffset = 0.0f;
+    for (const unsigned char *it = (const unsigned char *)str; *it; ++it) {
+      const unsigned char ch = *it;
+      if (ch == '\n') {
+        xOffset = 0.0f;
+        yOffset += (float)lineHeight;
+        continue;
+      }
+
+      const float ix = (float)((ch & 15) * 8);
+      const float iy = (float)((ch >> 4) * 8);
+      const float localX0 = tessScaleX * (x + xOffset);
+      const float localY0 = tessScaleY * (y + yOffset);
+      const float localX1 = tessScaleX * (x + xOffset + glyphWidth);
+      const float localY1 = tessScaleY * (y + yOffset + glyphHeight);
+      float screenX0 = 0.0f;
+      float screenY0 = 0.0f;
+      float screenX1 = 0.0f;
+      float screenY1 = 0.0f;
+      transformGuiPoint(modelView, localX0, localY0, screenX0, screenY0);
+      transformGuiPoint(modelView, localX1, localY1, screenX1, screenY1);
+
+      screenX0 = snapToPixel(screenX0);
+      screenY0 = snapToPixel(screenY0);
+      screenX1 = snapToPixel(screenX1);
+      screenY1 = snapToPixel(screenY1);
+      if (screenX1 <= screenX0) {
+        screenX1 = screenX0 + 1.0f;
+      }
+      if (screenY1 <= screenY0) {
+        screenY1 = screenY0 + 1.0f;
+      }
+
+      GraphicsTexturedQuad quad;
+      quad.x = screenX0;
+      quad.y = screenY0;
+      quad.width = screenX1 - screenX0;
+      quad.height = screenY1 - screenY0;
+      quad.canvasWidth = g_fontGraphicsWidth;
+      quad.canvasHeight = g_fontGraphicsHeight;
+      quad.u0 = (ix + 0.5f) / textureWidth;
+      quad.v0 = (iy + 0.5f) / textureHeight;
+      quad.u1 = (ix + glyphWidth - 0.5f) / textureWidth;
+      quad.v1 = (iy + glyphHeight - 0.5f) / textureHeight;
+      quad.r = r;
+      quad.g = g;
+      quad.b = b;
+      quad.a = a;
+      if (!g_fontGraphicsBackend->drawTexturedQuad(quad)) {
+        return;
+      }
+      xOffset += fcharWidths[ch];
+    }
+    return;
+  }
+
+  Tesselator &t = Tesselator::instance;
+  t.begin();
   t.color((color >> 16) & 0xff, (color >> 8) & 0xff, color & 0xff, alpha);
 
   t.addOffset((float)x, (float)y, 0);
@@ -354,11 +467,13 @@ void Font::buildChar(unsigned char i, float x /*= 0*/, float y /*=0*/) {
   float iy = (float)((i >> 4) * 8);
   float s = 7.99f;
 
-  float uo = (0.0f) / 128.0f;
-  float vo = (0.0f) / 128.0f;
+  const float textureWidth = (float)(_textureWidth > 0 ? _textureWidth : 128);
+  const float textureHeight =
+      (float)(_textureHeight > 0 ? _textureHeight : 128);
 
-  t.vertexUV(x, y + s, 0, ix / 128.0f + uo, (iy + s) / 128.0f + vo);
-  t.vertexUV(x + s, y + s, 0, (ix + s) / 128.0f + uo, (iy + s) / 128.0f + vo);
-  t.vertexUV(x + s, y, 0, (ix + s) / 128.0f + uo, iy / 128.0f + vo);
-  t.vertexUV(x, y, 0, ix / 128.0f + uo, iy / 128.0f + vo);
+  t.vertexUV(x, y + s, 0, ix / textureWidth, (iy + s) / textureHeight);
+  t.vertexUV(
+      x + s, y + s, 0, (ix + s) / textureWidth, (iy + s) / textureHeight);
+  t.vertexUV(x + s, y, 0, (ix + s) / textureWidth, iy / textureHeight);
+  t.vertexUV(x, y, 0, ix / textureWidth, iy / textureHeight);
 }

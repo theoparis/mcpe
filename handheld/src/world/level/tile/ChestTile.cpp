@@ -215,8 +215,8 @@ int ChestTile::getTexture(int face) {
   return tex;
 }
 
-bool ChestTile::mayPlace(Level *level, int x, int y, int z,
-                         unsigned char face) {
+bool ChestTile::mayPlace(
+    Level *level, int x, int y, int z, unsigned char face) {
   int chestCount = 0;
 
   if (level->getTile(x - 1, y, z) == id)
@@ -264,9 +264,8 @@ void ChestTile::onRemove(Level *level, int x, int y, int z) {
             if (count > item->count)
               count = item->count;
             item->count -= count;
-            ItemEntity *itemEntity = new ItemEntity(
-                level, x + xo, y + yo, z + zo,
-                ItemInstance(item->id, count, item->getAuxValue()));
+            ItemEntity *itemEntity = new ItemEntity(level, x + xo, y + yo,
+                z + zo, ItemInstance(item->id, count, item->getAuxValue()));
             float pow = 0.05f;
             itemEntity->xd = (float)random.nextGaussian() * pow;
             itemEntity->yd = (float)random.nextGaussian() * pow + 0.2f;
@@ -327,12 +326,12 @@ TileEntity *ChestTile::newTileEntity() {
 
 bool ChestTile::isFullChest(Level *level, int x, int y, int z) {
   return false; //@fullchest
-                /*
-                if (level->getTile(x, y, z) != id) return false;
-                if (level->getTile(x - 1, y, z) == id) return true;
-                if (level->getTile(x + 1, y, z) == id) return true;
-                if (level->getTile(x, y, z - 1) == id) return true;
-                if (level->getTile(x, y, z + 1) == id) return true;
-                return false;
-                */
+  /*
+  if (level->getTile(x, y, z) != id) return false;
+  if (level->getTile(x - 1, y, z) == id) return true;
+  if (level->getTile(x + 1, y, z) == id) return true;
+  if (level->getTile(x, y, z - 1) == id) return true;
+  if (level->getTile(x, y, z + 1) == id) return true;
+  return false;
+  */
 }

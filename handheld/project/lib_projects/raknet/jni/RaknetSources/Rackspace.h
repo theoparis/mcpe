@@ -81,63 +81,61 @@ class RAK_DLL_EXPORT RackspaceEventCallback {
 public:
   RackspaceEventCallback() {}
   virtual ~RackspaceEventCallback() {}
-  virtual void OnAuthenticationResult(RackspaceEventType eventType,
-                                      const char *htmlAdditionalInfo) = 0;
-  virtual void OnListServersResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) = 0;
-  virtual void
-  OnListServersWithDetailsResult(RackspaceEventType eventType,
-                                 const char *htmlAdditionalInfo) = 0;
-  virtual void OnCreateServerResult(RackspaceEventType eventType,
-                                    const char *htmlAdditionalInfo) = 0;
-  virtual void OnGetServerDetails(RackspaceEventType eventType,
-                                  const char *htmlAdditionalInfo) = 0;
-  virtual void OnUpdateServerNameOrPassword(RackspaceEventType eventType,
-                                            const char *htmlAdditionalInfo) = 0;
-  virtual void OnDeleteServer(RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) = 0;
-  virtual void OnListServerAddresses(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) = 0;
-  virtual void OnShareServerAddress(RackspaceEventType eventType,
-                                    const char *htmlAdditionalInfo) = 0;
-  virtual void OnDeleteServerAddress(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) = 0;
-  virtual void OnRebootServer(RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) = 0;
-  virtual void OnRebuildServer(RackspaceEventType eventType,
-                               const char *htmlAdditionalInfo) = 0;
-  virtual void OnResizeServer(RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) = 0;
-  virtual void OnConfirmResizedServer(RackspaceEventType eventType,
-                                      const char *htmlAdditionalInfo) = 0;
-  virtual void OnRevertResizedServer(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) = 0;
-  virtual void OnListFlavorsResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) = 0;
-  virtual void OnGetFlavorDetailsResult(RackspaceEventType eventType,
-                                        const char *htmlAdditionalInfo) = 0;
-  virtual void OnListImagesResult(RackspaceEventType eventType,
-                                  const char *htmlAdditionalInfo) = 0;
-  virtual void OnCreateImageResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) = 0;
-  virtual void OnGetImageDetailsResult(RackspaceEventType eventType,
-                                       const char *htmlAdditionalInfo) = 0;
-  virtual void OnDeleteImageResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) = 0;
-  virtual void OnListSharedIPGroups(RackspaceEventType eventType,
-                                    const char *htmlAdditionalInfo) = 0;
-  virtual void
-  OnListSharedIPGroupsWithDetails(RackspaceEventType eventType,
-                                  const char *htmlAdditionalInfo) = 0;
-  virtual void OnCreateSharedIPGroup(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) = 0;
-  virtual void OnGetSharedIPGroupDetails(RackspaceEventType eventType,
-                                         const char *htmlAdditionalInfo) = 0;
-  virtual void OnDeleteSharedIPGroup(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) = 0;
+  virtual void OnAuthenticationResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListServersResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListServersWithDetailsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnCreateServerResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnGetServerDetails(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnUpdateServerNameOrPassword(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnDeleteServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListServerAddresses(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnShareServerAddress(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnDeleteServerAddress(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnRebootServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnRebuildServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnResizeServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnConfirmResizedServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnRevertResizedServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListFlavorsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnGetFlavorDetailsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListImagesResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnCreateImageResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnGetImageDetailsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnDeleteImageResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListSharedIPGroups(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnListSharedIPGroupsWithDetails(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnCreateSharedIPGroup(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnGetSharedIPGroupDetails(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
+  virtual void OnDeleteSharedIPGroup(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) = 0;
 
-  virtual void OnConnectionAttemptFailure(RackspaceOperationType operationType,
-                                          const char *url) = 0;
+  virtual void OnConnectionAttemptFailure(
+      RackspaceOperationType operationType, const char *url) = 0;
 };
 
 /// \brief Callback interface to receive the results of operations, with a
@@ -146,123 +144,122 @@ class RAK_DLL_EXPORT RackspaceEventCallback_Default
     : public RackspaceEventCallback {
 public:
   virtual void ExecuteDefault(const char *callbackName,
-                              RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) {
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     (void)callbackName;
     (void)eventType;
     (void)htmlAdditionalInfo;
   }
 
-  virtual void OnAuthenticationResult(RackspaceEventType eventType,
-                                      const char *htmlAdditionalInfo) {
+  virtual void OnAuthenticationResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnAuthenticationResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListServersResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) {
+  virtual void OnListServersResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnListServersResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListServersWithDetailsResult(RackspaceEventType eventType,
-                                              const char *htmlAdditionalInfo) {
-    ExecuteDefault("OnListServersWithDetailsResult", eventType,
-                   htmlAdditionalInfo);
+  virtual void OnListServersWithDetailsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
+    ExecuteDefault(
+        "OnListServersWithDetailsResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnCreateServerResult(RackspaceEventType eventType,
-                                    const char *htmlAdditionalInfo) {
+  virtual void OnCreateServerResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnCreateServerResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnGetServerDetails(RackspaceEventType eventType,
-                                  const char *htmlAdditionalInfo) {
+  virtual void OnGetServerDetails(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnGetServerDetails", eventType, htmlAdditionalInfo);
   }
-  virtual void OnUpdateServerNameOrPassword(RackspaceEventType eventType,
-                                            const char *htmlAdditionalInfo) {
-    ExecuteDefault("OnUpdateServerNameOrPassword", eventType,
-                   htmlAdditionalInfo);
+  virtual void OnUpdateServerNameOrPassword(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
+    ExecuteDefault(
+        "OnUpdateServerNameOrPassword", eventType, htmlAdditionalInfo);
   }
-  virtual void OnDeleteServer(RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) {
+  virtual void OnDeleteServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnDeleteServer", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListServerAddresses(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) {
+  virtual void OnListServerAddresses(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnListServerAddresses", eventType, htmlAdditionalInfo);
   }
-  virtual void OnShareServerAddress(RackspaceEventType eventType,
-                                    const char *htmlAdditionalInfo) {
+  virtual void OnShareServerAddress(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnShareServerAddress", eventType, htmlAdditionalInfo);
   }
-  virtual void OnDeleteServerAddress(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) {
+  virtual void OnDeleteServerAddress(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnDeleteServerAddress", eventType, htmlAdditionalInfo);
   }
-  virtual void OnRebootServer(RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) {
+  virtual void OnRebootServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnRebootServer", eventType, htmlAdditionalInfo);
   }
-  virtual void OnRebuildServer(RackspaceEventType eventType,
-                               const char *htmlAdditionalInfo) {
+  virtual void OnRebuildServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnRebuildServer", eventType, htmlAdditionalInfo);
   }
-  virtual void OnResizeServer(RackspaceEventType eventType,
-                              const char *htmlAdditionalInfo) {
+  virtual void OnResizeServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnResizeServer", eventType, htmlAdditionalInfo);
   }
-  virtual void OnConfirmResizedServer(RackspaceEventType eventType,
-                                      const char *htmlAdditionalInfo) {
+  virtual void OnConfirmResizedServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnConfirmResizedServer", eventType, htmlAdditionalInfo);
   }
-  virtual void OnRevertResizedServer(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) {
+  virtual void OnRevertResizedServer(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnRevertResizedServer", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListFlavorsResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) {
+  virtual void OnListFlavorsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnListFlavorsResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnGetFlavorDetailsResult(RackspaceEventType eventType,
-                                        const char *htmlAdditionalInfo) {
+  virtual void OnGetFlavorDetailsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnGetFlavorDetailsResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListImagesResult(RackspaceEventType eventType,
-                                  const char *htmlAdditionalInfo) {
+  virtual void OnListImagesResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnListImagesResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnCreateImageResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) {
+  virtual void OnCreateImageResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnCreateImageResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnGetImageDetailsResult(RackspaceEventType eventType,
-                                       const char *htmlAdditionalInfo) {
+  virtual void OnGetImageDetailsResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnGetImageDetailsResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnDeleteImageResult(RackspaceEventType eventType,
-                                   const char *htmlAdditionalInfo) {
+  virtual void OnDeleteImageResult(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnDeleteImageResult", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListSharedIPGroups(RackspaceEventType eventType,
-                                    const char *htmlAdditionalInfo) {
+  virtual void OnListSharedIPGroups(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnListSharedIPGroups", eventType, htmlAdditionalInfo);
   }
-  virtual void OnListSharedIPGroupsWithDetails(RackspaceEventType eventType,
-                                               const char *htmlAdditionalInfo) {
-    ExecuteDefault("OnListSharedIPGroupsWithDetails", eventType,
-                   htmlAdditionalInfo);
+  virtual void OnListSharedIPGroupsWithDetails(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
+    ExecuteDefault(
+        "OnListSharedIPGroupsWithDetails", eventType, htmlAdditionalInfo);
   }
-  virtual void OnCreateSharedIPGroup(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) {
+  virtual void OnCreateSharedIPGroup(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnCreateSharedIPGroup", eventType, htmlAdditionalInfo);
   }
-  virtual void OnGetSharedIPGroupDetails(RackspaceEventType eventType,
-                                         const char *htmlAdditionalInfo) {
+  virtual void OnGetSharedIPGroupDetails(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnGetSharedIPGroupDetails", eventType, htmlAdditionalInfo);
   }
-  virtual void OnDeleteSharedIPGroup(RackspaceEventType eventType,
-                                     const char *htmlAdditionalInfo) {
+  virtual void OnDeleteSharedIPGroup(
+      RackspaceEventType eventType, const char *htmlAdditionalInfo) {
     ExecuteDefault("OnDeleteSharedIPGroup", eventType, htmlAdditionalInfo);
   }
 
-  virtual void OnConnectionAttemptFailure(RackspaceOperationType operationType,
-                                          const char *url) {
+  virtual void OnConnectionAttemptFailure(
+      RackspaceOperationType operationType, const char *url) {
     (void)operationType;
     (void)url;
   }
@@ -300,9 +297,8 @@ public:
   /// \return The address of the authentication server, or
   /// UNASSIGNED_SYSTEM_ADDRESS if the connection attempt failed
   SystemAddress Authenticate(TCPInterface *_tcpInterface,
-                             const char *_authenticationURL,
-                             const char *_rackspaceCloudUsername,
-                             const char *_apiAccessKey);
+      const char *_authenticationURL, const char *_rackspaceCloudUsername,
+      const char *_apiAccessKey);
 
   /// \brief Get a list of running servers
   /// \sa
@@ -337,7 +333,7 @@ public:
   /// \param[in] flavorId Which flavor (hardware config) to use, primarily how
   /// much memory is available.
   void CreateServer(RakNet::RakString name, RakNet::RakString imageId,
-                    RakNet::RakString flavorId);
+      RakNet::RakString flavorId);
 
   /// \brief Get details on a particular server
   /// \sa
@@ -359,8 +355,7 @@ public:
   /// \param[in] newPassword The new server password. Leave blank to leave
   /// unchanged.
   void UpdateServerNameOrPassword(RakNet::RakString serverId,
-                                  RakNet::RakString newName,
-                                  RakNet::RakString newPassword);
+      RakNet::RakString newName, RakNet::RakString newPassword);
 
   /// \brief Deletes a server
   /// \sa
@@ -386,8 +381,8 @@ public:
   /// to get the list of active servers.
   /// \param[in] ipAddress Which IP address. You can call ListServerAddresses()
   /// to get the list of addresses for the specified server
-  void ShareServerAddress(RakNet::RakString serverId,
-                          RakNet::RakString ipAddress);
+  void ShareServerAddress(
+      RakNet::RakString serverId, RakNet::RakString ipAddress);
 
   /// \brief Stops sharing an IP address with a server
   /// \sa
@@ -397,8 +392,8 @@ public:
   /// to get the list of active servers.
   /// \param[in] ipAddress Which IP address. You can call ListServerAddresses()
   /// to get the list of addresses for the specified server
-  void DeleteServerAddress(RakNet::RakString serverId,
-                           RakNet::RakString ipAddress);
+  void DeleteServerAddress(
+      RakNet::RakString serverId, RakNet::RakString ipAddress);
 
   /// \brief Reboots a server
   /// \sa
@@ -510,8 +505,8 @@ public:
   void ListSharedIPGroupsWithDetails(void);
 
   // I don't know what this does
-  void CreateSharedIPGroup(RakNet::RakString name,
-                           RakNet::RakString optionalServerId);
+  void CreateSharedIPGroup(
+      RakNet::RakString name, RakNet::RakString optionalServerId);
   // I don't know what this does
   void GetSharedIPGroupDetails(RakNet::RakString groupId);
   // I don't know what this does
@@ -541,7 +536,7 @@ public:
   /// \brief Mostly for internal use, but you can use it to execute an operation
   /// with more complex xml if desired See the Rackspace.cpp on how to use it
   void AddOperation(RackspaceOperationType type, RakNet::RakString httpCommand,
-                    RakNet::RakString operation, RakNet::RakString xml);
+      RakNet::RakString operation, RakNet::RakString xml);
 
 protected:
   DataStructures::List<RackspaceEventCallback *> eventCallbacks;
@@ -582,8 +577,8 @@ protected:
   RakNet::RakString apiAccessKey;
 
   bool ExecuteOperation(RackspaceOperation &ro);
-  void ReadLine(const char *data, const char *stringStart,
-                RakNet::RakString &output);
+  void ReadLine(
+      const char *data, const char *stringStart, RakNet::RakString &output);
   bool ConnectToServerManagementDomain(RackspaceOperation &ro);
 };
 

@@ -56,9 +56,9 @@ ItemInstance ItemInstance::remove(int count) {
 }
 
 bool ItemInstance::useOn(Player *player, Level *level, int x, int y, int z,
-                         int face, float clickX, float clickY, float clickZ) {
-  if (getItem()->useOn(this, player, level, x, y, z, face, clickX, clickY,
-                       clickZ)) {
+    int face, float clickX, float clickY, float clickZ) {
+  if (getItem()->useOn(
+          this, player, level, x, y, z, face, clickX, clickY, clickZ)) {
     // player.awardStat(Stats.itemUsed[id], 1);
     return true;
   }
@@ -83,7 +83,7 @@ bool ItemInstance::isStackable() const {
 
 bool ItemInstance::isStackable(const ItemInstance *a, const ItemInstance *b) {
   return a && b && a->id == b->id && b->isStackable() &&
-         (!b->isStackedByData() || a->getAuxValue() == b->getAuxValue());
+      (!b->isStackedByData() || a->getAuxValue() == b->getAuxValue());
 }
 
 bool ItemInstance::isDamageableItem() const {
@@ -249,8 +249,8 @@ Item *ItemInstance::getItem() const { return Item::items[id]; }
 int ItemInstance::getIcon() const {
   return Item::items[id]->getIcon(this->auxValue);
 }
-void ItemInstance::releaseUsing(Level *level, Player *player,
-                                int durationLeft) {
+void ItemInstance::releaseUsing(
+    Level *level, Player *player, int durationLeft) {
   getItem()->releaseUsing(this, level, player, durationLeft);
 }
 

@@ -16,8 +16,8 @@ public:
       : id(e->entityId), x(e->x), y(e->y), z(e->z), yRot(e->yRot),
         xRot(e->xRot), cause(cause) {}
 
-  TeleportEntityPacket(int id, float x, float y, float z, float yRot,
-                       float xRot, char cause)
+  TeleportEntityPacket(
+      int id, float x, float y, float z, float yRot, float xRot, char cause)
       : id(id), x(x), y(y), z(z), yRot(yRot), xRot(xRot), cause(cause) {}
 
   void write(RakNet::BitStream *bitStream) {

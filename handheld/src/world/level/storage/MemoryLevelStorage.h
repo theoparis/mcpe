@@ -29,7 +29,7 @@ public:
     if (_storage) {
       LOGW(">WARNING< Creating a MemoryChunkStorage over another (#%p). A "
            "memory leak will occur.\n",
-           _storage);
+          _storage);
     }
 
     return _storage = new MemoryChunkStorage();

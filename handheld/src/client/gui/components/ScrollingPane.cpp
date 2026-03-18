@@ -21,14 +21,13 @@ static const float kMinIndicatorLength = 34.0f / 3;
 static const float PKScrollIndicatorEndSize = 3;
 static const float PKScrollIndicatorThickness = 7.0f / 3;
 
-ScrollingPane::ScrollingPane(
-    int optionFlags, const IntRectangle &boundingBox,
+ScrollingPane::ScrollingPane(int optionFlags, const IntRectangle &boundingBox,
     const IntRectangle &itemRect, int columns, int numItems,
     float screenScale /* = 1.0f */,
     const IntRectangle &itemBoundingRect /*= IntRectangle(0,0,0,0)*/)
     : flags(optionFlags), bbox(boundingBox), size(boundingBox),
       area((float)bbox.x, (float)bbox.y, (float)(bbox.x + bbox.w),
-           (float)(bbox.y + bbox.h)),
+          (float)(bbox.y + bbox.h)),
       bboxArea(area), itemRect(itemRect), numItems(numItems),
       screenScale(screenScale), invScreenScale(1.0f / screenScale),
       // hasItemBounding(),
@@ -152,7 +151,7 @@ void ScrollingPane::render(int xm, int ym, float alpha) {
       if (y < 0 || id < 0 || id >= numItems)
         continue; // @todo: break rather
       if (isNotSet(SF_WrapX) && (x < 0 || x >= columns))
-        continue;    // @todo: break rather
+        continue; // @todo: break rather
       GridItem item; //@todo: v- Does not support SF_Wrapping
       item.id = id;
       item.xf = bxx + x * itemBbox.w;
@@ -180,8 +179,8 @@ void ScrollingPane::renderBatch(std::vector<GridItem> &items, float alpha) {
 
 void ScrollingPane::renderItem(GridItem &item, float alpha) {}
 
-ScrollingPane::GridItem ScrollingPane::getItemForPos(float x, float y,
-                                                     bool isScreenPos) {
+ScrollingPane::GridItem ScrollingPane::getItemForPos(
+    float x, float y, bool isScreenPos) {
   // Screen relative pos (rather than ScrollingPane relative pos)
   if (isScreenPos) {
     x -= bbox.x;
@@ -254,7 +253,7 @@ void ScrollingPane::handleUserInput() {
 Vec3 &ScrollingPane::contentOffset() { return _contentOffset; }
 
 void ScrollingPane::beginTracking(float x, float y,
-                                  int t) { //@param 1: MouseEvent a
+    int t) { //@param 1: MouseEvent a
   if (this->tracking) {
     return;
   }
@@ -263,8 +262,8 @@ void ScrollingPane::beginTracking(float x, float y,
   // this->hostingLayer.style.webkitTransitionDuration = 0;
   this->adjustContentSize(); //@todo @?
   this->minPoint.set((float)(this->size.w - this->adjustedContentSize.w),
-                     (float)(this->size.h - this->adjustedContentSize.h),
-                     0); //@todo
+      (float)(this->size.h - this->adjustedContentSize.h),
+      0); //@todo
   this->snapContentOffsetToBounds(false);
   this->startPosition = this->_contentOffset;
   this->startTouchPosition.set(x, y, 0);
@@ -280,7 +279,7 @@ void ScrollingPane::beginTracking(float x, float y,
 };
 
 void ScrollingPane::touchesBegan(float x, float y,
-                                 int t) { //@param 1: MouseEvent a
+    int t) { //@param 1: MouseEvent a
   if (!this->_scrollEnabled) {
     return;
   }
@@ -294,7 +293,7 @@ void ScrollingPane::touchesBegan(float x, float y,
   //	if (this.delaysContentTouches) {
   //		a.stopPropagation();
   //		this.callMethodNameAfterDelay("beginTouchesInContent",
-  //kContentTouchesDelay, a);
+  // kContentTouchesDelay, a);
   this->beginTracking(x, y, t);
   //	}
   //} else {
@@ -346,10 +345,10 @@ void ScrollingPane::touchesMoved(float x, float y, int t) {
     if (isNotSet(SF_HardLimits)) {
       f -= ((f < this->minPoint.x) ? (f - this->minPoint.x)
                                    : ((f > 0) ? f : 0)) /
-           2;
+          2;
       a -= ((a < this->minPoint.y) ? (a - this->minPoint.y)
                                    : ((a > 0) ? a : 0)) /
-           2;
+          2;
     } else {
       f = Mth::Min(Mth::Max(this->minPoint.x, f), 0.0f);
       a = Mth::Min(Mth::Max(this->minPoint.y, a), 0.0f);
@@ -396,7 +395,7 @@ void ScrollingPane::touchesEnded(float x, float y, int t) {
   //	window.removeEventListener(PKEndEvent, this, false);
 
   //// old and shaky, doesn't work good with Xperia Play (and presumably lots of
-  ///others)
+  /// others)
   // if (!this->touchesHaveMoved && this->highlightItem.id >= 0) {
   //	_onSelect(this->highlightItem.id);
   // }
@@ -414,7 +413,7 @@ void ScrollingPane::touchesCancelled(float x, float y, int a) {
 
 void ScrollingPane::startDecelerationAnimation(bool force) {
   Vec3 a(this->_contentOffset.x - this->startTimePosition.x,
-         this->_contentOffset.y - this->startTimePosition.y, 0);
+      this->_contentOffset.y - this->startTimePosition.y, 0);
   float b = (getTimeMs() /*event.timeStamp*/ - this->startTime) / kAcceleration;
   // LOGI("starting deceleration! %s, %f\n", STR(a), b);
 
@@ -422,22 +421,18 @@ void ScrollingPane::startDecelerationAnimation(bool force) {
   this->minDecelerationPoint = this->minPoint;
   this->maxDecelerationPoint = Vec3(0, 0, 0);
   if (this->pagingEnabled) {
-    this->minDecelerationPoint.x = Mth::Max(
-        this->minPoint.x,
+    this->minDecelerationPoint.x = Mth::Max(this->minPoint.x,
         std::floor(this->_contentOffsetBeforeDeceleration.x / this->size.w) *
             this->size.w);
-    this->minDecelerationPoint.y = Mth::Max(
-        this->minPoint.y,
+    this->minDecelerationPoint.y = Mth::Max(this->minPoint.y,
         std::floor(this->_contentOffsetBeforeDeceleration.y / this->size.h) *
             this->size.h);
-    this->maxDecelerationPoint.x =
-        Mth::Min(0.0f, std::ceil(this->_contentOffsetBeforeDeceleration.x /
-                                 this->size.w) *
-                           this->size.w);
-    this->maxDecelerationPoint.y =
-        Mth::Min(0.0f, std::ceil(this->_contentOffsetBeforeDeceleration.y /
-                                 this->size.h) *
-                           this->size.h);
+    this->maxDecelerationPoint.x = Mth::Min(0.0f,
+        std::ceil(this->_contentOffsetBeforeDeceleration.x / this->size.w) *
+            this->size.w);
+    this->maxDecelerationPoint.y = Mth::Min(0.0f,
+        std::ceil(this->_contentOffsetBeforeDeceleration.y / this->size.h) *
+            this->size.h);
   }
   this->penetrationDeceleration = kPenetrationDeceleration;
   this->penetrationAcceleration = kPenetrationAcceleration;
@@ -446,8 +441,9 @@ void ScrollingPane::startDecelerationAnimation(bool force) {
   }
   float c = this->pagingEnabled ? kMinVelocityForDecelerationWithPaging
                                 : kMinVelocityForDeceleration;
-  if (force || (Mth::abs(this->decelerationVelocity.x) > c ||
-                Mth::abs(this->decelerationVelocity.y) > c)) {
+  if (force ||
+      (Mth::abs(this->decelerationVelocity.x) > c ||
+          Mth::abs(this->decelerationVelocity.y) > c)) {
     this->decelerating = true;
     // LOGI("accelerating True - A\n");
     _doStepTimer = true;
@@ -479,9 +475,8 @@ void ScrollingPane::stepThroughDecelerationAnimation(bool noAnimation) {
   int k = d - this->lastFrame;
 
   int l = noAnimation
-              ? 0
-              : (int)(std::floor(0.5f +
-                                 ((float)k / kDesiredAnimationFrameRate) - 1));
+      ? 0
+      : (int)(std::floor(0.5f + ((float)k / kDesiredAnimationFrameRate) - 1));
   // LOGI("k: %d, %d %d : %d\n", d, this->lastFrame, k, l);
   for (int j = 0; j < l; j++)
     this->stepThroughDecelerationAnimation(true);
@@ -634,26 +629,26 @@ bool ScrollingPane::onSelect(int gridId, bool selected) { return selected; }
 
 void ScrollingPane::updateHorizontalScrollIndicator() {
   float c = (isNotSet(SF_LockX) && isSet(SF_ShowScrollbar))
-                ? PKScrollIndicatorEndSize * 2
-                : 1;
-  float d =
-      Mth::Max(kMinIndicatorLength,
-               std::floor(0.5f + (this->size.w / this->adjustedContentSize.w) *
-                                     (this->size.w - c)));
+      ? PKScrollIndicatorEndSize * 2
+      : 1;
+  float d = Mth::Max(kMinIndicatorLength,
+      std::floor(0.5f +
+          (this->size.w / this->adjustedContentSize.w) * (this->size.w - c)));
   float a =
       (-this->_contentOffset.x / (this->adjustedContentSize.w - this->size.w)) *
       (this->size.w - c - d);
   // float b = this->size.h - PKScrollIndicatorThickness - 1;
   if (this->_contentOffset.x > 0) {
-    d = std::floor(0.5f + Mth::Max(d - this->_contentOffset.x,
-                                   PKScrollIndicatorThickness));
+    d = std::floor(0.5f +
+        Mth::Max(d - this->_contentOffset.x, PKScrollIndicatorThickness));
     a = 1;
   } else {
     if (this->_contentOffset.x <
         -(this->adjustedContentSize.w - this->size.w)) {
-      d = std::floor(0.5f + Mth::Max(d + this->adjustedContentSize.w -
-                                         this->size.w + this->contentOffset().x,
-                                     PKScrollIndicatorThickness));
+      d = std::floor(0.5f +
+          Mth::Max(d + this->adjustedContentSize.w - this->size.w +
+                  this->contentOffset().x,
+              PKScrollIndicatorThickness));
       a = this->size.w - d - c;
     }
   }
@@ -664,26 +659,26 @@ void ScrollingPane::updateHorizontalScrollIndicator() {
 
 void ScrollingPane::updateVerticalScrollIndicator() {
   float c = (isNotSet(SF_LockY) && isSet(SF_ShowScrollbar))
-                ? PKScrollIndicatorEndSize * 2
-                : 1;
-  float d =
-      Mth::Max(kMinIndicatorLength,
-               std::floor(0.5f + (this->size.h / this->adjustedContentSize.h) *
-                                     (this->size.h - c)));
+      ? PKScrollIndicatorEndSize * 2
+      : 1;
+  float d = Mth::Max(kMinIndicatorLength,
+      std::floor(0.5f +
+          (this->size.h / this->adjustedContentSize.h) * (this->size.h - c)));
   // float a = this->size.w - PKScrollIndicatorThickness - 1;
   float b =
       (-this->_contentOffset.y / (this->adjustedContentSize.h - this->size.h)) *
       (this->size.h - c - d);
   if (this->_contentOffset.y > 0) {
-    d = std::floor(0.5f + Mth::Max(d - this->_contentOffset.y,
-                                   PKScrollIndicatorThickness));
+    d = std::floor(0.5f +
+        Mth::Max(d - this->_contentOffset.y, PKScrollIndicatorThickness));
     b = 1;
   } else {
     if (this->_contentOffset.y <
         -(this->adjustedContentSize.h - this->size.h)) {
-      d = std::floor(0.5f + Mth::Max(d + this->adjustedContentSize.h -
-                                         this->size.h + this->contentOffset().y,
-                                     PKScrollIndicatorThickness));
+      d = std::floor(0.5f +
+          Mth::Max(d + this->adjustedContentSize.h - this->size.h +
+                  this->contentOffset().y,
+              PKScrollIndicatorThickness));
       b = this->size.h - d - c;
     }
   }

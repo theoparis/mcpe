@@ -20,13 +20,12 @@
 #endif
 
 #ifdef _MSC_VER
-#pragma warning(                                                               \
-    disable                                                                    \
+#pragma warning(disable                                                        \
     : 4966) // mkdir declared deprecated by Microsoft in order to make it harder
             // to be cross platform.  I don't agree it's deprecated.
 #endif
-bool WriteFileWithDirectories(const char *path, char *data,
-                              unsigned dataLength) {
+bool WriteFileWithDirectories(
+    const char *path, char *data, unsigned dataLength) {
   int index;
   FILE *fp;
   char *pathCopy;
@@ -47,8 +46,7 @@ bool WriteFileWithDirectories(const char *path, char *data,
         pathCopy[index] = 0;
 
 #ifdef _WIN32
-#pragma warning(                                                               \
-    disable                                                                    \
+#pragma warning(disable                                                        \
     : 4966) // mkdir declared deprecated by Microsoft in order to make it harder
             // to be cross platform.  I don't agree it's deprecated.
         res = mkdir(pathCopy);
@@ -81,8 +79,7 @@ bool WriteFileWithDirectories(const char *path, char *data,
     fclose(fp);
   } else {
 #ifdef _WIN32
-#pragma warning(                                                               \
-    disable                                                                    \
+#pragma warning(disable                                                        \
     : 4966) // mkdir declared deprecated by Microsoft in order to make it harder
             // to be cross platform.  I don't agree it's deprecated.
     res = mkdir(pathCopy);

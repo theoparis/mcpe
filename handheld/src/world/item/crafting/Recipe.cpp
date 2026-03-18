@@ -71,7 +71,7 @@ std::vector<ItemInstance> ItemPack::getItemInstances() const {
 int ItemPack::getIdForItemInstance(const ItemInstance *ii) {
   bool anyAuxValue = Recipe::isAnyAuxValue(ii);
   return ii->id * 512 +
-         (anyAuxValue ? -1 /*Recipes::ANY_AUX_VALUE*/ : ii->getAuxValue());
+      (anyAuxValue ? -1 /*Recipes::ANY_AUX_VALUE*/ : ii->getAuxValue());
 }
 int ItemPack::getIdForItemInstanceAnyAux(const ItemInstance *ii) {
   return ii->id * 512 - 1;

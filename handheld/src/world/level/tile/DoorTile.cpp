@@ -182,9 +182,10 @@ void DoorTile::neighborChanged(Level *level, int x, int y, int z, int type) {
       }
     } else {
       bool signal = level->hasNeighborSignal(x, y, z) ||
-                    level->hasNeighborSignal(x, y + 1, z);
+          level->hasNeighborSignal(x, y + 1, z);
       if ((signal ||
-           ((type > 0 && Tile::tiles[type]->isSignalSource()) || type == 0)) &&
+              ((type > 0 && Tile::tiles[type]->isSignalSource()) ||
+                  type == 0)) &&
           type != id) {
         setOpen(level, x, y, z, signal);
       }
@@ -212,8 +213,8 @@ int DoorTile::getResource(int data, Random *random) {
   return Item::door_wood->id;
 }
 
-HitResult DoorTile::clip(Level *level, int xt, int yt, int zt, const Vec3 &a,
-                         const Vec3 &b) {
+HitResult DoorTile::clip(
+    Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b) {
   updateShape(level, xt, yt, zt);
   return super::clip(level, xt, yt, zt, a, b);
 }
@@ -227,8 +228,7 @@ bool DoorTile::mayPlace(Level *level, int x, int y, int z, unsigned char face) {
     return false;
 
   return (level->isSolidBlockingTile(x, y - 1, z) &&
-          super::mayPlace(level, x, y, z) &&
-          super::mayPlace(level, x, y + 1, z));
+      super::mayPlace(level, x, y, z) && super::mayPlace(level, x, y + 1, z));
 }
 
 int DoorTile::getCompositeData(LevelSource *level, int x, int y, int z) {
@@ -247,5 +247,5 @@ int DoorTile::getCompositeData(LevelSource *level, int x, int y, int z) {
   // bits: dir, dir, open/closed, isUpper, isRightHinge
   bool isRightHinge = (upperData & 1) != 0;
   return lowerData & C_LOWER_DATA_MASK | (isUpper ? 8 : 0) |
-         (isRightHinge ? 16 : 0);
+      (isRightHinge ? 16 : 0);
 }

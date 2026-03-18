@@ -51,7 +51,7 @@ bool TwoWayAuthentication::NonceGenerator::GetNonceById(
     if (generatedNonces[i]->requestId == requestId) {
       if (remoteSystem == generatedNonces[i]->remoteSystem) {
         memcpy(nonce, generatedNonces[i]->nonce,
-               TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
+            TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
         if (popIfFound) {
           RakNet::OP_DELETE(generatedNonces[i], _FILE_AND_LINE_);
           generatedNonces.RemoveAtIndex(i);
@@ -94,8 +94,8 @@ TwoWayAuthentication::TwoWayAuthentication() {
   seedMT(RakNet::GetTimeMS());
 }
 TwoWayAuthentication::~TwoWayAuthentication() { Clear(); }
-bool TwoWayAuthentication::AddPassword(RakNet::RakString identifier,
-                                       RakNet::RakString password) {
+bool TwoWayAuthentication::AddPassword(
+    RakNet::RakString identifier, RakNet::RakString password) {
   if (password.IsEmpty())
     return false;
 
@@ -111,8 +111,8 @@ bool TwoWayAuthentication::AddPassword(RakNet::RakString identifier,
   passwords.Push(identifier, password, _FILE_AND_LINE_);
   return true;
 }
-bool TwoWayAuthentication::Challenge(RakNet::RakString identifier,
-                                     AddressOrGUID remoteSystem) {
+bool TwoWayAuthentication::Challenge(
+    RakNet::RakString identifier, AddressOrGUID remoteSystem) {
   DataStructures::HashIndex skhi = passwords.GetIndexOf(identifier.C_String());
   if (skhi.IsInvalid())
     return false;
@@ -136,13 +136,13 @@ void TwoWayAuthentication::Update(void) {
   nonceGenerator.Update(curTime);
   if (GreaterThan(curTime - CHALLENGE_MINIMUM_TIMEOUT, whenLastTimeoutCheck)) {
     while (outgoingChallenges.Size() &&
-           GreaterThan(curTime - CHALLENGE_MINIMUM_TIMEOUT,
-                       outgoingChallenges.Peek().time)) {
+        GreaterThan(curTime - CHALLENGE_MINIMUM_TIMEOUT,
+            outgoingChallenges.Peek().time)) {
       PendingChallenge pc = outgoingChallenges.Pop();
 
       // Tell the user about the timeout
       PushToUser(ID_TWO_WAY_AUTHENTICATION_OUTGOING_CHALLENGE_TIMEOUT,
-                 pc.identifier, pc.remoteSystem);
+          pc.identifier, pc.remoteSystem);
     }
 
     whenLastTimeoutCheck = curTime + CHALLENGE_MINIMUM_TIMEOUT;
@@ -195,9 +195,10 @@ void TwoWayAuthentication::OnClosedConnection(
   unsigned int i = 0;
   while (i < outgoingChallenges.Size()) {
     if ((rakNetGUID != UNASSIGNED_RAKNET_GUID &&
-         outgoingChallenges[i].remoteSystem.rakNetGuid == rakNetGUID) ||
+            outgoingChallenges[i].remoteSystem.rakNetGuid == rakNetGUID) ||
         (systemAddress != UNASSIGNED_SYSTEM_ADDRESS &&
-         outgoingChallenges[i].remoteSystem.systemAddress == systemAddress)) {
+            outgoingChallenges[i].remoteSystem.systemAddress ==
+                systemAddress)) {
       outgoingChallenges.RemoveAtIndex(i);
     } else {
       i++;
@@ -215,8 +216,7 @@ void TwoWayAuthentication::Clear(void) {
   nonceGenerator.Clear();
 }
 void TwoWayAuthentication::PushToUser(MessageID messageId,
-                                      RakNet::RakString password,
-                                      RakNet::AddressOrGUID remoteSystem) {
+    RakNet::RakString password, RakNet::AddressOrGUID remoteSystem) {
   RakNet::BitStream output;
   output.Write(messageId);
   if (password.IsEmpty() == false)
@@ -241,8 +241,8 @@ void TwoWayAuthentication::OnNonceRequest(Packet *packet) {
   bsOut.Write((MessageID)ID_TWO_WAY_AUTHENTICATION_NEGOTIATION);
   bsOut.Write((MessageID)ID_NONCE_REPLY);
   bsOut.Write(requestId);
-  bsOut.WriteAlignedBytes((const unsigned char *)nonce,
-                          TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
+  bsOut.WriteAlignedBytes(
+      (const unsigned char *)nonce, TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
   SendUnified(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet, false);
 }
 void TwoWayAuthentication::OnNonceReply(Packet *packet) {
@@ -252,8 +252,8 @@ void TwoWayAuthentication::OnNonceReply(Packet *packet) {
   char thierNonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH];
   unsigned short requestId;
   bsIn.Read(requestId);
-  bsIn.ReadAlignedBytes((unsigned char *)thierNonce,
-                        TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
+  bsIn.ReadAlignedBytes(
+      (unsigned char *)thierNonce, TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
 
   // Lookup one of the negotiations for this guid/system address
   AddressOrGUID aog(packet);
@@ -279,10 +279,10 @@ void TwoWayAuthentication::OnNonceReply(Packet *packet) {
         bsOut.Write((MessageID)ID_HASHED_NONCE_AND_PASSWORD);
         bsOut.Write(requestId);
         bsOut.Write(outgoingChallenges[i]
-                        .identifier); // Identifier helps the other system
-                                      // lookup the password quickly.
+                .identifier); // Identifier helps the other system
+                              // lookup the password quickly.
         bsOut.WriteAlignedBytes((const unsigned char *)hashedNonceAndPw,
-                                HASHED_NONCE_AND_PW_LENGTH);
+            HASHED_NONCE_AND_PW_LENGTH);
         SendUnified(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet, false);
       }
 
@@ -290,8 +290,8 @@ void TwoWayAuthentication::OnNonceReply(Packet *packet) {
     }
   }
 }
-PluginReceiveResult
-TwoWayAuthentication::OnHashedNonceAndPassword(Packet *packet) {
+PluginReceiveResult TwoWayAuthentication::OnHashedNonceAndPassword(
+    Packet *packet) {
   RakNet::BitStream bsIn(packet->data, packet->length, false);
   bsIn.IgnoreBytes(sizeof(MessageID) * 2);
 
@@ -300,8 +300,8 @@ TwoWayAuthentication::OnHashedNonceAndPassword(Packet *packet) {
   bsIn.Read(requestId);
   RakNet::RakString passwordIdentifier;
   bsIn.Read(passwordIdentifier);
-  bsIn.ReadAlignedBytes((unsigned char *)remoteHashedNonceAndPw,
-                        HASHED_NONCE_AND_PW_LENGTH);
+  bsIn.ReadAlignedBytes(
+      (unsigned char *)remoteHashedNonceAndPw, HASHED_NONCE_AND_PW_LENGTH);
 
   // Look up used nonce from requestId
   char usedNonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH];
@@ -314,21 +314,21 @@ TwoWayAuthentication::OnHashedNonceAndPassword(Packet *packet) {
     char hashedThisNonceAndPw[HASHED_NONCE_AND_PW_LENGTH];
     Hash(usedNonce, passwords.ItemAtIndex(skhi), hashedThisNonceAndPw);
     if (memcmp(hashedThisNonceAndPw, remoteHashedNonceAndPw,
-               HASHED_NONCE_AND_PW_LENGTH) == 0) {
+            HASHED_NONCE_AND_PW_LENGTH) == 0) {
       // Pass
       RakNet::BitStream bsOut;
       bsOut.Write(
           (MessageID)ID_TWO_WAY_AUTHENTICATION_OUTGOING_CHALLENGE_SUCCESS);
       bsOut.WriteAlignedBytes((const unsigned char *)usedNonce,
-                              TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
+          TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
       bsOut.WriteAlignedBytes((const unsigned char *)remoteHashedNonceAndPw,
-                              HASHED_NONCE_AND_PW_LENGTH);
+          HASHED_NONCE_AND_PW_LENGTH);
       bsOut.Write(passwordIdentifier);
       SendUnified(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet, false);
 
       // Incoming success, modify packet header to tell user
       PushToUser(ID_TWO_WAY_AUTHENTICATION_INCOMING_CHALLENGE_SUCCESS,
-                 passwordIdentifier, packet);
+          passwordIdentifier, packet);
 
       return RR_STOP_PROCESSING_AND_DEALLOCATE;
     }
@@ -340,10 +340,10 @@ TwoWayAuthentication::OnHashedNonceAndPassword(Packet *packet) {
 
   RakNet::BitStream bsOut;
   bsOut.Write((MessageID)ID_TWO_WAY_AUTHENTICATION_OUTGOING_CHALLENGE_FAILURE);
-  bsOut.WriteAlignedBytes((const unsigned char *)usedNonce,
-                          TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
+  bsOut.WriteAlignedBytes(
+      (const unsigned char *)usedNonce, TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
   bsOut.WriteAlignedBytes((const unsigned char *)remoteHashedNonceAndPw,
-                          HASHED_NONCE_AND_PW_LENGTH);
+      HASHED_NONCE_AND_PW_LENGTH);
   bsOut.Write(passwordIdentifier);
   SendUnified(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0, packet, false);
 
@@ -353,11 +353,11 @@ void TwoWayAuthentication::OnPasswordResult(Packet *packet) {
   RakNet::BitStream bsIn(packet->data, packet->length, false);
   bsIn.IgnoreBytes(sizeof(MessageID) * 1);
   char usedNonce[TWO_WAY_AUTHENTICATION_NONCE_LENGTH];
-  bsIn.ReadAlignedBytes((unsigned char *)usedNonce,
-                        TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
+  bsIn.ReadAlignedBytes(
+      (unsigned char *)usedNonce, TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
   char hashedNonceAndPw[HASHED_NONCE_AND_PW_LENGTH];
-  bsIn.ReadAlignedBytes((unsigned char *)hashedNonceAndPw,
-                        HASHED_NONCE_AND_PW_LENGTH);
+  bsIn.ReadAlignedBytes(
+      (unsigned char *)hashedNonceAndPw, HASHED_NONCE_AND_PW_LENGTH);
   RakNet::RakString passwordIdentifier;
   bsIn.Read(passwordIdentifier);
 
@@ -398,8 +398,8 @@ void TwoWayAuthentication::Hash(
 #else
   CSHA1 sha1;
   sha1.Update((unsigned char *)thierNonce, TWO_WAY_AUTHENTICATION_NONCE_LENGTH);
-  sha1.Update((unsigned char *)password.C_String(),
-              (unsigned int)password.GetLength());
+  sha1.Update(
+      (unsigned char *)password.C_String(), (unsigned int)password.GetLength());
   sha1.Final();
   sha1.GetHash((unsigned char *)out);
 #endif

@@ -10,8 +10,8 @@ using namespace RakNet;
 
 STATIC_FACTORY_DEFINITIONS(ConnectionGraph2, ConnectionGraph2);
 
-int RakNet::ConnectionGraph2::RemoteSystemComp(const RakNetGUID &key,
-                                               RemoteSystem *const &data) {
+int RakNet::ConnectionGraph2::RemoteSystemComp(
+    const RakNetGUID &key, RemoteSystem *const &data) {
   if (key < data->guid)
     return -1;
   if (key > data->guid)
@@ -70,8 +70,8 @@ bool ConnectionGraph2::ConnectionExists(RakNetGUID g1, RakNetGUID g2) {
   sag.guid = g2;
   return remoteSystems[idx]->remoteConnections.HasData(sag);
 }
-uint16_t ConnectionGraph2::GetPingBetweenSystems(RakNetGUID g1,
-                                                 RakNetGUID g2) const {
+uint16_t ConnectionGraph2::GetPingBetweenSystems(
+    RakNetGUID g1, RakNetGUID g2) const {
   if (g1 == g2)
     return 0;
 
@@ -144,9 +144,8 @@ RakNetGUID ConnectionGraph2::GetLowestAveragePingSystem(void) const {
   return remoteSystems[lowestPingIdx]->guid;
 }
 
-void ConnectionGraph2::OnClosedConnection(
-    const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-    PI2_LostConnectionReason lostConnectionReason) {
+void ConnectionGraph2::OnClosedConnection(const SystemAddress &systemAddress,
+    RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason) {
   // Send notice to all existing connections
   RakNet::BitStream bs;
   if (lostConnectionReason == LCR_CONNECTION_LOST)
@@ -170,8 +169,8 @@ void ConnectionGraph2::SetAutoProcessNewConnections(bool b) {
 bool ConnectionGraph2::GetAutoProcessNewConnections(void) const {
   return autoProcessNewConnections;
 }
-void ConnectionGraph2::AddParticipant(const SystemAddress &systemAddress,
-                                      RakNetGUID rakNetGUID) {
+void ConnectionGraph2::AddParticipant(
+    const SystemAddress &systemAddress, RakNetGUID rakNetGUID) {
   // Relay the new connection to other systems.
   RakNet::BitStream bs;
   bs.Write((MessageID)ID_REMOTE_NEW_INCOMING_CONNECTION);
@@ -226,7 +225,7 @@ void ConnectionGraph2::GetParticipantList(
     participantList.InsertAtEnd(remoteSystems[i]->guid, _FILE_AND_LINE_);
 }
 void ConnectionGraph2::OnNewConnection(const SystemAddress &systemAddress,
-                                       RakNetGUID rakNetGUID, bool isIncoming) {
+    RakNetGUID rakNetGUID, bool isIncoming) {
   (void)isIncoming;
   if (autoProcessNewConnections)
     AddParticipant(systemAddress, rakNetGUID);
@@ -243,8 +242,8 @@ PluginReceiveResult ConnectionGraph2::OnReceive(Packet *packet) {
       bs.Read(saag.systemAddress);
       bs.Read(saag.guid);
       unsigned long idx2 =
-          remoteSystems[idx]->remoteConnections.GetIndexFromKey(saag,
-                                                                &objectExists);
+          remoteSystems[idx]->remoteConnections.GetIndexFromKey(
+              saag, &objectExists);
       if (objectExists)
         remoteSystems[idx]->remoteConnections.RemoveAtIndex(idx2);
     }
@@ -265,8 +264,8 @@ PluginReceiveResult ConnectionGraph2::OnReceive(Packet *packet) {
         unsigned int ii = remoteSystems[idx]->remoteConnections.GetIndexFromKey(
             saag, &objectExists);
         if (objectExists == false)
-          remoteSystems[idx]->remoteConnections.InsertAtIndex(saag, ii,
-                                                              _FILE_AND_LINE_);
+          remoteSystems[idx]->remoteConnections.InsertAtIndex(
+              saag, ii, _FILE_AND_LINE_);
       }
     }
   }

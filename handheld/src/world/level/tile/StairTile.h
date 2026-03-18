@@ -42,15 +42,14 @@ public:
     setLightBlock(255);
   }
 
-  HitResult clip(Level *level, int xt, int yt, int zt, const Vec3 &a,
-                 const Vec3 &b);
+  HitResult clip(
+      Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b);
 
   void updateShape(LevelSource *level, int x, int y, int z) {
     if (isClipping) {
       setShape(0.5f * (clipStep % 2), 0.5f * (clipStep / 2 % 2),
-               0.5f * (clipStep / 4 % 2), 0.5f + 0.5f * (clipStep % 2),
-               0.5f + 0.5f * (clipStep / 2 % 2),
-               0.5f + 0.5f * (clipStep / 4 % 2));
+          0.5f * (clipStep / 4 % 2), 0.5f + 0.5f * (clipStep % 2),
+          0.5f + 0.5f * (clipStep / 2 % 2), 0.5f + 0.5f * (clipStep / 4 % 2));
     } else {
       setShape(0, 0, 0, 1, 1, 1);
     }
@@ -98,7 +97,7 @@ public:
   // }
 
   void addAABBs(Level *level, int x, int y, int z, const AABB *box,
-                std::vector<AABB> &boxes) {
+      std::vector<AABB> &boxes) {
     setBaseShape(level, x, y, z);
     super::addAABBs(level, x, y, z, box, boxes);
 
@@ -172,8 +171,8 @@ public:
     return base->getTileAABB(level, x, y, z);
   }
 
-  void handleEntityInside(Level *level, int x, int y, int z, Entity *e,
-                          Vec3 &current) {
+  void handleEntityInside(
+      Level *level, int x, int y, int z, Entity *e, Vec3 &current) {
     base->handleEntityInside(level, x, y, z, e, current);
   }
 
@@ -229,8 +228,7 @@ public:
   }
 
   int getPlacedOnFaceDataValue(Level *level, int x, int y, int z, int face,
-                               float clickX, float clickY, float clickZ,
-                               int itemValue);
+      float clickX, float clickY, float clickZ, int itemValue);
 };
 
 #endif /*NET_MINECRAFT_WORLD_LEVEL_TILE__StairTile_H__*/

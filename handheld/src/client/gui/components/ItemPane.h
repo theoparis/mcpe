@@ -57,8 +57,8 @@ class ItemPane : public ScrollingPane {
 
 public:
   ItemPane(IItemPaneCallback *screen, Textures *textures,
-           const IntRectangle &rect, int numItems, int guiHeight,
-           int physicalScreenHeight, bool isVertical = true);
+      const IntRectangle &rect, int numItems, int guiHeight,
+      int physicalScreenHeight, bool isVertical = true);
   ~ItemPane();
 
   void renderBatch(std::vector<GridItem> &item, float alpha);

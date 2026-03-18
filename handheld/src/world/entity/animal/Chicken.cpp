@@ -10,7 +10,7 @@ Chicken::Chicken(Level *level)
   textureName = "mob/chicken.png";
   setSize(0.3f, 0.7f);
   eggTime = random.nextInt(SharedConstants::TicksPerSecond * 60 * 5) +
-            SharedConstants::TicksPerSecond * 60 * 5;
+      SharedConstants::TicksPerSecond * 60 * 5;
 }
 
 int Chicken::getEntityTypeId() const { return MobTypes::Chicken; }
@@ -46,7 +46,7 @@ void Chicken::aiStep() {
   //(random.nextFloat() - random.nextFloat()) * 0.2f + 1.0f);
   //		spawnAtLocation(Item::egg->id, 1);
   //		eggTime = random.nextInt(SharedConstants::TicksPerSecond * 60 *
-  //5) + SharedConstants::TicksPerSecond * 60 * 5;
+  // 5) + SharedConstants::TicksPerSecond * 60 * 5;
   //	}
   //}
 }

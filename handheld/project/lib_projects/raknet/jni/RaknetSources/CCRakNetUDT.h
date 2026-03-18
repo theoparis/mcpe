@@ -93,12 +93,10 @@ public:
   void Update(CCTimeType curTime, bool hasDataToSendOrResend);
 
   int GetRetransmissionBandwidth(CCTimeType curTime,
-                                 CCTimeType timeSinceLastTick,
-                                 uint32_t unacknowledgedBytes,
-                                 bool isContinuousSend);
+      CCTimeType timeSinceLastTick, uint32_t unacknowledgedBytes,
+      bool isContinuousSend);
   int GetTransmissionBandwidth(CCTimeType curTime, CCTimeType timeSinceLastTick,
-                               uint32_t unacknowledgedBytes,
-                               bool isContinuousSend);
+      uint32_t unacknowledgedBytes, bool isContinuousSend);
 
   /// Acks do not have to be sent immediately. Instead, they can be buffered up
   /// such that groups of acks are sent at a time This reduces overall bandwidth
@@ -122,15 +120,15 @@ public:
 
   /// Call this when you get a packet pair
   void OnGotPacketPair(DatagramSequenceNumberType datagramSequenceNumber,
-                       uint32_t sizeInBytes, CCTimeType curTime);
+      uint32_t sizeInBytes, CCTimeType curTime);
 
   /// Call this when you get a packet (including packet pairs)
   /// If the DatagramSequenceNumberType is out of order, skippedMessageCount
   /// will be non-zero In that case, send a NAK for every sequence number up to
   /// that count
   bool OnGotPacket(DatagramSequenceNumberType datagramSequenceNumber,
-                   bool isContinuousSend, CCTimeType curTime,
-                   uint32_t sizeInBytes, uint32_t *skippedMessageCount);
+      bool isContinuousSend, CCTimeType curTime, uint32_t sizeInBytes,
+      uint32_t *skippedMessageCount);
 
   /// Call when you get a NAK, with the sequence number of the lost message
   /// Affects the congestion control
@@ -142,16 +140,16 @@ public:
   /// B and AS are used in the calculations in UpdateWindowSizeAndAckOnAckPerSyn
   /// B and AS are updated at most once per SYN
   void OnAck(CCTimeType curTime, CCTimeType rtt, bool hasBAndAS,
-             BytesPerMicrosecond _B, BytesPerMicrosecond _AS,
-             double totalUserDataBytesAcked, bool isContinuousSend,
-             DatagramSequenceNumberType sequenceNumber);
-  void OnDuplicateAck(CCTimeType curTime,
-                      DatagramSequenceNumberType sequenceNumber) {}
+      BytesPerMicrosecond _B, BytesPerMicrosecond _AS,
+      double totalUserDataBytesAcked, bool isContinuousSend,
+      DatagramSequenceNumberType sequenceNumber);
+  void OnDuplicateAck(
+      CCTimeType curTime, DatagramSequenceNumberType sequenceNumber) {}
 
   /// Call when you send an ack, to see if the ack should have the B and AS
   /// parameters transmitted Call before calling OnSendAck()
   void OnSendAckGetBAndAS(CCTimeType curTime, bool *hasBAndAS,
-                          BytesPerMicrosecond *_B, BytesPerMicrosecond *_AS);
+      BytesPerMicrosecond *_B, BytesPerMicrosecond *_AS);
 
   /// Call when we send an ack, to write B and AS if needed
   /// B and AS are only written once per SYN, to prevent slow calculations
@@ -202,11 +200,11 @@ public:
   }
 
   /// Is a > b, accounting for variable overflow?
-  static bool GreaterThan(DatagramSequenceNumberType a,
-                          DatagramSequenceNumberType b);
+  static bool GreaterThan(
+      DatagramSequenceNumberType a, DatagramSequenceNumberType b);
   /// Is a < b, accounting for variable overflow?
-  static bool LessThan(DatagramSequenceNumberType a,
-                       DatagramSequenceNumberType b);
+  static bool LessThan(
+      DatagramSequenceNumberType a, DatagramSequenceNumberType b);
   //	void SetTimeBetweenSendsLimit(unsigned int bitsPerSecond);
   uint64_t GetBytesPerSecondLimitByCongestionControl(void) const;
 
@@ -385,8 +383,8 @@ protected:
   void SetNextSYNUpdate(CCTimeType currentTime);
 
   /// Returns the rate of data arrival, based on packets arriving on the sender.
-  BytesPerMicrosecond
-  ReceiverCalculateDataArrivalRate(CCTimeType curTime) const;
+  BytesPerMicrosecond ReceiverCalculateDataArrivalRate(
+      CCTimeType curTime) const;
   /// Returns the median of the data arrival rate
   BytesPerMicrosecond ReceiverCalculateDataArrivalRateMedian(void) const;
 
@@ -395,8 +393,8 @@ protected:
       const BytesPerMicrosecond inputList[CC_RAKNET_UDT_PACKET_HISTORY_LENGTH],
       int inputListLength, int lessThanSum, int greaterThanSum);
   //	static uint32_t CalculateListMedianRecursive(const uint32_t
-  //inputList[RTT_HISTORY_LENGTH], int inputListLength, int lessThanSum, int
-  //greaterThanSum);
+  // inputList[RTT_HISTORY_LENGTH], int inputListLength, int lessThanSum, int
+  // greaterThanSum);
 
   /// Same as GetRTOForRetransmission, but does not factor in ExpCount
   /// This is because the receiver does not know ExpCount for the sender, and
@@ -407,8 +405,8 @@ protected:
   void EndSlowStart(void);
 
   /// Does the named conversion
-  inline double
-  BytesPerMicrosecondToPacketsPerMillisecond(BytesPerMicrosecond in);
+  inline double BytesPerMicrosecondToPacketsPerMillisecond(
+      BytesPerMicrosecond in);
 
   /// Update the round trip time, from ACK or ACK2
   // void UpdateRTT(CCTimeType rtt);
@@ -417,10 +415,8 @@ protected:
   void UpdateWindowSizeAndAckOnAckPreSlowStart(double totalUserDataBytesAcked);
 
   /// Update the corresponding variables post-slow start
-  void
-  UpdateWindowSizeAndAckOnAckPerSyn(CCTimeType curTime, CCTimeType rtt,
-                                    bool isContinuousSend,
-                                    DatagramSequenceNumberType sequenceNumber);
+  void UpdateWindowSizeAndAckOnAckPerSyn(CCTimeType curTime, CCTimeType rtt,
+      bool isContinuousSend, DatagramSequenceNumberType sequenceNumber);
 
   /// Sets halveSNDOnNoDataTime to the future, and also resets ExpCount, which
   /// is used to multiple the RTO on no data arriving at all

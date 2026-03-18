@@ -130,7 +130,7 @@ public:
 
   bool mayPlace(Level *level, int x, int y, int z, unsigned char face) {
     return level->isSolidBlockingTile(x, y - 1, z) ||
-           isValidFireLocation(level, x, y, z);
+        isValidFireLocation(level, x, y, z);
   }
 
   void neighborChanged(Level *level, int x, int y, int z, int type) {
@@ -241,8 +241,8 @@ private:
     burnOdds[id] = burn;
   }
 
-  void checkBurn(Level *level, int x, int y, int z, int chance,
-                 Random *random) {
+  void checkBurn(
+      Level *level, int x, int y, int z, int chance, Random *random) {
     return; //@fire
 
     int odds = burnOdds[level->getTile(x, y, z)];

@@ -45,7 +45,7 @@ HumanoidModel::HumanoidModel(float g /*= 0*/, float yOffset /*= 0*/)
 }
 
 void HumanoidModel::render(Entity *e, float time, float r, float bob,
-                           float yRot, float xRot, float scale) {
+    float yRot, float xRot, float scale) {
   if (e != NULL && e->isMob()) {
     Mob *mob = (Mob *)(e);
     ItemInstance *item = mob->getCarriedItem();
@@ -96,8 +96,8 @@ void HumanoidModel::render(HumanoidModel *model, float scale) {
   // hair.render(scale);
 }
 
-void HumanoidModel::renderHorrible(float time, float r, float bob, float yRot,
-                                   float xRot, float scale) {
+void HumanoidModel::renderHorrible(
+    float time, float r, float bob, float yRot, float xRot, float scale) {
   setupAnim(time, r, bob, yRot, xRot, scale);
   head.renderHorrible(scale);
   body.renderHorrible(scale);
@@ -108,8 +108,8 @@ void HumanoidModel::renderHorrible(float time, float r, float bob, float yRot,
   // hair.renderHorrible(scale);
 }
 // Updated to match Minecraft Java, all except hair.
-void HumanoidModel::setupAnim(float time, float r, float bob, float yRot,
-                              float xRot, float scale) {
+void HumanoidModel::setupAnim(
+    float time, float r, float bob, float yRot, float xRot, float scale) {
   head.yRot = yRot / (180 / Mth::PI);
   head.xRot = xRot / (180 / Mth::PI);
   const float tcos0 = Mth::cos(time * 0.6662f) * r;

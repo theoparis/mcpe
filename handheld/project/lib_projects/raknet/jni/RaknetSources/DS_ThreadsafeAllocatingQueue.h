@@ -73,9 +73,8 @@ structureType *ThreadsafeAllocatingQueue<structureType>::Pop(void) {
 }
 
 template <class structureType>
-structureType *
-ThreadsafeAllocatingQueue<structureType>::Allocate(const char *file,
-                                                   unsigned int line) {
+structureType *ThreadsafeAllocatingQueue<structureType>::Allocate(
+    const char *file, unsigned int line) {
   structureType *s;
   memoryPoolMutex.Lock();
   s = memoryPool.Allocate(file, line);
@@ -85,9 +84,8 @@ ThreadsafeAllocatingQueue<structureType>::Allocate(const char *file,
   return s;
 }
 template <class structureType>
-void ThreadsafeAllocatingQueue<structureType>::Deallocate(structureType *s,
-                                                          const char *file,
-                                                          unsigned int line) {
+void ThreadsafeAllocatingQueue<structureType>::Deallocate(
+    structureType *s, const char *file, unsigned int line) {
   // Call delete operator, memory pool doesn't do this
   s->~structureType();
   memoryPoolMutex.Lock();
@@ -96,8 +94,8 @@ void ThreadsafeAllocatingQueue<structureType>::Deallocate(structureType *s,
 }
 
 template <class structureType>
-void ThreadsafeAllocatingQueue<structureType>::Clear(const char *file,
-                                                     unsigned int line) {
+void ThreadsafeAllocatingQueue<structureType>::Clear(
+    const char *file, unsigned int line) {
   memoryPoolMutex.Lock();
   for (unsigned int i = 0; i < queue.Size(); i++) {
     queue[i]->~structureType();

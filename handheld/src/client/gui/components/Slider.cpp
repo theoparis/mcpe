@@ -6,17 +6,17 @@
 #include <algorithm>
 #include <assert.h>
 Slider::Slider(Minecraft *minecraft, const Options::Option *option,
-               float progressMin, float progressMax)
+    float progressMin, float progressMax)
     : sliderType(SliderProgress), mouseDownOnElement(false), option(option),
       numSteps(0), progressMin(progressMin), progressMax(progressMax) {
   if (option != NULL) {
     percentage = (minecraft->options.getProgressValue(option) - progressMin) /
-                 (progressMax - progressMin);
+        (progressMax - progressMin);
   }
 }
 
 Slider::Slider(Minecraft *minecraft, const Options::Option *option,
-               const std::vector<int> &stepVec)
+    const std::vector<int> &stepVec)
     : sliderType(SliderStep), curStepValue(0), curStep(0), sliderSteps(stepVec),
       mouseDownOnElement(false), option(option), percentage(0),
       progressMin(0.0f), progressMax(1.0) {
@@ -51,12 +51,12 @@ void Slider::render(Minecraft *minecraft, int xm, int ym) {
     for (int a = 0; a <= numSteps - 1; ++a) {
       int renderSliderStepPosX = xSliderStart + a * stepDistance + 1;
       fill(renderSliderStepPosX - 1, ySliderStart - 2, renderSliderStepPosX + 1,
-           ySliderEnd + 2, 0xff606060);
+          ySliderEnd + 2, 0xff606060);
     }
   }
   minecraft->textures->loadAndBindTexture("gui/touchgui.png");
   blit(xSliderStart + (int)(percentage * barWidth) - handleSizeX / 2, y, 226,
-       126, handleSizeX, handleSizeY, handleSizeX, handleSizeY);
+      126, handleSizeX, handleSizeY, handleSizeX, handleSizeY);
 }
 
 void Slider::mouseClicked(Minecraft *minecraft, int x, int y, int buttonNum) {

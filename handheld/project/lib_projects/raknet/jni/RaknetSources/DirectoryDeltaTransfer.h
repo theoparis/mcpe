@@ -125,12 +125,10 @@ public:
   /// \param[in] cb Callback to get progress updates. Pass 0 to not use.
   /// \return A set ID, identifying this download set.  Returns 65535 on host
   /// unreachable.
-  unsigned short
-  DownloadFromSubdirectory(const char *subdir, const char *outputSubdir,
-                           bool prependAppDirToOutputSubdir, SystemAddress host,
-                           FileListTransferCBInterface *onFileCallback,
-                           PacketPriority _priority, char _orderingChannel,
-                           FileListProgress *cb);
+  unsigned short DownloadFromSubdirectory(const char *subdir,
+      const char *outputSubdir, bool prependAppDirToOutputSubdir,
+      SystemAddress host, FileListTransferCBInterface *onFileCallback,
+      PacketPriority _priority, char _orderingChannel, FileListProgress *cb);
 
   /// \brief Downloads files from the matching parameter \a subdir in
   /// AddUploadsFromSubdirectory.
@@ -160,8 +158,8 @@ public:
   /// \param[in] cb Callback to get progress updates. Pass 0 to not use.
   /// \return A set ID, identifying this download set.  Returns 65535 on host
   /// unreachable.
-  unsigned short DownloadFromSubdirectory(
-      FileList &localFiles, const char *subdir, const char *outputSubdir,
+  unsigned short DownloadFromSubdirectory(FileList &localFiles,
+      const char *subdir, const char *outputSubdir,
       bool prependAppDirToOutputSubdir, SystemAddress host,
       FileListTransferCBInterface *onFileCallback, PacketPriority _priority,
       char _orderingChannel, FileListProgress *cb);
@@ -178,7 +176,7 @@ public:
   /// pathToApplication when determining the final output path.  Usually you
   /// want this to be true.
   void GenerateHashes(FileList &localFiles, const char *outputSubdir,
-                      bool prependAppDirToOutputSubdir);
+      bool prependAppDirToOutputSubdir);
 
   /// \brief Clear all allowed uploads previously set with
   /// AddUploadsFromSubdirectory

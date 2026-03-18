@@ -7,8 +7,8 @@ using namespace RakNet;
 
 STATIC_FACTORY_DEFINITIONS(DataCompressor, DataCompressor)
 
-void DataCompressor::Compress(unsigned char *userData, unsigned sizeInBytes,
-                              RakNet::BitStream *output) {
+void DataCompressor::Compress(
+    unsigned char *userData, unsigned sizeInBytes, RakNet::BitStream *output) {
   // Don't use this for small files as you will just make them bigger!
   RakAssert(sizeInBytes > 2048);
 
@@ -31,14 +31,13 @@ void DataCompressor::Compress(unsigned char *userData, unsigned sizeInBytes,
   bitsUsed2 = output->GetNumberOfBitsUsed();
   writeOffset2 = output->GetWriteOffset();
   output->SetWriteOffset(writeOffset1);
-  output->Write(
-      bitsUsed2 -
+  output->Write(bitsUsed2 -
       bitsUsed1); // Go back and write how many bits were used for the encoding
   output->SetWriteOffset(writeOffset2);
 }
 
-unsigned DataCompressor::DecompressAndAllocate(RakNet::BitStream *input,
-                                               unsigned char **output) {
+unsigned DataCompressor::DecompressAndAllocate(
+    RakNet::BitStream *input, unsigned char **output) {
   HuffmanEncodingTree tree;
   unsigned int bitsUsed, destinationSizeInBytes;
   unsigned int decompressedBytes;

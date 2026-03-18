@@ -43,10 +43,9 @@ public:
   } GridItem;
 
   ScrollingPane(int flags, const IntRectangle &boundingBox,
-                const IntRectangle &itemRect, int columns, int numItems,
-                float screenScale = 1.0f,
-                const IntRectangle &itemBoundingRect = IntRectangle(0, 0, 0,
-                                                                    0));
+      const IntRectangle &itemRect, int columns, int numItems,
+      float screenScale = 1.0f,
+      const IntRectangle &itemBoundingRect = IntRectangle(0, 0, 0, 0));
   ~ScrollingPane();
   // void init(Minecraft*, int width, int height);
   void tick();
@@ -111,7 +110,7 @@ protected:
 
   bool pagingEnabled; //!
 
-  Vec3 _contentOffset;                   //!
+  Vec3 _contentOffset; //!
   Vec3 _contentOffsetBeforeDeceleration; //*
 
   int lastEventTime; //<
@@ -123,13 +122,13 @@ protected:
   float penetrationDeceleration; //<
   float penetrationAcceleration; //<
 
-  Vec3 minPoint;           //*
-  Vec3 startPosition;      //*
+  Vec3 minPoint; //*
+  Vec3 startPosition; //*
   Vec3 startTouchPosition; //*
-  Vec3 startTimePosition;  //*
+  Vec3 startTimePosition; //*
 
   bool wasDeceleratingWhenTouchesBegan; //*
-  bool firstDrag;                       //<
+  bool firstDrag; //<
 
   float startTime; //<
   // float startTime
@@ -137,7 +136,7 @@ protected:
   IntRectangle size;
   int lastFrame;
 
-  bool _scrollEnabled;   //!
+  bool _scrollEnabled; //!
   bool touchesHaveMoved; //*
 
   virtual void didEndDragging() {}

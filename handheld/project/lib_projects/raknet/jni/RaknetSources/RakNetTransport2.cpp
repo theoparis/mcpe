@@ -35,8 +35,8 @@ void RakNetTransport2::Stop(void) {
   }
   packetQueue.Clear(_FILE_AND_LINE_);
 }
-void RakNetTransport2::Send(SystemAddress systemAddress, const char *data,
-                            ...) {
+void RakNetTransport2::Send(
+    SystemAddress systemAddress, const char *data, ...) {
   if (data == 0 || data[0] == 0)
     return;
 
@@ -52,8 +52,7 @@ void RakNetTransport2::Send(SystemAddress systemAddress, const char *data,
   str.Write(text, (int)strlen(text));
   str.Write((unsigned char)0); // Null terminate the string
   rakPeerInterface->Send(&str, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0,
-                         systemAddress,
-                         (systemAddress == UNASSIGNED_SYSTEM_ADDRESS) != 0);
+      systemAddress, (systemAddress == UNASSIGNED_SYSTEM_ADDRESS) != 0);
 }
 void RakNetTransport2::CloseConnection(SystemAddress systemAddress) {
   rakPeerInterface->CloseConnection(systemAddress, true, 0);
@@ -95,15 +94,14 @@ PluginReceiveResult RakNetTransport2::OnReceive(Packet *packet) {
   }
   return RR_CONTINUE_PROCESSING;
 }
-void RakNetTransport2::OnClosedConnection(
-    const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-    PI2_LostConnectionReason lostConnectionReason) {
+void RakNetTransport2::OnClosedConnection(const SystemAddress &systemAddress,
+    RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason) {
   (void)rakNetGUID;
   (void)lostConnectionReason;
   lostConnections.Push(systemAddress, _FILE_AND_LINE_);
 }
 void RakNetTransport2::OnNewConnection(const SystemAddress &systemAddress,
-                                       RakNetGUID rakNetGUID, bool isIncoming) {
+    RakNetGUID rakNetGUID, bool isIncoming) {
   (void)rakNetGUID;
   (void)isIncoming;
   newConnections.Push(systemAddress, _FILE_AND_LINE_);

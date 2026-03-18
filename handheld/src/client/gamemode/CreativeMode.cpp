@@ -46,6 +46,7 @@ void CreativeMode::continueDestroyBlock(int x, int y, int z, int face) {
 void CreativeMode::stopDestroyBlock() {}
 
 void CreativeMode::initAbilities(Abilities &abilities) {
+  abilities.flying = true;
   abilities.mayfly = true;
   abilities.instabuild = true;
   abilities.invulnerable = true;

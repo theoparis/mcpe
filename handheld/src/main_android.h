@@ -56,19 +56,19 @@ static int engine_init_display(struct ENGINE *engine) {
   LOGI("1) Initing display. Get display\n");
   // initialize OpenGL ES 2.0 and EGL
   const EGLint attribs[] = {EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
-                            // EGL_BUFFER_SIZE, 32,
-                            // EGL_BLUE_SIZE, 5,
-                            // EGL_GREEN_SIZE, 6,
-                            // EGL_RED_SIZE, 5,
-                            /// EGL_ALPHA_SIZE, 8,
-                            // 0x3098, 1,
-                            // EGL_TRANSPARENT_TYPE, EGL_TRANSPARENT_RGB,
-                            // EGL_ALPHA_SIZE, 8,//5,
-                            EGL_DEPTH_SIZE, 16, // 8
-                            // EGL_STENCIL_SIZE, 8,
-                            // EGL_DEPTH_SIZE, 16,
-                            // EGL_CONFIG_CAVEAT,   EGL_NONE,
-                            EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT, EGL_NONE};
+      // EGL_BUFFER_SIZE, 32,
+      // EGL_BLUE_SIZE, 5,
+      // EGL_GREEN_SIZE, 6,
+      // EGL_RED_SIZE, 5,
+      /// EGL_ALPHA_SIZE, 8,
+      // 0x3098, 1,
+      // EGL_TRANSPARENT_TYPE, EGL_TRANSPARENT_RGB,
+      // EGL_ALPHA_SIZE, 8,//5,
+      EGL_DEPTH_SIZE, 16, // 8
+      // EGL_STENCIL_SIZE, 8,
+      // EGL_DEPTH_SIZE, 16,
+      // EGL_CONFIG_CAVEAT,   EGL_NONE,
+      EGL_RENDERABLE_TYPE, EGL_OPENGL_ES_BIT, EGL_NONE};
 
   EGLint w, h, format;
   EGLint numConfigs;
@@ -174,8 +174,8 @@ static void engine_term_display(struct ENGINE *engine) {
   // LOGI( "engine_term_display" );
 
   if (engine->display != EGL_NO_DISPLAY) {
-    eglMakeCurrent(engine->display, EGL_NO_SURFACE, EGL_NO_SURFACE,
-                   EGL_NO_CONTEXT);
+    eglMakeCurrent(
+        engine->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 
     if (engine->context != EGL_NO_CONTEXT) {
       eglDestroyContext(engine->display, engine->context);
@@ -203,7 +203,7 @@ static int broadcastData(int port, void *msg, int msgLen) {
   broadcastAddr.sin_addr.s_addr = inet_addr("192.168.0.255");
 
   return sendto(socketDesc, msg, msgLen, 0, (struct sockaddr *)&broadcastAddr,
-                sizeof(broadcastAddr));
+      sizeof(broadcastAddr));
 }
 
 static void mouseDown(int buttonId, int x, int y) {
@@ -245,21 +245,21 @@ __inline static const float padYtoSigned(int y) {
 }
 
 static void trackpadPress(int x, int y) {
-  Controller::feed(1, Controller::STATE_TOUCH, padXtoSigned(x),
-                   padYtoSigned(y));
+  Controller::feed(
+      1, Controller::STATE_TOUCH, padXtoSigned(x), padYtoSigned(y));
 }
 static void trackpadMove(int x, int y) {
   Controller::feed(1, Controller::STATE_MOVE, padXtoSigned(x), padYtoSigned(y));
 }
 static void trackpadRelease(int x, int y) {
-  Controller::feed(1, Controller::STATE_RELEASE, padXtoSigned(x),
-                   padYtoSigned(y));
+  Controller::feed(
+      1, Controller::STATE_RELEASE, padXtoSigned(x), padYtoSigned(y));
 }
 
 static int isTouchpadTouched = 0;
 
-static int32_t handle_xperia_input(struct android_app *app,
-                                   AInputEvent *event) {
+static int32_t handle_xperia_input(
+    struct android_app *app, AInputEvent *event) {
   if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
     struct ENGINE *engine = (struct ENGINE *)app->userData;
     int nPointerCount = AMotionEvent_getPointerCount(event);
@@ -291,8 +291,7 @@ static int32_t handle_xperia_input(struct android_app *app,
           // LOGI("mouse-pointer down");
         }
       } else if (
-          nAction == AMOTION_EVENT_ACTION_UP || nAction ==
-                                                    AMOTION_EVENT_ACTION_POINTER_UP /*|| nAction == AMOTION_EVENT_ACTION_CANCEL*/) {
+          nAction == AMOTION_EVENT_ACTION_UP || nAction == AMOTION_EVENT_ACTION_POINTER_UP /*|| nAction == AMOTION_EVENT_ACTION_CANCEL*/) {
         // LOGI("action up %d\n", isTrackpad);
         if (isTrackpad) {
           // LOGI("trackpad-up\n");
@@ -350,8 +349,8 @@ static int convertAndroidKeyCodeToWindowsKeyCode(int keyCode) {
     return 0;
   }
 }
-static int32_t handle_keyboard_input(struct android_app *app,
-                                     AInputEvent *event) {
+static int32_t handle_keyboard_input(
+    struct android_app *app, AInputEvent *event) {
   if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_KEY) {
     struct ENGINE *engine = (struct ENGINE *)app->userData;
     bool isDown = AKeyEvent_getAction(event) == AKEY_EVENT_ACTION_DOWN;
@@ -419,7 +418,7 @@ static int32_t handle_touch_input(struct android_app *app, AInputEvent *event) {
   int fullAction = AMotionEvent_getAction(event);
   int nAction = AMOTION_EVENT_ACTION_MASK & fullAction;
   int pointerIndex = (fullAction & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >>
-                     AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+      AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
   int pointerId = AMotionEvent_getPointerId(event, pointerIndex);
   int x = (int)AMotionEvent_getX(event, pointerIndex);
   int y = (int)AMotionEvent_getY(event, pointerIndex);
@@ -456,8 +455,8 @@ static int32_t handle_touch_input(struct android_app *app, AInputEvent *event) {
 /**
  * Process the next input event.
  */
-static int32_t engine_handle_input(struct android_app *app,
-                                   AInputEvent *event) {
+static int32_t engine_handle_input(
+    struct android_app *app, AInputEvent *event) {
   if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_KEY)
     return handle_keyboard_input(app, event);
 

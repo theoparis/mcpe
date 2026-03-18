@@ -26,22 +26,22 @@ Recipes::Recipes() {
   ClothDyeRecipes::addRecipes(this);
 
   addShapedRecipe(ItemInstance(Item::paper, 3), //
-                  "###",                        //
+      "###", //
 
-                  definition('#', Item::reeds));
+      definition('#', Item::reeds));
 
   addShapedRecipe(ItemInstance(Item::book, 1), //
-                  "#",                         //
-                  "#",                         //
-                  "#",                         //
+      "#", //
+      "#", //
+      "#", //
 
-                  definition('#', Item::paper));
+      definition('#', Item::paper));
 
   addShapedRecipe(ItemInstance(Tile::fence, 2), //
-                  "###",                        //
-                  "###",                        //
+      "###", //
+      "###", //
 
-                  definition('#', Item::stick));
+      definition('#', Item::stick));
 
   // addShapedRecipe(ItemInstance(Tile::netherFence, 6), //
   //	"###", //
@@ -50,10 +50,10 @@ Recipes::Recipes() {
   //	'#', Tile::netherBrick);
 
   addShapedRecipe(ItemInstance(Tile::fenceGate, 1), //
-                  "#W#",                            //
-                  "#W#",                            //
+      "#W#", //
+      "#W#", //
 
-                  definition('#', Item::stick, 'W', Tile::wood));
+      definition('#', Item::stick, 'W', Tile::wood));
 
   // addShapedRecipe(ItemInstance(Tile::recordPlayer, 1), //
   //	"###", //
@@ -70,102 +70,102 @@ Recipes::Recipes() {
   //	definition('#', Tile::wood, 'X', Item::redStone));
 
   addShapedRecipe(ItemInstance(Tile::bookshelf, 1), //
-                  "###",                            //
-                  "XXX",                            //
-                  "###",                            //
+      "###", //
+      "XXX", //
+      "###", //
 
-                  definition('#', Tile::wood, 'X', Item::book));
+      definition('#', Tile::wood, 'X', Item::book));
 
   addShapedRecipe(ItemInstance(Tile::snow, 1), //
-                  "##",                        //
-                  "##",                        //
+      "##", //
+      "##", //
 
-                  definition('#', Item::snowBall));
+      definition('#', Item::snowBall));
 
   addShapedRecipe(ItemInstance(Tile::clay, 1), //
-                  "##",                        //
-                  "##",                        //
+      "##", //
+      "##", //
 
-                  definition('#', Item::clay));
+      definition('#', Item::clay));
 
   addShapedRecipe(ItemInstance(Tile::redBrick, 1), //
-                  "##",                            //
-                  "##",                            //
+      "##", //
+      "##", //
 
-                  definition('#', Item::brick));
+      definition('#', Item::brick));
 
   addShapedRecipe(ItemInstance(Tile::lightGem, 1), //
-                  "##",                            //
-                  "##",                            //
+      "##", //
+      "##", //
 
-                  definition('#', Item::yellowDust));
+      definition('#', Item::yellowDust));
 
   addShapedRecipe(ItemInstance(Tile::cloth, 1), //
-                  "##",                         //
-                  "##",                         //
+      "##", //
+      "##", //
 
-                  definition('#', Item::string));
+      definition('#', Item::string));
 
   addShapedRecipe(ItemInstance(Tile::tnt, 1), //
-                  "X#X",                      //
-                  "#X#",                      //
-                  "X#X",                      //
+      "X#X", //
+      "#X#", //
+      "X#X", //
 
-                  definition('X', Item::sulphur, '#', Tile::sand));
+      definition('X', Item::sulphur, '#', Tile::sand));
 
   addShapedRecipe(
       ItemInstance(Tile::stoneSlabHalf, 6, StoneSlabTile::COBBLESTONE_SLAB), //
-      "###",                                                                 //
+      "###", //
 
       definition('#', Tile::stoneBrick));
 
   addShapedRecipe(
       ItemInstance(Tile::stoneSlabHalf, 6, StoneSlabTile::STONE_SLAB), //
-      "###",                                                           //
+      "###", //
 
       definition('#', Tile::rock));
 
   addShapedRecipe(
       ItemInstance(Tile::stoneSlabHalf, 6, StoneSlabTile::SAND_SLAB), //
-      "###",                                                          //
+      "###", //
       definition('#', Tile::sandStone));
 
   addShapedRecipe(
       ItemInstance(Tile::stoneSlabHalf, 6, StoneSlabTile::WOOD_SLAB), //
-      "###",                                                          //
+      "###", //
 
       definition('#', Tile::wood));
 
   addShapedRecipe(
       ItemInstance(Tile::stoneSlabHalf, 6, StoneSlabTile::BRICK_SLAB), //
-      "###",                                                           //
+      "###", //
 
       definition('#', Tile::redBrick));
 
   addShapedRecipe(
       ItemInstance(Tile::stoneSlabHalf, 6, StoneSlabTile::SMOOTHBRICK_SLAB), //
-      "###",                                                                 //
+      "###", //
       definition('#', Tile::stoneBrickSmooth));
 
   addShapedRecipe(ItemInstance(Tile::ladder, 2), //
-                  "# #",                         //
-                  "###",                         //
-                  "# #",                         //
+      "# #", //
+      "###", //
+      "# #", //
 
-                  definition('#', Item::stick));
+      definition('#', Item::stick));
 
   addShapedRecipe(ItemInstance(Item::door_wood, 1), //
-                  "##",                             //
-                  "##",                             //
-                  "##",                             //
+      "##", //
+      "##", //
+      "##", //
 
-                  definition('#', Tile::wood));
+      definition('#', Tile::wood));
 
   addShapedRecipe(ItemInstance(Tile::trapdoor, 2), //
-                  "###",                           //
-                  "###",                           //
+      "###", //
+      "###", //
 
-                  definition('#', Tile::wood));
+      definition('#', Tile::wood));
 
   // addShapedRecipe(ItemInstance(Item::door_iron, 1), //
   //	"##", //
@@ -175,11 +175,11 @@ Recipes::Recipes() {
   //	definition('#', Item::ironIngot));
 
   addShapedRecipe(ItemInstance(Item::sign, 1), //
-                  "###",                       //
-                  "###",                       //
-                  " X ",                       //
+      "###", //
+      "###", //
+      " X ", //
 
-                  definition('#', Tile::wood, 'X', Item::stick));
+      definition('#', Tile::wood, 'X', Item::stick));
 
   // addShapedRecipe(ItemInstance(Item::cake, 1), //
   //	"AAA", //
@@ -191,41 +191,40 @@ Recipes::Recipes() {
   //				'C', Item::wheat, 'E', Item::egg));
 
   addShapedRecipe(ItemInstance(Item::sugar, 1), //
-                  "#",                          //
+      "#", //
 
-                  definition('#', Item::reeds));
+      definition('#', Item::reeds));
 
   addShapedRecipe(ItemInstance(Tile::wood, 4), //
-                  "#",                         //
+      "#", //
 
-                  definition('#', Tile::treeTrunk));
+      definition('#', Tile::treeTrunk));
 
   addShapedRecipe(ItemInstance(Item::stick, 4), //
-                  "#",                          //
-                  "#",                          //
+      "#", //
+      "#", //
 
-                  definition('#', Tile::wood));
+      definition('#', Tile::wood));
 
   addShapedRecipe(ItemInstance(Tile::torch, 4), //
-                  "X",                          //
-                  "#",                          //
+      "X", //
+      "#", //
 
-                  definition('X', Item::coal, //
-                             '#', Item::stick));
+      definition('X', Item::coal, //
+          '#', Item::stick));
   // torch made of charcoal
-  addShapedRecipe(
-      ItemInstance(Tile::torch, 4), //
-      "X",                          //
-      "#",                          //
+  addShapedRecipe(ItemInstance(Tile::torch, 4), //
+      "X", //
+      "#", //
 
       definition('X', ItemInstance(Item::coal, 1, CoalItem::CHAR_COAL), //
-                 '#', Item::stick));
+          '#', Item::stick));
 
   addShapedRecipe(ItemInstance(Item::bowl, 4), //
-                  "# #",                       //
-                  " # ",                       //
+      "# #", //
+      " # ", //
 
-                  definition('#', Tile::wood));
+      definition('#', Tile::wood));
 
   // addShapedRecipe(ItemInstance(Item::glassBottle, 3), //
   //	"# #", //
@@ -309,22 +308,22 @@ Recipes::Recipes() {
   //	definition('#', Item::ironIngot));
 
   addShapedRecipe(ItemInstance(Item::flintAndSteel, 1), //
-                  "A ",                                 //
-                  " B",                                 //
+      "A ", //
+      " B", //
 
-                  definition('A', Item::ironIngot, 'B', Item::flint));
+      definition('A', Item::ironIngot, 'B', Item::flint));
 
   addShapedRecipe(ItemInstance(Item::bread, 1), //
-                  "###",                        //
+      "###", //
 
-                  definition('#', Item::wheat));
+      definition('#', Item::wheat));
 
   addShapedRecipe(ItemInstance(Tile::stairs_wood, 4), //
-                  "#  ",                              //
-                  "## ",                              //
-                  "###",                              //
+      "#  ", //
+      "## ", //
+      "###", //
 
-                  definition('#', Tile::wood));
+      definition('#', Tile::wood));
 
   // addShapedRecipe(ItemInstance(Item::fishingRod, 1), //
   //	"  #", //
@@ -334,38 +333,38 @@ Recipes::Recipes() {
   //	definition('#', Item::stick, 'X', Item::string));
 
   addShapedRecipe(ItemInstance(Tile::stairs_stone, 4), //
-                  "#  ",                               //
-                  "## ",                               //
-                  "###",                               //
+      "#  ", //
+      "## ", //
+      "###", //
 
-                  definition('#', Tile::stoneBrick));
+      definition('#', Tile::stoneBrick));
 
   addShapedRecipe(ItemInstance(Tile::stairs_brick, 4), //
-                  "#  ",                               //
-                  "## ",                               //
-                  "###",                               //
-                  definition('#', Tile::redBrick));
+      "#  ", //
+      "## ", //
+      "###", //
+      definition('#', Tile::redBrick));
 
   addShapedRecipe(ItemInstance(Tile::stairs_stoneBrickSmooth, 4), //
-                  "#  ",                                          //
-                  "## ",                                          //
-                  "###",                                          //
+      "#  ", //
+      "## ", //
+      "###", //
 
-                  definition('#', Tile::stoneBrickSmooth));
+      definition('#', Tile::stoneBrickSmooth));
 
   addShapedRecipe(ItemInstance(Tile::stairs_netherBricks, 4), //
-                  "#  ",                                      //
-                  "## ",                                      //
-                  "###",                                      //
+      "#  ", //
+      "## ", //
+      "###", //
 
-                  definition('#', Tile::netherBrick));
+      definition('#', Tile::netherBrick));
 
   addShapedRecipe(ItemInstance(Item::painting, 1), //
-                  "###",                           //
-                  "#X#",                           //
-                  "###",                           //
+      "###", //
+      "#X#", //
+      "###", //
 
-                  definition('#', Item::stick, 'X', Tile::cloth));
+      definition('#', Item::stick, 'X', Tile::cloth));
 
   // addShapedRecipe(ItemInstance(Item::apple_gold, 1), //
   //	"###", //
@@ -391,7 +390,7 @@ Recipes::Recipes() {
   //	"III", //
 
   //	definition('#', Tile::notGate_on, 'X', Item::redStone, 'I',
-  //Tile::rock));
+  // Tile::rock));
 
   // addShapedRecipe(ItemInstance(Item::clock, 1), //
   //	" # ", //
@@ -443,7 +442,7 @@ Recipes::Recipes() {
   //	"#R#", //
 
   //	'#', Tile::stoneBrick, 'X', Item::ironIngot, 'R', Item::redStone, 'T',
-  //Tile::wood);
+  // Tile::wood);
 
   // addShapedRecipe(ItemInstance(Tile::pistonStickyBase, 1), //
   //	"S", //
@@ -452,9 +451,9 @@ Recipes::Recipes() {
   //	'S', Item::slimeBall, 'P', Tile::pistonBase);
 
   addShapedRecipe(ItemInstance(Item::bed, 1), //
-                  "###",                      //
-                  "XXX",                      //
-                  definition('#', Tile::cloth, 'X', Tile::wood));
+      "###", //
+      "XXX", //
+      definition('#', Tile::cloth, 'X', Tile::wood));
 
   // addShapedRecipe(ItemInstance(Tile::enchantTable, 1), //
   //	" B ", //
@@ -466,17 +465,17 @@ Recipes::Recipes() {
   // addShapelessRecipe(ItemInstance(Item::eyeOfEnder, 1), //
   //	Item::enderPearl, Item::blazePowder);
   addShapedRecipe(ItemInstance(Tile::netherReactor, 1), //
-                  "X#X",                                //
-                  "X#X",                                //
-                  "X#X",                                //
+      "X#X", //
+      "X#X", //
+      "X#X", //
 
-                  definition('#', Item::emerald, 'X', Item::ironIngot));
+      definition('#', Item::emerald, 'X', Item::ironIngot));
 
   LOGI("%d recipes\n", (int)recipes.size());
 }
 
-void Recipes::addShapedRecipe(const ItemInstance &result, const RowList &rows,
-                              const TypeList &types) {
+void Recipes::addShapedRecipe(
+    const ItemInstance &result, const RowList &rows, const TypeList &types) {
   if (rows.empty()) {
     LOGE("Recipes::addShapedRecipe: adding an empty recipe!\n");
     return;
@@ -520,24 +519,23 @@ void Recipes::addShapedRecipe(const ItemInstance &result, const RowList &rows,
   recipes.push_back(new ShapedRecipe(width, height, ids, result));
 }
 
-void Recipes::addShapedRecipe(const ItemInstance &result, const std::string &r0,
-                              const TypeList &types) {
+void Recipes::addShapedRecipe(
+    const ItemInstance &result, const std::string &r0, const TypeList &types) {
   addShapedRecipe(result, Shape(r0), types);
 }
 
 void Recipes::addShapedRecipe(const ItemInstance &result, const std::string &r0,
-                              const std::string &r1, const TypeList &types) {
+    const std::string &r1, const TypeList &types) {
   addShapedRecipe(result, Shape(r0, r1), types);
 }
 
 void Recipes::addShapedRecipe(const ItemInstance &result, const std::string &r0,
-                              const std::string &r1, const std::string &r2,
-                              const TypeList &types) {
+    const std::string &r1, const std::string &r2, const TypeList &types) {
   addShapedRecipe(result, Shape(r0, r1, r2), types);
 }
 
-void Recipes::addShapelessRecipe(const ItemInstance &result,
-                                 const TypeList &types) {
+void Recipes::addShapelessRecipe(
+    const ItemInstance &result, const TypeList &types) {
 
   std::vector<ItemInstance> ingredients;
 
@@ -570,8 +568,8 @@ RowList Recipes::Shape(const std::string &r0, const std::string &r1) {
   return rows;
 }
 
-RowList Recipes::Shape(const std::string &r0, const std::string &r1,
-                       const std::string &r2) {
+RowList Recipes::Shape(
+    const std::string &r0, const std::string &r1, const std::string &r2) {
   RowList rows;
   rows.push_back(r0);
   rows.push_back(r1);
@@ -588,7 +586,7 @@ Recipe *Recipes::getRecipeFor(const ItemInstance &result) {
 
     if (result.count == 0 && result.getAuxValue() == res.getAuxValue() ||
         (result.count == res.count &&
-         result.getAuxValue() == res.getAuxValue()))
+            result.getAuxValue() == res.getAuxValue()))
       return recipe;
   }
   return NULL;

@@ -34,7 +34,7 @@ public:
 
   virtual bool useItem(Player *player, Level *level, ItemInstance *item);
   virtual bool useItemOn(Player *player, Level *level, ItemInstance *item,
-                         int x, int y, int z, int face, const Vec3 &hit);
+      int x, int y, int z, int face, const Vec3 &hit);
 
   virtual Player *createPlayer(Level *level);
   virtual void initPlayer(Player *player);
@@ -44,9 +44,8 @@ public:
   virtual void interact(Player *player, Entity *entity);
   virtual void attack(Player *player, Entity *entity);
 
-  virtual ItemInstance *handleInventoryMouseClick(int containerId, int slotNum,
-                                                  int buttonNum,
-                                                  Player *player);
+  virtual ItemInstance *handleInventoryMouseClick(
+      int containerId, int slotNum, int buttonNum, Player *player);
   virtual void handleCloseInventory(int containerId, Player *player);
 
   virtual bool isCreativeType() { return false; }

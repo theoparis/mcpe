@@ -72,8 +72,8 @@ public:
   // }
 };
 
-ExternalFileLevelStorage::ExternalFileLevelStorage(const std::string &levelId,
-                                                   const std::string &fullPath)
+ExternalFileLevelStorage::ExternalFileLevelStorage(
+    const std::string &levelId, const std::string &fullPath)
     : levelId(levelId), levelPath(fullPath), loadedLevelData(NULL),
       regionFile(NULL), entitiesFile(NULL), tickCount(0),
       lastSavedEntitiesTick(-999999), level(NULL),
@@ -97,14 +97,13 @@ ExternalFileLevelStorage::~ExternalFileLevelStorage() {
   delete loadedLevelData;
 }
 
-void ExternalFileLevelStorage::saveLevelData(LevelData &levelData,
-                                             std::vector<Player *> *players) {
+void ExternalFileLevelStorage::saveLevelData(
+    LevelData &levelData, std::vector<Player *> *players) {
   ExternalFileLevelStorage::saveLevelData(levelPath, levelData, players);
 }
 
 void ExternalFileLevelStorage::saveLevelData(const std::string &levelPath,
-                                             LevelData &levelData,
-                                             std::vector<Player *> *players) {
+    LevelData &levelData, std::vector<Player *> *players) {
   std::string directory = levelPath + "/";
   std::string tmpFile = directory + fnLevelDatNew;
   std::string datFile = directory + fnLevelDat;
@@ -140,8 +139,8 @@ LevelData *ExternalFileLevelStorage::prepareLevel(Level *_level) {
   return loadedLevelData;
 }
 
-bool ExternalFileLevelStorage::readLevelData(const std::string &directory,
-                                             LevelData &levelData) {
+bool ExternalFileLevelStorage::readLevelData(
+    const std::string &directory, LevelData &levelData) {
   // Try to load level.dat
   std::string datFilename = directory + "/" + fnLevelDat;
   FILE *file = fopen(datFilename.c_str(), "rb");
@@ -200,9 +199,8 @@ bool ExternalFileLevelStorage::readLevelData(const std::string &directory,
   return true;
 }
 
-bool ExternalFileLevelStorage::writeLevelData(
-    const std::string &datFileName, LevelData &levelData,
-    const std::vector<Player *> *players) {
+bool ExternalFileLevelStorage::writeLevelData(const std::string &datFileName,
+    LevelData &levelData, const std::vector<Player *> *players) {
   LOGI("Writing down level seed as: %ld\n", levelData.getSeed());
   // return true;
 
@@ -241,8 +239,8 @@ bool ExternalFileLevelStorage::writeLevelData(
   return true;
 }
 
-bool ExternalFileLevelStorage::readPlayerData(const std::string &filename,
-                                              LevelData &dest) {
+bool ExternalFileLevelStorage::readPlayerData(
+    const std::string &filename, LevelData &dest) {
   FILE *fp = fopen(filename.c_str(), "rb");
   if (!fp)
     return false;
@@ -334,10 +332,10 @@ void ExternalFileLevelStorage::save(Level *level, LevelChunk *levelChunk) {
   chunkData.Write((const char *)levelChunk->getBlockData(), CHUNK_BLOCK_COUNT);
   chunkData.Write((const char *)levelChunk->data.data, CHUNK_BLOCK_COUNT / 2);
 
-  chunkData.Write((const char *)levelChunk->skyLight.data,
-                  CHUNK_BLOCK_COUNT / 2);
-  chunkData.Write((const char *)levelChunk->blockLight.data,
-                  CHUNK_BLOCK_COUNT / 2);
+  chunkData.Write(
+      (const char *)levelChunk->skyLight.data, CHUNK_BLOCK_COUNT / 2);
+  chunkData.Write(
+      (const char *)levelChunk->blockLight.data, CHUNK_BLOCK_COUNT / 2);
 
   chunkData.Write((const char *)levelChunk->updateMap, CHUNK_COLUMNS);
 
@@ -436,8 +434,8 @@ LevelChunk *ExternalFileLevelStorage::load(Level *level, int x, int z) {
   return levelChunk;
 }
 
-void ExternalFileLevelStorage::saveEntities(Level *level,
-                                            LevelChunk *levelChunk) {
+void ExternalFileLevelStorage::saveEntities(
+    Level *level, LevelChunk *levelChunk) {
   lastSavedEntitiesTick = tickCount;
   int count = 0;
   float st = getTimeS();
@@ -530,7 +528,7 @@ void ExternalFileLevelStorage::loadEntities(Level *level, LevelChunk *chunk) {
           Tag *_et = entityTags->get(i);
           if (!_et || _et->getId() != Tag::TAG_Compound) {
             LOGE("Entity tag is either NULL or not a compoundTag: %p : %d!\n",
-                 _et, _et ? _et->getId() : -1);
+                _et, _et ? _et->getId() : -1);
             continue;
           }
           CompoundTag *et = (CompoundTag *)_et;
@@ -549,7 +547,7 @@ void ExternalFileLevelStorage::loadEntities(Level *level, LevelChunk *chunk) {
           if (!_et || _et->getId() != Tag::TAG_Compound) {
             LOGE("TileEntity tag is either NULL or not a compoundTag: %p : "
                  "%d!\n",
-                 _et, _et ? _et->getId() : -1);
+                _et, _et ? _et->getId() : -1);
             continue;
           }
           CompoundTag *et = (CompoundTag *)_et;
@@ -558,15 +556,15 @@ void ExternalFileLevelStorage::loadEntities(Level *level, LevelChunk *chunk) {
             LevelChunk *chunk = level->getChunkAt(e->x, e->z);
             if (chunk && !chunk->hasTileEntityAt(e)) {
               LOGI("Adding TileEntity %d to %d, %d, %d\n", e->type, e->x, e->y,
-                   e->z);
+                  e->z);
               chunk->addTileEntity(e);
             } else {
               if (!chunk)
                 LOGE("Couldn't find chunk at %d, %d to add %d\n", e->x, e->z,
-                     e->type);
+                    e->type);
               else
                 LOGE("Already have TileEntity at %d, %d to add %d\n", e->x,
-                     e->z, e->type);
+                    e->z, e->type);
               delete e;
             }
           }
@@ -579,7 +577,7 @@ void ExternalFileLevelStorage::loadEntities(Level *level, LevelChunk *chunk) {
       delete[] buf;
     }
     LOGI("header: %s, version: %d, bytes: %d (remaining: %d)\n", header,
-         version, numBytes, left);
+        version, numBytes, left);
 
     // fread(stream.GetData(), 1, numBytes, fp);
     fclose(fp);
@@ -615,8 +613,8 @@ int ExternalFileLevelStorage::savePendingUnsavedChunks(int maxCount) {
   return count;
 }
 
-void ExternalFileLevelStorage::saveAll(Level *level,
-                                       std::vector<LevelChunk *> &levelChunks) {
+void ExternalFileLevelStorage::saveAll(
+    Level *level, std::vector<LevelChunk *> &levelChunks) {
   ChunkStorage::saveAll(level, levelChunks);
   int numChunks = savePendingUnsavedChunks(-1);
   LOGI("Saving %d additional chunks.\n", numChunks);

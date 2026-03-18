@@ -112,8 +112,7 @@ void ParticleEngine::destroy(int x, int y, int z) {
         float yp = y + (yy + 0.5f) / SD;
         float zp = z + (zz + 0.5f) / SD;
         add((new TerrainParticle(level, xp, yp, zp, 2 * (xp - x - 0.5f),
-                                 2 * (yp - y - 0.5f), 2 * (zp - z - 0.5f), tile,
-                                 data))
+                 2 * (yp - y - 0.5f), 2 * (zp - z - 0.5f), tile, data))
                 ->init(x, y, z));
       }
   // sw.stop();
@@ -128,11 +127,11 @@ void ParticleEngine::crack(int x, int y, int z, int face) {
   Tile *tile = Tile::tiles[tid];
   float r = 0.10f;
   float xp = x + random.nextFloat() * ((tile->xx1 - tile->xx0) - r * 2) + r +
-             tile->xx0;
+      tile->xx0;
   float yp = y + random.nextFloat() * ((tile->yy1 - tile->yy0) - r * 2) + r +
-             tile->yy0;
+      tile->yy0;
   float zp = z + random.nextFloat() * ((tile->zz1 - tile->zz0) - r * 2) + r +
-             tile->zz0;
+      tile->zz0;
   switch (face) {
   case 0:
     yp = y + tile->yy0 - r;

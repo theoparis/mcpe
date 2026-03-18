@@ -17,8 +17,8 @@ public:
     setTicking(true);
   }
 
-  void playerDestroy(Level *level, Player *player, int x, int y, int z,
-                     int data) {
+  void playerDestroy(
+      Level *level, Player *player, int x, int y, int z, int data) {
     const Material *below = level->getMaterial(x, y - 1, z);
     if (below->blocksMotion() || below->isLiquid()) {
       level->setTile(x, y, z, Tile::water->id);

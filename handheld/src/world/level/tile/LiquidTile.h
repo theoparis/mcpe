@@ -55,8 +55,8 @@ public:
 
   int getColor(LevelSource *level, int x, int y, int z) { return 0x999999ff; }
 
-  void handleEntityInside(Level *level, int x, int y, int z, Entity *e,
-                          Vec3 &current) {
+  void handleEntityInside(
+      Level *level, int x, int y, int z, Entity *e, Vec3 &current) {
     Vec3 flow = getFlow(level, x, y, z);
     current.x += flow.x * .5f;
     current.y += flow.y * .5f;
@@ -108,8 +108,8 @@ public:
     }
   }
 
-  static float getSlopeAngle(LevelSource *level, int x, int y, int z,
-                             const Material *m) {
+  static float getSlopeAngle(
+      LevelSource *level, int x, int y, int z, const Material *m) {
     Vec3 flow;
     if (m == Material::water)
       flow = ((LiquidTile *)Tile::water)->getFlow(level, x, y, z);
@@ -143,7 +143,7 @@ protected:
     // + (level->random.nextFloat() - level->random.nextFloat()) * 0.8f);
     for (int i = 0; i < 8; i++) {
       level->addParticle(PARTICLETYPE(largesmoke), (float)x + Mth::random(),
-                         (float)y + 1.2f, (float)z + Mth::random(), 0, 0, 0);
+          (float)y + 1.2f, (float)z + Mth::random(), 0, 0, 0);
     }
   }
   int getDepth(Level *level, int x, int y, int z) {
@@ -217,14 +217,14 @@ private:
           if (t >= 0) {
             int dir = t - (mid - 8);
             flow = flow.add((float)((xt - x) * dir), (float)((yt - y) * dir),
-                            (float)((zt - z) * dir));
+                (float)((zt - z) * dir));
           }
         }
       } else {
         if (t >= 0) {
           int dir = t - mid;
           flow = flow.add((float)((xt - x) * dir), (float)((yt - y) * dir),
-                          (float)((zt - z) * dir));
+              (float)((zt - z) * dir));
         }
       }
     }

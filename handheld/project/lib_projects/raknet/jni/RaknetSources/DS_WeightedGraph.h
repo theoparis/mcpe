@@ -34,8 +34,8 @@ template <class node_type, class weight_type, bool allow_unlinkedNodes>
 class RAK_DLL_EXPORT WeightedGraph {
 public:
   static void IMPLEMENT_DEFAULT_COMPARISON(void) {
-    DataStructures::defaultMapKeyComparison<node_type>(node_type(),
-                                                       node_type());
+    DataStructures::defaultMapKeyComparison<node_type>(
+        node_type(), node_type());
   }
 
   WeightedGraph();
@@ -44,22 +44,21 @@ public:
   WeightedGraph &operator=(const WeightedGraph &original_copy);
   void AddNode(const node_type &node);
   void RemoveNode(const node_type &node);
-  void AddConnection(const node_type &node1, const node_type &node2,
-                     weight_type weight);
+  void AddConnection(
+      const node_type &node1, const node_type &node2, weight_type weight);
   void RemoveConnection(const node_type &node1, const node_type &node2);
   bool HasConnection(const node_type &node1, const node_type &node2);
   void Print(void);
   void Clear(void);
   bool GetShortestPath(DataStructures::List<node_type> &path,
-                       node_type startNode, node_type endNode,
-                       weight_type INFINITE_WEIGHT);
+      node_type startNode, node_type endNode, weight_type INFINITE_WEIGHT);
   bool GetSpanningTree(DataStructures::Tree<node_type> &outTree,
-                       DataStructures::List<node_type> *inputNodes,
-                       node_type startNode, weight_type INFINITE_WEIGHT);
+      DataStructures::List<node_type> *inputNodes, node_type startNode,
+      weight_type INFINITE_WEIGHT);
   unsigned GetNodeCount(void) const;
   unsigned GetConnectionCount(unsigned nodeIndex) const;
   void GetConnectionAtIndex(unsigned nodeIndex, unsigned connectionIndex,
-                            node_type &outNode, weight_type &outWeight) const;
+      node_type &outNode, weight_type &outWeight) const;
   node_type GetNodeAtIndex(unsigned nodeIndex) const;
 
 protected:
@@ -108,13 +107,13 @@ WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::WeightedGraph(
     costMatrixIndices = original_copy.costMatrixIndices;
     costMatrix = RakNet::OP_NEW_ARRAY<weight_type>(
         costMatrixIndices.Size() * costMatrixIndices.Size(), _FILE_AND_LINE_);
-    leastNodeArray = RakNet::OP_NEW_ARRAY<node_type>(costMatrixIndices.Size(),
-                                                     _FILE_AND_LINE_);
+    leastNodeArray = RakNet::OP_NEW_ARRAY<node_type>(
+        costMatrixIndices.Size(), _FILE_AND_LINE_);
     memcpy(costMatrix, original_copy.costMatrix,
-           costMatrixIndices.Size() * costMatrixIndices.Size() *
-               sizeof(weight_type));
+        costMatrixIndices.Size() * costMatrixIndices.Size() *
+            sizeof(weight_type));
     memcpy(leastNodeArray, original_copy.leastNodeArray,
-           costMatrixIndices.Size() * sizeof(weight_type));
+        costMatrixIndices.Size() * sizeof(weight_type));
   }
 }
 
@@ -130,13 +129,13 @@ WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::operator=(
     costMatrixIndices = original_copy.costMatrixIndices;
     costMatrix = RakNet::OP_NEW_ARRAY<weight_type>(
         costMatrixIndices.Size() * costMatrixIndices.Size(), _FILE_AND_LINE_);
-    leastNodeArray = RakNet::OP_NEW_ARRAY<node_type>(costMatrixIndices.Size(),
-                                                     _FILE_AND_LINE_);
+    leastNodeArray = RakNet::OP_NEW_ARRAY<node_type>(
+        costMatrixIndices.Size(), _FILE_AND_LINE_);
     memcpy(costMatrix, original_copy.costMatrix,
-           costMatrixIndices.Size() * costMatrixIndices.Size() *
-               sizeof(weight_type));
+        costMatrixIndices.Size() * costMatrixIndices.Size() *
+            sizeof(weight_type));
     memcpy(leastNodeArray, original_copy.leastNodeArray,
-           costMatrixIndices.Size() * sizeof(weight_type));
+        costMatrixIndices.Size() * sizeof(weight_type));
   }
 
   return *this;
@@ -145,9 +144,9 @@ WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::operator=(
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
 void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::AddNode(
     const node_type &node) {
-  adjacencyLists.SetNew(
-      node, RakNet::OP_NEW<DataStructures::Map<node_type, weight_type>>(
-                _FILE_AND_LINE_));
+  adjacencyLists.SetNew(node,
+      RakNet::OP_NEW<DataStructures::Map<node_type, weight_type>>(
+          _FILE_AND_LINE_));
 }
 
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
@@ -158,16 +157,16 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::RemoveNode(
 
   removeNodeQueue.Push(node, _FILE_AND_LINE_);
   while (removeNodeQueue.Size()) {
-    RakNet::OP_DELETE(adjacencyLists.Pop(removeNodeQueue.Pop()),
-                      _FILE_AND_LINE_);
+    RakNet::OP_DELETE(
+        adjacencyLists.Pop(removeNodeQueue.Pop()), _FILE_AND_LINE_);
 
     // Remove this node from all of the other lists as well
     for (i = 0; i < adjacencyLists.Size(); i++) {
       adjacencyLists[i]->Delete(node);
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
       if (allow_unlinkedNodes == false && adjacencyLists[i]->Size() == 0)
         removeNodeQueue.Push(adjacencyLists.GetKeyAtIndex(i), _FILE_AND_LINE_);
@@ -202,14 +201,15 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::AddConnection(
 }
 
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
-void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
-    RemoveConnection(const node_type &node1, const node_type &node2) {
+void WeightedGraph<node_type, weight_type,
+    allow_unlinkedNodes>::RemoveConnection(const node_type &node1,
+    const node_type &node2) {
   adjacencyLists.Get(node2)->Delete(node1);
   adjacencyLists.Get(node1)->Delete(node2);
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   if (allow_unlinkedNodes ==
       false) // If we do not allow _unlinked nodes, then if there are no
@@ -236,9 +236,9 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::Clear(void) {
 }
 
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
-bool WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
-    GetShortestPath(DataStructures::List<node_type> &path, node_type startNode,
-                    node_type endNode, weight_type INFINITE_WEIGHT) {
+bool WeightedGraph<node_type, weight_type,
+    allow_unlinkedNodes>::GetShortestPath(DataStructures::List<node_type> &path,
+    node_type startNode, node_type endNode, weight_type INFINITE_WEIGHT) {
   path.Clear(false, _FILE_AND_LINE_);
   if (startNode == endNode) {
     path.Insert(startNode, _FILE_AND_LINE_);
@@ -279,8 +279,8 @@ bool WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
   outputQueue.PushAtHead(vertex, 0, _FILE_AND_LINE_);
   row--;
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (1) {
     while (costMatrix[row * adjacencyLists.Size() + col] == currentWeight) {
@@ -329,18 +329,20 @@ WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::GetConnectionCount(
 }
 
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
-void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
-    GetConnectionAtIndex(unsigned nodeIndex, unsigned connectionIndex,
-                         node_type &outNode, weight_type &outWeight) const {
+void WeightedGraph<node_type, weight_type,
+    allow_unlinkedNodes>::GetConnectionAtIndex(unsigned nodeIndex,
+    unsigned connectionIndex, node_type &outNode,
+    weight_type &outWeight) const {
   outWeight = adjacencyLists[nodeIndex]->operator[](connectionIndex);
   outNode = adjacencyLists[nodeIndex]->GetKeyAtIndex(connectionIndex);
 }
 
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
-bool WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
-    GetSpanningTree(DataStructures::Tree<node_type> &outTree,
-                    DataStructures::List<node_type> *inputNodes,
-                    node_type startNode, weight_type INFINITE_WEIGHT) {
+bool WeightedGraph<node_type, weight_type,
+    allow_unlinkedNodes>::GetSpanningTree(DataStructures::Tree<node_type>
+                                              &outTree,
+    DataStructures::List<node_type> *inputNodes, node_type startNode,
+    weight_type INFINITE_WEIGHT) {
   // Find the shortest path from the start node to each of the input nodes.  Add
   // this path to a new WeightedGraph if the result is reachable
   DataStructures::List<node_type> path;
@@ -402,8 +404,9 @@ bool WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
 }
 
 template <class node_type, class weight_type, bool allow_unlinkedNodes>
-void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
-    GenerateDisjktraMatrix(node_type startNode, weight_type INFINITE_WEIGHT) {
+void WeightedGraph<node_type, weight_type,
+    allow_unlinkedNodes>::GenerateDisjktraMatrix(node_type startNode,
+    weight_type INFINITE_WEIGHT) {
   if (adjacencyLists.Size() == 0)
     return;
 
@@ -425,8 +428,7 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
     // This should be already sorted, so it's a bit inefficient to do an
     // insertion sort, but what the heck
     costMatrixIndices.Insert(adjacencyLists.GetKeyAtIndex(col),
-                             adjacencyLists.GetKeyAtIndex(col), true,
-                             _FILE_AND_LINE_);
+        adjacencyLists.GetKeyAtIndex(col), true, _FILE_AND_LINE_);
   }
   for (col = 0; col < adjacencyLists.Size() * adjacencyLists.Size(); col++)
     costMatrix[col] = INFINITE_WEIGHT;
@@ -466,7 +468,7 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::
     minHeap.Clear(true, _FILE_AND_LINE_);
     for (openSetIndex = 0; openSetIndex < openSet.Size(); openSetIndex++)
       minHeap.Push(openSet[openSetIndex], openSet.GetKeyAtIndex(openSetIndex),
-                   _FILE_AND_LINE_);
+          _FILE_AND_LINE_);
 
     /*
     unsigned i,j;
@@ -531,8 +533,7 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::Print(void) {
   unsigned i, j;
   for (i = 0; i < adjacencyLists.Size(); i++) {
     // RAKNET_DEBUG_PRINTF("%i connected to ", i);
-    RAKNET_DEBUG_PRINTF(
-        "%s connected to ",
+    RAKNET_DEBUG_PRINTF("%s connected to ",
         adjacencyLists.GetKeyAtIndex(i).systemAddress.ToString());
 
     if (adjacencyLists[i]->Size() == 0)
@@ -540,10 +541,9 @@ void WeightedGraph<node_type, weight_type, allow_unlinkedNodes>::Print(void) {
     else {
       for (j = 0; j < adjacencyLists[i]->Size(); j++)
         //	RAKNET_DEBUG_PRINTF("%i (%.2f) ",
-        //adjacencyLists.GetIndexAtKey(adjacencyLists[i]->GetKeyAtIndex(j)),
+        // adjacencyLists.GetIndexAtKey(adjacencyLists[i]->GetKeyAtIndex(j)),
         //(float) adjacencyLists[i]->operator[](j) );
-        RAKNET_DEBUG_PRINTF(
-            "%s (%.2f) ",
+        RAKNET_DEBUG_PRINTF("%s (%.2f) ",
             adjacencyLists[i]->GetKeyAtIndex(j).systemAddress.ToString(),
             (float)adjacencyLists[i]->operator[](j));
     }

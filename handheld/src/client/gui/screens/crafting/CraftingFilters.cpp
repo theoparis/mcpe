@@ -26,8 +26,8 @@ bool isStonecutterItem(const ItemInstance &ins) {
     return false;
 
   // Return everything stone or sand
-  return (tile->material == Material::stone ||
-          tile->material == Material::sand);
+  return (
+      tile->material == Material::stone || tile->material == Material::sand);
 }
 
 } // namespace CraftingFilters

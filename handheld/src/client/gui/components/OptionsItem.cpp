@@ -9,7 +9,7 @@ OptionsItem::OptionsItem(std::string label, GuiElement *element)
 void OptionsItem::setupPositions() {
   int currentHeight = 0;
   for (std::vector<GuiElement *>::iterator it = children.begin();
-       it != children.end(); ++it) {
+      it != children.end(); ++it) {
     (*it)->x = x + width - (*it)->width - 15;
     (*it)->y = y + currentHeight;
     currentHeight += (*it)->height;

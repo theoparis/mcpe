@@ -8,8 +8,8 @@ class ServerLevel : public Level {
 
 public:
   ServerLevel(LevelStorage *levelStorage, const std::string &levelName,
-              const LevelSettings &settings, int generatorVersion,
-              Dimension *fixedDimension = NULL);
+      const LevelSettings &settings, int generatorVersion,
+      Dimension *fixedDimension = NULL);
 
   void updateSleepingPlayerList();
   void awakenAllPlayers();

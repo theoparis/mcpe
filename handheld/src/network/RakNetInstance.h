@@ -25,8 +25,8 @@ class IRakNetInstance {
 public:
   virtual ~IRakNetInstance() {}
 
-  virtual bool host(const std::string &localName, int port,
-                    int maxConnections = 4) {
+  virtual bool host(
+      const std::string &localName, int port, int maxConnections = 4) {
     return false;
   }
   virtual bool connect(const char *host, int port) { return false; }
@@ -103,8 +103,7 @@ public:
 
 private:
   int handleUnconnectedPong(const RakNet::RakString &data,
-                            const RakNet::Packet *, const char *appid,
-                            bool insertAtBeginning);
+      const RakNet::Packet *, const char *appid, bool insertAtBeginning);
 
   RakNet::RakPeerInterface *rakPeer;
   RakNet::RakNetGUID serverGuid;

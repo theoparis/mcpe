@@ -10,8 +10,12 @@ struct TypeMapping {
 };
 const int NUM_TYPE_MAPPINGS = 7;
 TypeMapping typeMappings[NUM_TYPE_MAPPINGS] = {
-    {'i', "int"},   {'d', "int"},     {'s', "text"},
-    {'b', "bool"},  {'f', "numeric"}, {'g', "double precision"},
+    {'i', "int"},
+    {'d', "int"},
+    {'s', "text"},
+    {'b', "bool"},
+    {'f', "numeric"},
+    {'g', "double precision"},
     {'a', "bytea"},
 };
 unsigned int GetTypeMappingIndex(char c) {
@@ -46,9 +50,9 @@ void VariadicSQLParser::GetTypeMappingIndices(
     previousCharWasPercentSign = format[i] == '%';
   }
 }
-void VariadicSQLParser::ExtractArguments(
-    va_list argptr, const DataStructures::List<IndexAndType> &indices,
-    char ***argumentBinary, int **argumentLengths) {
+void VariadicSQLParser::ExtractArguments(va_list argptr,
+    const DataStructures::List<IndexAndType> &indices, char ***argumentBinary,
+    int **argumentLengths) {
   if (indices.Size() == 0)
     return;
 
@@ -62,7 +66,7 @@ void VariadicSQLParser::ExtractArguments(
 
   int variadicArgIndex;
   for (variadicArgIndex = 0, i = 0; i < indices.Size();
-       i++, variadicArgIndex++) {
+      i++, variadicArgIndex++) {
     switch (typeMappings[indices[i].typeMappingIndex].inputType) {
     case 'i':
     case 'd': {
@@ -71,8 +75,8 @@ void VariadicSQLParser::ExtractArguments(
       paramData[i] = (char *)rakMalloc_Ex(paramLength[i], _FILE_AND_LINE_);
       memcpy(paramData[i], &val, paramLength[i]);
       if (RakNet::BitStream::IsNetworkOrder() == false)
-        RakNet::BitStream::ReverseBytesInPlace((unsigned char *)paramData[i],
-                                               paramLength[i]);
+        RakNet::BitStream::ReverseBytesInPlace(
+            (unsigned char *)paramData[i], paramLength[i]);
     } break;
     case 's': {
       char *val = va_arg(argptr, char *);
@@ -86,8 +90,8 @@ void VariadicSQLParser::ExtractArguments(
       paramData[i] = (char *)rakMalloc_Ex(paramLength[i], _FILE_AND_LINE_);
       memcpy(paramData[i], &val, paramLength[i]);
       if (RakNet::BitStream::IsNetworkOrder() == false)
-        RakNet::BitStream::ReverseBytesInPlace((unsigned char *)paramData[i],
-                                               paramLength[i]);
+        RakNet::BitStream::ReverseBytesInPlace(
+            (unsigned char *)paramData[i], paramLength[i]);
     } break;
       /*
 case 'f':
@@ -112,8 +116,8 @@ paramLength[i]);
       paramData[i] = (char *)rakMalloc_Ex(paramLength[i], _FILE_AND_LINE_);
       memcpy(paramData[i], &val, paramLength[i]);
       if (RakNet::BitStream::IsNetworkOrder() == false)
-        RakNet::BitStream::ReverseBytesInPlace((unsigned char *)paramData[i],
-                                               paramLength[i]);
+        RakNet::BitStream::ReverseBytesInPlace(
+            (unsigned char *)paramData[i], paramLength[i]);
     } break;
     case 'a': {
       char *val = va_arg(argptr, char *);

@@ -54,7 +54,7 @@ public:
   }
 
   int getDiff(const std::vector<const ItemInstance *> &v,
-              std::vector<int> &outIndices) {
+      std::vector<int> &outIndices) {
     int diffLen = v.size() - size;
     int minLen = Mth::Max((int)v.size(), size);
     for (int i = 0; i < minLen; ++i) {
@@ -92,7 +92,7 @@ static const float BlockPixels = 24;
 static const int ItemSize = (int)(BlockPixels + 2 * BorderPixels);
 
 static const int Bx = 10; // Border Frame width
-static const int By = 6;  // Border Frame height
+static const int By = 6; // Border Frame height
 
 typedef struct FlyingItem {
   ItemInstance item;
@@ -191,18 +191,17 @@ void ChestScreen::tick() {
   }
 }
 
-void ChestScreen::handleRenderPane(Touch::InventoryPane *pane, Tesselator &t,
-                                   int xm, int ym, float a) {
+void ChestScreen::handleRenderPane(
+    Touch::InventoryPane *pane, Tesselator &t, int xm, int ym, float a) {
   if (pane) {
     int ms, id;
     pane->markerIndex = -1;
     if (pane->queryHoldTime(&id, &ms)) {
       heldMs = ms;
 
-      FillingContainer *c =
-          (pane == inventoryPane)
-              ? upcast<FillingContainer>(minecraft->player->inventory)
-              : upcast<FillingContainer>(chest);
+      FillingContainer *c = (pane == inventoryPane)
+          ? upcast<FillingContainer>(minecraft->player->inventory)
+          : upcast<FillingContainer>(chest);
 
       const int slotIndex = id + c->getNumLinkedSlots();
       ItemInstance *item = c->getItem(slotIndex);
@@ -270,8 +269,8 @@ void ChestScreen::render(int xm, int ym, float a) {
 
     float xx = Mth::lerp(fi.sx, fi.dx, t);
     float yy = Mth::lerp(fi.sy, fi.dy, t);
-    ItemRenderer::renderGuiItem(minecraft->font, minecraft->textures, &fi.item,
-                                xx + 7, yy + 8, true);
+    ItemRenderer::renderGuiItem(
+        minecraft->font, minecraft->textures, &fi.item, xx + 7, yy + 8, true);
     // minecraft->gui.renderSlotText(&fi.item, xx + 3, yy + 3, true, true);
 
     flyingToSave.push_back(fi);
@@ -294,8 +293,8 @@ void ChestScreen::buttonClicked(Button *button) {
   }
 }
 
-bool ChestScreen::handleAddItem(FillingContainer *from, FillingContainer *to,
-                                int itemIndex) {
+bool ChestScreen::handleAddItem(
+    FillingContainer *from, FillingContainer *to, int itemIndex) {
   const int itemOffset = from->getNumLinkedSlots();
   const int slotIndex = itemIndex + itemOffset;
   ItemInstance *item = from->getItem(slotIndex);
@@ -371,8 +370,8 @@ bool ChestScreen::handleAddItem(FillingContainer *from, FillingContainer *to,
 bool ChestScreen::addItem(const Touch::InventoryPane *forPane, int itemIndex) {
   // LOGI("items.size, index: %d, %d\n", inventoryItems.size(), itemIndex);
   bool l2r = (forPane == inventoryPane);
-  return handleAddItem(
-      l2r ? upcast<FillingContainer>(minecraft->player->inventory)
+  return handleAddItem(l2r
+          ? upcast<FillingContainer>(minecraft->player->inventory)
           : upcast<FillingContainer>(chest),
       l2r ? upcast<FillingContainer>(chest)
           : upcast<FillingContainer>(minecraft->player->inventory),
@@ -383,11 +382,11 @@ bool ChestScreen::isAllowed(int slot) { return true; }
 
 bool ChestScreen::renderGameBehind() { return false; }
 
-std::vector<const ItemInstance *>
-ChestScreen::getItems(const Touch::InventoryPane *forPane) {
+std::vector<const ItemInstance *> ChestScreen::getItems(
+    const Touch::InventoryPane *forPane) {
   if (forPane == inventoryPane) {
     for (int i = Inventory::MAX_SELECTION_SIZE, j = 0;
-         i < minecraft->player->inventory->getContainerSize(); ++i, ++j)
+        i < minecraft->player->inventory->getContainerSize(); ++i, ++j)
       inventoryItems[j] = minecraft->player->inventory->getItem(i);
     return inventoryItems;
   } else {
@@ -400,7 +399,7 @@ ChestScreen::getItems(const Touch::InventoryPane *forPane) {
 void ChestScreen::setupPane() {
   inventoryItems.clear();
   for (int i = Inventory::MAX_SELECTION_SIZE;
-       i < minecraft->player->inventory->getContainerSize(); ++i) {
+      i < minecraft->player->inventory->getContainerSize(); ++i) {
     ItemInstance *item = minecraft->player->inventory->getItem(i);
     /*if (!item || item->isNull()) continue;*/
     inventoryItems.push_back(item);
@@ -420,19 +419,19 @@ void ChestScreen::setupPane() {
 
   IntRectangle rect(realBx,
 #ifdef __APPLE__
-                    24 + By - ((width == 240) ? 1 : 0), realWidth,
-                    ((width == 240) ? 1 : 0) + height - By - By - 24);
+      24 + By - ((width == 240) ? 1 : 0), realWidth,
+      ((width == 240) ? 1 : 0) + height - By - By - 24);
 #else
-                    24 + By, realWidth, height - By - By - 24);
+      24 + By, realWidth, height - By - By - 24);
 #endif
   // IntRectangle(0, 0, 100, 100)
   if (inventoryPane)
     delete inventoryPane;
-  inventoryPane = new Touch::InventoryPane(
-      this, minecraft, rect, paneWidth, BorderPixels,
-      minecraft->player->inventory->getContainerSize() -
-          Inventory::MAX_SELECTION_SIZE,
-      ItemSize, (int)BorderPixels);
+  inventoryPane =
+      new Touch::InventoryPane(this, minecraft, rect, paneWidth, BorderPixels,
+          minecraft->player->inventory->getContainerSize() -
+              Inventory::MAX_SELECTION_SIZE,
+          ItemSize, (int)BorderPixels);
   inventoryPane->fillMarginX = 0;
   inventoryPane->fillMarginY = 0;
   guiPaneFrame->setSize((float)rect.w + 2, (float)rect.h + 2);
@@ -444,19 +443,18 @@ void ChestScreen::setupPane() {
   if (chestPane)
     delete chestPane;
   chestPane = new Touch::InventoryPane(this, minecraft, rect, paneWidth,
-                                       BorderPixels, chest->getContainerSize(),
-                                       ItemSize, (int)BorderPixels);
+      BorderPixels, chest->getContainerSize(), ItemSize, (int)BorderPixels);
   chestPane->fillMarginX = 0;
   chestPane->fillMarginY = 0;
   LOGI("Creating new panes\n:"
        "          Inventory %d %p\n"
        "          Chest     %d %p\n",
-       (int)inventoryItems.size(), inventoryPane, (int)chestItems.size(),
-       chestPane);
+      (int)inventoryItems.size(), inventoryPane, (int)chestItems.size(),
+      chestPane);
 }
 
-void ChestScreen::drawSlotItemAt(Tesselator &t, const ItemInstance *item, int x,
-                                 int y, bool selected) {
+void ChestScreen::drawSlotItemAt(
+    Tesselator &t, const ItemInstance *item, int x, int y, bool selected) {
   float xx = (float)x;
   float yy = (float)y;
 
@@ -466,8 +464,8 @@ void ChestScreen::drawSlotItemAt(Tesselator &t, const ItemInstance *item, int x,
     guiSlotMarker->draw(t, xx - 2, yy - 2);
 
   if (item && !item->isNull()) {
-    ItemRenderer::renderGuiItem(minecraft->font, minecraft->textures, item,
-                                xx + 7, yy + 8, true);
+    ItemRenderer::renderGuiItem(
+        minecraft->font, minecraft->textures, item, xx + 7, yy + 8, true);
     minecraft->gui.renderSlotText(item, xx + 3, yy + 3, true, true);
   }
 }

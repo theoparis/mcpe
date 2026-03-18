@@ -11,8 +11,8 @@
 using namespace RakNet;
 
 // DataStructures::MemoryPool<RakString::SharedString> RakString::pool;
-RakString::SharedString RakString::emptyString = {0, 0, 0, (char *)"",
-                                                  (char *)""};
+RakString::SharedString RakString::emptyString = {
+    0, 0, 0, (char *)"", (char *)""};
 // RakString::SharedString *RakString::sharedStringFreeList=0;
 // unsigned int RakString::sharedStringFreeListAllocationCount=0;
 DataStructures::List<RakString::SharedString *> RakString::freeList;
@@ -29,8 +29,8 @@ SimpleMutex &GetPoolMutex(void) {
   return poolMutex;
 }
 
-int RakNet::RakString::RakStringComp(RakString const &key,
-                                     RakString const &data) {
+int RakNet::RakString::RakStringComp(
+    RakString const &key, RakString const &data) {
   return key.StrCmp(data);
 }
 
@@ -126,8 +126,8 @@ void RakString::Realloc(SharedString *sharedString, size_t bytes) {
     strcpy(sharedString->bigString, sharedString->smallString);
     sharedString->c_str = sharedString->bigString;
   } else if (oldBytes > smallStringSize) {
-    sharedString->bigString = (char *)rakRealloc_Ex(sharedString->bigString,
-                                                    newBytes, _FILE_AND_LINE_);
+    sharedString->bigString = (char *)rakRealloc_Ex(
+        sharedString->bigString, newBytes, _FILE_AND_LINE_);
     sharedString->c_str = sharedString->bigString;
   }
   sharedString->bytesUsed = newBytes;
@@ -209,8 +209,8 @@ bool RakString::operator!=(const char *str) const {
 bool RakString::operator!=(char *str) const {
   return strcmp(sharedString->c_str, str) != 0;
 }
-const RakNet::RakString operator+(const RakNet::RakString &lhs,
-                                  const RakNet::RakString &rhs) {
+const RakNet::RakString operator+(
+    const RakNet::RakString &lhs, const RakNet::RakString &rhs) {
   if (lhs.IsEmpty() && rhs.IsEmpty()) {
     return RakString(&RakString::emptyString);
   }
@@ -378,14 +378,13 @@ WCHAR *RakString::ToWideChar(void) {
   //
   // Get size of destination UTF-16 buffer, in WCHAR's
   //
-  int cchUTF16 = ::MultiByteToWideChar(
-      CP_UTF8,             // convert from UTF-8
-      0,                   // Flags
+  int cchUTF16 = ::MultiByteToWideChar(CP_UTF8, // convert from UTF-8
+      0, // Flags
       sharedString->c_str, // source UTF-8 string
-      GetLength() + 1,     // total length of source UTF-8 string,
+      GetLength() + 1, // total length of source UTF-8 string,
       // in CHAR's (= bytes), including end-of-string \0
       NULL, // unused - no conversion done in this step
-      0     // request size of destination buffer, in WCHAR's
+      0 // request size of destination buffer, in WCHAR's
   );
 
   if (cchUTF16 == 0) {
@@ -401,14 +400,13 @@ WCHAR *RakString::ToWideChar(void) {
   //
   // Do the conversion from UTF-8 to UTF-16
   //
-  int result = ::MultiByteToWideChar(
-      CP_UTF8,             // convert from UTF-8
-      0,                   // Buffer
+  int result = ::MultiByteToWideChar(CP_UTF8, // convert from UTF-8
+      0, // Buffer
       sharedString->c_str, // source UTF-8 string
-      GetLength() + 1,     // total length of source UTF-8 string,
+      GetLength() + 1, // total length of source UTF-8 string,
       // in CHAR's (= bytes), including end-of-string \0
       pszUTF16, // destination buffer
-      cchUTF16  // size of destination buffer, in WCHAR's
+      cchUTF16 // size of destination buffer, in WCHAR's
   );
 
   if (result == 0) {
@@ -560,8 +558,8 @@ bool RakString::IPAddressMatch(const char *IP) {
   characterIndex = 0;
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (true) {
     if (sharedString->c_str[characterIndex] == IP[characterIndex]) {
@@ -702,7 +700,7 @@ RakNet::RakString &RakString::URLDecode(void) {
   return *this;
 }
 void RakString::SplitURI(RakNet::RakString &header, RakNet::RakString &domain,
-                         RakNet::RakString &path) {
+    RakNet::RakString &path) {
   header.Clear();
   domain.Clear();
   path.Clear();
@@ -828,12 +826,12 @@ void RakString::Serialize(const char *str, BitStream *bs) {
   bs->Write(l);
   bs->WriteAlignedBytes((const unsigned char *)str, (const unsigned int)l);
 }
-void RakString::SerializeCompressed(BitStream *bs, uint8_t languageId,
-                                    bool writeLanguageId) const {
+void RakString::SerializeCompressed(
+    BitStream *bs, uint8_t languageId, bool writeLanguageId) const {
   SerializeCompressed(C_String(), bs, languageId, writeLanguageId);
 }
-void RakString::SerializeCompressed(const char *str, BitStream *bs,
-                                    uint8_t languageId, bool writeLanguageId) {
+void RakString::SerializeCompressed(
+    const char *str, BitStream *bs, uint8_t languageId, bool writeLanguageId) {
   if (writeLanguageId)
     bs->WriteCompressed(languageId);
   StringCompressor::Instance()->EncodeString(str, 0xFFFF, bs, languageId);
@@ -874,18 +872,18 @@ bool RakString::DeserializeCompressed(BitStream *bs, bool readLanguageId) {
     bs->ReadCompressed(languageId);
   else
     languageId = 0;
-  return StringCompressor::Instance()->DecodeString(this, 0xFFFF, bs,
-                                                    languageId);
+  return StringCompressor::Instance()->DecodeString(
+      this, 0xFFFF, bs, languageId);
 }
-bool RakString::DeserializeCompressed(char *str, BitStream *bs,
-                                      bool readLanguageId) {
+bool RakString::DeserializeCompressed(
+    char *str, BitStream *bs, bool readLanguageId) {
   uint8_t languageId;
   if (readLanguageId)
     bs->ReadCompressed(languageId);
   else
     languageId = 0;
-  return StringCompressor::Instance()->DecodeString(str, 0xFFFF, bs,
-                                                    languageId);
+  return StringCompressor::Instance()->DecodeString(
+      str, 0xFFFF, bs, languageId);
 }
 const char *RakString::ToString(int64_t i) {
   static int index = 0;

@@ -1,4 +1,5 @@
 #include "Screen.h"
+#include "../../App.h"
 #include "../../platform/input/Keyboard.h"
 #include "../../platform/input/Mouse.h"
 #include "../Minecraft.h"
@@ -7,6 +8,26 @@
 #include "../sound/SoundEngine.h"
 #include "components/Button.h"
 #include "components/TextBox.h"
+
+namespace {
+
+auto opaqueQuadColor(int rgb) -> GraphicsQuadColor {
+  GraphicsQuadColor color;
+  color.r = (float)((rgb >> 16) & 0xff) / 255.0f;
+  color.g = (float)((rgb >> 8) & 0xff) / 255.0f;
+  color.b = (float)(rgb & 0xff) / 255.0f;
+  color.a = 1.0f;
+  return color;
+}
+
+void setUniformQuadColor(GraphicsQuad &quad, const GraphicsQuadColor &color) {
+  quad.topLeft = color;
+  quad.topRight = color;
+  quad.bottomRight = color;
+  quad.bottomLeft = color;
+}
+
+} // namespace
 
 Screen::Screen()
     : passEvents(false), clickedButton(NULL), tabButtonIndex(0), width(1),
@@ -90,18 +111,34 @@ void Screen::renderBackground(int vo) {
 }
 
 void Screen::renderDirtBackground(int vo) {
+  minecraft->textures->loadAndBindTexture("gui/background.png");
+  float s = 32;
+  float fvo = (float)vo;
+  GraphicsQuad quad;
+  quad.x = 0.0f;
+  quad.y = 0.0f;
+  quad.width = (float)width;
+  quad.height = (float)height;
+  quad.canvasWidth = (float)width;
+  quad.canvasHeight = (float)height;
+  quad.u0 = 0.0f;
+  quad.v0 = fvo;
+  quad.u1 = (float)width / s;
+  quad.v1 = (float)height / s + fvo;
+  setUniformQuadColor(quad, opaqueQuadColor(0x404040));
+  if (tryDrawQuad(quad)) {
+    return;
+  }
+
   // glDisable2(GL_LIGHTING);
   glDisable2(GL_FOG);
   Tesselator &t = Tesselator::instance;
-  minecraft->textures->loadAndBindTexture("gui/background.png");
   glColor4f2(1, 1, 1, 1);
-  float s = 32;
-  float fvo = (float)vo;
   t.begin();
   t.color(0x404040);
   t.vertexUV(0, (float)height, 0, 0, height / s + fvo);
-  t.vertexUV((float)width, (float)height, 0, width / s,
-             (float)height / s + fvo);
+  t.vertexUV(
+      (float)width, (float)height, 0, width / s, (float)height / s + fvo);
   t.vertexUV((float)width, 0, 0, (float)width / s, 0 + fvo);
   t.vertexUV(0, 0, 0, 0, 0 + fvo);
   t.draw();
@@ -187,7 +224,7 @@ void Screen::mouseReleased(int x, int y, int buttonNum) {
       clickedButton->released(x, y);
     }
   }
-#else  //	} else {
+#else //	} else {
   clickedButton->released(x, y);
 #endif // }
   clickedButton = NULL;
@@ -199,7 +236,7 @@ bool Screen::hasClippingArea(IntRectangle &out) { return false; }
 
 void Screen::lostFocus() {
   for (std::vector<TextBox *>::iterator it = textBoxes.begin();
-       it != textBoxes.end(); ++it) {
+      it != textBoxes.end(); ++it) {
     TextBox *tb = *it;
     tb->loseFocus(minecraft);
   }

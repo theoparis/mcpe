@@ -79,8 +79,8 @@ void ItemInHandRenderer::renderItem(Mob *mob, ItemInstance *item) {
   } else if (itemId == Tile::stoneSlabHalf->id) {
     itemId = 224 + item->getAuxValue(); // 224 to 231 @stoneslab
   } else if (itemId == ((Tile *)Tile::leaves)->id) {
-    itemId = 232 + (item->getAuxValue() &
-                    LeafTile::LEAF_TYPE_MASK); // 232 to 235 @leaves
+    itemId = 232 +
+        (item->getAuxValue() & LeafTile::LEAF_TYPE_MASK); // 232 to 235 @leaves
   }
 
   RenderCall &renderObject = renderObjects[itemId];
@@ -217,7 +217,7 @@ void ItemInHandRenderer::renderItem(Mob *mob, ItemInstance *item) {
     mc->textures->loadAndBindTexture(renderObject.texture);
 
     drawArrayVT_NoState(renderObject.chunk.vboId,
-                        renderObject.chunk.vertexCount, 24, GL_TRIANGLES);
+        renderObject.chunk.vertexCount, 24, GL_TRIANGLES);
     if (renderObject.isFlat)
       glPopMatrix2();
   }
@@ -280,9 +280,8 @@ void ItemInHandRenderer::render(float a) {
         is = is * is * is;
         float iss = 1 - is;
         glTranslatef(0,
-                     Mth::abs(Mth::cos(t / 4 * Mth::PI) * 0.1f) *
-                         (swing > 0.2 ? 1 : 0),
-                     0);
+            Mth::abs(Mth::cos(t / 4 * Mth::PI) * 0.1f) * (swing > 0.2 ? 1 : 0),
+            0);
         glTranslatef(iss * 0.6f, -iss * 0.5f, 0);
         glRotatef(iss * 90, 0, 1, 0);
         glRotatef(iss * 10, 1, 0, 0);
@@ -290,8 +289,7 @@ void ItemInHandRenderer::render(float a) {
       }
     } else {
       glTranslatef2(-swing2 * 0.4f,
-                    (float)Mth::sin(sqrtSwing * Mth::PI * 2) * 0.2f,
-                    -swing1 * 0.2f);
+          (float)Mth::sin(sqrtSwing * Mth::PI * 2) * 0.2f, -swing1 * 0.2f);
     }
 
     glTranslatef2(0.7f * d, -0.65f * d - (1 - h) * 0.6f, -0.9f * d);
@@ -353,8 +351,7 @@ void ItemInHandRenderer::render(float a) {
     const float swing2 = Mth::sin(sqrtSwing * Mth::PI);
 
     glTranslatef2(-swing2 * 0.3f,
-                  (float)Mth::sin(Mth::sqrt(swing) * Mth::PI * 2) * 0.4f,
-                  -swing1 * 0.4f);
+        (float)Mth::sin(Mth::sqrt(swing) * Mth::PI * 2) * 0.4f, -swing1 * 0.4f);
     glTranslatef2(0.8f * d, -0.75f * d - (1 - h) * 0.6f, -0.9f * d);
 
     glRotatef2(45, 0, 1, 0);

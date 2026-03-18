@@ -49,24 +49,24 @@ void ModelPart::setModel(Model *model) {
 
 void ModelPart::addChild(ModelPart *child) { children.push_back(child); }
 
-ModelPart &ModelPart::addBox(const std::string &id, float x0, float y0,
-                             float z0, int w, int h, int d) {
+ModelPart &ModelPart::addBox(
+    const std::string &id, float x0, float y0, float z0, int w, int h, int d) {
   std::string newid = this->id + "." + id;
   // TexOffs offs = model.getMapTex(id); //@todo @diff
   // texOffs(offs.x, offs.y);
   cubes.push_back((new Cube(this, xTexOffs, yTexOffs, x0, y0, z0, w, h, d, 0))
-                      ->setId(newid));
+          ->setId(newid));
   return *this;
 }
 
-ModelPart &ModelPart::addBox(float x0, float y0, float z0, int w, int h,
-                             int d) {
+ModelPart &ModelPart::addBox(
+    float x0, float y0, float z0, int w, int h, int d) {
   cubes.push_back(new Cube(this, xTexOffs, yTexOffs, x0, y0, z0, w, h, d, 0));
   return *this;
 }
 
-void ModelPart::addBox(float x0, float y0, float z0, int w, int h, int d,
-                       float g) {
+void ModelPart::addBox(
+    float x0, float y0, float z0, int w, int h, int d, float g) {
   cubes.push_back(new Cube(this, xTexOffs, yTexOffs, x0, y0, z0, w, h, d, g));
 }
 

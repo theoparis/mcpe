@@ -21,7 +21,7 @@ public:
     // emptyChunk = new EmptyLevelChunk(level_, emptyChunkBlocks, 0, 0);
     emptyChunk = new EmptyLevelChunk(level_, NULL, 0, 0);
     memset(chunks, 0,
-           sizeof(LevelChunk *) * CHUNK_CACHE_WIDTH * CHUNK_CACHE_WIDTH);
+        sizeof(LevelChunk *) * CHUNK_CACHE_WIDTH * CHUNK_CACHE_WIDTH);
   }
 
   ~ChunkCache() {
@@ -53,7 +53,7 @@ public:
     int zs = z & (CHUNK_CACHE_WIDTH - 1);
     int slot = xs + zs * CHUNK_CACHE_WIDTH;
     return chunks[slot] != NULL &&
-           (chunks[slot] == emptyChunk || chunks[slot]->isAt(x, z));
+        (chunks[slot] == emptyChunk || chunks[slot]->isAt(x, z));
   }
 
   LevelChunk *create(int x, int z) { return getChunk(x, z); }
@@ -99,10 +99,9 @@ public:
             int height = level->getHeightmap(cx + x * 16, cz + z * 16);
             for (int cy = height; cy >= 0; cy--) {
               level->updateLight(LightLayer::Sky, cx + x * 16, cy, cz + z * 16,
-                                 cx + x * 16, cy, cz + z * 16);
+                  cx + x * 16, cy, cz + z * 16);
               level->updateLight(LightLayer::Block, cx + x * 16 - 1, cy,
-                                 cz + z * 16 - 1, cx + x * 16 + 1, cy,
-                                 cz + z * 16 + 1);
+                  cz + z * 16 - 1, cx + x * 16 + 1, cy, cz + z * 16 + 1);
             }
           }
         }
@@ -138,8 +137,8 @@ public:
     return chunks[slot];
   }
 
-  Biome::MobList getMobsAt(const MobCategory &mobCategory, int x, int y,
-                           int z) {
+  Biome::MobList getMobsAt(
+      const MobCategory &mobCategory, int x, int y, int z) {
     return source->getMobsAt(mobCategory, x, y, z);
   }
 

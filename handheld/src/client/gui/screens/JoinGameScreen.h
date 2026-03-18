@@ -19,8 +19,8 @@ class AvailableGamesList : public ScrolledSelectionList {
 
 public:
   AvailableGamesList(Minecraft *_minecraft, int _width, int _height)
-      : ScrolledSelectionList(_minecraft, _width, _height, 24, _height - 30,
-                              28) {}
+      : ScrolledSelectionList(
+            _minecraft, _width, _height, 24, _height - 30, 28) {}
 
   void setBounds(int top, int bottom) {
     y0 = (float)top;

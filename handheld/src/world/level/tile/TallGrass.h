@@ -17,8 +17,8 @@ public:
   int getColor(int auxData);
   int getColor(LevelSource *level, int x, int y, int z);
   int getResource(int data, Random *random);
-  void playerDestroy(Level *level, Player *player, int x, int y, int z,
-                     int data);
+  void playerDestroy(
+      Level *level, Player *player, int x, int y, int z, int data);
 };
 
 #endif /* NET_MINECRAFT_WORLD_LEVEL_TILE__TallGrass_H__ */

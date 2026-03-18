@@ -11,7 +11,7 @@ PolygonQuad::PolygonQuad(VertexPT *v0, VertexPT *v1, VertexPT *v2, VertexPT *v3)
 }
 
 PolygonQuad::PolygonQuad(VertexPT *v0, VertexPT *v1, VertexPT *v2, VertexPT *v3,
-                         int uu0, int vv0, int uu1, int vv1)
+    int uu0, int vv0, int uu1, int vv1)
     : _flipNormal(false) {
   const float us = -0.002f / 64.0f; // 0.1f / 64.0f;
   const float vs = -0.002f / 32.0f; // 0.1f / 32.0f;
@@ -22,7 +22,7 @@ PolygonQuad::PolygonQuad(VertexPT *v0, VertexPT *v1, VertexPT *v2, VertexPT *v3,
 }
 
 PolygonQuad::PolygonQuad(VertexPT *v0, VertexPT *v1, VertexPT *v2, VertexPT *v3,
-                         float uu0, float vv0, float uu1, float vv1)
+    float uu0, float vv0, float uu1, float vv1)
     : _flipNormal(false) {
   vertices[0] = v0->remap(uu1, vv0);
   vertices[1] = v1->remap(uu0, vv0);

@@ -31,17 +31,17 @@ class CategoryButton : public ImageButton {
 
 public:
   CategoryButton(int id, const ImageButton *const *selectedPtr,
-                 NinePatchLayer *stateNormal, NinePatchLayer *statePressed)
+      NinePatchLayer *stateNormal, NinePatchLayer *statePressed)
       : super(id, ""), selectedPtr(selectedPtr), stateNormal(stateNormal),
         statePressed(statePressed) {}
 
   void renderBg(Minecraft *minecraft, int xm, int ym) {
     // fill(x+1, y+1, x+w-1, y+h-1, 0xff999999);
 
-    bool hovered = active && (minecraft->useTouchscreen()
-                                  ? (_currentlyDown && xm >= x && ym >= y &&
-                                     xm < x + width && ym < y + height)
-                                  : false);
+    bool hovered = active &&
+        (minecraft->useTouchscreen() ? (_currentlyDown && xm >= x && ym >= y &&
+                                           xm < x + width && ym < y + height)
+                                     : false);
 
     if (hovered || *selectedPtr == this)
       statePressed->draw(Tesselator::instance, (float)x, (float)y);
@@ -118,9 +118,8 @@ void PaneCraftingScreen::initCategories() {
 
   // Category buttons
   for (int i = 0; i < numCategories; ++i) {
-    ImageButton *button =
-        new CategoryButton(100 + i, &selectedCategoryButton, guiSlotCategory,
-                           guiSlotCategorySelected);
+    ImageButton *button = new CategoryButton(100 + i, &selectedCategoryButton,
+        guiSlotCategory, guiSlotCategorySelected);
     _categoryButtons.push_back(button);
     buttons.push_back(button);
   }
@@ -165,7 +164,7 @@ void PaneCraftingScreen::setupPositions() {
   // Right  - Description
   const int craftW = (int)(100 - 2 * BorderPixels - 0);
   btnCraft.x = width - descFrameWidth + (descFrameWidth - craftW) / 2 -
-               1; //    width - descFrameWidth + (int)BorderPixels + 4;
+      1; //    width - descFrameWidth + (int)BorderPixels + 4;
   btnCraft.y = 20;
   btnCraft.setSize((float)craftW, 62);
 
@@ -230,8 +229,8 @@ void PaneCraftingScreen::render(int xm, int ym, float a) {
       reqItem = req.item;
       if (reqItem.getAuxValue() == -1)
         reqItem.setAuxValue(0);
-      ItemRenderer::renderGuiItem(NULL, minecraft->textures, &reqItem, xx, yy,
-                                  16, 16, true);
+      ItemRenderer::renderGuiItem(
+          NULL, minecraft->textures, &reqItem, xx, yy, 16, 16, true);
     }
     t.endOverrideAndDraw();
 
@@ -265,8 +264,8 @@ void PaneCraftingScreen::render(int xm, int ym, float a) {
     // minecraft->font->drawWordWrap(currentItemDesc, rightBx + 2,
     // (float)btnCraft.y + btnCraft.h + 6, descFrameWidth-4, rgbActive);
     minecraft->font->drawWordWrap(currentItemDesc, (float)btnCraft.x,
-                                  (float)(btnCraft.y + btnCraft.height + 6),
-                                  (float)btnCraft.width, rgbActive);
+        (float)(btnCraft.y + btnCraft.height + 6), (float)btnCraft.width,
+        rgbActive);
   }
   // glDisable2(GL_ALPHA_TEST);
 }
@@ -321,7 +320,7 @@ void PaneCraftingScreen::recheckRecipes() {
     Inventory *inv = (minecraft->player)->inventory;
 
     for (int i = Inventory::MAX_SELECTION_SIZE; i < inv->getContainerSize();
-         ++i) {
+        ++i) {
       if (ItemInstance *item = inv->getItem(i))
         ip.add(ItemPack::getIdForItemInstance(item), item->count);
     }
@@ -371,15 +370,15 @@ void PaneCraftingScreen::recheckRecipes() {
   w.printEvery(1, "> craft ");
 
   for (unsigned int c = 0; c < _categories.size(); ++c)
-    std::stable_sort(_categories[c].begin(), _categories[c].end(),
-                     sortCanCraftPredicate);
+    std::stable_sort(
+        _categories[c].begin(), _categories[c].end(), sortCanCraftPredicate);
 }
 
 void PaneCraftingScreen::addItem(Recipe *recipe) {
   ItemInstance instance = recipe->getResultItem();
   Item *item = instance.getItem();
   CItem *ci = new CItem(instance, recipe,
-                        instance.getName()); // item->getDescriptionId());
+      instance.getName()); // item->getDescriptionId());
   if (item->id == Tile::cloth->id)
     ci->sortText = "Wool " + ci->text;
   if (item->id == Item::dye_powder->id)
@@ -396,14 +395,14 @@ void PaneCraftingScreen::addItem(Recipe *recipe) {
   }
 }
 
-void PaneCraftingScreen::onItemSelected(const ItemPane *forPane,
-                                        int itemIndexInCurrentCategory) {
+void PaneCraftingScreen::onItemSelected(
+    const ItemPane *forPane, int itemIndexInCurrentCategory) {
   if (currentCategory >= (int)_categories.size())
     return;
   if (itemIndexInCurrentCategory >= (int)_categories[currentCategory].size())
     return;
   onItemSelected(currentCategory,
-                 _categories[currentCategory][itemIndexInCurrentCategory]);
+      _categories[currentCategory][itemIndexInCurrentCategory]);
 }
 
 void PaneCraftingScreen::onItemSelected(int buttonIndex, CItem *item) {
@@ -420,7 +419,7 @@ void PaneCraftingScreen::onItemSelected(int buttonIndex, CItem *item) {
     if (pane)
       delete pane;
     pane = new ItemPane(this, minecraft->textures, paneRect, NumCategoryItems,
-                        height, minecraft->height);
+        height, minecraft->height);
     pane->f = minecraft->font;
 
     currentCategory = buttonIndex;
@@ -494,15 +493,16 @@ void PaneCraftingScreen::filterRecipes(RecipeList &recipes) {
   }
 }
 
-const std::vector<CItem *> &
-PaneCraftingScreen::getItems(const ItemPane *forPane) {
+const std::vector<CItem *> &PaneCraftingScreen::getItems(
+    const ItemPane *forPane) {
   return _categories[currentCategory];
 }
 
-void PaneCraftingScreen::setSingleCategoryAndIcon(int categoryBitmask,
-                                                  int categoryIcon) {
-  assert(!minecraft && "setSingleCategoryAndIcon needs to be called from "
-                       "subclass constructor!\n");
+void PaneCraftingScreen::setSingleCategoryAndIcon(
+    int categoryBitmask, int categoryIcon) {
+  assert(!minecraft &&
+      "setSingleCategoryAndIcon needs to be called from "
+      "subclass constructor!\n");
 
   numCategories = 1;
 
@@ -547,10 +547,10 @@ void CraftButton::renderBg(Minecraft *minecraft, int xm, int ym) {
     return;
   // fill(x+1, y+1, x+w-1, y+h-1, 0xff999999);
 
-  bool hovered = active && (minecraft->useTouchscreen()
-                                ? (_currentlyDown && xm >= x && ym >= y &&
-                                   xm < x + width && ym < y + height)
-                                : false);
+  bool hovered = active &&
+      (minecraft->useTouchscreen() ? (_currentlyDown && xm >= x && ym >= y &&
+                                         xm < x + width && ym < y + height)
+                                   : false);
 
   if (hovered || selected)
     bgSelected->draw(Tesselator::instance, (float)x, (float)y);

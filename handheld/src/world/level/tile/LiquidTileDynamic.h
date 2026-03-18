@@ -47,7 +47,7 @@ public:
         if (level->isSolidBlockingTile(x, y - 1, z)) {
           newDepth = 0;
         } else if (level->getMaterial(x, y - 1, z) == material &&
-                   level->getData(x, y, z) == 0) {
+            level->getData(x, y, z) == 0) {
           newDepth = 0;
         }
       }
@@ -83,7 +83,7 @@ public:
       else
         level->setTileAndData(x, y - 1, z, id, depth + 8);
     } else if (depth >= 0 &&
-               (depth == 0 || isWaterBlocking(level, x, y - 1, z))) {
+        (depth == 0 || isWaterBlocking(level, x, y - 1, z))) {
       bool *spreads = getSpread(level, x, y, z);
       int neighbor = depth + dropOff;
       if (depth >= 8) {
@@ -173,7 +173,7 @@ private:
       if (isWaterBlocking(level, xx, yy, zz)) {
         continue;
       } else if (level->getMaterial(xx, yy, zz) == material &&
-                 level->getData(xx, yy, zz) == 0) {
+          level->getData(xx, yy, zz) == 0) {
         continue;
       } else {
         if (!isWaterBlocking(level, xx, yy - 1, zz)) {
@@ -203,8 +203,8 @@ private:
         if (material == Material::lava) {
           fizz(level, x, y, z);
         } else {
-          Tile::tiles[old]->spawnResources(level, x, y, z,
-                                           level->getData(x, y, z));
+          Tile::tiles[old]->spawnResources(
+              level, x, y, z, level->getData(x, y, z));
         }
       }
       level->setTileAndData(x, y, z, id, neighbor);
@@ -239,7 +239,7 @@ private:
       if (isWaterBlocking(level, xx, yy, zz)) {
         continue;
       } else if (level->getMaterial(xx, yy, zz) == material &&
-                 level->getData(xx, yy, zz) == 0) {
+          level->getData(xx, yy, zz) == 0) {
         continue;
       } else {
         if (!isWaterBlocking(level, xx, yy - 1, zz)) {

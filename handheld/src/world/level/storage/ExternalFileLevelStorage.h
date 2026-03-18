@@ -31,8 +31,8 @@ class ExternalFileLevelStorage : public LevelStorage,
 // public PlayerIO
 {
 public:
-  ExternalFileLevelStorage(const std::string &levelId,
-                           const std::string &fullPath);
+  ExternalFileLevelStorage(
+      const std::string &levelId, const std::string &fullPath);
   virtual ~ExternalFileLevelStorage();
 
   LevelData *prepareLevel(Level *level);
@@ -51,9 +51,9 @@ public:
   static bool readLevelData(const std::string &directory, LevelData &dest);
   static bool readPlayerData(const std::string &filename, LevelData &dest);
   static bool writeLevelData(const std::string &datFileName, LevelData &dest,
-                             const std::vector<Player *> *players);
+      const std::vector<Player *> *players);
   static void saveLevelData(const std::string &directory, LevelData &levelData,
-                            std::vector<Player *> *players);
+      std::vector<Player *> *players);
 
   int savePendingUnsavedChunks(int maxCount);
 

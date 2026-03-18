@@ -58,8 +58,8 @@ void NatPunchthroughServer::User::LogConnectionAttempts(RakNet::RakString &rs) {
   rs = RakNet::RakString("User systemAddress=%s guid=%s\n", ipStr, guidStr);
   rs += RakNet::RakString("%i attempts in list:\n", connectionAttempts.Size());
   for (index = 0; index < connectionAttempts.Size(); index++) {
-    rs += RakNet::RakString("%i. SessionID=%i ", index + 1,
-                            connectionAttempts[index]->sessionId);
+    rs += RakNet::RakString(
+        "%i. SessionID=%i ", index + 1, connectionAttempts[index]->sessionId);
     if (connectionAttempts[index]->sender == this)
       rs += "(We are sender) ";
     else
@@ -81,8 +81,8 @@ void NatPunchthroughServer::User::LogConnectionAttempts(RakNet::RakString &rs) {
       connectionAttempts[index]->sender->systemAddress.ToString(true, ipStr);
     }
 
-    rs += RakNet::RakString("Target systemAddress=%s, guid=%s.\n", ipStr,
-                            guidStr);
+    rs += RakNet::RakString(
+        "Target systemAddress=%s, guid=%s.\n", ipStr, guidStr);
   }
 }
 
@@ -141,8 +141,7 @@ void NatPunchthroughServer::Update(void) {
           if (connectionAttempt->attemptPhase !=
                   ConnectionAttempt::NAT_ATTEMPT_PHASE_NOT_STARTED &&
               time > connectionAttempt->startTime &&
-              time >
-                  10000 +
+              time > 10000 +
                       connectionAttempt->startTime) // Formerly 5000, but
                                                     // sometimes false positives
           {
@@ -153,8 +152,7 @@ void NatPunchthroughServer::Update(void) {
             outgoingBs.Write(connectionAttempt->recipient->guid);
             outgoingBs.Write(connectionAttempt->sessionId);
             rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED,
-                                   0, connectionAttempt->sender->systemAddress,
-                                   false);
+                0, connectionAttempt->sender->systemAddress, false);
 
             // 05/28/09 Previously only told sender about
             // ID_NAT_CONNECTION_TO_TARGET_LOST However, recipient may be
@@ -164,9 +162,8 @@ void NatPunchthroughServer::Update(void) {
             outgoingBs.Write((MessageID)ID_NAT_TARGET_UNRESPONSIVE);
             outgoingBs.Write(connectionAttempt->sender->guid);
             outgoingBs.Write(connectionAttempt->sessionId);
-            rakPeerInterface->Send(
-                &outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                connectionAttempt->recipient->systemAddress, false);
+            rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED,
+                0, connectionAttempt->recipient->systemAddress, false);
 
             connectionAttempt->sender->isReady = true;
             connectionAttempt->recipient->isReady = true;
@@ -180,9 +177,9 @@ void NatPunchthroughServer::Update(void) {
               connectionAttempt->sender->systemAddress.ToString(true, addr1);
               connectionAttempt->recipient->systemAddress.ToString(true, addr2);
               sprintf(str,
-                      "Sending ID_NAT_TARGET_UNRESPONSIVE to sender %s and "
-                      "recipient %s.",
-                      addr1, addr2);
+                  "Sending ID_NAT_TARGET_UNRESPONSIVE to sender %s and "
+                  "recipient %s.",
+                  addr1, addr2);
               natPunchthroughServerDebugInterface->OnServerMessage(str);
               RakNet::RakString log;
               connectionAttempt->sender->LogConnectionAttempts(log);
@@ -235,8 +232,8 @@ void NatPunchthroughServer::OnClosedConnection(
     unsigned int connectionAttemptIndex;
     ConnectionAttempt *connectionAttempt;
     for (connectionAttemptIndex = 0;
-         connectionAttemptIndex < user->connectionAttempts.Size();
-         connectionAttemptIndex++) {
+        connectionAttemptIndex < user->connectionAttempts.Size();
+        connectionAttemptIndex++) {
       connectionAttempt = user->connectionAttempts[connectionAttemptIndex];
       outgoingBs.Reset();
       if (connectionAttempt->recipient == user) {
@@ -253,7 +250,7 @@ void NatPunchthroughServer::OnClosedConnection(
       outgoingBs.Write(rakNetGUID);
       outgoingBs.Write(connectionAttempt->sessionId);
       rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                             otherUser->systemAddress, false);
+          otherUser->systemAddress, false);
 
       // 4/22/09 - Bug: was checking inProgress, legacy variable not used
       // elsewhere
@@ -287,7 +284,7 @@ void NatPunchthroughServer::OnClosedConnection(
       outgoingBs.Write((MessageID)ID_NAT_TARGET_NOT_CONNECTED);
       outgoingBs.Write(rakNetGUID);
       rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                             users[i]->systemAddress, false);
+          users[i]->systemAddress, false);
 
       users[i]->groupPunchthroughRequests.RemoveAtIndex(gprIndex);
     }
@@ -295,8 +292,7 @@ void NatPunchthroughServer::OnClosedConnection(
 }
 
 void NatPunchthroughServer::OnNewConnection(const SystemAddress &systemAddress,
-                                            RakNetGUID rakNetGUID,
-                                            bool isIncoming) {
+    RakNetGUID rakNetGUID, bool isIncoming) {
   (void)systemAddress;
   (void)isIncoming;
 
@@ -334,7 +330,7 @@ void NatPunchthroughServer::OnNATPunchthroughRequest(Packet *packet) {
     outgoingBs.Write((MessageID)ID_NAT_TARGET_NOT_CONNECTED);
     outgoingBs.Write(recipientGuid);
     rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                           packet->systemAddress, false);
+        packet->systemAddress, false);
     RakNet::OP_DELETE(ca, _FILE_AND_LINE_);
     return;
   }
@@ -343,7 +339,7 @@ void NatPunchthroughServer::OnNATPunchthroughRequest(Packet *packet) {
     outgoingBs.Write((MessageID)ID_NAT_ALREADY_IN_PROGRESS);
     outgoingBs.Write(recipientGuid);
     rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                           packet->systemAddress, false);
+        packet->systemAddress, false);
     RakNet::OP_DELETE(ca, _FILE_AND_LINE_);
     return;
   }
@@ -434,7 +430,7 @@ void NatPunchthroughServer::OnGetMostRecentPort(Packet *packet) {
           connectionAttempt->recipient->guid.ToString(addr2);
           log = RakNet::RakString("Sending ID_NAT_CONNECT_AT_TIME to recipient "
                                   "systemAddress %s guid %s",
-                                  addr1, addr2);
+              addr1, addr2);
           natPunchthroughServerDebugInterface->OnServerMessage(log.C_String());
         }
 
@@ -450,7 +446,7 @@ void NatPunchthroughServer::OnGetMostRecentPort(Packet *packet) {
         bsOut.Write(connectionAttempt->sender->guid);
         bsOut.Write(false);
         rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                               recipientSystemAddress, false);
+            recipientSystemAddress, false);
 
         if (natPunchthroughServerDebugInterface) {
           RakNet::RakString log;
@@ -459,7 +455,7 @@ void NatPunchthroughServer::OnGetMostRecentPort(Packet *packet) {
           connectionAttempt->sender->guid.ToString(addr2);
           log = RakNet::RakString("Sending ID_NAT_CONNECT_AT_TIME to sender "
                                   "systemAddress %s guid %s",
-                                  addr1, addr2);
+              addr1, addr2);
           natPunchthroughServerDebugInterface->OnServerMessage(log.C_String());
         }
 
@@ -477,7 +473,7 @@ void NatPunchthroughServer::OnGetMostRecentPort(Packet *packet) {
         bsOut.Write(connectionAttempt->recipient->guid);
         bsOut.Write(true);
         rakPeerInterface->Send(&bsOut, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                               senderSystemAddress, false);
+            senderSystemAddress, false);
 
         connectionAttempt->recipient->DerefConnectionAttempt(connectionAttempt);
         connectionAttempt->sender->DeleteConnectionAttempt(connectionAttempt);
@@ -526,9 +522,9 @@ void NatPunchthroughServer::StartPunchthroughForUser(User *user) {
         sender->systemAddress.ToString(true, addr1);
         recipient->systemAddress.ToString(true, addr2);
         sprintf(str,
-                "Sending NAT_ATTEMPT_PHASE_GETTING_RECENT_PORTS to sender %s "
-                "and recipient %s.",
-                addr1, addr2);
+            "Sending NAT_ATTEMPT_PHASE_GETTING_RECENT_PORTS to sender %s "
+            "and recipient %s.",
+            addr1, addr2);
         natPunchthroughServerDebugInterface->OnServerMessage(str);
       }
 
@@ -547,9 +543,9 @@ void NatPunchthroughServer::StartPunchthroughForUser(User *user) {
       // don't want
       outgoingBs.Write(connectionAttempt->sessionId);
       rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                             sender->systemAddress, false);
+          sender->systemAddress, false);
       rakPeerInterface->Send(&outgoingBs, HIGH_PRIORITY, RELIABLE_ORDERED, 0,
-                             recipient->systemAddress, false);
+          recipient->systemAddress, false);
 
       // 4/22/09 - BUG: missing break statement here
       break;

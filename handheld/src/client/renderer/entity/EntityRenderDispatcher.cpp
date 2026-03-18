@@ -38,13 +38,13 @@ EntityRenderDispatcher::EntityRenderDispatcher() : itemInHandRenderer(NULL) {
   assign(ER_ITEM_RENDERER, new ItemRenderer());
   assign(ER_HUMANOID_RENDERER, new HumanoidMobRenderer(new HumanoidModel(), 0));
   assign(ER_PIG_RENDERER,
-         new PigRenderer(new PigModel(), NULL /*new PigModel(0.5f)*/, 0));
+      new PigRenderer(new PigModel(), NULL /*new PigModel(0.5f)*/, 0));
   assign(ER_COW_RENDERER, new MobRenderer(new CowModel(), 0));
   assign(ER_CHICKEN_RENDERER, new ChickenRenderer(new ChickenModel(), 0));
   assign(ER_SHEEP_RENDERER,
-         new SheepRenderer(new SheepModel(), new SheepFurModel(), 0));
-  assign(ER_SKELETON_RENDERER,
-         new HumanoidMobRenderer(new SkeletonModel(), 0.5f));
+      new SheepRenderer(new SheepModel(), new SheepFurModel(), 0));
+  assign(
+      ER_SKELETON_RENDERER, new HumanoidMobRenderer(new SkeletonModel(), 0.5f));
   assign(ER_ZOMBIE_RENDERER, new HumanoidMobRenderer(new ZombieModel(), 0.5f));
   assign(ER_CREEPER_RENDERER, new CreeperRenderer());
   assign(ER_SPIDER_RENDERER, new SpiderRenderer());
@@ -52,8 +52,8 @@ EntityRenderDispatcher::EntityRenderDispatcher() : itemInHandRenderer(NULL) {
   assign(ER_ARROW_RENDERER, new ArrowRenderer());
   assign(ER_PLAYER_RENDERER, new PlayerRenderer(new HumanoidModel(), 0));
   assign(ER_THROWNEGG_RENDERER, new ItemSpriteRenderer(Item::egg->getIcon(0)));
-  assign(ER_SNOWBALL_RENDERER,
-         new ItemSpriteRenderer(Item::snowBall->getIcon(0)));
+  assign(
+      ER_SNOWBALL_RENDERER, new ItemSpriteRenderer(Item::snowBall->getIcon(0)));
   assign(ER_PAINTING_RENDERER, new PaintingRenderer());
   assign(ER_FALLINGTILE_RENDERER, new FallingTileRenderer());
 
@@ -79,7 +79,7 @@ EntityRenderDispatcher *EntityRenderDispatcher::getInstance() {
 EntityRenderDispatcher::~EntityRenderDispatcher() {
   std::set<EntityRenderer *> destroyed;
   for (RendererCIterator cit = _renderers.begin(); cit != _renderers.end();
-       ++cit) {
+      ++cit) {
     if (destroyed.find(cit->second) == destroyed.end()) {
       destroyed.insert(cit->second);
       delete cit->second;
@@ -87,18 +87,18 @@ EntityRenderDispatcher::~EntityRenderDispatcher() {
   }
 }
 
-void EntityRenderDispatcher::prepare(Level *level, Font *font, Mob *player,
-                                     Options *options, float a) {
+void EntityRenderDispatcher::prepare(
+    Level *level, Font *font, Mob *player, Options *options, float a) {
   this->level = level;
   this->options = options;
   this->cameraEntity = player;
   this->_font = font;
   if (player->isSleeping()) {
-    int t = level->getTile(Mth::floor(player->x), Mth::floor(player->y),
-                           Mth::floor(player->z));
+    int t = level->getTile(
+        Mth::floor(player->x), Mth::floor(player->y), Mth::floor(player->z));
     if (t == Tile::bed->id) {
-      int data = level->getData(Mth::floor(player->x), Mth::floor(player->y),
-                                Mth::floor(player->z));
+      int data = level->getData(
+          Mth::floor(player->x), Mth::floor(player->y), Mth::floor(player->z));
 
       int direction = data & 3;
       playerRotY = float(direction * 90 + 180);
@@ -126,8 +126,8 @@ void EntityRenderDispatcher::render(Entity *entity, float a) {
   render(entity, x - xOff, y - yOff, z - zOff, r, a);
 }
 
-void EntityRenderDispatcher::render(Entity *entity, float x, float y, float z,
-                                    float rot, float a) {
+void EntityRenderDispatcher::render(
+    Entity *entity, float x, float y, float z, float rot, float a) {
   EntityRenderer *renderer = getRenderer(entity);
   if (renderer != NULL) {
     renderer->render(entity, x, y, z, rot, a);
@@ -144,8 +144,8 @@ EntityRenderer *EntityRenderDispatcher::getRenderer(Entity *entity) {
   return getRenderer(rendererId);
 }
 
-EntityRenderer *
-EntityRenderDispatcher::getRenderer(EntityRendererId rendererId) {
+EntityRenderer *EntityRenderDispatcher::getRenderer(
+    EntityRendererId rendererId) {
 
   EntityRenderer *renderer = NULL;
   RendererCIterator cit = _renderers.find(rendererId);
@@ -176,7 +176,7 @@ void EntityRenderDispatcher::onGraphicsReset() {
   }
 }
 
-void EntityRenderDispatcher::assign(EntityRendererId id,
-                                    EntityRenderer *renderer) {
+void EntityRenderDispatcher::assign(
+    EntityRendererId id, EntityRenderer *renderer) {
   _renderers.insert(std::make_pair(id, renderer));
 }

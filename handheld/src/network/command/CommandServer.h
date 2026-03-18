@@ -48,8 +48,8 @@ private:
   bool handleCheckpoint(bool doRestore);
 
   void dispatchPacket(Packet &p);
-  std::string handleEventPollMessage(ConnectedClient &client,
-                                     const std::string &cmd);
+  std::string handleEventPollMessage(
+      ConnectedClient &client, const std::string &cmd);
   std::string handleSetSetting(const std::string &setting, int value);
 
   bool inited;

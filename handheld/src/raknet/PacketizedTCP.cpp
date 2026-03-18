@@ -17,10 +17,10 @@ PacketizedTCP::PacketizedTCP() {}
 PacketizedTCP::~PacketizedTCP() { ClearAllConnections(); }
 
 bool PacketizedTCP::Start(unsigned short port,
-                          unsigned short maxIncomingConnections,
-                          int threadPriority, unsigned short socketFamily) {
-  bool success = TCPInterface::Start(port, maxIncomingConnections, 0,
-                                     threadPriority, socketFamily);
+    unsigned short maxIncomingConnections, int threadPriority,
+    unsigned short socketFamily) {
+  bool success = TCPInterface::Start(
+      port, maxIncomingConnections, 0, threadPriority, socketFamily);
   if (success) {
     unsigned int i;
     for (i = 0; i < messageHandlerList.Size(); i++)
@@ -40,14 +40,13 @@ void PacketizedTCP::Stop(void) {
 }
 
 void PacketizedTCP::Send(const char *data, unsigned length,
-                         const SystemAddress &systemAddress, bool broadcast) {
+    const SystemAddress &systemAddress, bool broadcast) {
   PTCPHeader dataLength;
   dataLength = length;
 #ifndef __BITSTREAM_NATIVE_END
   if (RakNet::BitStream::DoEndianSwap())
     RakNet::BitStream::ReverseBytes((unsigned char *)&length,
-                                    (unsigned char *)&dataLength,
-                                    sizeof(dataLength));
+        (unsigned char *)&dataLength, sizeof(dataLength));
 #else
   dataLength = length;
 #endif
@@ -61,9 +60,8 @@ void PacketizedTCP::Send(const char *data, unsigned length,
   TCPInterface::SendList(dataArray, lengthsArray, 2, systemAddress, broadcast);
 }
 bool PacketizedTCP::SendList(const char **data, const int *lengths,
-                             const int numParameters,
-                             const SystemAddress &systemAddress,
-                             bool broadcast) {
+    const int numParameters, const SystemAddress &systemAddress,
+    bool broadcast) {
   if (isStarted == false)
     return false;
   if (data == 0)
@@ -83,8 +81,7 @@ bool PacketizedTCP::SendList(const char **data, const int *lengths,
 #ifndef __BITSTREAM_NATIVE_END
   if (RakNet::BitStream::DoEndianSwap())
     RakNet::BitStream::ReverseBytes((unsigned char *)&totalLengthOfUserData,
-                                    (unsigned char *)&dataLength,
-                                    sizeof(dataLength));
+        (unsigned char *)&dataLength, sizeof(dataLength));
 #else
   dataLength = totalLengthOfUserData;
 #endif
@@ -97,8 +94,8 @@ bool PacketizedTCP::SendList(const char **data, const int *lengths,
     dataArray[i + 1] = data[i];
     lengthsArray[i + 1] = lengths[i];
   }
-  return TCPInterface::SendList(dataArray, lengthsArray, numParameters + 1,
-                                systemAddress, broadcast);
+  return TCPInterface::SendList(
+      dataArray, lengthsArray, numParameters + 1, systemAddress, broadcast);
 }
 void PacketizedTCP::PushNotificationsToQueues(void) {
   SystemAddress sa;
@@ -132,8 +129,8 @@ void PacketizedTCP::PushNotificationsToQueues(void) {
     RemoveFromConnectionList(sa);
     unsigned int i;
     for (i = 0; i < messageHandlerList.Size(); i++)
-      messageHandlerList[i]->OnClosedConnection(sa, UNASSIGNED_RAKNET_GUID,
-                                                LCR_DISCONNECTION_NOTIFICATION);
+      messageHandlerList[i]->OnClosedConnection(
+          sa, UNASSIGNED_RAKNET_GUID, LCR_DISCONNECTION_NOTIFICATION);
   }
 
   sa = TCPInterface::HasCompletedConnectionAttempt();
@@ -178,15 +175,15 @@ Packet *PacketizedTCP::Receive(void) {
         DataStructures::ByteQueue *bq = connections[index];
         // Buffer data
         bq->WriteBytes((const char *)incomingPacket->data,
-                       incomingPacket->length, _FILE_AND_LINE_);
+            incomingPacket->length, _FILE_AND_LINE_);
         systemAddressFromPacket = incomingPacket->systemAddress;
         PTCPHeader dataLength;
 
         // Peek the header to see if a full message is waiting
         bq->ReadBytes((char *)&dataLength, sizeof(PTCPHeader), true);
         if (RakNet::BitStream::DoEndianSwap())
-          RakNet::BitStream::ReverseBytesInPlace((unsigned char *)&dataLength,
-                                                 sizeof(dataLength));
+          RakNet::BitStream::ReverseBytesInPlace(
+              (unsigned char *)&dataLength, sizeof(dataLength));
         // Header indicates packet length. If enough data is available, read out
         // and return one packet
         if (bq->GetBytesWritten() >= dataLength + sizeof(PTCPHeader)) {
@@ -227,8 +224,7 @@ Packet *PacketizedTCP::Receive(void) {
           if (newWritten / 65536 != oldWritten / 65536) {
             outgoingPacket = RakNet::OP_NEW<Packet>(_FILE_AND_LINE_);
             outgoingPacket->length = sizeof(MessageID) +
-                                     sizeof(unsigned int) * 2 +
-                                     sizeof(unsigned int) + 65536;
+                sizeof(unsigned int) * 2 + sizeof(unsigned int) + 65536;
             outgoingPacket->bitSize = BYTES_TO_BITS(incomingPacket->length);
             outgoingPacket->guid = UNASSIGNED_RAKNET_GUID;
             outgoingPacket->systemAddress = incomingPacket->systemAddress;
@@ -246,17 +242,17 @@ Packet *PacketizedTCP::Receive(void) {
             unsigned int partIndex = newWritten / 65536;
             unsigned int oneChunkSize = 65536;
             memcpy(outgoingPacket->data + sizeof(MessageID), &partIndex,
-                   sizeof(unsigned int));
+                sizeof(unsigned int));
             memcpy(outgoingPacket->data + sizeof(MessageID) +
-                       sizeof(unsigned int) * 1,
-                   &totalParts, sizeof(unsigned int));
+                    sizeof(unsigned int) * 1,
+                &totalParts, sizeof(unsigned int));
             memcpy(outgoingPacket->data + sizeof(MessageID) +
-                       sizeof(unsigned int) * 2,
-                   &oneChunkSize, sizeof(unsigned int));
+                    sizeof(unsigned int) * 2,
+                &oneChunkSize, sizeof(unsigned int));
             bq->IncrementReadOffset(sizeof(PTCPHeader));
             bq->ReadBytes((char *)outgoingPacket->data + sizeof(MessageID) +
-                              sizeof(unsigned int) * 3,
-                          oneChunkSize, true);
+                    sizeof(unsigned int) * 3,
+                oneChunkSize, true);
             bq->DecrementReadOffset(sizeof(PTCPHeader));
 
             waitingPackets.Push(outgoingPacket, _FILE_AND_LINE_);
@@ -285,7 +281,7 @@ Packet *PacketizedTCP::ReturnOutgoingPacket(void) {
       if (pluginResult == RR_STOP_PROCESSING_AND_DEALLOCATE) {
         DeallocatePacket(outgoingPacket);
         outgoingPacket = 0; // Will do the loop again and get another packet
-        break;              // break out of the enclosing for
+        break; // break out of the enclosing for
       } else if (pluginResult == RR_STOP_PROCESSING) {
         outgoingPacket = 0;
         break;

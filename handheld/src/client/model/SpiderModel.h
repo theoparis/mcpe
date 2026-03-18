@@ -71,7 +71,7 @@ public:
 
   /*@Override*/
   void render(Entity *entity, float time, float r, float bob, float yRot,
-              float xRot, float scale) {
+      float xRot, float scale) {
     setupAnim(time, r, bob, yRot, xRot, scale);
 
     head.render(scale);
@@ -87,8 +87,8 @@ public:
     leg7.render(scale);
   }
 
-  void setupAnim(float time, float r, float bob, float yRot, float xRot,
-                 float scale) {
+  void setupAnim(
+      float time, float r, float bob, float yRot, float xRot, float scale) {
     head.yRot = yRot / (float)(180 / Mth::PI);
     head.xRot = xRot / (float)(180 / Mth::PI);
 
@@ -137,20 +137,20 @@ public:
     // LOGI("spider: %f, %f, %f, %f\n", c0, c1, c2, c3);
 
     float s0 =
-        std::abs((float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 0 / 4.0f) *
-                 0.4f) *
+        std::abs(
+            (float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 0 / 4.0f) * 0.4f) *
         r;
     float s1 =
-        std::abs((float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 2 / 4.0f) *
-                 0.4f) *
+        std::abs(
+            (float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 2 / 4.0f) * 0.4f) *
         r;
     float s2 =
-        std::abs((float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 1 / 4.0f) *
-                 0.4f) *
+        std::abs(
+            (float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 1 / 4.0f) * 0.4f) *
         r;
     float s3 =
-        std::abs((float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 3 / 4.0f) *
-                 0.4f) *
+        std::abs(
+            (float)Mth::sin(time * 0.6662f + Mth::PI * 2 * 3 / 4.0f) * 0.4f) *
         r;
 
     // w.stop();

@@ -9,8 +9,8 @@ class MultiTextureTile : public Tile {
   typedef Tile super;
 
 public:
-  MultiTextureTile(int id, const int *textures, int texCount,
-                   const Material *material)
+  MultiTextureTile(
+      int id, const int *textures, int texCount, const Material *material)
       : super(id, textures[0], material), _textures(textures),
         _textureCount(texCount) {}
 

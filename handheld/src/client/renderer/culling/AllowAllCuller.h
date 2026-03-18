@@ -11,13 +11,13 @@ class AllowAllCuller : public Culler {
 public:
   bool isVisible(const AABB &bb) { return true; }
 
-  bool cubeFullyInFrustum(float x1, float y1, float z1, float x2, float y2,
-                          float z2) {
+  bool cubeFullyInFrustum(
+      float x1, float y1, float z1, float x2, float y2, float z2) {
     return true;
   }
 
-  bool cubeInFrustum(float x1, float y1, float z1, float x2, float y2,
-                     float z2) {
+  bool cubeInFrustum(
+      float x1, float y1, float z1, float x2, float y2, float z2) {
     return true;
   }
 

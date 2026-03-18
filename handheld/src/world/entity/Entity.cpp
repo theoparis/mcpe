@@ -74,8 +74,8 @@ void Entity::resetPos(bool clearMore) {
 }
 
 bool Entity::isInWater() {
-  return level->checkAndHandleWater(bb.grow(0, -0.4f, 0), Material::water,
-                                    this);
+  return level->checkAndHandleWater(
+      bb.grow(0, -0.4f, 0), Material::water, this);
 }
 
 bool Entity::isInLava() {
@@ -149,8 +149,8 @@ void Entity::move(float xa, float ya, float za) {
 
   if (sneaking) {
     float d = 0.05f;
-    while (xa != 0 &&
-           level->getCubes(this, bb.cloneMove(xa, -1.0, 0)).empty()) {
+    while (
+        xa != 0 && level->getCubes(this, bb.cloneMove(xa, -1.0, 0)).empty()) {
       if (xa < d && xa >= -d)
         xa = 0;
       else if (xa > 0)
@@ -159,8 +159,8 @@ void Entity::move(float xa, float ya, float za) {
         xa += d;
       xaOrg = xa;
     }
-    while (za != 0 &&
-           level->getCubes(this, bb.cloneMove(0, -1.0, za)).empty()) {
+    while (
+        za != 0 && level->getCubes(this, bb.cloneMove(0, -1.0, za)).empty()) {
       if (za < d && za >= -d)
         za = 0;
       else if (za > 0)
@@ -171,7 +171,7 @@ void Entity::move(float xa, float ya, float za) {
     }
 
     while (xa != 0 && za != 0 &&
-           level->getCubes(this, bb.cloneMove(xa, -1.0, za)).empty()) {
+        level->getCubes(this, bb.cloneMove(xa, -1.0, za)).empty()) {
       if (xa < d && xa >= -d)
         xa = 0;
       else if (xa > 0)
@@ -395,7 +395,7 @@ void Entity::setPos(float x, float y, float z) {
   float w = bbWidth / 2;
   float h = bbHeight;
   bb.set(x - w, y - heightOffset + ySlideOffset, z - w, x + w,
-         y - heightOffset + ySlideOffset + h, z + w);
+      y - heightOffset + ySlideOffset + h, z + w);
 }
 
 /*virtual*/
@@ -406,8 +406,8 @@ float Entity::getBrightness(float a) {
   int yTile = Mth::floor(y - this->heightOffset + hh);
   int zTile = Mth::floor(z);
   if (level->hasChunksAt(Mth::floor(bb.x0), Mth::floor(bb.y0),
-                         Mth::floor(bb.z0), Mth::floor(bb.x1),
-                         Mth::floor(bb.y1), Mth::floor(bb.z1))) {
+          Mth::floor(bb.z0), Mth::floor(bb.x1), Mth::floor(bb.y1),
+          Mth::floor(bb.z1))) {
     return level->getBrightness(xTile, yTile, zTile);
   }
   return 0;
@@ -471,15 +471,14 @@ void Entity::baseTick() {
       float speed = sqrt(xd * xd * 0.2f + yd * yd + zd * zd * 0.2f) * 0.2f;
       if (speed > 1)
         speed = 1;
-      level->playSound(
-          this, "random.splash", speed,
+      level->playSound(this, "random.splash", speed,
           1 + (sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 0.4f);
       float yt = floorf(bb.y0);
       for (int i = 0; i < 1 + bbWidth * 20; i++) {
         float xo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
         float zo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
         level->addParticle(PARTICLETYPE(bubble), x + xo, yt + 1, z + zo, xd,
-                           yd - sharedRandom.nextFloat() * 0.2f, zd);
+            yd - sharedRandom.nextFloat() * 0.2f, zd);
       }
       // for (int i = 0; i < 1 + bbWidth * 20; i++) {
       //     float xo = (sharedRandom.nextFloat() * 2 - 1) * bbWidth;
@@ -671,8 +670,8 @@ void Entity::_init() {
   fallDistance = 0;
 }
 
-bool Entity::intersects(float x0, float y0, float z0, float x1, float y1,
-                        float z1) {
+bool Entity::intersects(
+    float x0, float y0, float z0, float x1, float y1, float z1) {
   return bb.intersects(x0, y0, z0, x1, y1, z1);
 }
 
@@ -708,8 +707,8 @@ bool Entity::isAlive() { return !removed; }
 
 bool Entity::interact(Player *player) { return false; }
 
-void Entity::lerpTo(float x, float y, float z, float yRot, float xRot,
-                    int steps) {
+void Entity::lerpTo(
+    float x, float y, float z, float yRot, float xRot, int steps) {
   setPos(x, y, z);
   setRot(yRot, xRot);
 }
@@ -880,10 +879,10 @@ void Entity::playStepSound(int xt, int yt, int zt, int t) {
   if (level->getTile(xt, yt + 1, zt) == Tile::topSnow->id) {
     soundType = Tile::topSnow->soundType;
     level->playSound(this, soundType->getStepSound(),
-                     soundType->getVolume() * 0.25f,
-                     soundType->getPitch()); // was * 0.15f
+        soundType->getVolume() * 0.25f,
+        soundType->getPitch()); // was * 0.15f
   } else if (!Tile::tiles[t]->material->isLiquid()) {
     level->playSound(this, soundType->getStepSound(),
-                     soundType->getVolume() * 0.25f, soundType->getPitch());
+        soundType->getVolume() * 0.25f, soundType->getPitch());
   }
 }

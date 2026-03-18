@@ -18,8 +18,8 @@ void MobRenderer::setArmor(Model *armor) { this->armor = armor; }
 
 Model *MobRenderer::getArmor() { return armor; }
 
-void MobRenderer::render(Entity *e, float x, float y, float z, float rot,
-                         float a) {
+void MobRenderer::render(
+    Entity *e, float x, float y, float z, float rot, float a) {
   Mob *mob = (Mob *)e;
 
   glPushMatrix2();
@@ -140,8 +140,8 @@ void MobRenderer::setupPosition(Entity *mob, float x, float y, float z) {
   glTranslatef2((float)x, (float)y, (float)z);
 }
 
-void MobRenderer::setupRotations(Entity *mob_, float bob, float bodyRot,
-                                 float a) {
+void MobRenderer::setupRotations(
+    Entity *mob_, float bob, float bodyRot, float a) {
   glRotatef2(180 - bodyRot, 0, 1, 0);
 
   Mob *mob = (Mob *)mob_;
@@ -184,8 +184,8 @@ void MobRenderer::renderName(Mob *mob, float x, float y, float z) {
   */
 }
 
-void MobRenderer::renderNameTag(Mob *mob, const std::string &name, float x,
-                                float y, float z, int maxDist) {
+void MobRenderer::renderNameTag(
+    Mob *mob, const std::string &name, float x, float y, float z, int maxDist) {
   float dist = mob->distanceToSqr(entityRenderDispatcher->cameraEntity);
 
   if (dist > maxDist * maxDist)

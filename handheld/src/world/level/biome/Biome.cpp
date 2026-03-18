@@ -30,12 +30,12 @@ Biome *Biome::map[64 * 64];
 Biome::Biome()
     : topMaterial(((Tile *)Tile::grass)->id),
       material(((Tile *)Tile::dirt)->id), leafColor(0x4EE031) {
-  _friendlies.insert(_friendlies.end(),
-                     MobSpawnerData(MobTypes::Sheep, 12, 2, 3));
-  _friendlies.insert(_friendlies.end(),
-                     MobSpawnerData(MobTypes::Pig, 10, 1, 3));
-  _friendlies.insert(_friendlies.end(),
-                     MobSpawnerData(MobTypes::Chicken, 10, 2, 4));
+  _friendlies.insert(
+      _friendlies.end(), MobSpawnerData(MobTypes::Sheep, 12, 2, 3));
+  _friendlies.insert(
+      _friendlies.end(), MobSpawnerData(MobTypes::Pig, 10, 1, 3));
+  _friendlies.insert(
+      _friendlies.end(), MobSpawnerData(MobTypes::Chicken, 10, 2, 4));
   _friendlies.insert(_friendlies.end(), MobSpawnerData(MobTypes::Cow, 8, 2, 3));
 
   _enemies.insert(_enemies.end(), MobSpawnerData(MobTypes::Spider, 8, 2, 3));
@@ -49,19 +49,19 @@ Biome::Biome()
   // _friendlies.insert(_friendlies.end(), new MobSpawnerData(Wolf.class, 2));
 
   //_waterFriendlies.insert(_waterFriendlies.end(), (new
-  //MobSpawnerData(Squid.class, 10, 4, 4));
+  // MobSpawnerData(Squid.class, 10, 4, 4));
 
   //
   // Sum up the weights
   //
   defaultTotalEnemyWeight = 0;
   for (MobList::const_iterator cit = _enemies.begin(); cit != _enemies.end();
-       ++cit)
+      ++cit)
     defaultTotalEnemyWeight += cit->randomWeight;
 
   defaultTotalFriendlyWeight = 0;
   for (MobList::const_iterator cit = _friendlies.begin();
-       cit != _friendlies.end(); ++cit)
+      cit != _friendlies.end(); ++cit)
     defaultTotalFriendlyWeight += cit->randomWeight;
 }
 
@@ -83,8 +83,7 @@ Biome *Biome::setColor(int color) {
 Biome *Biome::setSnowCovered() { return this; }
 
 Biome *Biome::clearMobs(bool friendlies /*= true*/,
-                        bool waterFriendlies /*= true*/,
-                        bool enemies /*= true*/) {
+    bool waterFriendlies /*= true*/, bool enemies /*= true*/) {
   if (friendlies)
     _friendlies.clear();
   if (waterFriendlies)

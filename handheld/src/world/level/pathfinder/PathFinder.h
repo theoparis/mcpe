@@ -63,8 +63,8 @@ public:
   }
 
 private:
-  bool findPath(Path &path, Entity *e, float xt, float yt, float zt,
-                float maxDist) {
+  bool findPath(
+      Path &path, Entity *e, float xt, float yt, float zt, float maxDist) {
     // openSet.clear();
     // LOGI("<--------------------->\n");
     static Stopwatch w;
@@ -118,7 +118,7 @@ private:
     }
 
     Node size(Mth::floor((e->bbWidth + 1)), Mth::floor((e->bbHeight + 1)),
-              Mth::floor((e->bbWidth + 1)));
+        Mth::floor((e->bbWidth + 1)));
     bool out = findPath(path, e, from, to, &size, maxDist);
     w.stop();
     // w.printEvery(1, "Pathfinder");
@@ -135,7 +135,7 @@ private:
 
   // function A*(start,goal)
   bool findPath(Path &path, Entity *e, Node *from, Node *to, const Node *size,
-                float maxDist) {
+      float maxDist) {
     // static int _x = 0;
     __created = 0;
 
@@ -224,7 +224,7 @@ private:
   }
 
   int getNeighbors(Entity *entity, Node *pos, const Node *size, Node *target,
-                   float maxDist) {
+      float maxDist) {
     int p = 0;
 
     // LOGI("Getting neighbours for: (%d, %d, %d)\n", pos->x, pos->y, pos->z);
@@ -249,8 +249,8 @@ private:
     return p;
   }
 
-  Node *getNode(Entity *entity, int x, int y, int z, const Node *size,
-                int jumpSize) {
+  Node *getNode(
+      Entity *entity, int x, int y, int z, const Node *size, int jumpSize) {
     Node *best = NULL;
     int pathType = isFree(entity, x, y, z, size);
     if (pathType == TYPE_WALKABLE)
@@ -327,13 +327,13 @@ private:
             } else
               continue;
           } else if (tileId == Tile::water->id ||
-                     tileId == Tile::calmWater->id) {
+              tileId == Tile::calmWater->id) {
             if (avoidWater) {
               return TYPE_WATER;
             }
             walkable = true;
           } else if (tileId == Tile::fence->id ||
-                     tileId == Tile::fenceGate->id) {
+              tileId == Tile::fenceGate->id) {
             return TYPE_FENCE;
           }
 

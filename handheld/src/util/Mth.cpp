@@ -9,7 +9,7 @@ static Random _rand;
 
 namespace Mth {
 const float PI = 3.1415926535897932384626433832795028841971f; // exactly!
-const float TWO_PI = 2.0f * PI;                               // exactly!
+const float TWO_PI = 2.0f * PI; // exactly!
 const float DEGRAD = PI / 180.0f;
 const float RADDEG = 180.0f / PI;
 

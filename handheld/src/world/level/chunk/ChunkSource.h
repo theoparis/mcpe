@@ -32,8 +32,8 @@ public:
   virtual bool shouldSave() = 0;
   virtual void saveAll(bool onlyUnsaved) {}
 
-  virtual Biome::MobList getMobsAt(const MobCategory &mobCategory, int x, int y,
-                                   int z) = 0;
+  virtual Biome::MobList getMobsAt(
+      const MobCategory &mobCategory, int x, int y, int z) = 0;
 
   /**
    * Returns some stats that are rendered when the user holds F3.

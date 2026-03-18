@@ -29,7 +29,7 @@ public:
   static const std::string NullString;
 
   virtual void write(IDataOutput *dos) = 0; ///*throws IOException*/;
-  virtual void load(IDataInput *dis) = 0;   ///*throws IOException*/;
+  virtual void load(IDataInput *dis) = 0; ///*throws IOException*/;
 
   virtual std::string toString() const = 0;
   virtual char getId() const = 0;

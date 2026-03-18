@@ -19,7 +19,7 @@ public:
   static const int MAX_INVENTORY_STACK_SIZE = 254;
 
   FillingContainer(int numTotalSlots, int numLinkedSlots, int containerType,
-                   bool isCreative);
+      bool isCreative);
   ~FillingContainer();
 
   bool hasResource(int type) const;

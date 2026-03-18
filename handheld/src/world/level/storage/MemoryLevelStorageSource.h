@@ -29,8 +29,8 @@ public:
 
   void deleteLevel(const std::string &levelId) {}
 
-  void renameLevel(const std::string &levelId,
-                   const std::string &newLevelName) {}
+  void renameLevel(
+      const std::string &levelId, const std::string &newLevelName) {}
 
   bool isConvertible(const std::string &levelId) { return false; }
 

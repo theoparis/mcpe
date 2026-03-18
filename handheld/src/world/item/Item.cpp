@@ -624,7 +624,7 @@ void Item::initItems() {
   for (int i = 256; i < MAX_ITEMS; ++i) {
     if (items[i] && items[i]->category == -1)
       LOGE("Error: Missing category for item %d: %s\n", items[i]->id,
-           items[i]->getDescriptionId().c_str());
+          items[i]->getDescriptionId().c_str());
   }
 }
 
@@ -637,7 +637,7 @@ void Item::teardownItems() {
     }
 }
 
-ItemInstance Item::useTimeDepleted(ItemInstance *itemInstance, Level *level,
-                                   Player *player) {
+ItemInstance Item::useTimeDepleted(
+    ItemInstance *itemInstance, Level *level, Player *player) {
   return *itemInstance;
 }

@@ -15,8 +15,8 @@ Throwable::Throwable(Level *level, Mob *mob) : super(level) {
 
   ownerId = mob->entityId;
 
-  this->moveTo(mob->x, mob->y + mob->getHeadHeight(), mob->z, mob->yRot,
-               mob->xRot);
+  this->moveTo(
+      mob->x, mob->y + mob->getHeadHeight(), mob->z, mob->yRot, mob->xRot);
 
   const float rcos = Mth::cos(yRot / 180 * Mth::PI);
   const float rsin = Mth::sin(yRot / 180 * Mth::PI);
@@ -73,8 +73,8 @@ void Throwable::shoot(const Vec3 &v, float pow, float uncertainty) {
   shoot(v.x, v.y, v.z, pow, uncertainty);
 }
 
-void Throwable::shoot(float xd, float yd, float zd, float pow,
-                      float uncertainty) {
+void Throwable::shoot(
+    float xd, float yd, float zd, float pow, float uncertainty) {
   float dist = Mth::sqrt(xd * xd + yd * yd + zd * zd);
 
   if (dist >= 0.001f) {
@@ -212,8 +212,8 @@ void Throwable::tick() {
   if (isInWater()) {
     for (int i = 0; i < 4; i++) {
       float s = 1 / 4.0f;
-      level->addParticle("bubble", x - xd * s, y - yd * s, z - zd * s, xd, yd,
-                         zd);
+      level->addParticle(
+          "bubble", x - xd * s, y - yd * s, z - zd * s, xd, yd, zd);
     }
     inertia = 0.80f;
   }

@@ -76,8 +76,8 @@ public:
 
   BPlusTree();
   ~BPlusTree();
-  void
-  SetPoolPageSize(int size); // Set the page size for the memory pool.  Optionsl
+  void SetPoolPageSize(
+      int size); // Set the page size for the memory pool.  Optionsl
   bool Get(const KeyType key, DataType &out) const;
   bool Delete(const KeyType key);
   bool Delete(const KeyType key, DataType &out);
@@ -88,42 +88,39 @@ public:
   Page<KeyType, DataType, order> *GetListHead(void) const;
   DataType GetDataHead(void) const;
   void PrintLeaves(void);
-  void ForEachLeaf(void (*func)(Page<KeyType, DataType, order> *leaf,
-                                int index));
+  void ForEachLeaf(
+      void (*func)(Page<KeyType, DataType, order> *leaf, int index));
   void ForEachData(void (*func)(DataType input, int index));
   void PrintGraph(void);
 
 protected:
   void ValidateTreeRecursive(Page<KeyType, DataType, order> *cur);
-  void DeleteFromPageAtIndex(const int index,
-                             Page<KeyType, DataType, order> *cur);
+  void DeleteFromPageAtIndex(
+      const int index, Page<KeyType, DataType, order> *cur);
   static void PrintLeaf(Page<KeyType, DataType, order> *leaf, int index);
   void FreePages(void);
-  bool GetIndexOf(const KeyType key, Page<KeyType, DataType, order> *page,
-                  int *out) const;
+  bool GetIndexOf(
+      const KeyType key, Page<KeyType, DataType, order> *page, int *out) const;
   void ShiftKeysLeft(Page<KeyType, DataType, order> *cur);
   bool CanRotateLeft(Page<KeyType, DataType, order> *cur, int childIndex);
   bool CanRotateRight(Page<KeyType, DataType, order> *cur, int childIndex);
   void RotateRight(Page<KeyType, DataType, order> *cur, int childIndex,
-                   ReturnAction *returnAction);
+      ReturnAction *returnAction);
   void RotateLeft(Page<KeyType, DataType, order> *cur, int childIndex,
-                  ReturnAction *returnAction);
-  Page<KeyType, DataType, order> *
-  InsertIntoNode(const KeyType key, const DataType &childData,
-                 int insertionIndex, Page<KeyType, DataType, order> *nodeData,
-                 Page<KeyType, DataType, order> *cur,
-                 ReturnAction *returnAction);
-  Page<KeyType, DataType, order> *
-  InsertBranchDown(const KeyType key, const DataType &data,
-                   Page<KeyType, DataType, order> *cur,
-                   ReturnAction *returnAction, bool *success);
+      ReturnAction *returnAction);
+  Page<KeyType, DataType, order> *InsertIntoNode(const KeyType key,
+      const DataType &childData, int insertionIndex,
+      Page<KeyType, DataType, order> *nodeData,
+      Page<KeyType, DataType, order> *cur, ReturnAction *returnAction);
+  Page<KeyType, DataType, order> *InsertBranchDown(const KeyType key,
+      const DataType &data, Page<KeyType, DataType, order> *cur,
+      ReturnAction *returnAction, bool *success);
   Page<KeyType, DataType, order> *GetLeafFromKey(const KeyType key) const;
   bool FindDeleteRebalance(const KeyType key,
-                           Page<KeyType, DataType, order> *cur, bool *underflow,
-                           KeyType rightRootKey, ReturnAction *returnAction,
-                           DataType &out);
+      Page<KeyType, DataType, order> *cur, bool *underflow,
+      KeyType rightRootKey, ReturnAction *returnAction, DataType &out);
   bool FixUnderflow(int branchIndex, Page<KeyType, DataType, order> *cur,
-                    KeyType rightRootKey, ReturnAction *returnAction);
+      KeyType rightRootKey, ReturnAction *returnAction);
   void ShiftNodeLeft(Page<KeyType, DataType, order> *cur);
   void ShiftNodeRight(Page<KeyType, DataType, order> *cur);
 
@@ -146,8 +143,8 @@ void BPlusTree<KeyType, DataType, order>::SetPoolPageSize(int size) {
   pagePool.SetPageSize(size);
 }
 template <class KeyType, class DataType, int order>
-bool BPlusTree<KeyType, DataType, order>::Get(const KeyType key,
-                                              DataType &out) const {
+bool BPlusTree<KeyType, DataType, order>::Get(
+    const KeyType key, DataType &out) const {
   if (root == 0)
     return false;
 
@@ -181,8 +178,8 @@ bool BPlusTree<KeyType, DataType, order>::Delete(const KeyType key) {
   return Delete(key, temp);
 }
 template <class KeyType, class DataType, int order>
-bool BPlusTree<KeyType, DataType, order>::Delete(const KeyType key,
-                                                 DataType &out) {
+bool BPlusTree<KeyType, DataType, order>::Delete(
+    const KeyType key, DataType &out) {
   if (root == 0)
     return false;
 
@@ -202,7 +199,7 @@ bool BPlusTree<KeyType, DataType, order>::Delete(const KeyType key,
     }
     return true;
   } else if (FindDeleteRebalance(key, root, &underflow, root->keys[0],
-                                 &returnAction, out) == false)
+                 &returnAction, out) == false)
     return false;
 
   //		RakAssert(returnAction.action==ReturnAction::NO_ACTION);
@@ -218,9 +215,9 @@ bool BPlusTree<KeyType, DataType, order>::Delete(const KeyType key,
   return true;
 }
 template <class KeyType, class DataType, int order>
-bool BPlusTree<KeyType, DataType, order>::FindDeleteRebalance(
-    const KeyType key, Page<KeyType, DataType, order> *cur, bool *underflow,
-    KeyType rightRootKey, ReturnAction *returnAction, DataType &out) {
+bool BPlusTree<KeyType, DataType, order>::FindDeleteRebalance(const KeyType key,
+    Page<KeyType, DataType, order> *cur, bool *underflow, KeyType rightRootKey,
+    ReturnAction *returnAction, DataType &out) {
   // Get index of child to follow.
   int branchIndex, childIndex;
   if (GetIndexOf(key, cur, &childIndex))
@@ -236,7 +233,7 @@ bool BPlusTree<KeyType, DataType, order>::FindDeleteRebalance(
       rightRootKey = cur->keys[branchIndex - 1]; // Shift center to left
 
     if (FindDeleteRebalance(key, cur->children[branchIndex], underflow,
-                            rightRootKey, returnAction, out) == false)
+            rightRootKey, returnAction, out) == false)
       return false;
 
     // Call again in case the root key changed
@@ -290,8 +287,8 @@ bool BPlusTree<KeyType, DataType, order>::FindDeleteRebalance(
   return true;
 }
 template <class KeyType, class DataType, int order>
-bool BPlusTree<KeyType, DataType, order>::FixUnderflow(
-    int branchIndex, Page<KeyType, DataType, order> *cur, KeyType rightRootKey,
+bool BPlusTree<KeyType, DataType, order>::FixUnderflow(int branchIndex,
+    Page<KeyType, DataType, order> *cur, KeyType rightRootKey,
     ReturnAction *returnAction) {
   // Borrow from a neighbor that has excess.
   Page<KeyType, DataType, order> *source;
@@ -323,7 +320,7 @@ bool BPlusTree<KeyType, DataType, order>::FixUnderflow(
     // No underflow
     return false;
   } else if (branchIndex < cur->size &&
-             cur->children[branchIndex + 1]->size > order / 2) {
+      cur->children[branchIndex + 1]->size > order / 2) {
     dest = cur->children[branchIndex];
     source = cur->children[branchIndex + 1];
 
@@ -337,8 +334,8 @@ bool BPlusTree<KeyType, DataType, order>::FixUnderflow(
       cur->keys[branchIndex] = source->keys[1];
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
       if (order <= 3 && dest->size == 0) {
         if (branchIndex == 0) {
@@ -406,8 +403,8 @@ bool BPlusTree<KeyType, DataType, order>::FixUnderflow(
     }
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
     if (order <= 3 && branchIndex > 0 &&
         cur->children[branchIndex]
@@ -481,8 +478,8 @@ void BPlusTree<KeyType, DataType, order>::ShiftNodeLeft(
 }
 template <class KeyType, class DataType, int order>
 Page<KeyType, DataType, order> *
-BPlusTree<KeyType, DataType, order>::InsertIntoNode(
-    const KeyType key, const DataType &leafData, int insertionIndex,
+BPlusTree<KeyType, DataType, order>::InsertIntoNode(const KeyType key,
+    const DataType &leafData, int insertionIndex,
     Page<KeyType, DataType, order> *nodeData,
     Page<KeyType, DataType, order> *cur, ReturnAction *returnAction) {
   int i;
@@ -589,8 +586,8 @@ BPlusTree<KeyType, DataType, order>::InsertIntoNode(
         RakAssert(b == false);
       } else
         insertionIndex = 0;
-      InsertIntoNode(key, leafData, insertionIndex, nodeData, cur,
-                     returnAction);
+      InsertIntoNode(
+          key, leafData, insertionIndex, nodeData, cur, returnAction);
     }
 
     newPage->size = destIndex;
@@ -668,10 +665,9 @@ BPlusTree<KeyType, DataType, order>::GetLeafFromKey(const KeyType key) const {
 
 template <class KeyType, class DataType, int order>
 Page<KeyType, DataType, order> *
-BPlusTree<KeyType, DataType, order>::InsertBranchDown(
-    const KeyType key, const DataType &data,
-    Page<KeyType, DataType, order> *cur, ReturnAction *returnAction,
-    bool *success) {
+BPlusTree<KeyType, DataType, order>::InsertBranchDown(const KeyType key,
+    const DataType &data, Page<KeyType, DataType, order> *cur,
+    ReturnAction *returnAction, bool *success) {
   int childIndex;
   int branchIndex;
   if (GetIndexOf(key, cur, &childIndex))
@@ -694,8 +690,8 @@ BPlusTree<KeyType, DataType, order>::InsertBranchDown(
 
           int insertionIndex;
           GetIndexOf(key, cur->children[branchIndex], &insertionIndex);
-          InsertIntoNode(key, data, insertionIndex, 0,
-                         cur->children[branchIndex], 0);
+          InsertIntoNode(
+              key, data, insertionIndex, 0, cur->children[branchIndex], 0);
         } else {
           // Move head element to left and replace it with key,data
           Page<KeyType, DataType, order> *dest = cur->children[branchIndex - 1];
@@ -720,8 +716,8 @@ BPlusTree<KeyType, DataType, order>::InsertBranchDown(
 
           int insertionIndex;
           GetIndexOf(key, cur->children[branchIndex], &insertionIndex);
-          InsertIntoNode(key, data, insertionIndex, 0,
-                         cur->children[branchIndex], 0);
+          InsertIntoNode(
+              key, data, insertionIndex, 0, cur->children[branchIndex], 0);
 
         } else {
           // Insert to the head of the right leaf instead and change our key
@@ -734,8 +730,8 @@ BPlusTree<KeyType, DataType, order>::InsertBranchDown(
       }
     }
 
-    newPage = InsertBranchDown(key, data, cur->children[branchIndex],
-                               returnAction, success);
+    newPage = InsertBranchDown(
+        key, data, cur->children[branchIndex], returnAction, success);
     if (returnAction->action == ReturnAction::REPLACE_KEY1_WITH_KEY2) {
       if (branchIndex > 0 && cur->keys[branchIndex - 1] == returnAction->key1)
         cur->keys[branchIndex - 1] = returnAction->key2;
@@ -744,11 +740,11 @@ BPlusTree<KeyType, DataType, order>::InsertBranchDown(
       if (newPage->isLeaf == false) {
         RakAssert(returnAction->action == ReturnAction::PUSH_KEY_TO_PARENT);
         newPage->size--;
-        return InsertIntoNode(returnAction->key1, data, branchIndex, newPage,
-                              cur, returnAction);
+        return InsertIntoNode(
+            returnAction->key1, data, branchIndex, newPage, cur, returnAction);
       } else {
-        return InsertIntoNode(newPage->keys[0], data, branchIndex, newPage, cur,
-                              returnAction);
+        return InsertIntoNode(
+            newPage->keys[0], data, branchIndex, newPage, cur, returnAction);
       }
     }
   } else {
@@ -763,8 +759,8 @@ BPlusTree<KeyType, DataType, order>::InsertBranchDown(
   return 0;
 }
 template <class KeyType, class DataType, int order>
-bool BPlusTree<KeyType, DataType, order>::Insert(const KeyType key,
-                                                 const DataType &data) {
+bool BPlusTree<KeyType, DataType, order>::Insert(
+    const KeyType key, const DataType &data) {
   if (root == 0) {
     // Allocate root and make root a leaf
     root = pagePool.Allocate(_FILE_AND_LINE_);
@@ -847,8 +843,8 @@ bool BPlusTree<KeyType, DataType, order>::GetIndexOf(
   index = page->size / 2;
 
 #ifdef _MSC_VER
-#pragma warning(disable                                                        \
-                : 4127) // warning C4127: conditional expression is constant
+#pragma warning(                                                               \
+    disable : 4127) // warning C4127: conditional expression is constant
 #endif
   while (1) {
     if (key == page->keys[index]) {

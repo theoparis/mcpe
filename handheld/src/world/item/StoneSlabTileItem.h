@@ -33,12 +33,12 @@ public:
     if (auxValue < 0 || auxValue >= StoneSlabTile::SLAB_NAMES_COUNT)
       auxValue = 0;
     return super::getDescriptionId() + "." +
-           StoneSlabTile::SLAB_NAMES[auxValue];
+        StoneSlabTile::SLAB_NAMES[auxValue];
   }
 
   /*@Override*/
   bool useOn(ItemInstance *instance, Player *player, Level *level, int x, int y,
-             int z, int face, float clickX, float clickY, float clickZ) {
+      int z, int face, float clickX, float clickY, float clickZ) {
     if (instance->count == 0)
       return false;
     // if (!player->mayBuild(x, y, z)) return false;
@@ -49,7 +49,7 @@ public:
     bool isUpper = (currentData & StoneSlabTile::TOP_SLOT_BIT) != 0;
 
     if (((face == Facing::UP && !isUpper) ||
-         (face == Facing::DOWN && isUpper)) &&
+            (face == Facing::DOWN && isUpper)) &&
         currentTile == Tile::stoneSlabHalf->id &&
         slabType == instance->getAuxValue()) {
       bool unobstructed =
@@ -57,15 +57,15 @@ public:
       if (unobstructed &&
           level->setTileAndData(x, y, z, Tile::stoneSlab->id, slabType)) {
         level->playSound(x + 0.5f, y + 0.5f, z + 0.5f,
-                         Tile::stoneSlab->soundType->getStepSound(),
-                         (Tile::stoneSlab->soundType->getVolume() + 1) / 2,
-                         Tile::stoneSlab->soundType->getPitch() * 0.8f);
+            Tile::stoneSlab->soundType->getStepSound(),
+            (Tile::stoneSlab->soundType->getVolume() + 1) / 2,
+            Tile::stoneSlab->soundType->getPitch() * 0.8f);
         instance->count--;
       }
       return true;
     } else {
-      return super::useOn(instance, player, level, x, y, z, face, clickX,
-                          clickY, clickZ);
+      return super::useOn(
+          instance, player, level, x, y, z, face, clickX, clickY, clickZ);
     }
   }
 };

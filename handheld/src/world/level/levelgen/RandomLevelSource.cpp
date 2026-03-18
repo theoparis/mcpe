@@ -16,8 +16,8 @@ const float RandomLevelSource::SNOW_CUTOFF = 0.5f;
 const float RandomLevelSource::SNOW_SCALE = 0.3f;
 static const int MAX_BUFFER_SIZE = 1024;
 
-RandomLevelSource::RandomLevelSource(Level *level, long seed, int version,
-                                     bool spawnMobs)
+RandomLevelSource::RandomLevelSource(
+    Level *level, long seed, int version, bool spawnMobs)
     : random(seed), level(level), lperlinNoise1(&random, 16),
       lperlinNoise2(&random, 16), perlinNoise1(&random, 8),
       perlinNoise2(&random, 4), perlinNoise3(&random, 4),
@@ -42,7 +42,7 @@ RandomLevelSource::~RandomLevelSource() {
   // ChunkMap::iterator it = chunkMap.begin();
   // while (it != chunkMap.end()) {
   //	it->second->deleteBlockData(); //@attn: we delete the block data here,
-  //for now 	delete it->second;
+  // for now 	delete it->second;
   //	++it;
   //}
 
@@ -58,9 +58,8 @@ RandomLevelSource::~RandomLevelSource() {
 
 /*public*/
 void RandomLevelSource::prepareHeights(int xOffs, int zOffs,
-                                       unsigned char *blocks,
-                                       /*Biome*/ void *biomes,
-                                       float *temperatures) {
+    unsigned char *blocks,
+    /*Biome*/ void *biomes, float *temperatures) {
 
   int xChunks = 16 / CHUNK_WIDTH;
   int waterHeight = Level::DEPTH - 64;
@@ -68,8 +67,8 @@ void RandomLevelSource::prepareHeights(int xOffs, int zOffs,
   int xSize = xChunks + 1;
   int ySize = 128 / CHUNK_HEIGHT + 1;
   int zSize = xChunks + 1;
-  buffer = getHeights(buffer, xOffs * xChunks, 0, zOffs * xChunks, xSize, ySize,
-                      zSize);
+  buffer = getHeights(
+      buffer, xOffs * xChunks, 0, zOffs * xChunks, xSize, ySize, zSize);
 
   for (int xc = 0; xc < xChunks; xc++) {
     for (int zc = 0; zc < xChunks; zc++) {
@@ -103,7 +102,7 @@ void RandomLevelSource::prepareHeights(int xOffs, int zOffs,
 
           for (int x = 0; x < CHUNK_WIDTH; x++) {
             int offs = (x + xc * CHUNK_WIDTH) << 11 |
-                       (0 + zc * CHUNK_WIDTH) << 7 | (yc * CHUNK_HEIGHT + y);
+                (0 + zc * CHUNK_WIDTH) << 7 | (yc * CHUNK_HEIGHT + y);
             int step = 1 << 7;
             float zStep = 1 / (float)CHUNK_WIDTH;
 
@@ -112,7 +111,7 @@ void RandomLevelSource::prepareHeights(int xOffs, int zOffs,
             for (int z = 0; z < CHUNK_WIDTH; z++) {
               // + (zc * CHUNK_WIDTH + z)];
               float temp = temperatures[(xc * CHUNK_WIDTH + x) * 16 +
-                                        (zc * CHUNK_WIDTH + z)];
+                  (zc * CHUNK_WIDTH + z)];
               int tileId = 0;
               if (yc * CHUNK_HEIGHT + y < waterHeight) {
                 if (temp < SNOW_CUTOFF &&
@@ -145,17 +144,17 @@ void RandomLevelSource::prepareHeights(int xOffs, int zOffs,
   }
 }
 
-void RandomLevelSource::buildSurfaces(int xOffs, int zOffs,
-                                      unsigned char *blocks, Biome **biomes) {
+void RandomLevelSource::buildSurfaces(
+    int xOffs, int zOffs, unsigned char *blocks, Biome **biomes) {
   int waterHeight = Level::DEPTH - 64;
 
   float s = 1 / 32.0f;
   perlinNoise2.getRegion(sandBuffer, (float)(xOffs * 16), (float)(zOffs * 16),
-                         0, 16, 16, 1, s, s, 1);
+      0, 16, 16, 1, s, s, 1);
   perlinNoise2.getRegion(gravelBuffer, (float)(xOffs * 16), 109.01340f,
-                         (float)(zOffs * 16), 16, 1, 16, s, 1, s);
+      (float)(zOffs * 16), 16, 1, 16, s, 1, s);
   perlinNoise3.getRegion(depthBuffer, (float)(xOffs * 16), (float)(zOffs * 16),
-                         0, 16, 16, 1, s * 2, s * 2, s * 2);
+      0, 16, 16, 1, s * 2, s * 2, s * 2);
 
   for (int x = 0; x < 16; x++) {
     for (int z = 0; z < 16; z++) {
@@ -354,8 +353,8 @@ void RandomLevelSource::postProcess(ChunkSource *parent, int xt, int zt) {
 
   const float ss = 0.5f;
   int oFor = (int)((forestNoise.getValue(xo * ss, zo * ss) / 8 +
-                    random.nextFloat() * 4 + 4) /
-                   3);
+                       random.nextFloat() * 4 + 4) /
+      3);
   int forests = 0; // 1; (java: 0)
   if (random.nextInt(10) == 0)
     forests += 1;
@@ -478,8 +477,8 @@ void RandomLevelSource::postProcess(ChunkSource *parent, int xt, int zt) {
   }
 
   if (spawnMobs && !level->isClientSide)
-    MobSpawner::postProcessSpawnMobs(level, biome, xo + 8, zo + 8, 16, 16,
-                                     &random);
+    MobSpawner::postProcessSpawnMobs(
+        level, biome, xo + 8, zo + 8, 16, 16, &random);
 
   // LOGI("Reading temp: 1\n");
   float *temperatures = level->getBiomeSource()->getTemperatureBlock(
@@ -530,7 +529,7 @@ LevelChunk *RandomLevelSource::getChunk(int xOffs, int zOffs) {
       /*biomes, */ xOffs * 16, zOffs * 16, 16, 16);
   float *temperatures = level->getBiomeSource()->temperatures;
   prepareHeights(xOffs, zOffs, blocks, 0,
-                 temperatures); // biomes, temperatures);
+      temperatures); // biomes, temperatures);
   buildSurfaces(xOffs, zOffs, blocks, biomes);
 
   // caveFeature.apply(this, level, xOffs, zOffs, blocks,
@@ -541,13 +540,13 @@ LevelChunk *RandomLevelSource::getChunk(int xOffs, int zOffs) {
 }
 
 /*private*/
-float *RandomLevelSource::getHeights(float *buffer, int x, int y, int z,
-                                     int xSize, int ySize, int zSize) {
+float *RandomLevelSource::getHeights(
+    float *buffer, int x, int y, int z, int xSize, int ySize, int zSize) {
   const int size = xSize * ySize * zSize;
   if (size > MAX_BUFFER_SIZE) {
     LOGI("RandomLevelSource::getHeights: TOO LARGE BUFFER REQUESTED: %d (max "
          "%d)\n",
-         size, MAX_BUFFER_SIZE);
+        size, MAX_BUFFER_SIZE);
   }
 
   float s = 1 * 684.412f;
@@ -559,11 +558,11 @@ float *RandomLevelSource::getHeights(float *buffer, int x, int y, int z,
   dr = depthNoise.getRegion(dr, x, z, xSize, zSize, 200.0f, 200.0f, 0.5f);
 
   pnr = perlinNoise1.getRegion(pnr, (float)x, (float)y, (float)z, xSize, ySize,
-                               zSize, s / 80.0f, hs / 160.0f, s / 80.0f);
-  ar = lperlinNoise1.getRegion(ar, (float)x, (float)y, (float)z, xSize, ySize,
-                               zSize, s, hs, s);
-  br = lperlinNoise2.getRegion(br, (float)x, (float)y, (float)z, xSize, ySize,
-                               zSize, s, hs, s);
+      zSize, s / 80.0f, hs / 160.0f, s / 80.0f);
+  ar = lperlinNoise1.getRegion(
+      ar, (float)x, (float)y, (float)z, xSize, ySize, zSize, s, hs, s);
+  br = lperlinNoise2.getRegion(
+      br, (float)x, (float)y, (float)z, xSize, ySize, zSize, s, hs, s);
 
   int p = 0;
   int pp = 0;
@@ -663,19 +662,19 @@ void RandomLevelSource::calcWaterDepths(ChunkSource *parent, int xt, int zt) {
           bool hadWater = false;
           if (hadWater ||
               (level->getTile(xp - 1, y, zp) == Tile::calmWater->id &&
-               level->getData(xp - 1, y, zp) < 7))
+                  level->getData(xp - 1, y, zp) < 7))
             hadWater = true;
           if (hadWater ||
               (level->getTile(xp + 1, y, zp) == Tile::calmWater->id &&
-               level->getData(xp + 1, y, zp) < 7))
+                  level->getData(xp + 1, y, zp) < 7))
             hadWater = true;
           if (hadWater ||
               (level->getTile(xp, y, zp - 1) == Tile::calmWater->id &&
-               level->getData(xp, y, zp - 1) < 7))
+                  level->getData(xp, y, zp - 1) < 7))
             hadWater = true;
           if (hadWater ||
               (level->getTile(xp, y, zp + 1) == Tile::calmWater->id &&
-               level->getData(xp, y, zp + 1) < 7))
+                  level->getData(xp, y, zp + 1) < 7))
             hadWater = true;
           if (hadWater) {
             for (int x2 = -5; x2 <= 5; x2++) {
@@ -697,8 +696,8 @@ void RandomLevelSource::calcWaterDepths(ChunkSource *parent, int xt, int zt) {
             if (hadWater) {
               level->setTileAndDataNoUpdate(xp, y, zp, Tile::calmWater->id, 7);
               for (int y2 = 0; y2 < y; y2++) {
-                level->setTileAndDataNoUpdate(xp, y2, zp, Tile::calmWater->id,
-                                              8);
+                level->setTileAndDataNoUpdate(
+                    xp, y2, zp, Tile::calmWater->id, 8);
               }
             }
           }
@@ -723,8 +722,8 @@ std::string RandomLevelSource::gatherStats() { return "RandomLevelSource"; }
 //     return true;
 // }
 
-Biome::MobList RandomLevelSource::getMobsAt(const MobCategory &mobCategory,
-                                            int x, int y, int z) {
+Biome::MobList RandomLevelSource::getMobsAt(
+    const MobCategory &mobCategory, int x, int y, int z) {
   BiomeSource *biomeSource = level->getBiomeSource();
   if (biomeSource == NULL) {
     return Biome::MobList();

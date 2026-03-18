@@ -219,7 +219,7 @@ public:
         return false;
 
       for (TagMap::const_iterator it = tags.begin(), jt = o.tags.begin();
-           it != tags.end(); ++it, ++jt) {
+          it != tags.end(); ++it, ++jt) {
         if (it->first != jt->first)
           return false;
         if (!it->second->equals(*jt->second))

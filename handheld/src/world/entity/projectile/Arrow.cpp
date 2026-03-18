@@ -207,7 +207,7 @@ void Arrow::tick() {
           ((Mob *)res.entity)->arrowCount++;
         }
         level->playSound(this, "random.bowhit", 1.0f,
-                         1.2f / (sharedRandom.nextFloat() * 0.2f + 0.9f));
+            1.2f / (sharedRandom.nextFloat() * 0.2f + 0.9f));
         remove();
       } else {
         xd *= -0.1f;
@@ -232,7 +232,7 @@ void Arrow::tick() {
       z -= (zd / dd) * 0.05f;
 
       level->playSound(this, "random.bowhit", 1.0f,
-                       1.2f / (sharedRandom.nextFloat() * 0.2f + 0.9f));
+          1.2f / (sharedRandom.nextFloat() * 0.2f + 0.9f));
       inGround = true;
       shakeTime = 7;
       critArrow = false;
@@ -242,8 +242,7 @@ void Arrow::tick() {
   if (critArrow) {
     for (int i = 0; i < 4; i++) {
       level->addParticle(PARTICLETYPE(crit), x + xd * i / 4.0f,
-                         y + yd * i / 4.0f, z + zd * i / 4.0f, -xd, -yd + 0.2f,
-                         -zd);
+          y + yd * i / 4.0f, z + zd * i / 4.0f, -xd, -yd + 0.2f, -zd);
     }
   }
 
@@ -274,8 +273,8 @@ void Arrow::tick() {
   if (isInWater()) {
     for (int i = 0; i < 4; i++) {
       float s = 1 / 4.0f;
-      level->addParticle(PARTICLETYPE(bubble), x - xd * s, y - yd * s,
-                         z - zd * s, xd, yd, zd);
+      level->addParticle(
+          PARTICLETYPE(bubble), x - xd * s, y - yd * s, z - zd * s, xd, yd, zd);
     }
     inertia = 0.80f;
   }
@@ -317,10 +316,9 @@ void Arrow::playerTouch(Player *player) {
   if (inGround && playerArrow && shakeTime <= 0) {
     ItemInstance item(Item::arrow, 1);
     if (player->inventory->add(&item)) {
-      level->playSound(
-          this, "random.pop", 0.2f,
+      level->playSound(this, "random.pop", 0.2f,
           ((sharedRandom.nextFloat() - sharedRandom.nextFloat()) * 0.7f +
-           1.0f) *
+              1.0f) *
               2.f);
       player->take(this, 1);
       remove();

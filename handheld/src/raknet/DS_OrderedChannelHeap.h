@@ -22,9 +22,8 @@
 /// can use them outside of RakNet for your own projects if you wish.
 namespace DataStructures {
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &) =
-              defaultMapKeyComparison<channel_key_type>>
+    int (*channel_key_comparison_func)(const channel_key_type &,
+        const channel_key_type &) = defaultMapKeyComparison<channel_key_type>>
 class RAK_DLL_EXPORT OrderedChannelHeap {
 public:
   static void IMPLEMENT_DEFAULT_COMPARISON(void) {
@@ -36,7 +35,7 @@ public:
   ~OrderedChannelHeap();
   void Push(const channel_key_type &channelID, const heap_data_type &data);
   void PushAtHead(const unsigned index, const channel_key_type &channelID,
-                  const heap_data_type &data);
+      const heap_data_type &data);
   heap_data_type Pop(const unsigned startingIndex = 0);
   heap_data_type Peek(const unsigned startingIndex) const;
   void AddChannel(const channel_key_type &channelID, const double weight);
@@ -54,8 +53,8 @@ public:
 
   struct HeapChannelAndData {
     HeapChannelAndData() {}
-    HeapChannelAndData(const channel_key_type &_channel,
-                       const heap_data_type &_data)
+    HeapChannelAndData(
+        const channel_key_type &_channel, const heap_data_type &_data)
         : data(_data), channel(_channel) {}
     heap_data_type data;
     channel_key_type channel;
@@ -63,41 +62,40 @@ public:
 
 protected:
   DataStructures::Map<channel_key_type, QueueAndWeight *,
-                      channel_key_comparison_func>
+      channel_key_comparison_func>
       map;
   DataStructures::Heap<double, HeapChannelAndData, true> heap;
   void GreatestRandResult(void);
 };
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
 OrderedChannelHeap<channel_key_type, heap_data_type,
-                   channel_key_comparison_func>::OrderedChannelHeap() {}
+    channel_key_comparison_func>::OrderedChannelHeap() {}
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
 OrderedChannelHeap<channel_key_type, heap_data_type,
-                   channel_key_comparison_func>::~OrderedChannelHeap() {
+    channel_key_comparison_func>::~OrderedChannelHeap() {
   Clear();
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-void OrderedChannelHeap<
-    channel_key_type, heap_data_type,
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+void OrderedChannelHeap<channel_key_type, heap_data_type,
     channel_key_comparison_func>::Push(const channel_key_type &channelID,
-                                       const heap_data_type &data) {
+    const heap_data_type &data) {
   PushAtHead(MAX_UNSIGNED_LONG, channelID, data);
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
 void OrderedChannelHeap<channel_key_type, heap_data_type,
-                        channel_key_comparison_func>::GreatestRandResult(void) {
+    channel_key_comparison_func>::GreatestRandResult(void) {
   double greatest;
   unsigned i;
   greatest = 0.0;
@@ -109,13 +107,11 @@ void OrderedChannelHeap<channel_key_type, heap_data_type,
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-void OrderedChannelHeap<
-    channel_key_type, heap_data_type,
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+void OrderedChannelHeap<channel_key_type, heap_data_type,
     channel_key_comparison_func>::PushAtHead(const unsigned index,
-                                             const channel_key_type &channelID,
-                                             const heap_data_type &data) {
+    const channel_key_type &channelID, const heap_data_type &data) {
   // If an assert hits here then this is an unknown channel.  Call AddChannel
   // first.
   QueueAndWeight *queueAndWeight = map.Get(channelID);
@@ -169,12 +165,10 @@ void OrderedChannelHeap<
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-heap_data_type
-OrderedChannelHeap<channel_key_type, heap_data_type,
-                   channel_key_comparison_func>::Pop(const unsigned
-                                                         startingIndex) {
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+heap_data_type OrderedChannelHeap<channel_key_type, heap_data_type,
+    channel_key_comparison_func>::Pop(const unsigned startingIndex) {
   RakAssert(startingIndex < heap.Size());
 
   QueueAndWeight *queueAndWeight = map.Get(heap[startingIndex].channel);
@@ -184,8 +178,8 @@ OrderedChannelHeap<channel_key_type, heap_data_type,
     unsigned indiceCount = 0;
     unsigned i;
     for (i = 0; i < startingIndex; i++)
-      if (channel_key_comparison_func(heap[i].channel,
-                                      heap[startingIndex].channel) == 0)
+      if (channel_key_comparison_func(
+              heap[i].channel, heap[startingIndex].channel) == 0)
         indiceCount++;
     queueAndWeight->randResultQueue.RemoveAtIndex(indiceCount);
   } else {
@@ -204,23 +198,20 @@ OrderedChannelHeap<channel_key_type, heap_data_type,
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-heap_data_type
-OrderedChannelHeap<channel_key_type, heap_data_type,
-                   channel_key_comparison_func>::Peek(const unsigned
-                                                          startingIndex) const {
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+heap_data_type OrderedChannelHeap<channel_key_type, heap_data_type,
+    channel_key_comparison_func>::Peek(const unsigned startingIndex) const {
   HeapChannelAndData heapChannelAndData = heap.Peek(startingIndex);
   return heapChannelAndData.data;
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-void OrderedChannelHeap<
-    channel_key_type, heap_data_type,
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+void OrderedChannelHeap<channel_key_type, heap_data_type,
     channel_key_comparison_func>::AddChannel(const channel_key_type &channelID,
-                                             const double weight) {
+    const double weight) {
   QueueAndWeight *qaw = RakNet::OP_NEW<QueueAndWeight>(_FILE_AND_LINE_);
   qaw->weight = weight;
   qaw->signalDeletion = false;
@@ -228,10 +219,9 @@ void OrderedChannelHeap<
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-void OrderedChannelHeap<
-    channel_key_type, heap_data_type,
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+void OrderedChannelHeap<channel_key_type, heap_data_type,
     channel_key_comparison_func>::RemoveChannel(channel_key_type channelID) {
   if (map.Has(channelID)) {
     unsigned i;
@@ -248,39 +238,37 @@ void OrderedChannelHeap<
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
 unsigned OrderedChannelHeap<channel_key_type, heap_data_type,
-                            channel_key_comparison_func>::Size(void) const {
+    channel_key_comparison_func>::Size(void) const {
   return heap.Size();
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
-heap_data_type &
-OrderedChannelHeap<channel_key_type, heap_data_type,
-                   channel_key_comparison_func>::operator[](const unsigned int
-                                                                position)
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
+heap_data_type &OrderedChannelHeap<channel_key_type, heap_data_type,
+    channel_key_comparison_func>::operator[](const unsigned int position)
     const {
   return heap[position].data;
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
 unsigned OrderedChannelHeap<channel_key_type, heap_data_type,
-                            channel_key_comparison_func>::
-    ChannelSize(const channel_key_type &channelID) {
+    channel_key_comparison_func>::ChannelSize(const channel_key_type
+        &channelID) {
   QueueAndWeight *queueAndWeight = map.Get(channelID);
   return queueAndWeight->randResultQueue.Size();
 }
 
 template <class channel_key_type, class heap_data_type,
-          int (*channel_key_comparison_func)(const channel_key_type &,
-                                             const channel_key_type &)>
+    int (*channel_key_comparison_func)(
+        const channel_key_type &, const channel_key_type &)>
 void OrderedChannelHeap<channel_key_type, heap_data_type,
-                        channel_key_comparison_func>::Clear(void) {
+    channel_key_comparison_func>::Clear(void) {
   unsigned i;
   for (i = 0; i < map.Size(); i++)
     RakNet::OP_DELETE(map[i], _FILE_AND_LINE_);

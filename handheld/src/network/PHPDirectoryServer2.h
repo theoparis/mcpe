@@ -68,7 +68,7 @@ public:
   /// \param[out] columnName The \a columnName parameter passed to SetField()
   /// \param[out] value The \a value parameter passed to SetField()
   void GetField(unsigned int index, RakNet::RakString &columnName,
-                RakNet::RakString &value);
+      RakNet::RakString &value);
 
   /// Set all parameters at once from a table
   /// \param[in] table A table containing the values you want to send. Note that
@@ -95,7 +95,7 @@ public:
   /// dropped. Set autoRepost to true to automatically reupload the most recent
   /// table.
   void UploadTable(RakNet::RakString uploadPassword, RakNet::RakString gameName,
-                   unsigned short gamePort, bool autoRepost);
+      unsigned short gamePort, bool autoRepost);
 
   /// Send a download request to the PHP server.
   /// On success:
@@ -124,9 +124,8 @@ public:
   /// dropped. Set autoRepost to true to automatically reupload the most recent
   /// table.
   void UploadAndDownloadTable(RakNet::RakString uploadPassword,
-                              RakNet::RakString downloadPassword,
-                              RakNet::RakString gameName,
-                              unsigned short gamePort, bool autoRepost);
+      RakNet::RakString downloadPassword, RakNet::RakString gameName,
+      unsigned short gamePort, bool autoRepost);
 
   /// When HTTPConnection::ProcessDataPacket() returns true, and not an error,
   /// pass HTTPConnection::Read() to this function The message will be parsed
@@ -154,7 +153,7 @@ private:
 
   void SendOperation(void);
   void PushColumnsAndValues(DataStructures::List<RakNet::RakString> &columns,
-                            DataStructures::List<RakNet::RakString> &values);
+      DataStructures::List<RakNet::RakString> &values);
 
   DataStructures::Table lastDownloadedTable;
   DataStructures::Map<RakNet::RakString, RakNet::RakString> fields;

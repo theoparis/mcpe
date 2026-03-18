@@ -31,7 +31,7 @@ public:
   bool canContinueToUse() {
     float d = mob->distanceToSqr((float)doorX, (float)doorY, (float)doorZ);
     return breakTime >= 0 &&
-           !doorTile->isOpen(mob->level, doorX, doorY, doorZ) && d < 2 * 2;
+        !doorTile->isOpen(mob->level, doorX, doorY, doorZ) && d < 2 * 2;
   }
 
   void tick() {

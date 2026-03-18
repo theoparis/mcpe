@@ -36,7 +36,7 @@ static const float BlockPixels = 24;
 static const int ItemSize = (int)(BlockPixels + 2 * BorderPixels);
 
 static const int Bx = 10; // Border Frame width
-static const int By = 6;  // Border Frame height
+static const int By = 6; // Border Frame height
 
 ArmorScreen::ArmorScreen()
     : inventoryPane(NULL), btnArmor0(0), btnArmor1(1), btnArmor2(2),
@@ -110,13 +110,12 @@ void ArmorScreen::setupPositions() {
   const int paneWidth = realWidth + Bx + Bx;
   const int realBx = (paneWidth - realWidth) / 2;
 
-  inventoryPaneRect =
-      IntRectangle(realBx,
+  inventoryPaneRect = IntRectangle(realBx,
 #ifdef __APPLE__
-                   26 + By - ((width == 240) ? 1 : 0), realWidth,
-                   ((width == 240) ? 1 : 0) + height - By - By - 28);
+      26 + By - ((width == 240) ? 1 : 0), realWidth,
+      ((width == 240) ? 1 : 0) + height - By - By - 28);
 #else
-                   26 + By, realWidth, height - By - By - 28);
+      26 + By, realWidth, height - By - By - 28);
 #endif
 
   for (int i = 0; i < NUM_ARMORBUTTONS; ++i) {
@@ -134,8 +133,8 @@ void ArmorScreen::setupPositions() {
   guiPlayerBgRect.w = xw - (xw / 10) * 2;
   guiPlayerBgRect.h = inventoryPaneRect.h;
 
-  guiPaneFrame->setSize((float)inventoryPaneRect.w + 2,
-                        (float)inventoryPaneRect.h + 2);
+  guiPaneFrame->setSize(
+      (float)inventoryPaneRect.w + 2, (float)inventoryPaneRect.h + 2);
   guiPlayerBg->setSize((float)guiPlayerBgRect.w, (float)guiPlayerBgRect.h);
   guiBackground->setSize((float)width, (float)height);
 
@@ -154,8 +153,8 @@ void ArmorScreen::tick() {
   }
 }
 
-void ArmorScreen::handleRenderPane(Touch::InventoryPane *pane, Tesselator &t,
-                                   int xm, int ym, float a) {
+void ArmorScreen::handleRenderPane(
+    Touch::InventoryPane *pane, Tesselator &t, int xm, int ym, float a) {
   if (pane) {
     pane->render(xm, ym, a);
     guiPaneFrame->draw(t, (float)(pane->rect.x - 1), (float)(pane->rect.y - 1));
@@ -183,12 +182,12 @@ void ArmorScreen::render(int xm, int ym, float a) {
   t.addOffset(0, 0, -490);
   guiPlayerBg->draw(t, (float)guiPlayerBgRect.x, (float)guiPlayerBgRect.y);
   t.addOffset(0, 0, 490);
-  renderPlayer((float)(guiPlayerBgRect.x + guiPlayerBgRect.w / 2),
-               0.85f * height);
+  renderPlayer(
+      (float)(guiPlayerBgRect.x + guiPlayerBgRect.w / 2), 0.85f * height);
 
   for (int i = 0; i < NUM_ARMORBUTTONS; ++i) {
-    drawSlotItemAt(t, i, player->getArmor(i), armorButtons[i]->x,
-                   armorButtons[i]->y);
+    drawSlotItemAt(
+        t, i, player->getArmor(i), armorButtons[i]->x, armorButtons[i]->y);
   }
   glDisable2(GL_ALPHA_TEST);
 }
@@ -236,8 +235,8 @@ bool ArmorScreen::isAllowed(int slot) { return true; }
 
 bool ArmorScreen::renderGameBehind() { return false; }
 
-std::vector<const ItemInstance *>
-ArmorScreen::getItems(const Touch::InventoryPane *forPane) {
+std::vector<const ItemInstance *> ArmorScreen::getItems(
+    const Touch::InventoryPane *forPane) {
   return armorItems;
 }
 
@@ -245,7 +244,7 @@ void ArmorScreen::updateItems() {
   armorItems.clear();
 
   for (int i = Inventory::MAX_SELECTION_SIZE;
-       i < minecraft->player->inventory->getContainerSize(); ++i) {
+      i < minecraft->player->inventory->getContainerSize(); ++i) {
     ItemInstance *item = minecraft->player->inventory->getItem(i);
     if (ItemInstance::isArmorItem(item))
       armorItems.push_back(item);
@@ -260,24 +259,24 @@ void ArmorScreen::setupInventoryPane() {
   // IntRectangle(0, 0, 100, 100)
   if (inventoryPane)
     delete inventoryPane;
-  inventoryPane = new Touch::InventoryPane(
-      this, minecraft, inventoryPaneRect, inventoryPaneRect.w, BorderPixels,
-      armorItems.size(), ItemSize, (int)BorderPixels);
+  inventoryPane = new Touch::InventoryPane(this, minecraft, inventoryPaneRect,
+      inventoryPaneRect.w, BorderPixels, armorItems.size(), ItemSize,
+      (int)BorderPixels);
   inventoryPane->fillMarginX = 0;
   inventoryPane->fillMarginY = 0;
   // LOGI("Creating new pane: %d %p\n", inventoryItems.size(), inventoryPane);
 }
 
-void ArmorScreen::drawSlotItemAt(Tesselator &t, int slot,
-                                 const ItemInstance *item, int x, int y) {
+void ArmorScreen::drawSlotItemAt(
+    Tesselator &t, int slot, const ItemInstance *item, int x, int y) {
   float xx = (float)x;
   float yy = (float)y;
 
   guiSlot->draw(t, xx, yy);
 
   if (item && !item->isNull()) {
-    ItemRenderer::renderGuiItem(minecraft->font, minecraft->textures, item,
-                                xx + 2, yy, true);
+    ItemRenderer::renderGuiItem(
+        minecraft->font, minecraft->textures, item, xx + 2, yy, true);
     glDisable2(GL_TEXTURE_2D);
     ItemRenderer::renderGuiItemDecorations(item, xx + 2, yy + 3);
     glEnable2(GL_TEXTURE_2D);
@@ -322,7 +321,7 @@ void ArmorScreen::renderPlayer(float xo, float yo) {
 
   float t = getTimeS();
 
-  float xd = 10 * Mth::sin(t);         //(xo + 51) - xm;
+  float xd = 10 * Mth::sin(t); //(xo + 51) - xm;
   float yd = 10 * Mth::cos(t * 0.05f); //(yo + 75 - 50) - ym;
 
   glRotatef(45 + 90, 0, 1, 0);

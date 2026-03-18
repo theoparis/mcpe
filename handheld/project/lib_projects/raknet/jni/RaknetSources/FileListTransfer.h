@@ -77,7 +77,7 @@ public:
   /// callback and is unique per file set.  Returns 65535 on failure (not
   /// connected to sender)
   unsigned short SetupReceive(FileListTransferCBInterface *handler,
-                              bool deleteHandler, SystemAddress allowedSender);
+      bool deleteHandler, SystemAddress allowedSender);
 
   /// \brief Send the FileList structure to another system, which must have
   /// previously called SetupReceive().
@@ -95,10 +95,10 @@ public:
   /// \a chunkSize
   /// \param[in] _chunkSize How large of a block of a file to send at once
   void Send(FileList *fileList, RakNet::RakPeerInterface *rakPeer,
-            SystemAddress recipient, unsigned short setID,
-            PacketPriority priority, char orderingChannel,
-            IncrementalReadInterface *_incrementalReadInterface = 0,
-            unsigned int _chunkSize = 262144 * 4 * 16);
+      SystemAddress recipient, unsigned short setID, PacketPriority priority,
+      char orderingChannel,
+      IncrementalReadInterface *_incrementalReadInterface = 0,
+      unsigned int _chunkSize = 262144 * 4 * 16);
 
   /// Return number of files waiting to go out to a particular address
   unsigned int GetPendingFilesToAddress(SystemAddress recipient);
@@ -136,9 +136,8 @@ public:
   /// \internal For plugin handling
   virtual void OnRakPeerShutdown(void);
   /// \internal For plugin handling
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   /// \internal For plugin handling
   virtual void Update(void);
 
@@ -188,7 +187,7 @@ protected:
   ThreadPool<ThreadData, int> threadPool;
 
   friend int SendIRIToAddressCB(FileListTransfer::ThreadData threadData,
-                                bool *returnOutput, void *perThreadData);
+      bool *returnOutput, void *perThreadData);
 };
 
 } // namespace RakNet

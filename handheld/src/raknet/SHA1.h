@@ -39,15 +39,15 @@ public:
 #ifdef LITTLE_ENDIAN
 #define SHABLK0(i)                                                             \
   (block->l[i] = (ROL32(block->l[i], 24) & 0xFF00FF00) |                       \
-                 (ROL32(block->l[i], 8) & 0x00FF00FF))
+          (ROL32(block->l[i], 8) & 0x00FF00FF))
 #else
 #define SHABLK0(i) (block->l[i])
 #endif
 
 #define SHABLK(i)                                                              \
   (block->l[i & 15] = ROL32(block->l[(i + 13) & 15] ^ block->l[(i + 8) & 15] ^ \
-                                block->l[(i + 2) & 15] ^ block->l[i & 15],     \
-                            1))
+           block->l[(i + 2) & 15] ^ block->l[i & 15],                          \
+       1))
 
   // SHA-1 rounds
 #define R0(v, width, x, y, z, i)                                               \
@@ -68,7 +68,7 @@ public:
 #define R3(v, width, x, y, z, i)                                               \
   {                                                                            \
     z += (((width | x) & y) | (width & x)) + SHABLK(i) + 0x8F1BBCDC +          \
-         ROL32(v, 5);                                                          \
+        ROL32(v, 5);                                                           \
     width = ROL32(width, 30);                                                  \
   }
 #define R4(v, width, x, y, z, i)                                               \

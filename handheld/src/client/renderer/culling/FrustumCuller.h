@@ -21,16 +21,16 @@ public:
     this->zOff = zOff;
   }
 
-  bool cubeFullyInFrustum(float x0, float y0, float z0, float x1, float y1,
-                          float z1) {
-    return frustum.cubeFullyInFrustum(x0 - xOff, y0 - yOff, z0 - zOff,
-                                      x1 - xOff, y1 - yOff, z1 - zOff);
+  bool cubeFullyInFrustum(
+      float x0, float y0, float z0, float x1, float y1, float z1) {
+    return frustum.cubeFullyInFrustum(
+        x0 - xOff, y0 - yOff, z0 - zOff, x1 - xOff, y1 - yOff, z1 - zOff);
   }
 
-  bool cubeInFrustum(float x0, float y0, float z0, float x1, float y1,
-                     float z1) {
-    return frustum.cubeInFrustum(x0 - xOff, y0 - yOff, z0 - zOff, x1 - xOff,
-                                 y1 - yOff, z1 - zOff);
+  bool cubeInFrustum(
+      float x0, float y0, float z0, float x1, float y1, float z1) {
+    return frustum.cubeInFrustum(
+        x0 - xOff, y0 - yOff, z0 - zOff, x1 - xOff, y1 - yOff, z1 - zOff);
   }
 
   bool isVisible(const AABB &bb) {

@@ -22,9 +22,9 @@ void RemotePlayer::tick() {
       }
     }
   } else if (hasStartedUsingItem &&
-             !getSharedFlag(SharedFlagsInformation::FLAG_USINGITEM)) {
+      !getSharedFlag(SharedFlagsInformation::FLAG_USINGITEM)) {
     //		LOGI("Stop using item! %s\n",
-    //useItem.getDescriptionId().c_str());
+    // useItem.getDescriptionId().c_str());
     stopUsingItem();
     hasStartedUsingItem = false;
   }

@@ -65,8 +65,8 @@ public:
   virtual int getItemInHandIcon(ItemInstance *item, int layer) {
     return item->getIcon();
   }
-  virtual void lerpTo(float x, float y, float z, float yRot, float xRot,
-                      int steps);
+  virtual void lerpTo(
+      float x, float y, float z, float yRot, float xRot, int steps);
 
   void setYya(float yya);
   float getSpeed();

@@ -30,7 +30,7 @@ public:
       return NULL;
     Path *p = new Path();
     level->findPath(p, mob, Mth::floor(x), (int)y, Mth::floor(z), maxDist,
-                    canOpenDoors, avoidWater);
+        canOpenDoors, avoidWater);
     return p;
   }
 
@@ -114,8 +114,8 @@ public:
     Vec3 target = path->currentPos(mob);
     // LOGI("hehe4 %d\n", _tick);
 
-    mob->getMoveControl()->setWantedPosition(target.x, target.y, target.z,
-                                             speed);
+    mob->getMoveControl()->setWantedPosition(
+        target.x, target.y, target.z, speed);
   }
 
   bool isDone() {
@@ -209,8 +209,8 @@ private:
   bool isInLiquid() { return mob->isInWater() || mob->isInLava(); }
 
   void trimPathFromSun() {
-    if (level->canSeeSky(Mth::floor(mob->x), (int)(mob->bb.y0 + 0.5),
-                         Mth::floor(mob->z)))
+    if (level->canSeeSky(
+            Mth::floor(mob->x), (int)(mob->bb.y0 + 0.5), Mth::floor(mob->z)))
       return;
 
     Path &path = *this->path;
@@ -224,8 +224,8 @@ private:
     }
   }
 
-  bool canMoveDirectly(const Vec3 &startPos, const Vec3 &stopPos, int sx,
-                       int sy, int sz) {
+  bool canMoveDirectly(
+      const Vec3 &startPos, const Vec3 &stopPos, int sx, int sy, int sz) {
 
     int gridPosX = Mth::floor(startPos.x);
     int gridPosZ = Mth::floor(startPos.z);
@@ -243,7 +243,7 @@ private:
     sx += 2;
     sz += 2;
     if (!canWalkOn(gridPosX, (int)startPos.y, gridPosZ, sx, sy, sz, startPos,
-                   dirX, dirZ))
+            dirX, dirZ))
       return false;
     sx -= 2;
     sz -= 2;
@@ -278,19 +278,19 @@ private:
       }
 
       if (!canWalkOn(gridPosX, (int)startPos.y, gridPosZ, sx, sy, sz, startPos,
-                     dirX, dirZ))
+              dirX, dirZ))
         return false;
     }
     return true;
   }
 
   bool canWalkOn(int x, int y, int z, int sx, int sy, int sz,
-                 const Vec3 &startPos, float goalDirX, float goalDirZ) {
+      const Vec3 &startPos, float goalDirX, float goalDirZ) {
     int startX = x - sx / 2;
     int startZ = z - sz / 2;
 
-    if (!canWalkAbove(startX, y, startZ, sx, sy, sz, startPos, goalDirX,
-                      goalDirZ))
+    if (!canWalkAbove(
+            startX, y, startZ, sx, sy, sz, startPos, goalDirX, goalDirZ))
       return false;
 
     // lava or water or air under
@@ -315,7 +315,7 @@ private:
   }
 
   bool canWalkAbove(int startX, int startY, int startZ, int sx, int sy, int sz,
-                    const Vec3 &startPos, float goalDirX, float goalDirZ) {
+      const Vec3 &startPos, float goalDirX, float goalDirZ) {
     for (int xx = startX; xx < startX + sx; xx++) {
       for (int yy = startY; yy < startY + sy; yy++) {
         for (int zz = startZ; zz < startZ + sz; zz++) {

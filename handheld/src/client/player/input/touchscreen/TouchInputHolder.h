@@ -53,8 +53,7 @@ public:
   static const int MODE_DELTA = 2;
 
   UnifiedTurnBuild(int turnMode, int width, int height, float maxMovementDelta,
-                   float sensitivity, IInputHolder *holder,
-                   Minecraft *minecraft)
+      float sensitivity, IInputHolder *holder, Minecraft *minecraft)
       : mode(turnMode), _holder(holder), _options(&minecraft->options), cxO(0),
         cyO(0), wasActive(false), _totalMoveDelta(0),
         _maxMovement(maxMovementDelta), _lastPlayer(0),
@@ -218,9 +217,9 @@ public:
         if (state == State_Deciding &&
             (since >= (0.001f * RemovalMilliseconds))) {
           // LOGI("DECIDED!: %f\n", _totalMoveDelta);
-          bool isInMovement =
-              _lastPlayer ? getSpeedSquared(_lastPlayer) > 0.01f /*.25f*/
-                          : false;
+          bool isInMovement = _lastPlayer
+              ? getSpeedSquared(_lastPlayer) > 0.01f /*.25f*/
+              : false;
           if (!_forceCanUse && (_totalMoveDelta > 20.0f || isInMovement)) {
             state = State_Turn;
           } else {
@@ -290,10 +289,10 @@ public:
   void render(float alpha) {
     if (_options->isJoyTouchArea) {
       fill((int)(Gui::InvGuiScale * joyTouchArea._x0),
-           (int)(Gui::InvGuiScale * joyTouchArea._y0),
-           (int)(Gui::InvGuiScale * joyTouchArea._x1),
-           (int)(Gui::InvGuiScale * joyTouchArea._y1),
-           0x40000000); // 0x20ffffff);
+          (int)(Gui::InvGuiScale * joyTouchArea._y0),
+          (int)(Gui::InvGuiScale * joyTouchArea._x1),
+          (int)(Gui::InvGuiScale * joyTouchArea._y1),
+          0x40000000); // 0x20ffffff);
     }
   }
 
@@ -350,7 +349,7 @@ public:
           if (since >= 0.0f && since < 0.25f) {
             // We've pressed and released in haste; Let's build!
             *bai = BuildActionIntention(BuildActionIntention::BAI_BUILD |
-                                        BuildActionIntention::BAI_ATTACK);
+                BuildActionIntention::BAI_ATTACK);
             handled = true;
           }
         }
@@ -419,8 +418,7 @@ private:
 class Minecraft;
 
 #if defined(_MSC_VER)
-#pragma warning(                                                               \
-    disable                                                                    \
+#pragma warning(disable                                                        \
     : 4355) // 'this' pointer in initialization list which is perfectly legal
 #endif
 
@@ -429,7 +427,7 @@ public:
   TouchInputHolder(Minecraft *mc, Options *options)
       : _mc(mc), _move(mc, options),
         _turnBuild(UnifiedTurnBuild::MODE_DELTA, mc->width, mc->height,
-                   (float)MovementLimit, 1, this, mc) {
+            (float)MovementLimit, 1, this, mc) {
     onConfigChanged(createConfig(mc));
   }
   ~TouchInputHolder() {}

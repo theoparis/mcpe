@@ -38,11 +38,11 @@ struct FilterSet {
   RakNet::TimeMS timeExceedBanTimeMS;
   RakNet::TimeMS maxMemberTimeMS;
   void (*invalidMessageCallback)(RakPeerInterface *peer,
-                                 AddressOrGUID systemAddress, int filterSetID,
-                                 void *userData, unsigned char messageID);
+      AddressOrGUID systemAddress, int filterSetID, void *userData,
+      unsigned char messageID);
   void *disallowedCallbackUserData;
   void (*timeoutCallback)(RakPeerInterface *peer, AddressOrGUID systemAddress,
-                          int filterSetID, void *userData);
+      int filterSetID, void *userData);
   void *timeoutUserData;
   int filterSetID;
   bool allowedIDs[MESSAGE_FILTER_MAX_MESSAGE_ID];
@@ -106,8 +106,8 @@ public:
   /// Inclusive.
   /// \param[in] filterSetID A user defined ID to represent a filter set.  If no
   /// filter with this ID exists, one will be created with default settings.
-  void SetAllowMessageID(bool allow, int messageIDStart, int messageIDEnd,
-                         int filterSetID);
+  void SetAllowMessageID(
+      bool allow, int messageIDStart, int messageIDEnd, int filterSetID);
 
   /// Allow a specific RPC4 call
   /// \pre MessageFilter must be attached before RPC4
@@ -129,7 +129,7 @@ public:
   /// \param[in] filterSetID A user defined ID to represent a filter set.  If no
   /// filter with this ID exists, one will be created with default settings.
   void SetActionOnDisallowedMessage(bool kickOnDisallowed, bool banOnDisallowed,
-                                    RakNet::TimeMS banTimeMS, int filterSetID);
+      RakNet::TimeMS banTimeMS, int filterSetID);
 
   /// Set a user callback to be called on an invalid message for a particular
   /// filterSet
@@ -138,12 +138,10 @@ public:
   /// \param[in] userData A pointer passed with the callback
   /// \param[in] invalidMessageCallback A pointer to a C function to be called
   /// back with the specified parameters.
-  void SetDisallowedMessageCallback(
-      int filterSetID, void *userData,
+  void SetDisallowedMessageCallback(int filterSetID, void *userData,
       void (*invalidMessageCallback)(RakPeerInterface *peer,
-                                     AddressOrGUID addressOrGUID,
-                                     int filterSetID, void *userData,
-                                     unsigned char messageID));
+          AddressOrGUID addressOrGUID, int filterSetID, void *userData,
+          unsigned char messageID));
 
   /// Set a user callback to be called when a user is disconnected due to
   /// SetFilterMaxTime
@@ -152,11 +150,9 @@ public:
   /// \param[in] userData A pointer passed with the callback
   /// \param[in] invalidMessageCallback A pointer to a C function to be called
   /// back with the specified parameters.
-  void SetTimeoutCallback(
-      int filterSetID, void *userData,
+  void SetTimeoutCallback(int filterSetID, void *userData,
       void (*invalidMessageCallback)(RakPeerInterface *peer,
-                                     AddressOrGUID addressOrGUID,
-                                     int filterSetID, void *userData));
+          AddressOrGUID addressOrGUID, int filterSetID, void *userData));
 
   /// Limit how long a connection can stay in a particular filterSetID. After
   /// this time, the connection is kicked and possibly banned. By default there
@@ -170,7 +166,7 @@ public:
   /// \param[in] filterSetID A user defined ID to represent a filter set.  If no
   /// filter with this ID exists, one will be created with default settings.
   void SetFilterMaxTime(int allowedTimeMS, bool banOnExceed,
-                        RakNet::TimeMS banTimeMS, int filterSetID);
+      RakNet::TimeMS banTimeMS, int filterSetID);
 
   /// Get the filterSetID a system is using.  Returns -1 for none.
   /// \param[in] addressOrGUID The system we are referring to
@@ -213,22 +209,21 @@ public:
   virtual void Update(void);
   virtual PluginReceiveResult OnReceive(Packet *packet);
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming);
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+      RakNetGUID rakNetGUID, bool isIncoming);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
 
 protected:
   void Clear(void);
   void DeallocateFilterSet(FilterSet *filterSet);
   FilterSet *GetFilterSetByID(int filterSetID);
   void OnInvalidMessage(FilterSet *filterSet, AddressOrGUID systemAddress,
-                        unsigned char messageID);
+      unsigned char messageID);
 
   DataStructures::OrderedList<int, FilterSet *, FilterSetComp> filterList;
   // Change to guid
   DataStructures::Hash<AddressOrGUID, FilteredSystem, 2048,
-                       AddressOrGUID::ToInteger>
+      AddressOrGUID::ToInteger>
       systemList;
 
   int autoAddNewConnectionsToFilter;

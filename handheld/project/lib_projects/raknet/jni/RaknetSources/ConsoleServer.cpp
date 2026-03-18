@@ -25,8 +25,8 @@ ConsoleServer::~ConsoleServer() {
   if (prompt)
     rakFree_Ex(prompt, _FILE_AND_LINE_);
 }
-void ConsoleServer::SetTransportProvider(TransportInterface *transportInterface,
-                                         unsigned short port) {
+void ConsoleServer::SetTransportProvider(
+    TransportInterface *transportInterface, unsigned short port) {
   // Replace the current TransportInterface, stopping the old one, if present,
   // and starting the new one.
   if (transportInterface) {
@@ -58,7 +58,7 @@ void ConsoleServer::AddCommandParser(
       return;
 
     if (_stricmp(commandParserList[i]->GetName(),
-                 commandParserInterface->GetName()) == 0) {
+            commandParserInterface->GetName()) == 0) {
       // Naming conflict between two command parsers
       RakAssert(0);
       return;
@@ -98,12 +98,11 @@ void ConsoleServer::Update(void) {
 
   if (newOrLostConnectionId != UNASSIGNED_SYSTEM_ADDRESS) {
     for (i = 0; i < commandParserList.Size(); i++) {
-      commandParserList[i]->OnNewIncomingConnection(newOrLostConnectionId,
-                                                    transport);
+      commandParserList[i]->OnNewIncomingConnection(
+          newOrLostConnectionId, transport);
     }
 
-    transport->Send(
-        newOrLostConnectionId,
+    transport->Send(newOrLostConnectionId,
         "Connected to remote command console.\r\nType 'help' for help.\r\n");
     ListParsers(newOrLostConnectionId);
     ShowPrompt(newOrLostConnectionId);
@@ -120,9 +119,9 @@ void ConsoleServer::Update(void) {
     char copy[REMOTE_MAX_TEXT_INPUT];
     memcpy(copy, p->data, p->length);
     copy[p->length] = 0;
-    RakNet::CommandParserInterface::ParseConsoleString(
-        (char *)p->data, COMMAND_DELINATOR, COMMAND_DELINATOR_TOGGLE,
-        &numParameters, parameterList, 20); // Up to 20 parameters
+    RakNet::CommandParserInterface::ParseConsoleString((char *)p->data,
+        COMMAND_DELINATOR, COMMAND_DELINATOR_TOGGLE, &numParameters,
+        parameterList, 20); // Up to 20 parameters
     if (numParameters == 0) {
       transport->DeallocatePacket(p);
       p = transport->Receive();
@@ -133,35 +132,34 @@ void ConsoleServer::Update(void) {
       if (numParameters == 1) {
         transport->Send(p->systemAddress, "\r\nINSTRUCTIONS:\r\n");
         transport->Send(p->systemAddress,
-                        "Enter commands on your keyboard, using spaces to "
-                        "delineate parameters.\r\n");
-        transport->Send(
-            p->systemAddress,
+            "Enter commands on your keyboard, using spaces to "
+            "delineate parameters.\r\n");
+        transport->Send(p->systemAddress,
             "You can use quotation marks to toggle space delineation.\r\n");
-        transport->Send(
-            p->systemAddress,
+        transport->Send(p->systemAddress,
             "You can connect multiple times from the same computer.\r\n");
         transport->Send(p->systemAddress,
-                        "You can direct commands to a parser by prefixing the "
-                        "parser name or number.\r\n");
+            "You can direct commands to a parser by prefixing the "
+            "parser name or number.\r\n");
         transport->Send(p->systemAddress, "COMMANDS:\r\n");
-        transport->Send(p->systemAddress, "help                                "
-                                          "        Show this display.\r\n");
         transport->Send(p->systemAddress,
-                        "help <ParserName>                           Show help "
-                        "on a particular parser.\r\n");
+            "help                                "
+            "        Show this display.\r\n");
         transport->Send(p->systemAddress,
-                        "help <CommandName>                          Show help "
-                        "on a particular command.\r\n");
+            "help <ParserName>                           Show help "
+            "on a particular parser.\r\n");
         transport->Send(p->systemAddress,
-                        "quit                                        "
-                        "Disconnects from the server.\r\n");
+            "help <CommandName>                          Show help "
+            "on a particular command.\r\n");
         transport->Send(p->systemAddress,
-                        "[<ParserName>]   <Command> [<Parameters>]   Execute a "
-                        "command\r\n");
+            "quit                                        "
+            "Disconnects from the server.\r\n");
         transport->Send(p->systemAddress,
-                        "[<ParserNumber>] <Command> [<Parameters>]   Execute a "
-                        "command\r\n");
+            "[<ParserName>]   <Command> [<Parameters>]   Execute a "
+            "command\r\n");
+        transport->Send(p->systemAddress,
+            "[<ParserNumber>] <Command> [<Parameters>]   Execute a "
+            "command\r\n");
         ListParsers(p->systemAddress);
         // ShowPrompt(p->systemAddress);
       } else // numParameters == 2, including the help tag
@@ -182,15 +180,15 @@ void ConsoleServer::Update(void) {
           // Try again, for all commands for all parsers.
           RakNet::RegisteredCommand rc;
           for (i = 0; i < commandParserList.Size(); i++) {
-            if (commandParserList[i]->GetRegisteredCommand(parameterList[1],
-                                                           &rc)) {
+            if (commandParserList[i]->GetRegisteredCommand(
+                    parameterList[1], &rc)) {
               if (rc.parameterCount ==
                   RakNet::CommandParserInterface::VARIABLE_NUMBER_OF_PARAMETERS)
                 transport->Send(p->systemAddress, "(Variable parms): %s %s\r\n",
-                                rc.command, rc.commandHelp);
+                    rc.command, rc.commandHelp);
               else
                 transport->Send(p->systemAddress, "(%i parms): %s %s\r\n",
-                                rc.parameterCount, rc.command, rc.commandHelp);
+                    rc.parameterCount, rc.command, rc.commandHelp);
               commandParsed = true;
               break;
             }
@@ -200,7 +198,7 @@ void ConsoleServer::Update(void) {
         if (commandParsed == false) {
           // Don't know what to do
           transport->Send(p->systemAddress, "Unknown help topic: %s.\r\n",
-                          parameterList[1]);
+              parameterList[1]);
         }
         // ShowPrompt(p->systemAddress);
       }
@@ -219,8 +217,8 @@ void ConsoleServer::Update(void) {
           commandParserIndex =
               atoi(*parameterList); // Use specified parser unless it's an
                                     // invalid number
-          commandParserIndex--;     // Subtract 1 since we displayed numbers
-                                    // starting at index+1
+          commandParserIndex--; // Subtract 1 since we displayed numbers
+                                // starting at index+1
           if (commandParserIndex >= commandParserList.Size()) {
             transport->Send(p->systemAddress, "Invalid index.\r\n");
             failed = true;
@@ -248,12 +246,11 @@ void ConsoleServer::Update(void) {
               if (rc.parameterCount ==
                       CommandParserInterface::VARIABLE_NUMBER_OF_PARAMETERS ||
                   rc.parameterCount == numParameters - 2)
-                commandParserList[commandParserIndex]->OnCommand(
-                    rc.command, numParameters - 2, parameterList + 2, transport,
+                commandParserList[commandParserIndex]->OnCommand(rc.command,
+                    numParameters - 2, parameterList + 2, transport,
                     p->systemAddress, copy);
               else
-                transport->Send(
-                    p->systemAddress,
+                transport->Send(p->systemAddress,
                     "Invalid parameter count.\r\n(%i parms): %s %s\r\n",
                     rc.parameterCount, rc.command, rc.commandHelp);
             }
@@ -266,27 +263,25 @@ void ConsoleServer::Update(void) {
           // Undirected command.  Try all the parsers to see if they understand
           // the command Pass the 1nd element as the command, and the remainder
           // as the parameter list
-          if (commandParserList[i]->GetRegisteredCommand(parameterList[0],
-                                                         &rc)) {
+          if (commandParserList[i]->GetRegisteredCommand(
+                  parameterList[0], &rc)) {
             commandParsed = true;
 
             if (rc.parameterCount ==
                     CommandParserInterface::VARIABLE_NUMBER_OF_PARAMETERS ||
                 rc.parameterCount == numParameters - 1)
               commandParserList[i]->OnCommand(rc.command, numParameters - 1,
-                                              parameterList + 1, transport,
-                                              p->systemAddress, copy);
+                  parameterList + 1, transport, p->systemAddress, copy);
             else
-              transport->Send(
-                  p->systemAddress,
+              transport->Send(p->systemAddress,
                   "Invalid parameter count.\r\n(%i parms): %s %s\r\n",
                   rc.parameterCount, rc.command, rc.commandHelp);
           }
         }
       }
       if (commandParsed == false && commandParserList.Size() > 0) {
-        transport->Send(p->systemAddress,
-                        "Unknown command:  Type 'help' for help.\r\n");
+        transport->Send(
+            p->systemAddress, "Unknown command:  Type 'help' for help.\r\n");
       }
     }
 
@@ -301,8 +296,8 @@ void ConsoleServer::ListParsers(SystemAddress systemAddress) {
   transport->Send(systemAddress, "INSTALLED PARSERS:\r\n");
   unsigned i;
   for (i = 0; i < commandParserList.Size(); i++) {
-    transport->Send(systemAddress, "%i. %s\r\n", i + 1,
-                    commandParserList[i]->GetName());
+    transport->Send(
+        systemAddress, "%i. %s\r\n", i + 1, commandParserList[i]->GetName());
   }
 }
 void ConsoleServer::ShowPrompt(SystemAddress systemAddress) {

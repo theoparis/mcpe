@@ -18,8 +18,8 @@ class InventoryPane : public ScrollingPane {
 
 public:
   InventoryPane(IInventoryPaneCallback *screen, Minecraft *mc,
-                const IntRectangle &rect, int paneWidth, float clickMarginH,
-                int numItems, int itemSize, int itemBorderSize);
+      const IntRectangle &rect, int paneWidth, float clickMarginH, int numItems,
+      int itemSize, int itemBorderSize);
   ~InventoryPane();
 
   void tick();
@@ -56,8 +56,8 @@ public:
   virtual ~IInventoryPaneCallback() {}
   virtual bool addItem(const InventoryPane *forPane, int index) = 0;
   virtual bool isAllowed(int slot) = 0;
-  virtual std::vector<const ItemInstance *>
-  getItems(const InventoryPane *forPane) = 0;
+  virtual std::vector<const ItemInstance *> getItems(
+      const InventoryPane *forPane) = 0;
 };
 
 } // namespace Touch

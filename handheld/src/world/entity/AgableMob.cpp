@@ -9,11 +9,11 @@ int AgableMob::getAge() { return age; }
 
 void AgableMob::setAge(int age) {
   if (this->age < 0 && age >= 0) {
-    entityData.clearFlag<SynchedEntityData::TypeChar>(DATA_FLAGS_ID,
-                                                      DATAFLAG_ISBABY);
+    entityData.clearFlag<SynchedEntityData::TypeChar>(
+        DATA_FLAGS_ID, DATAFLAG_ISBABY);
   } else if (this->age >= 0 && age < 0) {
-    entityData.setFlag<SynchedEntityData::TypeChar>(DATA_FLAGS_ID,
-                                                    DATAFLAG_ISBABY);
+    entityData.setFlag<SynchedEntityData::TypeChar>(
+        DATA_FLAGS_ID, DATAFLAG_ISBABY);
   }
   this->age = age;
 }
@@ -44,7 +44,7 @@ bool AgableMob::isBaby() {
   if (!level->isClientSide) {
     return age < 0;
   } else {
-    return entityData.getFlag<SynchedEntityData::TypeChar>(DATA_FLAGS_ID,
-                                                           DATAFLAG_ISBABY);
+    return entityData.getFlag<SynchedEntityData::TypeChar>(
+        DATA_FLAGS_ID, DATAFLAG_ISBABY);
   }
 }

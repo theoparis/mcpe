@@ -1,0 +1,7 @@
+Checks: 'bugprone-*,modernize-*,performance-*,readability-*,clang-analyzer-*'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+FormatStyle: 'file'
+CheckOptions:
+  - key: bugprone-argument-comment.StrictMode
+    value: '1'

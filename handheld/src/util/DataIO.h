@@ -125,12 +125,13 @@ private:
 //	void readBytes(void* data, int bytes) {
 //		if (bytes <= 0) {
 //			if (bytes < 0) LOGE("Error: %d bytes NOT read @
-//MemoryDataInput::readBytes!\n", bytes); 			return;
+// MemoryDataInput::readBytes!\n", bytes); 			return;
 //		}
 //		int left = _size - _index;
 //		if (bytes > left) {
 //			LOGE("ERROR: Not enough bytes left in buffer @
-//MemoryDataInput::readBytes (%d/%d).\n", bytes, left); 			_index = _size; 			return;
+// MemoryDataInput::readBytes (%d/%d).\n", bytes, left);
+// _index = _size; 			return;
 //		}
 //		memcpy((char*)data, &_buffer[_index], bytes);
 //		_index += bytes;
@@ -159,13 +160,13 @@ private:
 //	void writeBytes(const void* data, int bytes) {
 //		if (bytes <= 0) {
 //			LOGW("Warning: %d bytes read @
-//MemoryDataOutput::writeBytes!\n", bytes); 			return;
+// MemoryDataOutput::writeBytes!\n", bytes); 			return;
 //		}
 //		int left = _size - _index;
 //		if (bytes > left) {
 //			LOGE("ERROR: Not enough bytes left in buffer @
-//MemoryDataOutput::writeBytes (%d/%d).\n", bytes, left); 			_index = _size;
-//			return;
+// MemoryDataOutput::writeBytes (%d/%d).\n", bytes, left);
+// _index = _size; 			return;
 //		}
 //		memcpy(&_buffer[_index], (const char*)data, bytes);
 //		_index += bytes;

@@ -17,15 +17,15 @@ public:
   static float getX(int stickIndex);
   static float getY(int stickIndex);
 
-  static float getTransformedX(int stickIndex, float deadZone,
-                               float scale = 1.0f, bool limit1 = false);
-  static float getTransformedY(int stickIndex, float deadZone,
-                               float scale = 1.0f, bool limit1 = false);
+  static float getTransformedX(
+      int stickIndex, float deadZone, float scale = 1.0f, bool limit1 = false);
+  static float getTransformedY(
+      int stickIndex, float deadZone, float scale = 1.0f, bool limit1 = false);
 
 private:
   static bool isValidStick(int stick);
-  static float linearTransform(float value, float deadZone, float scale = 1.0f,
-                               bool limit1 = false);
+  static float linearTransform(
+      float value, float deadZone, float scale = 1.0f, bool limit1 = false);
 
   static float stickValuesX[NUM_STICKS];
   static float stickValuesY[NUM_STICKS];

@@ -13,8 +13,8 @@ public:
     setMaxStackSize(1);
   }
 
-  ItemInstance useTimeDepleted(ItemInstance *instance, Level *level,
-                               Player *player) {
+  ItemInstance useTimeDepleted(
+      ItemInstance *instance, Level *level, Player *player) {
     super::useTimeDepleted(instance, level, player);
     *instance = ItemInstance(Item::bowl);
     return *instance;

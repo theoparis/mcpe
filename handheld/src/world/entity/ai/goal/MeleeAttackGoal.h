@@ -13,12 +13,12 @@
 
 class MeleeAttackGoal : public Goal {
 public:
-  MeleeAttackGoal(Monster *mob, float speed, bool trackTarget,
-                  int attackType = 0)
+  MeleeAttackGoal(
+      Monster *mob, float speed, bool trackTarget, int attackType = 0)
       : mob(mob), level(mob->level), speed(speed), trackTarget(trackTarget),
         attackTime(0), attackType(attackType), path(NULL) {
-    setRequiredControlFlags(Control::MoveControlFlag |
-                            Control::LookControlFlag);
+    setRequiredControlFlags(
+        Control::MoveControlFlag | Control::LookControlFlag);
   }
   ~MeleeAttackGoal() {
     if (path) {

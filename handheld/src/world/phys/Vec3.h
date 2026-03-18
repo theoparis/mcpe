@@ -69,7 +69,7 @@ public:
 
   Vec3 cross(const Vec3 &p) const {
     return Vec3(y * p.z - z * p.y, z * p.x - x * p.z,
-                x * p.y - y * p.x); // newTemp
+        x * p.y - y * p.x); // newTemp
   }
 
   Vec3 add(float x, float y, float z) const {
@@ -178,7 +178,7 @@ public:
 
   Vec3 lerp(const Vec3 &v, float a) const {
     return Vec3(x + (v.x - x) * a, y + (v.y - y) * a,
-                z + (v.z - z) * a); // newTemp
+        z + (v.z - z) * a); // newTemp
   }
 
   void xRot(float degs) {

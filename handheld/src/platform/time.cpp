@@ -100,7 +100,7 @@ float StopwatchNLast::stop() {
 
 void StopwatchNLast::print(const std::string &prepend /*= ""*/) {
   LOGI("%s\tTime (AVGms for the last %d runs): %f (Max: %f)\n", prepend.c_str(),
-       n, (1000.0f * sum / n), 1000.0f * getMax());
+      n, (1000.0f * sum / n), 1000.0f * getMax());
 }
 
 //
@@ -160,7 +160,7 @@ void Stopwatch::print(const std::string &prepend /*= ""*/) {
   if (!_count)
     return;
   LOGI("%s\tTime (AVGms/LTs(MAXs)/TTs, C) : %.3f/%.6f(%.6f)/%.4f, %d\n",
-       prepend.c_str(), (1000.0f * _tt / _count), _last, _max, _tt, _count);
+      prepend.c_str(), (1000.0f * _tt / _count), _last, _max, _tt, _count);
 }
 
 //

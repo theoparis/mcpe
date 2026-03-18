@@ -40,7 +40,7 @@ public:
             const ItemInstance &ingredient = ingredients[i];
             if (item->id == ingredient.id &&
                 (ingredient.getAuxValue() == Recipe::ANY_AUX_VALUE ||
-                 item->getAuxValue() == ingredient.getAuxValue())) {
+                    item->getAuxValue() == ingredient.getAuxValue())) {
               found = true;
 
               Ingredients::iterator it =

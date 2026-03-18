@@ -4,8 +4,8 @@
 #include "Level.h"
 #include "tile/Tile.h"
 
-Explosion::Explosion(Level *level, Entity *source, float x, float y, float z,
-                     float r)
+Explosion::Explosion(
+    Level *level, Entity *source, float x, float y, float z, float r)
     : level(level), source(source), x(x), y(y), z(z), r(r), fire(false) {}
 
 void Explosion::explode() {
@@ -62,9 +62,8 @@ void Explosion::explode() {
   int y1 = Mth::floor(y + r + 1);
   int z0 = Mth::floor(z - r - 1);
   int z1 = Mth::floor(z + r + 1);
-  EntityList &entities =
-      level->getEntities(source, AABB((float)x0, (float)y0, (float)z0,
-                                      (float)x1, (float)y1, (float)z1));
+  EntityList &entities = level->getEntities(source,
+      AABB((float)x0, (float)y0, (float)z0, (float)x1, (float)y1, (float)z1));
   Vec3 center(x, y, z);
   for (unsigned int i = 0; i < entities.size(); i++) {
     Entity *e = entities[i];
@@ -111,15 +110,14 @@ void Explosion::explode() {
 }
 
 void Explosion::finalizeExplosion() {
-  level->playSound(
-      x, y, z, "random.explode", 4,
+  level->playSound(x, y, z, "random.explode", 4,
       (1 + (level->random.nextFloat() - level->random.nextFloat()) * 0.2f) *
           0.7f);
   // level->addParticle(PARTICLETYPE(hugeexplosion), x, y, z, 0, 0, 0);
 
   int j = 0;
   for (TilePosSet::const_iterator cit = toBlow.begin(); cit != toBlow.end();
-       ++cit, ++j) {
+      ++cit, ++j) {
     const TilePos &tp = *cit;
     int xt = tp.x;
     int yt = tp.y;
@@ -151,14 +149,14 @@ void Explosion::finalizeExplosion() {
       zd *= speed;
 
       level->addParticle(PARTICLETYPE(explode), (xa + x * 1) / 2,
-                         (ya + y * 1) / 2, (za + z * 1) / 2, xd, yd, zd);
+          (ya + y * 1) / 2, (za + z * 1) / 2, xd, yd, zd);
       level->addParticle(PARTICLETYPE(smoke), xa, ya, za, xd, yd, zd);
     } while (0);
 
     if (t > 0) {
       if (!level->isClientSide)
-        Tile::tiles[t]->spawnResources(level, xt, yt, zt,
-                                       level->getData(xt, yt, zt), 0.3f);
+        Tile::tiles[t]->spawnResources(
+            level, xt, yt, zt, level->getData(xt, yt, zt), 0.3f);
       if (level->setTileNoUpdate(xt, yt, zt, 0))
         level->updateNeighborsAt(xt, yt, zt, 0);
       level->setTileDirty(xt, yt, zt);

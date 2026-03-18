@@ -36,9 +36,7 @@ public:
   /// repository uses
   /// \return True on success, false on failure.
   virtual bool GetChangelistSinceDate(const char *applicationName,
-                                      FileList *addedFiles,
-                                      FileList *deletedFiles,
-                                      double sinceDate) = 0;
+      FileList *addedFiles, FileList *deletedFiles, double sinceDate) = 0;
 
   /// Get patches (or files) for every file in input, assuming that input has a
   /// hash for each of those files.
@@ -55,8 +53,8 @@ public:
   /// \param[out] currentDate The current server date, in whatever format your
   /// repository uses
   /// \return True on success, false on failure.
-  virtual bool GetPatches(const char *applicationName, FileList *input,
-                          FileList *patchList) = 0;
+  virtual bool GetPatches(
+      const char *applicationName, FileList *input, FileList *patchList) = 0;
 
   /// For the most recent update, return files that were patched, added, or
   /// deleted. For files that were patched, return both the patch in \a

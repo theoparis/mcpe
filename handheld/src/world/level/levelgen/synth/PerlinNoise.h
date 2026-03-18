@@ -20,10 +20,9 @@ public:
   // float[] getRegion(float[] buffer, float x, float y, float z, int xSize, int
   // ySize, int zSize, float xScale, float yScale, float zScale) {
   float *getRegion(float *buffer, float x, float y, float z, int xSize,
-                   int ySize, int zSize, float xScale, float yScale,
-                   float zScale);
+      int ySize, int zSize, float xScale, float yScale, float zScale);
   float *getRegion(float *sr, int x, int z, int xSize, int zSize, float xScale,
-                   float zScale, float pow);
+      float zScale, float pow);
 
   int hashCode();
 

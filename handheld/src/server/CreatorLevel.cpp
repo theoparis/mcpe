@@ -3,11 +3,10 @@
 #include "../world/level/chunk/ChunkSource.h"
 
 CreatorLevel::CreatorLevel(LevelStorage *levelStorage,
-                           const std::string &levelName,
-                           const LevelSettings &settings, int generatorVersion,
-                           Dimension *fixedDimension /* = NULL */)
+    const std::string &levelName, const LevelSettings &settings,
+    int generatorVersion, Dimension *fixedDimension /* = NULL */)
     : super(levelStorage, levelName, settings, generatorVersion,
-            fixedDimension) {}
+          fixedDimension) {}
 
 void CreatorLevel::tick() {
   TIMER_PUSH("chunkSource");

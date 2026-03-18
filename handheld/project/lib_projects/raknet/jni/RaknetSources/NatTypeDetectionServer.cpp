@@ -21,8 +21,7 @@ NatTypeDetectionServer::NatTypeDetectionServer() {
 }
 NatTypeDetectionServer::~NatTypeDetectionServer() { Shutdown(); }
 void NatTypeDetectionServer::Startup(const char *nonRakNetIP2,
-                                     const char *nonRakNetIP3,
-                                     const char *nonRakNetIP4) {
+    const char *nonRakNetIP3, const char *nonRakNetIP4) {
   DataStructures::List<RakNetSmartPtr<RakNetSocket>> sockets;
   rakPeerInterface->GetSockets(sockets);
   char str[64];
@@ -91,17 +90,17 @@ void NatTypeDetectionServer::Update(void) {
         }
 
         rakPeerInterface->Send(&bs, HIGH_PRIORITY, RELIABLE, 0,
-                               natDetectionAttempts[i].systemAddress, false);
+            natDetectionAttempts[i].systemAddress, false);
 
         // Done
         natDetectionAttempts.RemoveAtIndexFast(i);
       } else {
         //		RakAssert("i==0 in Update when looking up GUID in
-        //NatTypeDetectionServer.cpp. Either a bug or a late resend" && 0);
+        // NatTypeDetectionServer.cpp. Either a bug or a late resend" && 0);
       }
     } else {
       //	RakAssert("Didn't read GUID in Update in
-      //NatTypeDetectionServer.cpp. Message format error" && 0);
+      // NatTypeDetectionServer.cpp. Message format error" && 0);
     }
 
     len = NatTypeRecvFrom(data, s3p4, senderAddr);
@@ -125,8 +124,8 @@ void NatTypeDetectionServer::Update(void) {
         // banned, do not use again).
         saOut = natDetectionAttempts[i].systemAddress;
         saOut.SetPort(natDetectionAttempts[i].c2Port);
-        SocketLayer::SendTo_PC(s4p5, (const char *)&c, 1, saOut, __FILE__,
-                               __LINE__);
+        SocketLayer::SendTo_PC(
+            s4p5, (const char *)&c, 1, saOut, __FILE__, __LINE__);
         break;
       case STATE_TESTING_FULL_CONE_1:
       case STATE_TESTING_FULL_CONE_2:
@@ -140,8 +139,7 @@ void NatTypeDetectionServer::Update(void) {
         saOut = natDetectionAttempts[i].systemAddress;
         saOut.SetPort(natDetectionAttempts[i].systemAddress.GetPort());
         SocketLayer::SendTo_PC(s2p3, (const char *)bs.GetData(),
-                               bs.GetNumberOfBytesUsed(), saOut, __FILE__,
-                               __LINE__);
+            bs.GetNumberOfBytesUsed(), saOut, __FILE__, __LINE__);
         break;
       case STATE_TESTING_ADDRESS_RESTRICTED_1:
       case STATE_TESTING_ADDRESS_RESTRICTED_2:
@@ -154,8 +152,7 @@ void NatTypeDetectionServer::Update(void) {
         saOut = natDetectionAttempts[i].systemAddress;
         saOut.SetPort(natDetectionAttempts[i].systemAddress.GetPort());
         SocketLayer::SendTo_PC(s1p2, (const char *)bs.GetData(),
-                               bs.GetNumberOfBytesUsed(), saOut, __FILE__,
-                               __LINE__);
+            bs.GetNumberOfBytesUsed(), saOut, __FILE__, __LINE__);
         break;
       case STATE_TESTING_PORT_RESTRICTED_1:
       case STATE_TESTING_PORT_RESTRICTED_2:
@@ -166,7 +163,7 @@ void NatTypeDetectionServer::Update(void) {
         bs.Write(RakString::NonVariadic(s3p4Address));
         bs.Write(s3p4Port);
         rakPeerInterface->Send(&bs, HIGH_PRIORITY, RELIABLE, 0,
-                               natDetectionAttempts[i].systemAddress, false);
+            natDetectionAttempts[i].systemAddress, false);
         break;
       default:
         printf("Warning, exceeded final check "
@@ -176,7 +173,7 @@ void NatTypeDetectionServer::Update(void) {
         bs.Write((unsigned char)ID_NAT_TYPE_DETECTION_RESULT);
         bs.Write((unsigned char)NAT_TYPE_SYMMETRIC);
         rakPeerInterface->Send(&bs, HIGH_PRIORITY, RELIABLE, 0,
-                               natDetectionAttempts[i].systemAddress, false);
+            natDetectionAttempts[i].systemAddress, false);
         natDetectionAttempts.RemoveAtIndexFast(i);
         i--;
         break;
@@ -231,8 +228,8 @@ void NatTypeDetectionServer::OnDetectionRequest(Packet *packet) {
     natDetectionAttempts.RemoveAtIndexFast(i);
   }
 }
-unsigned int
-NatTypeDetectionServer::GetDetectionAttemptIndex(const SystemAddress &sa) {
+unsigned int NatTypeDetectionServer::GetDetectionAttemptIndex(
+    const SystemAddress &sa) {
   for (unsigned int i = 0; i < natDetectionAttempts.Size(); i++) {
     if (natDetectionAttempts[i].systemAddress == sa)
       return i;

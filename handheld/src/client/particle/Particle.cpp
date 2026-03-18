@@ -2,8 +2,8 @@
 
 float Particle::xOff = 0, Particle::yOff = 0, Particle::zOff = 0;
 
-Particle::Particle(Level *level, float x, float y, float z, float xa, float ya,
-                   float za)
+Particle::Particle(
+    Level *level, float x, float y, float z, float xa, float ya, float za)
     : super(level), age(0), gravity(0), rCol(1), gCol(1), bCol(1), tex(0) {
   setSize(0.2f, 0.2f);
   heightOffset = bbHeight / 2.0f;
@@ -63,7 +63,7 @@ void Particle::tick() {
 }
 
 void Particle::render(Tesselator &t, float a, float xa, float ya, float za,
-                      float xa2, float za2) {
+    float xa2, float za2) {
   float u0 = (tex % 16) / 16.0f;
   float u1 = u0 + 0.999f / 16.0f;
   float v0 = (tex / 16) / 16.0f;

@@ -7,9 +7,8 @@
 #include "DialogDefinitions.h"
 #include "StartMenuScreen.h"
 
-static char ILLEGAL_FILE_CHARACTERS[] = {'/',  '\n', '\r', '\t', '\0',
-                                         '\f', '`',  '?',  '*',  '\\',
-                                         '<',  '>',  '|',  '\"', ':'};
+static char ILLEGAL_FILE_CHARACTERS[] = {'/', '\n', '\r', '\t', '\0', '\f', '`',
+    '?', '*', '\\', '<', '>', '|', '\"', ':'};
 
 RenameMPLevelScreen::RenameMPLevelScreen(const std::string &levelId)
     : _levelId(levelId) {}

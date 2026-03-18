@@ -13,8 +13,8 @@ public:
   bool use(Level *level, int x, int y, int z, Player *player);
   static void setPhase(Level *level, int x, int y, int z, int phase);
   TileEntity *newTileEntity();
-  bool canSpawnStartNetherReactor(Level *level, int x, int y, int z,
-                                  Player *player);
+  bool canSpawnStartNetherReactor(
+      Level *level, int x, int y, int z, Player *player);
   bool allPlayersCloseToReactor(Level *level, int x, int y, int z);
 };
 

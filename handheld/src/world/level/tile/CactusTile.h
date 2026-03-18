@@ -53,7 +53,7 @@ public:
   AABB getTileAABB(Level *level, int x, int y, int z) {
     float r = 1 / 16.0f;
     return AABB((float)x + r, (float)y, (float)z + r, (float)x + 1 - r,
-                (float)y + 1, (float)z + 1 - r);
+        (float)y + 1, (float)z + 1 - r);
   }
 
   int getTexture(int face) {

@@ -3,16 +3,17 @@
 
 // package net.minecraft.client.renderer;
 
+class GraphicsBackend;
 class RenderChunk;
 
 class RenderList {
-  static const int MAX_NUM_OBJECTS = 1024 * 3;
+  static const int MAX_NUM_OBJECTS = 1024 * 6;
 
 public:
   RenderList();
   ~RenderList();
 
-  void init(float xOff, float yOff, float zOff);
+  void init(float xOff, float yOff, float zOff, GraphicsBackend *graphicsBackend);
 
   void add(int list);
   void addR(const RenderChunk &chunk);
@@ -34,6 +35,7 @@ public:
 
 private:
   int bufferLimit;
+  GraphicsBackend *graphicsBackend;
 };
 
 #endif /*NET_MINECRAFT_CLIENT_RENDERER__RenderList_H__*/

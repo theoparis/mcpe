@@ -14,7 +14,7 @@ public:
 
   static int createHash(const int x, const int y, const int z) {
     return (y & 0xff) | ((x & 0x7fff) << 8) | ((z & 0x7fff) << 24) |
-           ((x < 0) ? 0x0080000000 : 0) | ((z < 0) ? 0x0000008000 : 0);
+        ((x < 0) ? 0x0080000000 : 0) | ((z < 0) ? 0x0000008000 : 0);
   }
 
   float distanceTo(Node *to) const {

@@ -39,7 +39,7 @@ struct UDPProxyServerResultHandler {
   /// UDPProxyServer::LoginToCoordinator()
   /// \param[out] proxyServer The plugin calling this callback
   virtual void OnLoginSuccess(RakNet::RakString usedPassword,
-                              RakNet::UDPProxyServer *proxyServerPlugin) = 0;
+      RakNet::UDPProxyServer *proxyServerPlugin) = 0;
 
   /// We are already logged in.
   /// This login failed, but the system is operational as if it succeeded
@@ -47,7 +47,7 @@ struct UDPProxyServerResultHandler {
   /// UDPProxyServer::LoginToCoordinator()
   /// \param[out] proxyServer The plugin calling this callback
   virtual void OnAlreadyLoggedIn(RakNet::RakString usedPassword,
-                                 RakNet::UDPProxyServer *proxyServerPlugin) = 0;
+      RakNet::UDPProxyServer *proxyServerPlugin) = 0;
 
   /// The coordinator operator forgot to call
   /// UDPProxyCoordinator::SetRemoteLoginPassword()
@@ -55,7 +55,7 @@ struct UDPProxyServerResultHandler {
   /// UDPProxyServer::LoginToCoordinator()
   /// \param[out] proxyServer The plugin calling this callback
   virtual void OnNoPasswordSet(RakNet::RakString usedPassword,
-                               RakNet::UDPProxyServer *proxyServerPlugin) = 0;
+      RakNet::UDPProxyServer *proxyServerPlugin) = 0;
 
   /// The coordinator operator set a different password in
   /// UDPProxyCoordinator::SetRemoteLoginPassword() than what we passed
@@ -63,7 +63,7 @@ struct UDPProxyServerResultHandler {
   /// UDPProxyServer::LoginToCoordinator()
   /// \param[out] proxyServer The plugin calling this callback
   virtual void OnWrongPassword(RakNet::RakString usedPassword,
-                               RakNet::UDPProxyServer *proxyServerPlugin) = 0;
+      RakNet::UDPProxyServer *proxyServerPlugin) = 0;
 };
 
 /// \brief UDPProxyServer to control our instance of UDPForwarder
@@ -97,8 +97,8 @@ public:
   /// \pre Coordinator must have set a password with
   /// UDPProxyCoordinator::SetRemoteLoginPassword()
   /// \returns false if already logged in, or logging in. Returns true otherwise
-  bool LoginToCoordinator(RakNet::RakString password,
-                          SystemAddress coordinatorAddress);
+  bool LoginToCoordinator(
+      RakNet::RakString password, SystemAddress coordinatorAddress);
 
   /// Operative class that performs the forwarding
   /// Exposed so you can call UDPForwarder::SetMaxForwardEntries() if you want
@@ -113,9 +113,8 @@ public:
   /// \internal
   virtual void Update(void);
   virtual PluginReceiveResult OnReceive(Packet *packet);
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   virtual void OnRakPeerStartup(void);
   virtual void OnRakPeerShutdown(void);
 

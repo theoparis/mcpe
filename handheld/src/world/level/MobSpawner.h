@@ -22,17 +22,16 @@ public:
   static int tick(Level *level, bool spawnEnemies, bool spawnFriendlies);
 
   static void postProcessSpawnMobs(Level *level, Biome *biome, int xo, int zo,
-                                   int cellWidth, int cellHeight,
-                                   Random *random);
-  static void finalizeMobSettings(Mob *mob, Level *level, float xx, float yy,
-                                  float zz);
+      int cellWidth, int cellHeight, Random *random);
+  static void finalizeMobSettings(
+      Mob *mob, Level *level, float xx, float yy, float zz);
 
-  static bool isSpawnPositionOk(const MobCategory &category, Level *level,
-                                int x, int y, int z);
+  static bool isSpawnPositionOk(
+      const MobCategory &category, Level *level, int x, int y, int z);
   static TilePos getRandomPosWithin(Level *level, int xo, int zo);
 
   static bool addMob(Level *level, Mob *mob, float x, float y, float z,
-                     float yRot, float xRot, bool force);
+      float yRot, float xRot, bool force);
   static void makeBabyMob(Mob *mob, float probability);
 
 protected:

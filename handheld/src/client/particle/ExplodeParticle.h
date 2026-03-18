@@ -11,8 +11,8 @@ class ExplodeParticle : public Particle {
   typedef Particle super;
 
 public:
-  ExplodeParticle(Level *level, float x, float y, float z, float xa, float ya,
-                  float za)
+  ExplodeParticle(
+      Level *level, float x, float y, float z, float xa, float ya, float za)
       : super(level, x, y, z, xa, ya, za) {
     xd = xa + (Mth::random() * 2.0f - 1.0f) * 0.05f;
     yd = ya + (Mth::random() * 2.0f - 1.0f) * 0.05f;

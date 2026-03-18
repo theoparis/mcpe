@@ -43,9 +43,9 @@ public:
   LevelChunk *getChunk(int xOffs, int zOffs);
 
   void prepareHeights(int xOffs, int zOffs, unsigned char *blocks,
-                      /*Biome*/ void *biomes, float *temperatures);
-  void buildSurfaces(int xOffs, int zOffs, unsigned char *blocks,
-                     Biome **biomes);
+      /*Biome*/ void *biomes, float *temperatures);
+  void buildSurfaces(
+      int xOffs, int zOffs, unsigned char *blocks, Biome **biomes);
   void postProcess(ChunkSource *parent, int xt, int zt);
 
   bool tick();
@@ -57,8 +57,8 @@ public:
 
   // bool save(bool force, ProgressListener progressListener) {
 private:
-  float *getHeights(float *buffer, int x, int y, int z, int xSize, int ySize,
-                    int zSize);
+  float *getHeights(
+      float *buffer, int x, int y, int z, int xSize, int ySize, int zSize);
   void calcWaterDepths(ChunkSource *parent, int xt, int zt);
 
 public:

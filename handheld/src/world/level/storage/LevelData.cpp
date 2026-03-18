@@ -12,8 +12,7 @@ LevelData::LevelData()
 }
 
 LevelData::LevelData(const LevelSettings &settings,
-                     const std::string &levelName,
-                     int generatorVersion /*= -1*/)
+    const std::string &levelName, int generatorVersion /*= -1*/)
     : seed(settings.getSeed()), gameType(settings.getGameType()),
       levelName(levelName), xSpawn(128), ySpawn(64), zSpawn(128), lastPlayed(0),
       time(0), dimension(Dimension::NORMAL), playerDataVersion(-1),

@@ -13,8 +13,8 @@ void EntityTile::onRemove(Level *level, int x, int y, int z) {
   level->removeTileEntity(x, y, z);
 }
 
-void EntityTile::triggerEvent(Level *level, int x, int y, int z, int b0,
-                              int b1) {
+void EntityTile::triggerEvent(
+    Level *level, int x, int y, int z, int b0, int b1) {
   super::triggerEvent(level, x, y, z, b0, b1);
   TileEntity *te = level->getTileEntity(x, y, z);
   if (te != NULL) {

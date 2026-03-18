@@ -89,11 +89,10 @@ public:
   virtual PluginReceiveResult OnReceive(Packet *packet);
 
   /// \internal For plugin handling
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming);
+      RakNetGUID rakNetGUID, bool isIncoming);
 
   // Each connected user has a ready state. Ready means ready for nat
   // punchthrough.
@@ -133,7 +132,7 @@ public:
 protected:
   void OnNATPunchthroughRequest(Packet *packet);
   DataStructures::OrderedList<RakNetGUID, User *,
-                              NatPunchthroughServer::NatPunchthroughUserComp>
+      NatPunchthroughServer::NatPunchthroughUserComp>
       users;
 
   void OnGetMostRecentPort(Packet *packet);

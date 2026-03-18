@@ -245,12 +245,12 @@ struct RAK_DLL_EXPORT SystemAddress {
   /// \note The current port is unchanged if a port is not specified in \a str
   /// \return True on success, false on ipVersion does not match type of passed
   /// string
-  bool FromString(const char *str, char portDelineator = '|',
-                  int ipVersion = 0);
+  bool FromString(
+      const char *str, char portDelineator = '|', int ipVersion = 0);
 
   /// Same as FromString(), but you explicitly set a port at the same time
-  bool FromStringExplicitPort(const char *str, unsigned short port,
-                              int ipVersion = 0);
+  bool FromStringExplicitPort(
+      const char *str, unsigned short port, int ipVersion = 0);
 
   /// Copy the port from another SystemAddress structure
   void CopyPort(const SystemAddress &right);
@@ -275,8 +275,8 @@ struct RAK_DLL_EXPORT SystemAddress {
   /// Old version, for crap platforms that don't support newer socket functions
   void SetBinaryAddress(const char *str, char portDelineator = ':');
   /// Old version, for crap platforms that don't support newer socket functions
-  void ToString_Old(bool writePort, char *dest,
-                    char portDelineator = ':') const;
+  void ToString_Old(
+      bool writePort, char *dest, char portDelineator = ':') const;
 
   /// \internal sockaddr_in6 requires extra data beyond just the IP and port.
   /// Copy that extra data from an existing SystemAddress that already has it
@@ -369,7 +369,7 @@ struct RAK_DLL_EXPORT AddressOrGUID {
   }
   bool IsUndefined(void) const {
     return rakNetGuid == UNASSIGNED_RAKNET_GUID &&
-           systemAddress == UNASSIGNED_SYSTEM_ADDRESS;
+        systemAddress == UNASSIGNED_SYSTEM_ADDRESS;
   }
   void SetUndefined(void) {
     rakNetGuid = UNASSIGNED_RAKNET_GUID;
@@ -413,8 +413,8 @@ struct RAK_DLL_EXPORT AddressOrGUID {
 
   inline bool operator==(const AddressOrGUID &right) const {
     return (rakNetGuid != UNASSIGNED_RAKNET_GUID &&
-            rakNetGuid == right.rakNetGuid) ||
-           (systemAddress != UNASSIGNED_SYSTEM_ADDRESS &&
+               rakNetGuid == right.rakNetGuid) ||
+        (systemAddress != UNASSIGNED_SYSTEM_ADDRESS &&
             systemAddress == right.systemAddress);
   }
 };

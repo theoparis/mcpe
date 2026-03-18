@@ -20,7 +20,7 @@ public:
 
   /*@Override*/
   bool mineBlock(ItemInstance *itemInstance, int tile, int x, int y,
-                 int z /*, Mob* owner*/) {
+      int z /*, Mob* owner*/) {
     if (tile == ((Tile*)Tile::leaves)->id || tile == Tile::web->id /*|| tile == Tile::tallgrass->id || tile == Tile::vine->id*/) {
       itemInstance->hurt(1); //, owner);
       return true;

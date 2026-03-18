@@ -37,12 +37,12 @@ public:
   //
   void setContainerData(BaseContainerMenu *menu, int id, int value);
   void slotChanged(BaseContainerMenu *menu, int slot, const ItemInstance &item,
-                   bool isResultSlot);
-  void refreshContainer(BaseContainerMenu *menu,
-                        const std::vector<ItemInstance> &items);
+      bool isResultSlot);
+  void refreshContainer(
+      BaseContainerMenu *menu, const std::vector<ItemInstance> &items);
 
-  virtual void stopSleepInBed(bool forcefulWakeUp, bool updateLevelList,
-                              bool saveRespawnPoint);
+  virtual void stopSleepInBed(
+      bool forcefulWakeUp, bool updateLevelList, bool saveRespawnPoint);
 
   void completeUsingItem();
 

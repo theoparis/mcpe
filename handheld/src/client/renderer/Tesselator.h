@@ -7,6 +7,7 @@
 #include "VertecDecl.h"
 #include "gles.h"
 #include <map>
+#include <vector>
 
 extern const int VertexSizeBytes;
 
@@ -28,12 +29,19 @@ public:
   ~Tesselator();
 
   void init();
+  void beginFrame();
   void clear();
+  void setGraphicsBackend(GraphicsBackend *graphicsBackend);
 
   void begin();
   void begin(int mode);
   void draw();
-  RenderChunk end(bool useMine, int bufferId);
+  RenderChunk end(bool useMine, int bufferId, bool uploadMesh = false,
+      GraphicsMeshHandle existingMeshHandle = 0);
+  void destroyMesh(GraphicsMeshHandle meshHandle);
+  bool drawBuffer(GLuint bufferId);
+  RenderChunk uploadRetainedMesh(const std::vector<GraphicsMeshVertex> &vertices,
+      GraphicsMeshHandle existingMeshHandle = 0);
 
   void color(int c);
   void color(int c, int alpha);
@@ -54,12 +62,29 @@ public:
 
   void scale2d(float x, float y);
   void resetScale();
+  void getScale2d(float &sx, float &sy) const;
 
   void noColor();
   void enableColor();
 
 private:
+  struct RetainedMeshBuffer {
+    GraphicsMeshHandle mesh = 0;
+    GraphicsMeshPrimitive primitive = GraphicsMeshPrimitive::TriangleList;
+    bool usesTrackedColor = false;
+  };
+
   void setAccessMode(int mode);
+  [[nodiscard]] auto usingGraphicsBackend() const -> bool;
+  [[nodiscard]] auto resolveWorldPass() const -> GraphicsWorldPass;
+  [[nodiscard]] auto resolveBlendMode() const -> GraphicsBlendMode;
+  [[nodiscard]] auto resolvePrimitive(int drawMode) const
+      -> GraphicsMeshPrimitive;
+  auto buildGraphicsVertices(const VERTEX *source, int sourceCount, int mode,
+      GraphicsMeshPrimitive &primitive, bool &usesTrackedColor,
+      std::vector<GraphicsMeshVertex> &out) const -> bool;
+  auto queueMeshDraw(GraphicsMeshHandle meshHandle,
+      GraphicsMeshPrimitive primitive, bool usesTrackedColor = false) -> bool;
 
 public:
   void offset(float xo, float yo, float zo);
@@ -122,6 +147,8 @@ private:
   int accessMode;
 
   IntGLMap map;
+  GraphicsBackend *_graphicsBackend;
+  std::map<GLuint, RetainedMeshBuffer> _bufferMeshes;
 };
 
 #endif /*NET_MINECRAFT_CLIENT_RENDERER__Tesselator_H__*/

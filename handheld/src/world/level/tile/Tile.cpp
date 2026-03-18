@@ -51,8 +51,7 @@ int Tile::lightBlock[] = {0};
 int Tile::lightEmission[] = {0};
 bool Tile::solid[] = {false};
 bool Tile::isEntityTile[] = {false};
-bool Tile::translucent[] = {
-    true,
+bool Tile::translucent[] = {true,
     false}; // @trans: translucent, @trans "asbMax", some more like "*conditon"
 bool Tile::shouldTick[] = {false};
 bool Tile::sendTileData[] = {false};
@@ -300,7 +299,7 @@ void Tile::initTiles() {
                    ->setCategory(ItemCategory::Decorations)
                    ->setDescriptionId("blockLapis");
   sandStone = (new SandStoneTile(24, (const int *)&SANDSTONE_TEXTURES,
-                                 SANDSTONE_TEXTURE_COUNT))
+                   SANDSTONE_TEXTURE_COUNT))
                   ->init()
                   ->setSoundType(SOUND_STONE)
                   ->setDestroyTime(0.8f)
@@ -608,7 +607,7 @@ void Tile::initTiles() {
 
   stoneBrickSmooth =
       (new MultiTextureTile(98, (const int *)&STONE_BRICK_TEXTURES,
-                            STONE_BRICK_TEXTURE_COUNT, Material::stone))
+           STONE_BRICK_TEXTURE_COUNT, Material::stone))
           ->init()
           ->setDestroyTime(1.5f)
           ->setExplodeable(10)
@@ -785,7 +784,7 @@ void Tile::initTiles() {
       // Check for missing category
       if (Item::items[i]->category == -1)
         LOGE("Error: Missing category for tile %d: %s\n", tiles[i]->id,
-             tiles[i]->getDescriptionId().c_str());
+            tiles[i]->getDescriptionId().c_str());
     }
   }
 }
@@ -816,7 +815,7 @@ Tile::Tile(int id, const Material *material)
       xx0(0), yy0(0), zz0(0), xx1(1), yy1(1), zz1(1) {
   if (Tile::tiles[id]) {
     printf("Slot %d is already occupied by %p when adding %p\n", id,
-           &Tile::tiles[id], this);
+        &Tile::tiles[id], this);
   }
 }
 
@@ -826,7 +825,7 @@ Tile::Tile(int id, int tex, const Material *material)
       xx0(0), yy0(0), zz0(0), xx1(1), yy1(1), zz1(1) {
   if (Tile::tiles[id]) {
     printf("Slot %d is already occupied by %p when adding %p\n", id,
-           &Tile::tiles[id], this);
+        &Tile::tiles[id], this);
   }
 }
 
@@ -886,8 +885,8 @@ float Tile::getDestroyProgress(Player *player) {
 }
 
 /*public virtual*/
-HitResult Tile::clip(Level *level, int xt, int yt, int zt, const Vec3 &A,
-                     const Vec3 &B) {
+HitResult Tile::clip(
+    Level *level, int xt, int yt, int zt, const Vec3 &A, const Vec3 &B) {
   updateShape(level, xt, yt, zt);
 
   // Stopwatch sw;
@@ -965,13 +964,13 @@ HitResult Tile::clip(Level *level, int xt, int yt, int zt, const Vec3 &A,
   // sw.stop();
   // sw.printEvery(5, ">>> ");
 
-  return HitResult(xt, yt, zt, face,
-                   closest->add((float)xt, (float)yt, (float)zt));
+  return HitResult(
+      xt, yt, zt, face, closest->add((float)xt, (float)yt, (float)zt));
 }
 
 /*virtual*/
-void Tile::spawnResources(Level *level, int x, int y, int z, int data,
-                          float odds) {
+void Tile::spawnResources(
+    Level *level, int x, int y, int z, int data, float odds) {
   if (level->isClientSide)
     return;
 
@@ -986,9 +985,8 @@ void Tile::spawnResources(Level *level, int x, int y, int z, int data,
     float xo = level->random.nextFloat() * s + (1 - s) * 0.5f;
     float yo = level->random.nextFloat() * s + (1 - s) * 0.5f;
     float zo = level->random.nextFloat() * s + (1 - s) * 0.5f;
-    ItemEntity *item =
-        new ItemEntity(level, x + xo, y + yo, z + zo,
-                       ItemInstance(type, 1, getSpawnResourcesAuxValue(data)));
+    ItemEntity *item = new ItemEntity(level, x + xo, y + yo, z + zo,
+        ItemInstance(type, 1, getSpawnResourcesAuxValue(data)));
     item->throwTime = 10;
     level->addEntity(item);
   }
@@ -998,8 +996,8 @@ void Tile::spawnResources(Level *level, int x, int y, int z, int data) {
   spawnResources(level, x, y, z, data, 1);
 }
 
-void Tile::popResource(Level *level, int x, int y, int z,
-                       const ItemInstance &itemInstance) {
+void Tile::popResource(
+    Level *level, int x, int y, int z, const ItemInstance &itemInstance) {
   if (level->isClientSide ||
       level->getLevelData()->getGameType() == GameType::Creative)
     return;
@@ -1068,7 +1066,7 @@ int Tile::getTexture(int face, int data) { return getTexture(face); }
 int Tile::getTexture(int face) { return tex; }
 
 void Tile::addAABBs(Level *level, int x, int y, int z, const AABB *box,
-                    std::vector<AABB> &boxes) {
+    std::vector<AABB> &boxes) {
   AABB *aabb = getAABB(level, x, y, z);
   if (aabb != NULL && box->intersects(*aabb)) {
     boxes.push_back(*aabb);
@@ -1125,8 +1123,8 @@ bool Tile::getDirectSignal(Level *level, int x, int y, int z, int dir) {
   return false;
 }
 
-void Tile::playerDestroy(Level *level, Player *player, int x, int y, int z,
-                         int data) {
+void Tile::playerDestroy(
+    Level *level, Player *player, int x, int y, int z, int data) {
   // player.awardStat(Stats.blockMined[id], 1);
   spawnResources(level, x, y, z, data);
 }
@@ -1188,8 +1186,8 @@ AABB Tile::getTileAABB(Level *level, int x, int y, int z) {
 }
 
 /*public*/
-void Tile::setShape(float x0, float y0, float z0, float x1, float y1,
-                    float z1) {
+void Tile::setShape(
+    float x0, float y0, float z0, float x1, float y1, float z1) {
   this->xx0 = x0;
   this->yy0 = y0;
   this->zz0 = z0;

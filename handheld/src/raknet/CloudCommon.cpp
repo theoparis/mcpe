@@ -61,8 +61,8 @@ void CloudQuery::Serialize(bool writeToBitstream, BitStream *bitStream) {
     }
   }
 }
-void CloudQueryRow::Serialize(bool writeToBitstream, BitStream *bitStream,
-                              CloudAllocator *allocator) {
+void CloudQueryRow::Serialize(
+    bool writeToBitstream, BitStream *bitStream, CloudAllocator *allocator) {
   key.Serialize(writeToBitstream, bitStream);
   bitStream->Serialize(writeToBitstream, serverSystemAddress);
   bitStream->Serialize(writeToBitstream, clientSystemAddress);
@@ -83,20 +83,17 @@ void CloudQueryRow::Serialize(bool writeToBitstream, BitStream *bitStream,
       data = 0;
   }
 }
-void CloudQueryResult::SerializeHeader(bool writeToBitstream,
-                                       BitStream *bitStream) {
+void CloudQueryResult::SerializeHeader(
+    bool writeToBitstream, BitStream *bitStream) {
   cloudQuery.Serialize(writeToBitstream, bitStream);
   bitStream->Serialize(writeToBitstream, subscribeToResults);
 }
-void CloudQueryResult::SerializeNumRows(bool writeToBitstream,
-                                        uint32_t &numRows,
-                                        BitStream *bitStream) {
+void CloudQueryResult::SerializeNumRows(
+    bool writeToBitstream, uint32_t &numRows, BitStream *bitStream) {
   bitStream->Serialize(writeToBitstream, numRows);
 }
 void CloudQueryResult::SerializeCloudQueryRows(bool writeToBitstream,
-                                               uint32_t &numRows,
-                                               BitStream *bitStream,
-                                               CloudAllocator *allocator) {
+    uint32_t &numRows, BitStream *bitStream, CloudAllocator *allocator) {
   if (writeToBitstream) {
     for (uint16_t i = 0; i < numRows; i++) {
       rowsReturned[i]->Serialize(true, bitStream, allocator);
@@ -122,8 +119,8 @@ void CloudQueryResult::SerializeCloudQueryRows(bool writeToBitstream,
     }
   }
 }
-void CloudQueryResult::Serialize(bool writeToBitstream, BitStream *bitStream,
-                                 CloudAllocator *allocator) {
+void CloudQueryResult::Serialize(
+    bool writeToBitstream, BitStream *bitStream, CloudAllocator *allocator) {
   SerializeHeader(writeToBitstream, bitStream);
   uint32_t numRows = (uint32_t)rowsReturned.Size();
   SerializeNumRows(writeToBitstream, numRows, bitStream);

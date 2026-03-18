@@ -5,35 +5,75 @@ project(mcpe C CXX ASM OBJCXX)
 include(GNUInstallDirs)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_CLANG_SCAN_FOR_MODULES OFF)
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE RelWithDebInfo)
 endif()
 
 option(BUILD_CLIENT "Build the client" ON)
-option(BUILD_WITH_NIX "Build with Nix" OFF)
+option(MCPE_ENABLE_ASAN "Build with AddressSanitizer" OFF)
+option(MCPE_ENABLE_UBSAN "Build with UndefinedBehaviorSanitizer" OFF)
+
+function(mcpe_apply_sanitizers target)
+    if (NOT MCPE_ENABLE_ASAN AND NOT MCPE_ENABLE_UBSAN)
+        return()
+    endif()
+
+    if (NOT CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+        message(FATAL_ERROR "ASAN/UBSAN are only supported with Clang or GCC in this build")
+    endif()
+
+    set(MCPE_SANITIZER_FLAGS "-fno-omit-frame-pointer")
+    if (MCPE_ENABLE_ASAN)
+        list(APPEND MCPE_SANITIZER_FLAGS "-fsanitize=address")
+    endif()
+    if (MCPE_ENABLE_UBSAN)
+        list(APPEND MCPE_SANITIZER_FLAGS "-fsanitize=undefined")
+    endif()
+
+    target_compile_options(
+        ${target}
+        PRIVATE
+        ${MCPE_SANITIZER_FLAGS}
+    )
+    target_link_options(
+        ${target}
+        PRIVATE
+        ${MCPE_SANITIZER_FLAGS}
+    )
+endfunction()
 
 find_package(PkgConfig REQUIRED)
+
 if(BUILD_CLIENT)
     pkg_check_modules(SDL3 REQUIRED IMPORTED_TARGET sdl3)
-    if (BUILD_WITH_NIX)
-        pkg_check_modules(ANGLE REQUIRED IMPORTED_TARGET angle)
-    else()
-        pkg_check_modules(GLES1 REQUIRED IMPORTED_TARGET glesv1_cm)
-    endif()
     pkg_check_modules(OpenAL REQUIRED IMPORTED_TARGET openal)
     pkg_check_modules(libpng REQUIRED IMPORTED_TARGET libpng)
+    find_package(Vulkan REQUIRED)
 
-    if(APPLE)
-        execute_process(COMMAND brew --prefix angle
-                        OUTPUT_VARIABLE ANGLE_PREFIX
-                        OUTPUT_STRIP_TRAILING_WHITESPACE
-                        ERROR_QUIET)
-        message(STATUS "ANGLE_PREFIX: ${ANGLE_PREFIX}")
-        if(ANGLE_PREFIX)
-            set(GLES1_INCLUDE_DIRS ${ANGLE_PREFIX}/include)
-        endif()
-    endif()
+    set(MCPE_VULKAN_SHADER_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders")
+    file(MAKE_DIRECTORY "${MCPE_VULKAN_SHADER_DIR}")
+    set(MCPE_VULKAN_SHADER_SOURCES
+        "handheld/src/platform/sdl3/shaders/textured_quad.vert"
+        "handheld/src/platform/sdl3/shaders/textured_quad.frag"
+        "handheld/src/platform/sdl3/shaders/terrain_mesh.vert"
+        "handheld/src/platform/sdl3/shaders/terrain_mesh.frag"
+        "handheld/src/platform/sdl3/shaders/terrain_mesh_alpha_test.frag"
+    )
+    set(MCPE_VULKAN_SHADER_OUTPUTS)
+    foreach(shader IN LISTS MCPE_VULKAN_SHADER_SOURCES)
+        get_filename_component(shader_name "${shader}" NAME)
+        set(shader_output "${MCPE_VULKAN_SHADER_DIR}/${shader_name}.spv")
+        add_custom_command(
+            OUTPUT "${shader_output}"
+            COMMAND "${Vulkan_GLSLC_EXECUTABLE}" -o "${shader_output}" "${CMAKE_CURRENT_SOURCE_DIR}/${shader}"
+            DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${shader}"
+            VERBATIM
+        )
+        list(APPEND MCPE_VULKAN_SHADER_OUTPUTS "${shader_output}")
+    endforeach()
+    add_custom_target(mcpe_vulkan_shaders DEPENDS ${MCPE_VULKAN_SHADER_OUTPUTS})
 endif()
 
 set(SOURCES
@@ -295,10 +335,12 @@ target_compile_features(
     PRIVATE
     cxx_std_23
 )
+mcpe_apply_sanitizers(mcpe_dedicated)
 
 add_executable(mcpe_sdl3
     ${SOURCES}
     handheld/src/main.cpp
+    handheld/src/main_sdl3.cpp
     "handheld/src/client/gui/Font.cpp"
     "handheld/src/client/gui/Gui.cpp"
     "handheld/src/client/gui/GuiComponent.cpp"
@@ -365,6 +407,7 @@ add_executable(mcpe_sdl3
     "handheld/src/client/player/input/KeyboardInput.cpp"
     "handheld/src/client/player/input/touchscreen/TouchscreenInput.cpp"
     "handheld/src/client/renderer/Chunk.cpp"
+    "handheld/src/client/renderer/gles.cpp"
     "handheld/src/client/renderer/EntityTileRenderer.cpp"
     "handheld/src/client/renderer/GameRenderer.cpp"
     "handheld/src/client/renderer/ItemInHandRenderer.cpp"
@@ -389,7 +432,6 @@ add_executable(mcpe_sdl3
     "handheld/src/client/renderer/entity/SheepRenderer.cpp"
     "handheld/src/client/renderer/entity/TntRenderer.cpp"
     "handheld/src/client/renderer/entity/TripodCameraRenderer.cpp"
-    "handheld/src/client/renderer/gles.cpp"
     "handheld/src/client/renderer/ptexture/DynamicTexture.cpp"
     "handheld/src/client/renderer/tileentity/ChestRenderer.cpp"
     "handheld/src/client/renderer/tileentity/SignRenderer.cpp"
@@ -405,6 +447,7 @@ add_executable(mcpe_sdl3
     "handheld/src/platform/input/Keyboard.cpp"
     "handheld/src/platform/input/Mouse.cpp"
     "handheld/src/platform/input/Multitouch.cpp"
+    "handheld/src/platform/sdl3/Sdl3VulkanBackend.cpp"
 )
 target_link_libraries(
     mcpe_sdl3
@@ -412,20 +455,8 @@ target_link_libraries(
     PkgConfig::SDL3
     PkgConfig::OpenAL
     PkgConfig::libpng
+    Vulkan::Vulkan
 )
-if(BUILD_WITH_NIX)
-    target_link_libraries(
-        mcpe_sdl3
-        PUBLIC
-        PkgConfig::ANGLE
-    )
-else()
-    target_link_libraries(
-        mcpe_sdl3
-        PUBLIC
-        PkgConfig::GLES1
-    )
-endif()
 target_compile_definitions(
     mcpe_sdl3
     PUBLIC
@@ -437,32 +468,17 @@ target_link_directories(
     ${OpenAL_LIBRARY_DIRS}
     ${libpng_LIBRARY_DIRS}
 )
-if(BUILD_WITH_NIX)
-    target_link_directories(
-        mcpe_sdl3
-        PUBLIC
-        ${ANGLE_LIBRARY_DIRS}
-    )
-else()
-    target_link_directories(
-        mcpe_sdl3
-        PUBLIC
-        ${GLES1_LIBRARY_DIRS}
-    )
-endif()
 target_compile_definitions(
     mcpe_sdl3
     PUBLIC
     SDL3
     OPENGL_ES
-    GL_GLES_PROTOTYPES=1
-    GL_GLEXT_PROTOTYPES=1
     MCPE_INSTALL_DATA_DIR="${CMAKE_INSTALL_FULL_DATADIR}/mcpe"
+    MCPE_VULKAN_SHADER_DIR="${MCPE_VULKAN_SHADER_DIR}"
 )
 target_include_directories(
     mcpe_sdl3
     PUBLIC
-    ${GLES1_INCLUDE_DIRS}
     ${SDL3_INCLUDE_DIRS}
     ${libpng_INCLUDE_DIRS}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/handheld/src>
@@ -473,10 +489,10 @@ target_compile_features(
     PRIVATE
     cxx_std_23
 )
+add_dependencies(mcpe_sdl3 mcpe_vulkan_shaders)
+mcpe_apply_sanitizers(mcpe_sdl3)
 
-if (WIN32)
-    # list(APPEND SOURCES "handheld/src/AppPlatform_win32.cpp")
-elseif (APPLE)
+if (APPLE)
     find_library(FOUNDATION_LIBRARY Foundation)
     target_link_libraries(
         mcpe_sdl3

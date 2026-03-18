@@ -53,8 +53,8 @@ public:
   /// from the ConnectionGraph2 plugin. Defaults to true.
   /// \param[in] pw The password to use to connect with. Only used if \a
   /// attemptConnection is true
-  void SetConnectOnNewRemoteConnection(bool attemptConnection,
-                                       RakNet::RakString pw);
+  void SetConnectOnNewRemoteConnection(
+      bool attemptConnection, RakNet::RakString pw);
 
   /// \brief The connected host is whichever system we are connected to that has
   /// been running the longest.
@@ -139,12 +139,11 @@ public:
   /// \internal
   virtual void OnRakPeerShutdown(void);
   /// \internal
-  virtual void
-  OnClosedConnection(const SystemAddress &systemAddress, RakNetGUID rakNetGUID,
-                     PI2_LostConnectionReason lostConnectionReason);
+  virtual void OnClosedConnection(const SystemAddress &systemAddress,
+      RakNetGUID rakNetGUID, PI2_LostConnectionReason lostConnectionReason);
   /// \internal
   virtual void OnNewConnection(const SystemAddress &systemAddress,
-                               RakNetGUID rakNetGUID, bool isIncoming);
+      RakNetGUID rakNetGUID, bool isIncoming);
 
   /// \internal
   struct FCM2Participant {
@@ -165,8 +164,8 @@ protected:
   void PushNewHost(const RakNetGUID &guid, RakNetGUID oldHost);
   void SendOurFCMGuid(SystemAddress addr);
   void SendFCMGuidRequest(RakNetGUID rakNetGuid);
-  void SendConnectionCountResponse(SystemAddress addr,
-                                   unsigned int responseTotalConnectionCount);
+  void SendConnectionCountResponse(
+      SystemAddress addr, unsigned int responseTotalConnectionCount);
   void OnRequestFCMGuid(Packet *packet);
   void OnRespondConnectionCount(Packet *packet);
   void OnInformFCMGuid(Packet *packet);

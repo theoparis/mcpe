@@ -9,8 +9,7 @@ GridSectorizer::~GridSectorizer() {
     RakNet::OP_DELETE_ARRAY(grid, _FILE_AND_LINE_);
 }
 void GridSectorizer::Init(const float _maxCellWidth, const float _maxCellHeight,
-                          const float minX, const float minY, const float maxX,
-                          const float maxY) {
+    const float minX, const float minY, const float maxX, const float maxY) {
   RakAssert(_maxCellWidth > 0.0f && _maxCellHeight > 0.0f);
   if (grid)
     RakNet::OP_DELETE_ARRAY(grid, _FILE_AND_LINE_);
@@ -38,7 +37,7 @@ void GridSectorizer::Init(const float _maxCellWidth, const float _maxCellHeight,
 #endif
 }
 void GridSectorizer::AddEntry(void *entry, const float minX, const float minY,
-                              const float maxX, const float maxY) {
+    const float maxX, const float maxY) {
   RakAssert(cellWidth > 0.0f);
   RakAssert(minX < maxX && minY < maxY);
 
@@ -60,8 +59,7 @@ void GridSectorizer::AddEntry(void *entry, const float minX, const float minY,
 }
 #ifdef _USE_ORDERED_LIST
 void GridSectorizer::RemoveEntry(void *entry, const float minX,
-                                 const float minY, const float maxX,
-                                 const float maxY) {
+    const float minY, const float maxX, const float maxY) {
   RakAssert(cellWidth > 0.0f);
   RakAssert(minX <= maxX && minY <= maxY);
 
@@ -78,10 +76,9 @@ void GridSectorizer::RemoveEntry(void *entry, const float minX,
   }
 }
 void GridSectorizer::MoveEntry(void *entry, const float sourceMinX,
-                               const float sourceMinY, const float sourceMaxX,
-                               const float sourceMaxY, const float destMinX,
-                               const float destMinY, const float destMaxX,
-                               const float destMaxY) {
+    const float sourceMinY, const float sourceMaxX, const float sourceMaxY,
+    const float destMinX, const float destMinY, const float destMaxX,
+    const float destMaxY) {
   RakAssert(cellWidth > 0.0f);
   RakAssert(sourceMinX < sourceMaxX && sourceMinY < sourceMaxY);
   RakAssert(destMinX < destMaxX && destMinY < destMaxY);
@@ -126,8 +123,7 @@ void GridSectorizer::MoveEntry(void *entry, const float sourceMinX,
 }
 #endif
 void GridSectorizer::GetEntries(DataStructures::List<void *> &intersectionList,
-                                const float minX, const float minY,
-                                const float maxX, const float maxY) {
+    const float minX, const float minY, const float maxX, const float maxY) {
 #ifdef _USE_ORDERED_LIST
   DataStructures::OrderedList<void *, void *> *cell;
 #else
@@ -150,11 +146,10 @@ void GridSectorizer::GetEntries(DataStructures::List<void *> &intersectionList,
   }
 }
 bool GridSectorizer::PositionCrossesCells(const float originX,
-                                          const float originY,
-                                          const float destinationX,
-                                          const float destinationY) const {
+    const float originY, const float destinationX,
+    const float destinationY) const {
   return originX / cellWidth != destinationX / cellWidth ||
-         originY / cellHeight != destinationY / cellHeight;
+      originY / cellHeight != destinationY / cellHeight;
 }
 int GridSectorizer::WorldToCellX(const float input) const {
   return (int)((input - cellOriginX) * invCellWidth);
@@ -166,16 +161,16 @@ int GridSectorizer::WorldToCellXOffsetAndClamped(const float input) const {
   int cell = WorldToCellX(input);
   cell = cell > 0 ? cell : 0; // __max(cell,0);
   cell = gridCellWidthCount - 1 < cell
-             ? gridCellWidthCount - 1
-             : cell; // __min(gridCellWidthCount-1, cell);
+      ? gridCellWidthCount - 1
+      : cell; // __min(gridCellWidthCount-1, cell);
   return cell;
 }
 int GridSectorizer::WorldToCellYOffsetAndClamped(const float input) const {
   int cell = WorldToCellY(input);
   cell = cell > 0 ? cell : 0; // __max(cell,0);
   cell = gridCellHeightCount - 1 < cell
-             ? gridCellHeightCount - 1
-             : cell; // __min(gridCellHeightCount-1, cell);
+      ? gridCellHeightCount - 1
+      : cell; // __min(gridCellHeightCount-1, cell);
   return cell;
 }
 void GridSectorizer::Clear(void) {

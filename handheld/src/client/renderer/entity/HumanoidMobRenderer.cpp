@@ -10,8 +10,8 @@
 #include "../TileRenderer.h"
 #include "EntityRenderDispatcher.h"
 
-HumanoidMobRenderer::HumanoidMobRenderer(HumanoidModel *humanoidModel,
-                                         float shadow)
+HumanoidMobRenderer::HumanoidMobRenderer(
+    HumanoidModel *humanoidModel, float shadow)
     : super(humanoidModel, shadow), humanoidModel(humanoidModel) {}
 
 void HumanoidMobRenderer::renderHand() {
@@ -69,8 +69,8 @@ void HumanoidMobRenderer::additionalRendering(Mob *mob, float a) {
   }
 }
 
-void HumanoidMobRenderer::render(Entity *mob_, float x, float y, float z,
-                                 float rot, float a) {
+void HumanoidMobRenderer::render(
+    Entity *mob_, float x, float y, float z, float rot, float a) {
   Mob *mob = (Mob *)mob_;
   ItemInstance *carriedItem = mob->getCarriedItem();
   if (carriedItem != NULL)

@@ -84,11 +84,11 @@ void TextEditScreen::render(int xm, int ym, float a) {
     std::string msg = sign->messages[i];
     if (i == sign->selectedLine && msg.length() < 14) {
       std::string s = "> " + msg + " <";
-      font->draw(s, -(float)font->width(s) / 2.0f, 10.0f * i, 0xFF000000,
-                 false);
+      font->draw(
+          s, -(float)font->width(s) / 2.0f, 10.0f * i, 0xFF000000, false);
     } else {
-      font->draw(msg, -(float)font->width(msg) / 2.0f, 10.0f * i, 0xFF000000,
-                 false);
+      font->draw(
+          msg, -(float)font->width(msg) / 2.0f, 10.0f * i, 0xFF000000, false);
     }
   }
   sign->selectedLine = -1;

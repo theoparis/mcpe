@@ -13,22 +13,22 @@ public:
   }
 
   static bool getPosTowards(Vec3 &outPos, PathfinderMob *mob, int xzDist,
-                            int yDist, Vec3 *towardsPos) {
+      int yDist, Vec3 *towardsPos) {
     Vec3 tempDir(towardsPos->x, towardsPos->y, towardsPos->z);
     tempDir.subSelf(mob->x, mob->y, mob->z);
     return generateRandomPos(outPos, mob, xzDist, yDist, &tempDir);
   }
 
-  static bool getPosAvoid(Vec3 &outPos, PathfinderMob *mob, int xzDist,
-                          int yDist, Vec3 *avoidPos) {
+  static bool getPosAvoid(
+      Vec3 &outPos, PathfinderMob *mob, int xzDist, int yDist, Vec3 *avoidPos) {
     Vec3 tempDir(mob->x, mob->y, mob->z);
     tempDir.subSelf(avoidPos->x, avoidPos->y, avoidPos->z);
     return generateRandomPos(outPos, mob, xzDist, yDist, &tempDir);
   }
 
 private:
-  static bool generateRandomPos(Vec3 &outPos, PathfinderMob *mob, int xzDist,
-                                int yDist, Vec3 *dir) {
+  static bool generateRandomPos(
+      Vec3 &outPos, PathfinderMob *mob, int xzDist, int yDist, Vec3 *dir) {
     Random &random = mob->random;
     bool hasBest = false;
     int xBest = 0, yBest = 0, zBest = 0;

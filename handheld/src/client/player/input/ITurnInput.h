@@ -34,8 +34,8 @@ protected:
     return dt;
   }
 
-  static float linearTransform(float value, float deadZone, float scale = 1.0f,
-                               bool limit1 = false) {
+  static float linearTransform(
+      float value, float deadZone, float scale = 1.0f, bool limit1 = false) {
     float deadSigned = value >= 0 ? deadZone : -deadZone;
     if (std::abs(deadSigned) >= std::abs(value))
       return 0;

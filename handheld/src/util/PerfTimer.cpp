@@ -62,8 +62,8 @@ void PerfTimer::popPush(const std::string &name) {
 }
 
 /*static*/
-std::vector<PerfTimer::ResultField>
-PerfTimer::getLog(const std::string &rawPath) {
+std::vector<PerfTimer::ResultField> PerfTimer::getLog(
+    const std::string &rawPath) {
   if (!enabled)
     return std::vector<ResultField>();
 
@@ -113,12 +113,12 @@ PerfTimer::getLog(const std::string &rawPath) {
     it->second *= 0.999f;
 
   if (totalTime > oldTime)
-    result.push_back(ResultField("unspecified",
-                                 (totalTime - oldTime) * 100.0f / totalTime,
-                                 (totalTime - oldTime) * 100.0f / globalTime));
+    result.push_back(
+        ResultField("unspecified", (totalTime - oldTime) * 100.0f / totalTime,
+            (totalTime - oldTime) * 100.0f / globalTime));
 
   std::sort(result.begin(), result.end());
   result.insert(result.begin(),
-                ResultField(rawPath, 100, totalTime * 100.0f / globalTime));
+      ResultField(rawPath, 100, totalTime * 100.0f / globalTime));
   return result;
 }

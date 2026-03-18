@@ -11,7 +11,7 @@ void OptionsGroup::setupPositions() {
   // First we write the header and then we add the items
   int curY = y + 10;
   for (std::vector<GuiElement *>::iterator it = children.begin();
-       it != children.end(); ++it) {
+      it != children.end(); ++it) {
     (*it)->width = width - 5;
 
     (*it)->y = curY;
@@ -27,8 +27,8 @@ void OptionsGroup::render(Minecraft *minecraft, int xm, int ym) {
   super::render(minecraft, xm, ym);
 }
 
-OptionsGroup &OptionsGroup::addOptionItem(const Options::Option *option,
-                                          Minecraft *minecraft) {
+OptionsGroup &OptionsGroup::addOptionItem(
+    const Options::Option *option, Minecraft *minecraft) {
   if (option->isBoolean())
     createToggle(option, minecraft);
   else if (option->isProgress())
@@ -38,8 +38,8 @@ OptionsGroup &OptionsGroup::addOptionItem(const Options::Option *option,
   return *this;
 }
 
-void OptionsGroup::createToggle(const Options::Option *option,
-                                Minecraft *minecraft) {
+void OptionsGroup::createToggle(
+    const Options::Option *option, Minecraft *minecraft) {
   ImageDef def;
   def.setSrc(IntRectangle(160, 206, 39, 20));
   def.name = "gui/touchgui.png";
@@ -54,11 +54,11 @@ void OptionsGroup::createToggle(const Options::Option *option,
   setupPositions();
 }
 
-void OptionsGroup::createProgressSlider(const Options::Option *option,
-                                        Minecraft *minecraft) {
+void OptionsGroup::createProgressSlider(
+    const Options::Option *option, Minecraft *minecraft) {
   Slider *element =
       new Slider(minecraft, option, minecraft->options.getProgrssMin(option),
-                 minecraft->options.getProgrssMax(option));
+          minecraft->options.getProgrssMax(option));
   element->width = 100;
   element->height = 20;
   std::string itemLabel = I18n::get(option->getCaptionId());
@@ -67,8 +67,8 @@ void OptionsGroup::createProgressSlider(const Options::Option *option,
   setupPositions();
 }
 
-void OptionsGroup::createStepSlider(const Options::Option *option,
-                                    Minecraft *minecraft) {
+void OptionsGroup::createStepSlider(
+    const Options::Option *option, Minecraft *minecraft) {
   std::vector<int> steps;
   if (option == &Options::Option::DIFFICULTY ||
       option == &Options::Option::GUI_SCALE) {

@@ -29,9 +29,9 @@ UDPProxyClient::~UDPProxyClient() { Clear(); }
 void UDPProxyClient::SetResultHandler(UDPProxyClientResultHandler *rh) {
   resultHandler = rh;
 }
-bool UDPProxyClient::RequestForwarding(
-    SystemAddress proxyCoordinator, SystemAddress sourceAddress,
-    RakNetGUID targetGuid, RakNet::TimeMS timeoutOnNoDataMS,
+bool UDPProxyClient::RequestForwarding(SystemAddress proxyCoordinator,
+    SystemAddress sourceAddress, RakNetGUID targetGuid,
+    RakNet::TimeMS timeoutOnNoDataMS,
     RakNet::BitStream *serverSelectionBitstream) {
   // Return false if not connected
   ConnectionState cs = rakPeerInterface->GetConnectionState(proxyCoordinator);
@@ -60,12 +60,12 @@ bool UDPProxyClient::RequestForwarding(
     outgoingBs.Write(false);
   }
   rakPeerInterface->Send(&outgoingBs, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0,
-                         proxyCoordinator, false);
+      proxyCoordinator, false);
 
   return true;
 }
-bool UDPProxyClient::RequestForwarding(
-    SystemAddress proxyCoordinator, SystemAddress sourceAddress,
+bool UDPProxyClient::RequestForwarding(SystemAddress proxyCoordinator,
+    SystemAddress sourceAddress,
     SystemAddress targetAddressAsSeenFromCoordinator,
     RakNet::TimeMS timeoutOnNoDataMS,
     RakNet::BitStream *serverSelectionBitstream) {
@@ -96,7 +96,7 @@ bool UDPProxyClient::RequestForwarding(
     outgoingBs.Write(false);
   }
   rakPeerInterface->Send(&outgoingBs, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0,
-                         proxyCoordinator, false);
+      proxyCoordinator, false);
 
   return true;
 }
@@ -177,9 +177,9 @@ PluginReceiveResult UDPProxyClient::OnReceive(Packet *packet) {
         incomingBs.Read(forwardingPort);
         if (packet->data[1] == ID_UDP_PROXY_FORWARDING_SUCCEEDED) {
           if (resultHandler)
-            resultHandler->OnForwardingSuccess(
-                serverIP.C_String(), forwardingPort, packet->systemAddress,
-                senderAddress, targetAddress, targetGuid, this);
+            resultHandler->OnForwardingSuccess(serverIP.C_String(),
+                forwardingPort, packet->systemAddress, senderAddress,
+                targetAddress, targetGuid, this);
         } else {
           // Send a datagram to the proxy, so if we are behind a router, that
           // router adds an entry to the routing table. Otherwise the router
@@ -188,32 +188,30 @@ PluginReceiveResult UDPProxyClient::OnReceive(Packet *packet) {
           rakPeerInterface->Ping(serverIP.C_String(), forwardingPort, false);
 
           if (resultHandler)
-            resultHandler->OnForwardingNotification(
-                serverIP.C_String(), forwardingPort, packet->systemAddress,
-                senderAddress, targetAddress, targetGuid, this);
+            resultHandler->OnForwardingNotification(serverIP.C_String(),
+                forwardingPort, packet->systemAddress, senderAddress,
+                targetAddress, targetGuid, this);
         }
       } break;
       case ID_UDP_PROXY_ALL_SERVERS_BUSY:
         if (resultHandler)
           resultHandler->OnAllServersBusy(packet->systemAddress, senderAddress,
-                                          targetAddress, targetGuid, this);
+              targetAddress, targetGuid, this);
         break;
       case ID_UDP_PROXY_IN_PROGRESS:
         if (resultHandler)
           resultHandler->OnForwardingInProgress(packet->systemAddress,
-                                                senderAddress, targetAddress,
-                                                targetGuid, this);
+              senderAddress, targetAddress, targetGuid, this);
         break;
       case ID_UDP_PROXY_NO_SERVERS_ONLINE:
         if (resultHandler)
           resultHandler->OnNoServersOnline(packet->systemAddress, senderAddress,
-                                           targetAddress, targetGuid, this);
+              targetAddress, targetGuid, this);
         break;
       case ID_UDP_PROXY_RECIPIENT_GUID_NOT_CONNECTED_TO_COORDINATOR: {
         if (resultHandler)
           resultHandler->OnRecipientNotConnected(packet->systemAddress,
-                                                 senderAddress, targetAddress,
-                                                 targetGuid, this);
+              senderAddress, targetAddress, targetGuid, this);
         break;
       }
       }
@@ -241,7 +239,7 @@ void UDPProxyClient::OnPingServers(Packet *packet) {
   unsigned short serverListIndex;
   char ipStr[64];
   for (serverListIndex = 0; serverListIndex < serverListSize;
-       serverListIndex++) {
+      serverListIndex++) {
     incomingBs.Read(swp.serverAddress);
     swp.ping = DEFAULT_UNRESPONSIVE_PING_TIME;
     psg->serversToPing.Push(swp, _FILE_AND_LINE_);
@@ -254,7 +252,7 @@ void UDPProxyClient::OnPingServers(Packet *packet) {
 bool UDPProxyClient::PingServerGroup::AreAllServersPinged(void) const {
   unsigned int serversToPingIndex;
   for (serversToPingIndex = 0; serversToPingIndex < serversToPing.Size();
-       serversToPingIndex++) {
+      serversToPingIndex++) {
     if (serversToPing[serversToPingIndex].ping ==
         DEFAULT_UNRESPONSIVE_PING_TIME)
       return false;
@@ -274,12 +272,12 @@ void UDPProxyClient::PingServerGroup::SendPingedServersToCoordinator(
   outgoingBs.Write(serversToPingSize);
   unsigned int serversToPingIndex;
   for (serversToPingIndex = 0; serversToPingIndex < serversToPingSize;
-       serversToPingIndex++) {
+      serversToPingIndex++) {
     outgoingBs.Write(serversToPing[serversToPingIndex].serverAddress);
     outgoingBs.Write(serversToPing[serversToPingIndex].ping);
   }
   rakPeerInterface->Send(&outgoingBs, MEDIUM_PRIORITY, RELIABLE_ORDERED, 0,
-                         coordinatorAddressForPings, false);
+      coordinatorAddressForPings, false);
 }
 void UDPProxyClient::Clear(void) {
   for (unsigned int i = 0; i < pingServerGroups.Size(); i++)

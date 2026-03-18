@@ -11,11 +11,11 @@ You can do whatever you want with it.
 #else
 #include <sys/time.h> /* struct timeval, select() */
 /* ICANON, ECHO, TCSANOW, struct termios */
-#include <stdio.h>    /* printf() */
-#include <stdlib.h>   /* atexit(), exit() */
-#include <string.h>   /* memcpy */
-#include <termios.h>  /* tcgetattr(), tcsetattr() */
-#include <unistd.h>   /* read() */
+#include <stdio.h> /* printf() */
+#include <stdlib.h> /* atexit(), exit() */
+#include <string.h> /* memcpy */
+#include <termios.h> /* tcgetattr(), tcsetattr() */
+#include <unistd.h> /* read() */
 
 static struct termios g_old_kbd_mode;
 /*****************************************************************************

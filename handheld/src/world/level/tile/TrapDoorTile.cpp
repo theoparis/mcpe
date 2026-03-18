@@ -83,8 +83,8 @@ void TrapDoorTile::setOpen(Level *level, int x, int y, int z, bool shouldOpen) {
   level->levelEvent(NULL, LevelEvent::SOUND_OPEN_DOOR, x, y, z, 0);
 }
 
-void TrapDoorTile::neighborChanged(Level *level, int x, int y, int z,
-                                   int type) {
+void TrapDoorTile::neighborChanged(
+    Level *level, int x, int y, int z, int type) {
   if (level->isClientSide)
     return;
 
@@ -112,8 +112,8 @@ void TrapDoorTile::neighborChanged(Level *level, int x, int y, int z,
   }
 }
 
-HitResult TrapDoorTile::clip(Level *level, int xt, int yt, int zt,
-                             const Vec3 &a, const Vec3 &b) {
+HitResult TrapDoorTile::clip(
+    Level *level, int xt, int yt, int zt, const Vec3 &a, const Vec3 &b) {
   updateShape(level, xt, yt, zt);
   return super::clip(level, xt, yt, zt, a, b);
 }
@@ -127,8 +127,7 @@ int TrapDoorTile::getDir(int dir) {
 }
 
 int TrapDoorTile::getPlacedOnFaceDataValue(Level *level, int x, int y, int z,
-                                           int face, float clickX, float clickY,
-                                           float clickZ, int itemValue) {
+    int face, float clickX, float clickY, float clickZ, int itemValue) {
   int dir = 0;
   if (face == 2)
     dir = 0;
@@ -141,8 +140,8 @@ int TrapDoorTile::getPlacedOnFaceDataValue(Level *level, int x, int y, int z,
   return dir;
 }
 
-bool TrapDoorTile::mayPlace(Level *level, int x, int y, int z,
-                            unsigned char face) {
+bool TrapDoorTile::mayPlace(
+    Level *level, int x, int y, int z, unsigned char face) {
   if (face == 0)
     return false;
   if (face == 1)
@@ -168,6 +167,6 @@ bool TrapDoorTile::attachesTo(int id) {
   Tile *tile = Tile::tiles[id];
   bool isStair = tile != NULL && tile->getRenderShape() == Tile::SHAPE_STAIRS;
   return tile != NULL &&
-             (tile->material->isSolidBlocking() && tile->isCubeShaped()) ||
-         tile == Tile::lightGem || tile == Tile::stoneSlabHalf || isStair;
+      (tile->material->isSolidBlocking() && tile->isCubeShaped()) ||
+      tile == Tile::lightGem || tile == Tile::stoneSlabHalf || isStair;
 }

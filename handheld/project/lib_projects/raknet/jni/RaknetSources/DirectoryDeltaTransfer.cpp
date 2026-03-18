@@ -35,8 +35,7 @@ public:
         subdirLen < strlen(onFileStruct->fileName)) {
       strcpy(fullPathToDir, outputSubdir);
       strcat(fullPathToDir, onFileStruct->fileName + subdirLen);
-      WriteFileWithDirectories(
-          fullPathToDir, (char *)onFileStruct->fileData,
+      WriteFileWithDirectories(fullPathToDir, (char *)onFileStruct->fileData,
           (unsigned int)onFileStruct->byteLengthOfThisFile);
     } else
       fullPathToDir[0] = 0;
@@ -107,15 +106,14 @@ void DirectoryDeltaTransfer::SetApplicationDirectory(
     applicationDirectory[511] = 0;
   }
 }
-void DirectoryDeltaTransfer::SetUploadSendParameters(PacketPriority _priority,
-                                                     char _orderingChannel) {
+void DirectoryDeltaTransfer::SetUploadSendParameters(
+    PacketPriority _priority, char _orderingChannel) {
   priority = _priority;
   orderingChannel = _orderingChannel;
 }
 void DirectoryDeltaTransfer::AddUploadsFromSubdirectory(const char *subdir) {
   availableUploads->AddFilesFromDirectory(applicationDirectory, subdir, true,
-                                          false, true,
-                                          FileListNodeContext(0, 0));
+      false, true, FileListNodeContext(0, 0));
 }
 unsigned short DirectoryDeltaTransfer::DownloadFromSubdirectory(
     FileList &localFiles, const char *subdir, const char *outputSubdir,
@@ -144,9 +142,9 @@ unsigned short DirectoryDeltaTransfer::DownloadFromSubdirectory(
   if (outputSubdir)
     strcat(transferCallback->outputSubdir, outputSubdir);
   if (transferCallback->outputSubdir[strlen(transferCallback->outputSubdir) -
-                                     1] != '/' &&
+          1] != '/' &&
       transferCallback->outputSubdir[strlen(transferCallback->outputSubdir) -
-                                     1] != '\\')
+          1] != '\\')
     strcat(transferCallback->outputSubdir, "/");
   transferCallback->onFileCallback = onFileCallback;
 
@@ -162,7 +160,7 @@ unsigned short DirectoryDeltaTransfer::DownloadFromSubdirectory(
   StringCompressor::Instance()->EncodeString(outputSubdir, 256, &outBitstream);
   localFiles.Serialize(&outBitstream);
   SendUnified(&outBitstream, _priority, RELIABLE_ORDERED, _orderingChannel,
-              host, false);
+      host, false);
 
   return setId;
 }
@@ -176,13 +174,12 @@ unsigned short DirectoryDeltaTransfer::DownloadFromSubdirectory(
   localFiles.AddFilesFromDirectory(
       prependAppDirToOutputSubdir ? applicationDirectory : 0, outputSubdir,
       true, false, true, FileListNodeContext(0, 0));
-  return DownloadFromSubdirectory(
-      localFiles, subdir, outputSubdir, prependAppDirToOutputSubdir, host,
-      onFileCallback, _priority, _orderingChannel, cb);
+  return DownloadFromSubdirectory(localFiles, subdir, outputSubdir,
+      prependAppDirToOutputSubdir, host, onFileCallback, _priority,
+      _orderingChannel, cb);
 }
 void DirectoryDeltaTransfer::GenerateHashes(FileList &localFiles,
-                                            const char *outputSubdir,
-                                            bool prependAppDirToOutputSubdir) {
+    const char *outputSubdir, bool prependAppDirToOutputSubdir) {
   localFiles.AddFilesFromDirectory(
       prependAppDirToOutputSubdir ? applicationDirectory : 0, outputSubdir,
       true, false, true, FileListNodeContext(0, 0));
@@ -206,8 +203,8 @@ void DirectoryDeltaTransfer::OnDownloadRequest(Packet *packet) {
     return;
   }
 
-  availableUploads->GetDeltaToCurrent(&remoteFileHash, &delta, subdir,
-                                      remoteSubdir);
+  availableUploads->GetDeltaToCurrent(
+      &remoteFileHash, &delta, subdir, remoteSubdir);
   if (incrementalReadInterface == 0)
     delta.PopulateDataFromDisk(applicationDirectory, true, false, true);
   else
@@ -216,8 +213,7 @@ void DirectoryDeltaTransfer::OnDownloadRequest(Packet *packet) {
   // This will call the ddtCallback interface that was passed to
   // FileListTransfer::SetupReceive on the remote system
   fileListTransfer->Send(&delta, rakPeerInterface, packet->systemAddress, setId,
-                         priority, orderingChannel, incrementalReadInterface,
-                         chunkSize);
+      priority, orderingChannel, incrementalReadInterface, chunkSize);
 }
 PluginReceiveResult DirectoryDeltaTransfer::OnReceive(Packet *packet) {
   switch (packet->data[0]) {
